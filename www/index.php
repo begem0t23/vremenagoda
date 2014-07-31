@@ -4,6 +4,31 @@ require_once("config.php");
 require_once("functions.php");
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
+//die($_POST["dosend"]);
+if (@$_POST["dosend"])
+{
+	//die(($_POST["email"]) ."=". (@$_POST["pass"]));
+	if ((@$_POST["email"]) && (@$_POST["pass"]))
+	{
+		$tsql = "select * from users where login='".mysql_escape_string($_POST["email"])."' and pass=MD5('".$_POST["pass"]."');";
+		//die($tsql);
+		$r_user = mysql_query($tsql);
+		if (mysql_num_rows($r_user)>0)
+		{	
+			//
+			if (@$_POST["remember"])
+			{
+				setcookie ("curuser", md5($_POST["email"] . md5($_POST["pass"])));
+			}
+			$row_user = mysql_fetch_array($r_user);
+			session_start ();
+			$_SESSION["curusersession"] = md5($_POST["email"] . md5($_POST["pass"]) . $_SERVER['REMOTE_ADDR']);
+			$_SESSION["curuser"] = md5($_POST["email"] . md5($_POST["pass"]));
+			$_SESSION["curusername"] = $row_user["realname"];
+		}
+	}
+}
+
 if (checklogin())
 {
 
@@ -67,7 +92,7 @@ if (checklogin())
         <h1>Sticky footer with fixed navbar</h1>
       </div>
 <?php
-echo "hi";
+echo $_SESSION["curusername"];
 ?>
     </div>
 
@@ -114,13 +139,14 @@ else
 
     <div class="container">
 
-      <form class="form-signin" role="form">
+      <form method='POST' class="form-signin" role="form">
+		<input type='hidden' value=1 name=dosend>
         <h2 class="form-signin-heading">Введите ваш email и пароль от портала</h2>
-        <input type="email" class="form-control" placeholder="Email address" required autofocus>
-        <input type="password" class="form-control" placeholder="Password" required>
+        <input name = 'email' type="email" class="form-control" placeholder="Email address" required autofocus>
+        <input name = 'pass' type="password" class="form-control" placeholder="Password" required>
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="remember-me"> Запомнить меня
+            <input name='remember' type="checkbox" value="remember-me"> Запомнить меня
           </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
