@@ -39,8 +39,10 @@ fixednavbar();
 		  <li id=page4><a href="#">4: Услуги</a></li>
 		  <li id=page5><a href="#">5: Сохранение</a></li>
 		  <li id=pageright><a href="#">&raquo;</a></li>
-		</ul>	  
-
+		</ul>	
+		<div id=createform>
+		
+		</div>
     </div>
 
 <?php
@@ -112,8 +114,13 @@ fixedbotbar()
 					//alert(id);
 					dosetrightpaginator();
 				}
-			}			
+			}	
+			doloadcreateform();
 		});
+		function doloadcreateform();
+		{
+			
+		}
 	</script>
   </body>
 </html>
