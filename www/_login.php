@@ -1,8 +1,8 @@
-﻿<?
+<?
 //var_dump($_SESSION);
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,7 +24,10 @@
   <body>
 
     <div class="container">
-
+<?php 
+var_dump($_SESSION);
+var_dump(@$_COOKIES);
+?>
       <form action="/" method='POST' class="form-signin" role="form">
 		<input type='hidden' value="<?php echo rand();?>" name=dosend>
         <h2 class="form-signin-heading">Введите ваш email и пароль от портала</h2>

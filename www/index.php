@@ -1,7 +1,9 @@
 <?php
-error_reporting(1);
-ini_set("display_errors","1");
-ob_start();
+//error_reporting(1);
+//ini_set("display_errors","1");
+//ob_start();
+//die(session_id());
+if (!session_id()) session_start();
 require_once("config.php");
 require_once("functions.php");
 $qq = @$_SERVER['QUERY_STRING'];
@@ -26,22 +28,30 @@ if (@$_POST["dosend"])
 			$_SESSION["curusersession"] = md5($_POST["email"] . md5($_POST["pass"]) . $_SERVER['REMOTE_ADDR']);
 			$_SESSION["curuser"] = md5($_POST["email"] . md5($_POST["pass"]));
 			$_SESSION["curusername"] = $row_user["realname"];
+			Header("Location: /?" . rand());
 		}
 	}
 }
 
-if ($qq == "logout")
+if (checklogin())
 {
-	include("_logout.php");
-}
-elseif (checklogin())
-{
-	include("_index.php");
+	if ($qq == "logout")
+	{
+		include("_logout.php");
+	}
+	elseif ($qq == "create")
+	{
+		include("_create.php");
+	}
+	else
+	{
+		include("_index.php");
+	}
 }
 else
 {
 	include("_login.php");
 }
-ob_end_flush();
+//ob_end_flush();
 ?>
 
