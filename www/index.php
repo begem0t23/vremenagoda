@@ -1,11 +1,10 @@
 <?php
-//error_reporting(1);
-//ini_set("display_errors","1");
 //ob_start();
 //die(session_id());
 if (!session_id()) session_start();
-require_once("config.php");
-require_once("functions.php");
+require_once("config.inc.php");
+require_once("functions.inc.php");
+
 $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
@@ -28,6 +27,7 @@ if (@$_POST["dosend"])
 			$_SESSION["curusersession"] = md5($_POST["email"] . md5($_POST["pass"]) . $_SERVER['REMOTE_ADDR']);
 			$_SESSION["curuser"] = md5($_POST["email"] . md5($_POST["pass"]));
 			$_SESSION["curusername"] = $row_user["realname"];
+			$_SESSION["curuserrole"] = $row_user["role"];
 			Header("Location: /?" . rand());
 		}
 	}
@@ -42,6 +42,11 @@ if (checklogin())
 	elseif ($qq == "create")
 	{
 		include("_create.php");
+	}
+	elseif ($qq == "debug")
+	{
+		var_dump($_SESSION);
+		var_dump(@$_COOKIES);	
 	}
 	else
 	{

@@ -25,8 +25,8 @@
 
     <div class="container">
 <?php 
-var_dump($_SESSION);
-var_dump(@$_COOKIES);
+//var_dump($_SESSION);
+//var_dump(@$_COOKIES);
 ?>
       <form action="/" method='POST' class="form-signin" role="form">
 		<input type='hidden' value="<?php echo rand();?>" name=dosend>
