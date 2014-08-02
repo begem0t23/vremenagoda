@@ -1,6 +1,6 @@
 <?php
 
-define ("PRODUCTNAME","ÂÐÅÌÅÍÀ ÃÎÄÀ");
+define ("PRODUCTNAME","Ð’Ð Ð•ÐœÐ•ÐÐ Ð“ÐžÐ”Ð");
 
 function connect($dbname="vg",$dblogin="vg",$dbpass="vg%vg")
 {
