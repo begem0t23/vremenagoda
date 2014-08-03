@@ -1,8 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="description" content="">
     <meta name="author" content="">
     
@@ -13,6 +14,11 @@
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="/css/sticky-footer-navbar.css" rel="stylesheet">
+
+    <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
+    <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
+    <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
+	
   </head>
 
   <body>
@@ -31,7 +37,7 @@ fixednavbar();
       <div class="page-header">
         <h3>Новый заказ</h3>
       </div>
-		<ul class="pagination">
+		<ul class="pagination pagination-lg">
 		  <li id=pageleft><a href="#">&laquo;</a></li>
 		  <li id=page1><a href="#">1: Клиент</a></li>
 		  <li id=page2><a href="#">2: Условия</a></li>
@@ -43,18 +49,40 @@ fixednavbar();
 		<div id=createform>
 		
 		</div>
+		<span id=spanpage1 style="visibility: visible">
+			<div class="input-group">
+			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
+			</div>		
+		</span>
     </div>
 
 <?php
-fixedbotbar()
+
+fixedbotbar();
+
 ?>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="/jquery/jquery.min.js"></script>
+	<script src="/jquery/jquery-ui.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
 	<script>
+		function dosearchclient(t)
+		{
+			var s=$(t).val();
+			if (s.length<2) return false;
+			$.post("_dosearchclientautocomplete.php", {s:s, Rand: "<?php echo rand(); ?>"},
+			   function(data){})
+			   .done(function(data) {
+				//alert(data);
+				data = $.trim(data);
+				data = data.split("\n");
+				$(t).autocomplete({source: data});
+			});
+		}		
 		function dosetrightpaginator()
 		{
 			erasedisablefromli();
@@ -117,7 +145,7 @@ fixedbotbar()
 			}	
 			doloadcreateform();
 		});
-		function doloadcreateform();
+		function doloadcreateform()
 		{
 			
 		}

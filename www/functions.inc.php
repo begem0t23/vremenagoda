@@ -2,6 +2,7 @@
 
 function fixedbotbar()
 {
+	global $userroles;
 ?>
     <div class="footer">
       <div class="container">
@@ -18,6 +19,7 @@ if (@$userroles[$_SESSION["curuserrole"]])
     </div>
 <?php
 }
+
 function fixednavbar()
 {
 	global $userroles,$qq;

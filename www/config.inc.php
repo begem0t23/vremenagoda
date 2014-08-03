@@ -9,6 +9,9 @@ function connect($dbname="vg",$dblogin="vg",$dbpass="vg%vg")
 	$dbport="3306";
 	$link=mysql_connect($dbhost, $dblogin, $dbpass);
 	if (!@$link) return false;
+	
+	mb_internal_encoding("UTF-8"); 
+	
 	if ($link && mysql_select_db ($dbname))
 	{
 		mysql_query("SET NAMES utf8");
