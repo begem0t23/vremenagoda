@@ -53,6 +53,9 @@ fixednavbar();
 			<div class="input-group">
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
+			  <span class="input-group-btn">
+				<button class="btn btn-default" id=clientadd type="button">Создать</button>
+			  </span>			  
 			</div>		
 		</div>
 		<div id=spanpage2 style="visibility: hidden">
@@ -84,6 +87,8 @@ fixedbotbar();
 	<script>
 		function dosearchclient(t)
 		{
+			// Поиск клиента по имени, телефону, мылу в поле поиска на первой вкладке
+			//$("#clientadd").html("Создать");
 			var s=$(t).val();
 			if (s.length<2) return false;
 			$.post("_dosearchclientautocomplete.php", {s:s, Rand: "<?php echo rand(); ?>"},
@@ -92,11 +97,16 @@ fixedbotbar();
 				//alert(data);
 				data = $.trim(data);
 				data = data.split("\n");
-				$(t).autocomplete({source: data});
+				$(t).autocomplete({source: data, select: function (a, b) {
+					//$(this).val(b.item.value);
+					//alert(b.item.value);
+					$("#clientadd").html("Использовать");
+				}});
 			});
 		}		
 		function dosetrightpaginator()
 		{
+			// Активация правильной кнопки выбора с раницы в зависимости от curpage
 			erasedisablefromli();
 			//alert(curpage);
 			switch(curpage)
@@ -125,6 +135,7 @@ fixedbotbar();
 		}
 		function erasedisablefromli()
 		{
+			// Стирание дисэблед статуса для всех кнопок страниц, чтобы потом поставить правильный
 			for (i=1;i<=5;i++)
 			{
 				//alert(curpage);
@@ -134,11 +145,24 @@ fixedbotbar();
 			$("#pageleft").prop("class","enabled");		
 			$("#pageright").prop("class","enabled");		
 		}
+		function docheckclientname()
+		{
+			// проверка имени клиента на существование, в зависимости от этого вывод правильной формы
+			// создания нового клиента или поля с заполненными значениями существующего
+			$.post("_checkexistclient.php", {s:$("#clientsearch").val(), Rand: "<?php echo rand(); ?>"},
+			   function(data){})
+			   .done(function(data) {
+				
+			});
+		}
 		$(document).ready(function(){
+			// когда страница загружена
 			dosetrightpaginator();
 			doloadcreateform();
+			$("#clientadd").bind("click", docheckclientname());
 		});
 		$("li[id*='page']").bind("click", function(){
+			// слушаем клики на элементы выбора страниц
 			id = $(this).prop("id");
 			if (id=="pageleft") {
 				if (curpage>1) {curpage--; dosetrightpaginator();}
@@ -160,6 +184,7 @@ fixedbotbar();
 		});
 		function doloadcreateform()
 		{
+			// вывод правильного содержания вкладки в зависимости от curpage
 			$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());
 			//$("#spanpage"+curpage).css("visibility","visible");
