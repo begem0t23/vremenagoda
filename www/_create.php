@@ -49,12 +49,24 @@ fixednavbar();
 		<div id=createform>
 		
 		</div>
-		<span id=spanpage1 style="visibility: visible">
+		<div id=spanpage1 style="visibility: hidden">
 			<div class="input-group">
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
 			</div>		
-		</span>
+		</div>
+		<div id=spanpage2 style="visibility: hidden">
+		2
+		</div>
+		<div id=spanpage3 style="visibility: hidden">
+		3
+		</div>
+		<div id=spanpage4 style="visibility: hidden">
+		4
+		</div>
+		<div id=spanpage5 style="visibility: hidden">
+		5
+		</div>
     </div>
 
 <?php
@@ -124,6 +136,7 @@ fixedbotbar();
 		}
 		$(document).ready(function(){
 			dosetrightpaginator();
+			doloadcreateform();
 		});
 		$("li[id*='page']").bind("click", function(){
 			id = $(this).prop("id");
@@ -147,7 +160,9 @@ fixedbotbar();
 		});
 		function doloadcreateform()
 		{
-			
+			$("div[id*=spanpage]").css("visibility","hidden");
+			$("#createform").html($("#spanpage"+curpage).html());
+			//$("#spanpage"+curpage).css("visibility","visible");
 		}
 	</script>
   </body>
