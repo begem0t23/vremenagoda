@@ -18,11 +18,11 @@ if ($s)
 	if (mysql_num_rows($r_user)>0)
 	{
 		$row = mysql_fetch_array($r_user);
-		echo "OK;" . $row["name"];
+		echo "OK^" . $row["id"]."^" . $row["phone"]."^" . $row["email"];
 	}
 	else
 	{
-		echo "NO;";
+		echo "NO^";
 	}
 }
 ?>

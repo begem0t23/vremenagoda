@@ -149,11 +149,28 @@ fixedbotbar();
 		{
 			// проверка имени клиента на существование, в зависимости от этого вывод правильной формы
 			// создания нового клиента или поля с заполненными значениями существующего
-			$.post("_checkexistclient.php", {s:$("#clientsearch").val(), Rand: "<?php echo rand(); ?>"},
-			   function(data){})
-			   .done(function(data) {
-				
-			});
+			clientname = $("#clientsearch").val();
+			if (clientname!="") {
+				$.post("_checkexistclient.php", {s:clientname, Rand: "<?php echo rand(); ?>"},
+				   function(data){})
+				   .done(function(data) {
+					data = data.split("^");
+					$("#spanpage1").html();
+					spanpage1 = '<div><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
+					if (data[0]=="OK"){
+						spanpage1.='<input type="text" readonly id=clientname vale="'+clientname+'" class="form-control">';						
+						spanpage1.='<input type="hidden" id=clientid vale="'+data[1]+'">';						
+					}
+					else {
+						spanpage1.='<input type="text" readonly id=clientname vale="'+clientname+'" class="form-control">';						
+						spanpage1.='<input type="hidden" id=clientid vale="0">';
+					}
+					spanpage1.='<br><input type="text" id=clientphone vale="'+data[2]+'" class="form-control" placeholder="Телефон">';
+					spanpage1.='<br><input type="email" id=clientemail vale="'+data[3]+'" class="form-control" placeholder="E-mail">';
+					spanpage1.='<br><input type="text" id=clientfrom vale="" class="form-control" placeholder="откуда пришёл">';
+					spanpage1.='<button class="btn btn-default" id=clientsave1 type="button">Далее</button>/div>';
+				});
+			}
 		}
 		$(document).ready(function(){
 			// когда страница загружена
