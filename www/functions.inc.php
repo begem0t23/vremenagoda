@@ -1,133 +1,8 @@
 <?php
-date_default_timezone_set ("Europe/Moscow");
-
-function table($tname, $tcols, $thead, $tbody, $tsql, $tdate, $tbuts )
-{
-
-$curdate = new DateTime("now");
-$curdate = $curdate->format('Y-m-d');
-
-$sqldate = ';';
-$date_out = '';
-
-if($tdate) {
-
-$date = explode(',',$tdate);
-
-$date1 = date('Y-m-d',strtotime($curdate)-24*3600*$date[1]);
-$date2 = date('Y-m-d',strtotime($curdate)+24*3600*$date[2]);
-
-if (strtotime($date1) < strtotime($date2)) {
-$fromdate = $date1;
-$todate = $date2;
-} else {
-$fromdate = $date2;
-$todate = $date1;
-}
-
-$sqldate = " AND ".$date[0]." >= '".$fromdate."' AND ".$date[0]." <= '".$todate."';";
-//echo $sqldate ;
-
-$date_out = 'За период с '.$fromdate.' по '.$todate.'.';
-}
-
-
-echo '<h3>'.$tname.'</h3>'.chr(10);
-echo '<strong>'.$date_out.'</strong>'.chr(10);
-
-
-
-$body = explode(',',$tbody);
-$head = explode(',',$thead);
-$cols = explode(',',$tcols);
-$buts = explode(';',$tbuts);
-
-$empty_out = '<strong>За выбранный период данные не найдены</strong>';
-
-
-
-//ширина колонок
-$cols_out = '<colgroup>'.chr(10);
-foreach ($cols as $key => $val) 
-	{
-     $cols_out = $cols_out.'<col width="'.$val.'" />'.chr(10);
-	}
-	
-	foreach ($buts as $key => $val)	
-		{
-		$cols_out = $cols_out.'<col width="50" />'.chr(10);
-		}
-
-$cols_out = $cols_out.'</colgroup>'.chr(10);
-
-
-//заголовки
-$head_out ='<thead><tr>'.chr(10);
-foreach ($head as $key => $val) 
-	{
-     $head_out = $head_out.'<th>'.$val.'</th>'.chr(10);
-	}
-	
-	foreach ($buts as $key => $val)	
-		{
-		$head_out = $head_out.'<th class="filter-false sorter-false"></th>';
-		}
-
-$head_out = $head_out.'</tr></thead>'.chr(10);
-
-
-
-
-$rezult = mysql_query($tsql.$sqldate);
-
-
-if ( mysql_num_rows($rezult) > 0){
-	$body_out = '<tbody>'.chr(10);
-	
-	while ($rows = mysql_fetch_array($rezult))
-	{
-	//print_r($rows);
-	$body_out = $body_out.'<tr>'.chr(10);
-					
-	foreach ($body as $key => $val) 
-		{
-		$body_out = $body_out.'<td>'.chr(10);
-		$body_out = $body_out.$rows[$val].chr(10);
-		$body_out = $body_out.'</td>'.chr(10);
-		}
-		
-		foreach ($buts as $key => $val)	
-			{
-			$but = explode(',',$val);
-			$body_out = $body_out.'<td><button type="button" class="'.$but[0].'" title="'.$but[1].'">'.$but[2].'</button></td>';
-			}
-			
-	$body_out = $body_out.'</tr>'.chr(10);
-	}
-
-
-echo '<table  class="tablesorter">'.chr(10);
-
-echo $cols_out.$head_out.$body_out;
-
-echo '</tbody></table>'.chr(10);
-
-} else {
-echo $empty_out;
-}
-
-?>
- <br />   
-<br />   
-
-<?php
-
-}
-
-
 
 function fixedbotbar()
 {
+	global $userroles;
 ?>
     <div class="footer">
       <div class="container">
@@ -144,6 +19,7 @@ if (@$userroles[$_SESSION["curuserrole"]])
     </div>
 <?php
 }
+
 function fixednavbar()
 {
 	global $userroles,$qq;
