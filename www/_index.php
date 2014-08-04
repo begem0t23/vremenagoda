@@ -31,8 +31,8 @@ fixednavbar();
 		table(
 		"Новые заказы", //заголовок
 		"50,100,200,200,100",	//ширина колонок
-		"Номер Заказа,Кто принял,Дата Банкета,Клиент,Статус Заказа",	//заголовки
-		"id,realname,eventdate,name,stval",	//поля
+		"Номер Заказа,Дата Банкета,Клиент,Статус Заказа",	//заголовки
+		"id,eventdate,name,stval",	//поля
 		"SELECT o.id, o.eventdate, o.status, u.realname, c.name, s.name stval 
 		 FROM orders o, users u, clients c, status s 
 		 WHERE o.status = 1 AND  o.creatorid = u.id AND o.clientid = c.id AND o.status = s.id", //sql кроме даты
@@ -65,16 +65,9 @@ fixednavbar();
 
 		);
 	} else {
-		table(
+		report_client(
 		"Заказ №".$_GET['view_zakazid'], //заголовок
-		"50,100,200,200,100",	//ширина колонок
-		"Номер Заказа,Кто принял,Дата Банкета,Клиент,Статус Заказа",	//заголовки
-		"id,realname,eventdate,name,stval",	//поля
-		"SELECT o.id, o.eventdate, o.status, u.realname, c.name, s.name stval 
-		 FROM orders o, users u, clients c, status s 
-		 WHERE o.id = ".$_GET['view_zakazid']." AND  o.creatorid = u.id AND o.clientid = c.id AND o.status = s.id", //sql кроме даты
-		"",
-		"exit,Закрыть просмотр,Закрыть"
+		$_GET['view_zakazid']
 		);
 	}		
 	
@@ -103,28 +96,28 @@ fixedbotbar();
 $(function(){
 
 
-  $("table")
+  $(".baseview")
   .tablesorter(
   {
       theme: 'blue',
        widgets: ['zebra','filter']
     });
+	
   
-  
-  		$('table').delegate('button.view', 'click' ,function(){
-			location.href ="?view_zakazid="+$(this).closest('tr').children().first().html();
+		$('table').delegate('button.view', 'click' ,function(){
+			location.href ="?view_zakazid="+$(this).closest('tr').children().first().html()+"&r=<?echo rand();?>";
 		});
 
    		$('table').delegate('button.edit', 'click' ,function(){
-			location.href ="?edit_zakazid="+$(this).closest('tr').children().first().html();
+			location.href ="?edit_zakazid="+$(this).closest('tr').children().first().html()+"&r=<?echo rand();?>";
 		});
 
     	$('table').delegate('button.events', 'click' ,function(){
-			location.href ="?events_zakazid="+$(this).closest('tr').children().first().html();
+			location.href ="?events_zakazid="+$(this).closest('tr').children().first().html()+"&r=<?echo rand();?>";
 		});
 		
     	$('table').delegate('button.exit', 'click' ,function(){
-			location.href ="/";
+			location.href ="/?r=<?echo rand();?>";
 		});
 
   

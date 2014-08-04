@@ -28,6 +28,7 @@ if (@$_POST["dosend"])
 			$_SESSION["curuser"] = md5($_POST["email"] . md5($_POST["pass"]));
 			$_SESSION["curusername"] = $row_user["realname"];
 			$_SESSION["curuserrole"] = $row_user["role"];
+			$_SESSION["curuserid"] = $row_user["id"];
 			Header("Location: /?" . rand());
 		}
 	}

@@ -1,7 +1,96 @@
 <?php
 
 // это пропиши в php.ini
+// А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
+
+function report_client($tname,$zid)
+{
+echo '<h3>'.$tname.'</h3>'.chr(10);
+
+$cols_out = '<colgroup>
+<col width="250" />
+<col width="250" />
+<col width="250" />
+</colgroup>';
+
+$head_out = '<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>';
+
+
+$tsql = "SELECT o.id, o.eventdate, o.status, u.realname, c.name, c.phone, s.name stval 
+		 FROM orders o, users u, clients c, status s 
+		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id AND o.status = s.id";
+
+$rezult = mysql_query($tsql);
+
+	$body_out = '<tbody>'.chr(10);
+	
+$rows = mysql_fetch_array($rezult);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td>Заказчик</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows['phone'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td>Тип мероприятия</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td>Дата проведения мероприятия</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows['eventdate'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td>Место проведения мероприятия</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td>Время начала мероприятия</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td>Время окончания мероприятия</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td>Количество гостей</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td>Количество столов</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td>Количество человек за 1 столом</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+
+echo '<table id="report_client_param" class="table">'.chr(10);
+
+echo $cols_out.$head_out.$body_out;
+
+echo '</tbody></table>'.chr(10);
+
+echo '<br /> Дальше вывод блюд с ценами но пока нет таблицы';
+
+echo '<br /> Дальше вывод услуг с ценами но пока нет таблицы';
+
+
+}
 
 function table($tname, $tcols, $thead, $tbody, $tsql, $tdate, $tbuts )
 {
@@ -108,7 +197,7 @@ if ( mysql_num_rows($rezult) > 0){
 	}
 
 
-echo '<table  class="tablesorter">'.chr(10);
+echo '<table class="tablesorter baseview">'.chr(10);
 
 echo $cols_out.$head_out.$body_out;
 
