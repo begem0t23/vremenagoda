@@ -95,7 +95,13 @@ fixedbotbar();
 	
 $(function(){
 
-
+ $(".report_1_2")
+  .tablesorter(
+  {
+      theme: 'blue',
+       widgets: []
+    });
+	
   $(".baseview")
   .tablesorter(
   {

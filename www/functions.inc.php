@@ -85,7 +85,83 @@ echo $cols_out.$head_out.$body_out;
 
 echo '</tbody></table>'.chr(10);
 
-echo '<br /> Дальше вывод блюд с ценами но пока нет таблицы';
+$body_out = '';
+
+
+// Дальше вывод блюд с ценами но пока нет таблицы';
+
+
+$cols_out = '<colgroup>
+<col width="250" />
+<col width="50" />
+<col width="50" />
+<col width="50" />
+<col width="50" />
+</colgroup>';
+
+$head_out = '<thead>
+<tr>
+<th>Наименование блюда</th>
+<th>Выход гр.</th>
+<th>Кол - во</th>
+<th>Цена руб.</th>
+<th>Итого руб.</th>
+</tr>
+</thead>';
+
+
+
+$tsql = "SELECT * 
+		 FROM menu_sections 
+		 ";
+
+$rezult = mysql_query($tsql);
+
+	
+	
+while ($rows = mysql_fetch_array($rezult)) {
+
+
+		$body_out = $body_out.'<tbody><tr><th  colspan="5">'.chr(10);			
+		$body_out = $body_out.$rows['section_name'].chr(10);
+		$body_out = $body_out.'</th></tr></tbody>'.chr(10);
+
+
+		
+		$tsql2 = "SELECT * 
+		 FROM dishes 
+		 WHERE menu_section = ".$rows['id'];
+
+		$rezult2 = mysql_query($tsql2);
+
+	
+		while ($rows2 = mysql_fetch_array($rezult2)) {
+
+				$body_out = $body_out.'<tbody><tr>'.chr(10);			
+		$body_out = $body_out.'<td>'.$rows2['title'].'</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows2['weight'].'</td>'.chr(10);
+		$body_out = $body_out.'<td>2</td>'.chr(10);
+		$body_out = $body_out.'<td>'.$rows2['price'].'</td>'.chr(10);
+		$body_out = $body_out.'<td>'.($rows2['price'] * 2).'</td>'.chr(10);
+		$body_out = $body_out.'</tr></tbody>'.chr(10);
+
+
+		}
+		
+}
+
+
+
+echo '<table id="report_client_param" class="tablesorter report_1_2">'.chr(10);
+
+echo $cols_out.$head_out.$body_out;
+
+echo '</table>'.chr(10);
+
+
+
+
+
 
 echo '<br /> Дальше вывод услуг с ценами но пока нет таблицы';
 
