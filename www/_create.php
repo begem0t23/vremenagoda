@@ -49,7 +49,7 @@ fixednavbar();
 		<div id=createform>
 		
 		</div>
-		<div id=spanpage1 style="visibility: hidden">
+		<div id=spanpage1 style="width: 90%; position: absolute; visibility: hidden">
 			<div class="input-group">
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
@@ -58,17 +58,59 @@ fixednavbar();
 			  </span>			  
 			</div>		
 		</div>
-		<div id=spanpage2 style="visibility: hidden">
-		2
+		<div id=spanpage2 style="width: 90%; position: absolute; visibility: hidden">
+			<div class="input-group">
+			  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+			  <input type="text" id="dateevent" class="form-control" placeholder="Дата проведения">
+			</div><br>		
+			<div class="input-group">
+			  <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+			  <input type="text" id="guestcount" class="form-control" placeholder="Количество гостей">
+			</div>		
 		</div>
-		<div id=spanpage3 style="visibility: hidden">
-		3
+		<div id=spanpage3 style="width: 90%; position: absolute; visibility: hidden">
+<ul class="list-group">
+<?php
+	$tsql = "select * from menu_types;";
+	$r_menutype = mysql_query($tsql);
+	if (mysql_num_rows($r_menutype)>0)
+	{	
+		while ($row_menutype = mysql_fetch_array($r_menutype))
+		{
+			echo '<li class="list-group-item">'.$row_menutype["type_name"].'</li>';
+		}
+	}
+?>
+</ul>
 		</div>
-		<div id=spanpage4 style="visibility: hidden">
-		4
+		<div id=spanpage4 style="width: 90%; position: absolute; visibility: hidden">
+  <div class="col-lg-6">
+    <div class="input-group">
+      <span class="input-group-addon">
+        <input type="checkbox">
+      </span>
+      <input type="text" value="Музыканты" class="form-control">
+    </div><!-- /input-group -->
+  </div><br><br>
+  <div class="col-lg-6">
+    <div class="input-group">
+      <span class="input-group-addon">
+        <input type="checkbox">
+      </span>
+      <input type="text" value="Циркачи" class="form-control">
+    </div><!-- /input-group -->
+  </div><br><br>
+  <div class="col-lg-6">
+    <div class="input-group">
+      <span class="input-group-addon">
+        <input type="checkbox">
+      </span>
+      <input type="text" value="Фокусники" class="form-control">
+    </div><!-- /input-group -->
+  </div>
 		</div>
-		<div id=spanpage5 style="visibility: hidden">
-		5
+		<div id=spanpage5 style="width: 90%; position: absolute; visibility: hidden">
+Здесь будет сообщение о том, что не заполнены обязательные поля, либо значения полей неверные, после этого можно будет нажать СОХРАНИТЬ
 		</div>
     </div>
 
@@ -82,9 +124,12 @@ fixedbotbar();
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="/jquery/jquery.min.js"></script>
+	<script src="/jquery/jquery.ui.datepicker-ru.js"></script>
 	<script src="/jquery/jquery-ui.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
 	<script>
+		x = $("#spanpage1").offset().left;
+		y = $("#spanpage1").offset().top;
 		function dosearchclient(t)
 		{
 			// Поиск клиента по имени, телефону, мылу в поле поиска на первой вкладке
@@ -145,6 +190,18 @@ fixedbotbar();
 			$("#pageleft").prop("class","enabled");		
 			$("#pageright").prop("class","enabled");		
 		}
+		function shownextstep()
+		{
+			//alert(1);
+			$("div[id*=spanpage]").css("visibility","hidden");
+			//alert(x);
+			//alert(y);
+			if (curpage<5) curpage = curpage + 1;
+			$("#spanpage"+curpage).css("left",x);
+			$("#spanpage"+curpage).css("top",y);			
+			$("#spanpage"+curpage).css("visibility","visible");
+			return true;
+		}
 		function docheckclientname()
 		{
 			//alert(1);
@@ -159,21 +216,25 @@ fixedbotbar();
 					//alert(data);
 					data = data.split("^");
 					$("#spanpage1").html("");
-					alert(data[0]);
-					spanpage1 = '<div><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
+					//alert(data[0]);
+					spanpage1 = '<div id=spanpage1 style="width: 90%; position: absolute;"><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 					if (data[0]=="OK"){
-						spanpage1+='<input type="text" readonly id=clientname vale="'+clientname+'" class="form-control">';						
+						spanpage1+='<input type="text" readonly id=clientname value="'+clientname+'" class="form-control">';						
 						spanpage1+='<input type="hidden" id=clientid vale="'+data[1]+'">';						
 					}
 					else {
-						spanpage1+='<input type="text" readonly id=clientname vale="'+clientname+'" class="form-control">';						
+						spanpage1+='<input type="text" readonly id=clientname value="'+clientname+'" class="form-control">';						
 						spanpage1+='<input type="hidden" id=clientid vale="0">';
 					}
-					spanpage1+='<br><input type="text" id=clientphone vale="'+data[2]+'" class="form-control" placeholder="Телефон">';
-					spanpage1+='<br><input type="email" id=clientemail vale="'+data[3]+'" class="form-control" placeholder="E-mail">';
-					spanpage1+='<br><input type="text" id=clientfrom vale="" class="form-control" placeholder="откуда пришёл">';
-					spanpage1+='<button class="btn btn-default" id=clientsave1 type="button">Далее</button>/div>';
-					$("#spanpage1").html(spanpage1);
+					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-phone-alt"></span></span>';
+					spanpage1+='<input required="required" type="text" id=clientphone value="'+data[2]+'" class="form-control required" placeholder="Телефон">';
+					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>';
+					spanpage1+='<input type="email" id=clientemail value="'+data[3]+'" class="form-control" placeholder="E-mail">';
+					spanpage1+='</div><br><input type="text" id=clientfrom value="" class="form-control required" placeholder="откуда пришёл">';
+					spanpage1+='<br><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>';
+					//alert(spanpage1);
+					$("#createform").html(spanpage1);
+					//alert($("#spanpage1").html());
 				});
 			}
 		}
@@ -182,6 +243,7 @@ fixedbotbar();
 			dosetrightpaginator();
 			doloadcreateform();
 			$("#clientadd").click(docheckclientname);
+			$('#dateevent').datepicker();
 		});
 		$("li[id*='page']").bind("click", function(){
 			// слушаем клики на элементы выбора страниц
@@ -208,8 +270,8 @@ fixedbotbar();
 		{
 			// вывод правильного содержания вкладки в зависимости от curpage
 			$("div[id*=spanpage]").css("visibility","hidden");
-			$("#createform").html($("#spanpage"+curpage).html());
-			//$("#spanpage"+curpage).css("visibility","visible");
+			//$("#createform").html($("#spanpage"+curpage).html());
+			$("#spanpage"+curpage).css("visibility","visible");
 		}
 	</script>
   </body>
