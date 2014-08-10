@@ -18,7 +18,8 @@
     <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
-	
+	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
+		
   </head>
 
   <body>
@@ -40,16 +41,15 @@ fixednavbar();
 		<ul class="pagination pagination-lg">
 		  <li id=pageleft><a href="#">&laquo;</a></li>
 		  <li id=page1><a href="#">1: Клиент</a></li>
-		  <li id=page2><a href="#">2: Условия</a></li>
-		  <li id=page3><a href="#">3: Блюда</a></li>
-		  <li id=page4><a href="#">4: Услуги</a></li>
-		  <li id=page5><a href="#">5: Сохранение</a></li>
+		  <li id=page2><a href="#">2: Блюда</a></li>
+		  <li id=page3><a href="#">3: Услуги</a></li>
+		  <li id=page4><a href="#">4: Сохранение</a></li>
 		  <li id=pageright><a href="#">&raquo;</a></li>
 		</ul>	
-		<div id=createform>
+		<div id=createform style="width: 400px">
 		
 		</div>
-		<div id=spanpage1 style="width: 90%; position: absolute; visibility: hidden">
+		<div id=spanpage1 style="visibility: hidden">
 			<div class="input-group">
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
@@ -58,32 +58,62 @@ fixednavbar();
 			  </span>			  
 			</div>		
 		</div>
-		<div id=spanpage2 style="width: 90%; position: absolute; visibility: hidden">
-			<div class="input-group">
-			  <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-			  <input type="text" id="dateevent" class="form-control" placeholder="Дата проведения">
-			</div><br>		
-			<div class="input-group">
-			  <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-			  <input type="text" id="guestcount" class="form-control" placeholder="Количество гостей">
-			</div>		
-		</div>
-		<div id=spanpage3 style="width: 90%; position: absolute; visibility: hidden">
-<ul class="list-group">
-<?php
+		<div id=spanpage2 style="visibility: hidden">
+<?php		
 	$tsql = "select * from menu_types;";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
 	{	
+?>
+<div id="tabs" style="max-width: 500px">
+    <ul>
+<?php
+		$index=0;
 		while ($row_menutype = mysql_fetch_array($r_menutype))
 		{
-			echo '<li class="list-group-item">'.$row_menutype["type_name"].'</li>';
+			echo '<li><a href="#menu-'.$row_menutype["id"].'" onClick="showST('.$index.')">'.$row_menutype["type_name"].'</a></li>';
+			$index++;
 		}
+?>
+    </ul>
+<?php		
 	}
 ?>
-</ul>
+<?php		
+	$tsql = "select * from menu_types;";
+	$r_menutype = mysql_query($tsql);
+	if (mysql_num_rows($r_menutype)>0)
+	{	
+?>
+<?php
+		while ($row_menutype = mysql_fetch_array($r_menutype))
+		{
+			echo '<div id="menu-'.$row_menutype["id"].'">';
+			//$row_menutype["type_name"]
+			$tsql2 = "select * from menu_sections where menu_type_id=".$row_menutype["id"].";";
+			$r_menutype2 = mysql_query($tsql2);
+			if (mysql_num_rows($r_menutype2)>0)
+			{	
+				//echo '<ul class="list-group">';
+				while ($row_menutype2 = mysql_fetch_array($r_menutype2))
+				{
+					//echo "<li>" . $row_menutype2["section_name"] . "</li>";
+					echo $row_menutype2["section_name"] . "<br>";
+				}
+				//echo '</ul>';
+			}
+			else {
+				echo "меню не заполнено";
+			}
+			echo '</div>';
+		}
+?>
+<?php		
+	}
+?>		
+	</div>		
 		</div>
-		<div id=spanpage4 style="width: 90%; position: absolute; visibility: hidden">
+		<div id=spanpage3 style="visibility: hidden">
   <div class="col-lg-6">
     <div class="input-group">
       <span class="input-group-addon">
@@ -91,7 +121,7 @@ fixednavbar();
       </span>
       <input type="text" value="Музыканты" class="form-control">
     </div><!-- /input-group -->
-  </div><br><br>
+  </div><br>
   <div class="col-lg-6">
     <div class="input-group">
       <span class="input-group-addon">
@@ -99,7 +129,7 @@ fixednavbar();
       </span>
       <input type="text" value="Циркачи" class="form-control">
     </div><!-- /input-group -->
-  </div><br><br>
+  </div><br>
   <div class="col-lg-6">
     <div class="input-group">
       <span class="input-group-addon">
@@ -109,14 +139,14 @@ fixednavbar();
     </div><!-- /input-group -->
   </div>
 		</div>
-		<div id=spanpage5 style="width: 90%; position: absolute; visibility: hidden">
+		<div id=spanpage4 style="visibility: hidden">
 Здесь будет сообщение о том, что не заполнены обязательные поля, либо значения полей неверные, после этого можно будет нажать СОХРАНИТЬ
 		</div>
     </div>
 
 <?php
 
-fixedbotbar();
+//fixedbotbar();
 
 ?>
 
@@ -127,9 +157,17 @@ fixedbotbar();
 	<script src="/jquery/jquery.ui.datepicker-ru.js"></script>
 	<script src="/jquery/jquery-ui.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/jquery/validator.js"></script>
+	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script>
-		x = $("#spanpage1").offset().left;
-		y = $("#spanpage1").offset().top;
+		//x = $("#spanpage1").offset().left;
+		//y = $("#spanpage1").offset().top;
+		
+		function showST(tab_index){
+			event.preventDefault();
+			$('#tabs').smartTab('showTab',tab_index);
+		}
+		
 		function dosearchclient(t)
 		{
 			// Поиск клиента по имени, телефону, мылу в поле поиска на первой вкладке
@@ -145,7 +183,7 @@ fixedbotbar();
 				$(t).autocomplete({source: data, select: function (a, b) {
 					//$(this).val(b.item.value);
 					//alert(b.item.value);
-					$("#clientadd").html("Использовать");
+					$("#clientadd").html("Выбрать");
 				}});
 			});
 		}		
@@ -168,10 +206,7 @@ fixedbotbar();
 				break;
 				case 4:
 					$("#page4").prop("class","disabled");				
-				break;
-				case 5:
 					$("#pageright").prop("class","disabled");
-					$("#page5").prop("class","disabled");				
 				break;
 				default:
 					$("#pageleft").prop("class","disabled");
@@ -181,7 +216,7 @@ fixedbotbar();
 		function erasedisablefromli()
 		{
 			// Стирание дисэблед статуса для всех кнопок страниц, чтобы потом поставить правильный
-			for (i=1;i<=5;i++)
+			for (i=1;i<=4;i++)
 			{
 				//alert(curpage);
 				//if (i!=curpage) 
@@ -193,13 +228,15 @@ fixedbotbar();
 		function shownextstep()
 		{
 			//alert(1);
-			$("div[id*=spanpage]").css("visibility","hidden");
+			//$("div[id*=spanpage]").css("visibility","hidden");
 			//alert(x);
 			//alert(y);
-			if (curpage<5) curpage = curpage + 1;
-			$("#spanpage"+curpage).css("left",x);
-			$("#spanpage"+curpage).css("top",y);			
-			$("#spanpage"+curpage).css("visibility","visible");
+			if (curpage<4) curpage = curpage + 1;
+			//$("#spanpage"+curpage).css("left",x);
+			//$("#spanpage"+curpage).css("top",y);	
+			$("#createform").html($("#spanpage"+curpage).html());			
+			//$("#spanpage"+curpage).css("visibility","visible");
+			$("#page"+curpage).click();
 			return true;
 		}
 		function docheckclientname()
@@ -217,7 +254,8 @@ fixedbotbar();
 					data = data.split("^");
 					$("#spanpage1").html("");
 					//alert(data[0]);
-					spanpage1 = '<div id=spanpage1 style="width: 90%; position: absolute;"><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
+					spanpage1 = '<form role="form" data-toggle="validator">';
+					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 					if (data[0]=="OK"){
 						spanpage1+='<input type="text" readonly id=clientname value="'+clientname+'" class="form-control">';						
 						spanpage1+='<input type="hidden" id=clientid vale="'+data[1]+'">';						
@@ -230,10 +268,21 @@ fixedbotbar();
 					spanpage1+='<input required="required" type="text" id=clientphone value="'+data[2]+'" class="form-control required" placeholder="Телефон">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>';
 					spanpage1+='<input type="email" id=clientemail value="'+data[3]+'" class="form-control" placeholder="E-mail">';
-					spanpage1+='</div><br><input type="text" id=clientfrom value="" class="form-control required" placeholder="откуда пришёл">';
-					spanpage1+='<br><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>';
+
+					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
+					spanpage1+='<input type="text" id=clientfrom value="" class="form-control required" placeholder="откуда пришёл"></div><br>';
+
+					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
+					spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" class="form-control" placeholder="Дата проведения">';
+					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
+					spanpage1+='<input type="number" id="guestcount" class="form-control" placeholder="Количество гостей">';
+					spanpage1+='</div><'+'script>$("#dateevent").datepicker();</'+'script><br>';
+					
+					spanpage1+='<div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>';
+					spanpage1+='</form>';
 					//alert(spanpage1);
-					$("#createform").html(spanpage1);
+					$("#spanpage1").html(spanpage1);
+					$("#createform").html($("#spanpage"+curpage).html());
 					//alert($("#spanpage1").html());
 				});
 			}
@@ -243,7 +292,7 @@ fixedbotbar();
 			dosetrightpaginator();
 			doloadcreateform();
 			$("#clientadd").click(docheckclientname);
-			$('#dateevent').datepicker();
+			$('#tabs').smartTab({selected: 0});
 		});
 		$("li[id*='page']").bind("click", function(){
 			// слушаем клики на элементы выбора страниц
@@ -252,7 +301,7 @@ fixedbotbar();
 				if (curpage>1) {curpage--; dosetrightpaginator();}
 			}
 			else if (id=="pageright") {
-				if (curpage<5) {curpage++; dosetrightpaginator();}
+				if (curpage<4) {curpage++; dosetrightpaginator();}
 			}
 			else {
 				id = id.substr(4);
@@ -269,9 +318,9 @@ fixedbotbar();
 		function doloadcreateform()
 		{
 			// вывод правильного содержания вкладки в зависимости от curpage
-			$("div[id*=spanpage]").css("visibility","hidden");
-			//$("#createform").html($("#spanpage"+curpage).html());
-			$("#spanpage"+curpage).css("visibility","visible");
+			//$("div[id*=spanpage]").css("visibility","hidden");
+			$("#createform").html($("#spanpage"+curpage).html());
+			//$("#spanpage"+curpage).css("visibility","visible");
 		}
 	</script>
   </body>
