@@ -280,7 +280,22 @@ fixednavbar();
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 					spanpage1+='<input type="number" id="guestcount" class="form-control" placeholder="Количество гостей">';
 					spanpage1+='</div>';
-					//spanpage1+='<'+'script></'+'script>';
+
+					spanpage1+='<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
+					spanpage1+='<?php
+					$tsql = "select * from hall;";
+					$r_hall = mysql_query($tsql);
+					if (mysql_num_rows($r_hall)>0)
+					{	
+						echo '<select id="hall" class="form-control">' . "";
+						while ($row_hall = mysql_fetch_array($r_hall))
+						{	
+							echo '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
+						}
+						echo '</select>' . "";
+					}
+					?>';
+					spanpage1+='</div><br>';
 					
 					spanpage1+='<br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>';
 					spanpage1+='</form>';
