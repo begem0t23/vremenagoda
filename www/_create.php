@@ -248,7 +248,9 @@ fixednavbar();
 			if (clientname!="") {
 				//alert(1);
 				$.post("_checkexistclient.php", {s:clientname, Rand: "<?php echo rand(); ?>"},
-				   function(data){})
+				   function(){
+					// нет
+				   })
 				   .done(function(data) {
 					//alert(data);
 					data = data.split("^");
@@ -273,12 +275,14 @@ fixednavbar();
 					spanpage1+='<input type="text" id=clientfrom value="" class="form-control required" placeholder="откуда пришёл"></div><br>';
 
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
-					spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" class="form-control" placeholder="Дата проведения">';
+					//spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
+					spanpage1+='<input maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control" placeholder="Дата проведения">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 					spanpage1+='<input type="number" id="guestcount" class="form-control" placeholder="Количество гостей">';
-					spanpage1+='</div><'+'script>$("#dateevent").datepicker();</'+'script><br>';
+					spanpage1+='</div>';
+					//spanpage1+='<'+'script></'+'script>';
 					
-					spanpage1+='<div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>';
+					spanpage1+='<br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>';
 					spanpage1+='</form>';
 					//alert(spanpage1);
 					$("#spanpage1").html(spanpage1);
@@ -291,6 +295,7 @@ fixednavbar();
 			// когда страница загружена
 			dosetrightpaginator();
 			doloadcreateform();
+			
 			$("#clientadd").click(docheckclientname);
 			$('#tabs').smartTab({selected: 0});
 		});
