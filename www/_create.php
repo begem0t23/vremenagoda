@@ -70,6 +70,7 @@ fixednavbar();
 			</div>		
 		</div>
 		<div id=spanpage2 style="visibility: hidden">
+		<form id=frm2 role="form" data-toggle="validator">
 <?php		
 	$tsql = "select * from menu_types;";
 	$r_menutype = mysql_query($tsql);
@@ -122,10 +123,13 @@ fixednavbar();
 <?php		
 	}
 ?>		
+	
 	</div>		
 		<br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
+		</form>
 		</div>
 		<div id=spanpage3 style="visibility: hidden">
+		<form id=frm3 role="form" data-toggle="validator">
   <div class="col-lg-6">
     <div class="input-group">
       <span class="input-group-addon">
@@ -151,8 +155,10 @@ fixednavbar();
     </div><!-- /input-group -->
   </div>
 		<br><br><br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
+		</form>
 		</div>
 		<div id=spanpage4 style="visibility: hidden">
+		<form id=frm4 role="form" data-toggle="validator">
 Здесь будет сообщение о том, что не заполнены обязательные поля, либо значения полей неверные, после этого можно будет нажать СОХРАНИТЬ
 
 <div class="input-group">
@@ -161,6 +167,7 @@ fixednavbar();
   <span class="input-group-addon">.00</span>
 </div>
 		<br><div class="input-group"><button class="btn btn-default" onClick="dosaveorder()" type="button">Сохранить</button></div>
+		</form>
 		</div>
     </div>
 
@@ -178,6 +185,7 @@ fixednavbar();
 	<script src="/jquery/jquery-ui.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/jquery/validator.js"></script>
+	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
@@ -203,7 +211,7 @@ fixednavbar();
 			//$("#clientadd").html("Создать");
 			var s=$(t).val();
 			if (s.length<2) return false;
-			$.post("_dosearchclientautocomplete.php", {s:s, Rand: "<?php echo rand(); ?>"},
+			$.get("_dosearchclientautocomplete.php", {s:s, Rand: "<?php echo rand(); ?>"},
 			   function(data){})
 			   .done(function(data) {
 				//alert(data);
@@ -260,6 +268,13 @@ fixednavbar();
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			//alert(x);
 			//alert(y);
+
+			//$("#spanpage"+curpage).html("");
+			//$("#createform").clone().appendTo( $("#spanpage"+curpage) );
+			
+			//$curpage = $("#createform").clone();
+			//$("#spanpage"+curpage).html($curpage);
+			setvaluesincookie();
 			if (curpage<4) curpage = curpage + 1;
 			//$("#spanpage"+curpage).css("left",x);
 			//$("#spanpage"+curpage).css("top",y);	
@@ -276,16 +291,17 @@ fixednavbar();
 			clientname = $("#clientsearch").val();
 			if (clientname!="") {
 				//alert(1);
-				$.post("_checkexistclient.php", {s:clientname, Rand: "<?php echo rand(); ?>"},
+				$.get("_checkexistclient.php", {s:clientname, Rand: "<?php echo rand(); ?>"},
 				   function(){
 					// нет
 				   })
 				   .done(function(data) {
 					//alert(data);
+					erasevaluesincookie();
 					data = data.split("^");
 					$("#spanpage1").html("");
 					//alert(data[0]);
-					spanpage1 = '<form role="form" data-toggle="validator">';
+					spanpage1 = '<form id=frm1 role="form" data-toggle="validator">';
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 					if (typeof data[1] == 'undefined') data[1]='';
 					if (typeof data[2] == 'undefined') data[2]='';
@@ -305,7 +321,7 @@ fixednavbar();
 					spanpage1+='<input type="email" id=clientemail value="'+data[3]+'" class="form-control" placeholder="E-mail">';
 
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
-					spanpage1+='<input type="text" id=clientfrom value="'+data[4]+'" class="form-control required" placeholder="откуда пришёл"></div><br>';
+					spanpage1+='<input type="text" id=clientfrom onkeyup="" value="'+data[4]+'" class="form-control required" placeholder="откуда пришёл"></div><br>';
 
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
 					//spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
@@ -340,17 +356,61 @@ fixednavbar();
 				});
 			}
 		}
+		function erasevaluesincookie()
+		{
+			$.removeCookie("clientfrom");
+			$.removeCookie("clientphone");
+			$.removeCookie("clientemail");
+			$.removeCookie("dateevent");
+			$.removeCookie("guestcount");
+			$.removeCookie("hall");
+		}		
+		function setvaluesincookie()
+		{
+			//alert($("body #clientfrom").val());
+			//alert(curpage);
+			if (curpage==1)
+			{
+				$.cookie("clientfrom", $("body #clientfrom").val(),{ expiry: 0});
+				$.cookie("clientphone", $("body #clientphone").val(),{ expiry: 0});
+				$.cookie("clientemail", $("body #clientemail").val(),{ expiry: 0});
+				$.cookie("dateevent", $("body #dateevent").val(),{ expiry: 0});
+				$.cookie("guestcount", $("body #guestcount").val(),{ expiry: 0});
+				$.cookie("hall", $("body #hall").val(),{ expiry: 0});
+			}
+		}
+		function readvaluesincookie()
+		{
+			//alert($("body #clientfrom").val());
+			//alert(curpage);
+			if (curpage==1)
+			{
+				$("body #clientfrom").val($.cookie("clientfrom"));
+				$("body #clientphone").val($.cookie("clientphone"));
+				$("body #clientemail").val($.cookie("clientemail"));
+				$("body #dateevent").val($.cookie("dateevent"));
+				$("body #guestcount").val($.cookie("guestcount"));
+				$("body #hall").val($.cookie("hall"));
+			}
+		}		
+		
 		$(document).ready(function(){
 			// когда страница загружена
 			dosetrightpaginator();
 			doloadcreateform();
-			
+			erasevaluesincookie();
 			$("#clientadd").click(docheckclientname);
 			$('#tabs').smartTab({selected: 0});
 		});
 		$("li[id*='page']").bind("click", function(){
 			// слушаем клики на элементы выбора страниц
 			id = $(this).prop("id");
+			
+			//$("#spanpage"+curpage).html("");
+			//$("#createform").clone().appendTo( $("#spanpage"+curpage) );
+			
+			setvaluesincookie();
+			
 			if (id=="pageleft") {
 				if (curpage>1) {curpage--; dosetrightpaginator();}
 			}
@@ -374,10 +434,12 @@ fixednavbar();
 			// вывод правильного содержания вкладки в зависимости от curpage
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());
+			readvaluesincookie();
 			//$("#spanpage"+curpage).css("visibility","visible");
 		}
 		function dosaveorder()
 		{
+			//setvaluesincookie();
 			if ($("#clientname").val()!="") 
 			{
 				if ($("#clientphone").val()!="") 
@@ -399,7 +461,15 @@ fixednavbar();
 						// нет
 						})
 						.done(function(data) {
-							
+							if (data=="OK")
+							{
+								var nn = noty({text: 'Сохранено', type: 'information', timeout:5000, onClick: function(){delete nn;}});							
+								docheckclientname();
+							}
+							else
+							{
+								var nn = noty({text: 'Ошибка ' + data, type: 'error', timeout:5000, onClick: function(){delete nn;}});														
+							}
 						});
 					}
 					else

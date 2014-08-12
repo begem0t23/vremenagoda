@@ -333,9 +333,20 @@ function fixednavbar()
             <li <?php
 			if ($qq=="create") echo 'class="active"';
 			?>><a href="?create">Создать заказ</a></li>
-            <li <?php
-			if ($qq=="profile") echo 'class="active"';
-			?>><a href="?profile">Мои настройки</a></li>
+            <li class="dropdown<?php
+			if ($qq=="profile") echo ' active"';
+			?>">
+              <a href="?settings" class="dropdown-toggle" data-toggle="dropdown">Настройки<span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Меню блюд</a></li>
+                <li><a href="#">Меню услуг</a></li>
+                <li><a href="#">Другие настройки</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Учетная запись</li>
+                <li><a href="#">Мои настройки</a></li>
+                <li><a href="#">Другие настройки</a></li>
+              </ul>
+            </li>			
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Отчеты<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">

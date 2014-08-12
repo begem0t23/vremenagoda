@@ -11,25 +11,24 @@ require_once("config.inc.php");
 require_once("functions.inc.php");
 
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
-$s = $_GET["s"];
-//$s = $_GET["s"];
-//$s = iconv('UTF-8','',$s);
-if ($s)
+
+$cn = $_POST["cn"];
+
+if ($cn)
 {
-	$tsql = "select * from clients where name like '%".mysql_escape_string($s)."%'";
-	$tsql .= " union select * from clients where phone like '%".mysql_escape_string($s)."%'";
-	$tsql .= " union select * from clients where email like '%".mysql_escape_string($s)."%';";
+	$tsql = "select * from clients where name like '".mysql_escape_string($cn)."';";
 	//echo($tsql);
-	$r_user = mysql_query($tsql);
+	$r_client = mysql_query($tsql);
 	//echo mysql_num_rows($r_user);
-	if (mysql_num_rows($r_user)>0)
+	if (mysql_num_rows($r_client)>0)
 	{
-		//echo 1;
-		while ($row = mysql_fetch_array($r_user))
-		{
-			//echo 2;
-			echo $row["name"] . "\n";
-		}
+		$row_client = mysql_fetch_array($r_client)
+		$tsql = "update clients set phone='".mysql_real_escape_string($_POST["cp"])."',otkuda='".mysql_real_escape_string($_POST["cp"])."',email='".mysql_real_escape_string($_POST["cp"])."' where id=". $row_client["id"];
+		echo "OK";
+	}
+	else
+	{
+		echo "ERR:client not found";
 	}
 }
 ?>
