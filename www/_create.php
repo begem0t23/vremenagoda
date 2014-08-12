@@ -19,7 +19,18 @@
     <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
 	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
-		
+
+<style>
+.rouble {
+  position: relative; }
+
+.rouble:before {
+  display: block;
+  content: "–";
+  position: absolute;
+  top: 0.15em; }
+</style>  
+
   </head>
 
   <body>
@@ -112,6 +123,7 @@ fixednavbar();
 	}
 ?>		
 	</div>		
+		<br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</div>
 		<div id=spanpage3 style="visibility: hidden">
   <div class="col-lg-6">
@@ -138,9 +150,17 @@ fixednavbar();
       <input type="text" value="Фокусники" class="form-control">
     </div><!-- /input-group -->
   </div>
+		<br><br><br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</div>
 		<div id=spanpage4 style="visibility: hidden">
 Здесь будет сообщение о том, что не заполнены обязательные поля, либо значения полей неверные, после этого можно будет нажать СОХРАНИТЬ
+
+<div class="input-group">
+  <span class="input-group-addon"><span class=rouble>Р</span></span>
+  <input type="text" id=avans placeholder="аванс" class="form-control">
+  <span class="input-group-addon">.00</span>
+</div>
+		<br><div class="input-group"><button class="btn btn-default" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</div>
     </div>
 
@@ -159,6 +179,15 @@ fixednavbar();
     <script src="/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/jquery/validator.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
+
+	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
+	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/bottom.js"></script>
+	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/bottomCenter.js"></script>
+	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/top.js"></script>
+	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/center.js"></script>
+	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/inline.js"></script>
+	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/themes/default.js"></script>
+	
 	<script>
 		//x = $("#spanpage1").offset().left;
 		//y = $("#spanpage1").offset().top;
@@ -258,6 +287,10 @@ fixednavbar();
 					//alert(data[0]);
 					spanpage1 = '<form role="form" data-toggle="validator">';
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
+					if (typeof data[1] == 'undefined') data[1]='';
+					if (typeof data[2] == 'undefined') data[2]='';
+					if (typeof data[3] == 'undefined') data[3]='';
+					if (typeof data[4] == 'undefined') data[4]='';
 					if (data[0]=="OK"){
 						spanpage1+='<input type="text" readonly id=clientname value="'+clientname+'" class="form-control">';						
 						spanpage1+='<input type="hidden" id=clientid vale="'+data[1]+'">';						
@@ -272,13 +305,13 @@ fixednavbar();
 					spanpage1+='<input type="email" id=clientemail value="'+data[3]+'" class="form-control" placeholder="E-mail">';
 
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
-					spanpage1+='<input type="text" id=clientfrom value="" class="form-control required" placeholder="откуда пришёл"></div><br>';
+					spanpage1+='<input type="text" id=clientfrom value="'+data[4]+'" class="form-control required" placeholder="откуда пришёл"></div><br>';
 
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
 					//spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
-					spanpage1+='<input maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control" placeholder="Дата проведения">';
+					spanpage1+='<input required="required" pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
-					spanpage1+='<input type="number" id="guestcount" class="form-control" placeholder="Количество гостей">';
+					spanpage1+='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей">';
 					spanpage1+='</div>';
 
 					spanpage1+='<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
@@ -288,6 +321,7 @@ fixednavbar();
 					if (mysql_num_rows($r_hall)>0)
 					{	
 						echo '<select id="hall" class="form-control">' . "";
+						echo '<option value="0">выберите зал</option>' . "";
 						while ($row_hall = mysql_fetch_array($r_hall))
 						{	
 							echo '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
@@ -341,6 +375,47 @@ fixednavbar();
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());
 			//$("#spanpage"+curpage).css("visibility","visible");
+		}
+		function dosaveorder()
+		{
+			if ($("#clientname").val()!="") 
+			{
+				if ($("#clientphone").val()!="") 
+				{
+					if ($("#clientfrom").val()!="") 
+					{
+				
+						var additional_pars = new Object();
+						additional_pars["cn"] = $("#clientname").val();	
+						additional_pars["cp"] = $("#clientphone").val();	
+						additional_pars["cf"] = $("#clientfrom").val();	
+						additional_pars["ce"] = $("#clientemail").val();	
+						additional_pars["de"] = $("#dateevent").val();	
+						additional_pars["gc"] = $("#guestcount").val();	
+						additional_pars["hh"] = $("#hall").val();	
+						additional_pars["rand"] = "<?php echo rand(); ?>";
+						$.post("_dosaveorder.php", additional_pars,
+						function(){
+						// нет
+						})
+						.done(function(data) {
+							
+						});
+					}
+					else
+					{
+						var nn = noty({text: 'Откуда пришел поле не может быть пустым', type: 'error', timeout:5000, onClick: function(){delete nn;}});
+					}
+				}
+				else
+				{
+					var nn = noty({text: 'Номер телефона клиента не может быть пустым', type: 'error', timeout:5000, onClick: function(){delete nn;}});
+				}
+			}
+			else
+			{
+				var nn = noty({text: 'Название клиента не может быть пустым', type: 'error', timeout:5000, onClick: function(){delete nn;}});
+			}
 		}
 	</script>
   </body>
