@@ -138,7 +138,7 @@ fixednavbar();
 					{	
 						while ($row_menutype3 = mysql_fetch_array($r_menutype3))
 						{
-							echo '<td>'.$row_menutype3["title"].'</td><td>'.$row_menutype3["weight"].'</td><td>'.$row_menutype3["price"].'</td><td><input type="text" class="quant" size="2"></td><td><input type="text" class="note"></td><td><button type="button" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
+							echo '<td><span id=dishname'.$row_menutype3["id"].'>'.$row_menutype3["title"].'</span></td><td>'.$row_menutype3["weight"].'</td><td>'.$row_menutype3["price"].'</td><td><input type="text" id="quant'.$row_menutype3["id"].'" class="quant" size="2"></td><td><input id="note'.$row_menutype3["id"].'" type="text" class="note"></td><td><button type="button" name="add" id="adddish'.$row_menutype3["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 						}
 					}
 				echo '</tr>';
@@ -221,6 +221,7 @@ fixednavbar();
 	<script src="/jquery/validator.js"></script>
 	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
+	<script src="/jquery/jquery.json-2.4.js"></script>
 
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/bottom.js"></script>
@@ -422,6 +423,9 @@ fixednavbar();
 				$.cookie("guestcount", $("body #guestcount").val(),{ expiry: 0});
 				$.cookie("hall", $("body #hall").val(),{ expiry: 0});
 			}
+			if (curpage==2)
+			{
+			}
 		}
 		function readvaluesincookie()
 		{
@@ -442,19 +446,58 @@ fixednavbar();
 			// когда страница загружена
 			
 			$(".order")
-  .tablesorter(
-  {
-      theme: 'blue',
-       widgets: ['zebra']
-    });
+			.tablesorter(
+			{
+				theme: 'blue',
+				widgets: ['zebra']
+			});
 	
 	
 			dosetrightpaginator();
 			doloadcreateform();
 			erasevaluesincookie();
 			$("#clientadd").click(docheckclientname);
-			$('#tabs').smartTab({selected: 0});
+			$('#tabs').smartTab({selected: 0});		
+			
+			$( document ).on( "click", "button[name=add]", function() {
+				id = $(this).attr("id");
+				id = id.substr(7);
+				if ($(this).html()=="Удалить")
+				{
+					$(this).html("Добавить");				
+					$("#dishname"+id).css("color", "");
+					var dishall = $.parseJSON(dishes);
+					delete dishall[id];
+					dishes = $.toJSON(dishall);
+					$.cookie("dishes", dishes,{ expiry: 0});					
+				}
+				else
+				{
+					$(this).html("Удалить");
+					$("#dishname"+id).css("color", "green");
+					var quant 	= $("#quant"+id).val();
+					var note 	= $("#note"+id).val();
+					var dishes="";
+					if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
+					if (dishes)
+					{
+						var dishall = $.parseJSON(dishes);
+					}
+					else
+					{
+						var dishall = {};
+					}
+					var element = {};
+					element = ({id:id, quant:quant, note:note});
+					dishall[id] = element ;
+					dishes = $.toJSON(dishall);
+					$.cookie("dishes", dishes,{ expiry: 0});
+				}
+			});			
+			
 		});
+		
+	
 		$("li[id*='page']").bind("click", function(){
 			// слушаем клики на элементы выбора страниц
 			id = $(this).prop("id");
