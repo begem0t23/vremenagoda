@@ -32,10 +32,10 @@ fixednavbar();
 		"Новые заказы", //заголовок
 		"50,100,200,200,100",	//ширина колонок
 		"Номер Заказа,Дата Банкета,Клиент,Статус Заказа",	//заголовки
-		"id,eventdate,name,stval",	//поля
-		"SELECT o.id, o.eventdate, o.status, u.realname, c.name, s.name stval 
-		 FROM orders o, users u, clients c, status s 
-		 WHERE o.status = 1 AND  o.creatorid = u.id AND o.clientid = c.id AND o.status = s.id", //sql кроме даты
+		"id,eventdate,name,orderstatus",	//поля
+		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name
+		 FROM orders o, users u, clients c 
+		 WHERE o.status = 1 AND  o.creatorid = u.id AND o.clientid = c.id ", //sql кроме даты
 		"", //период (поле,начало,конец)
 		"view,Просмотр заказа,Просмотр" //кнопки
 		);
@@ -44,11 +44,11 @@ fixednavbar();
 		"Заказы ".$_SESSION["curusername"], //заголовок
 		"50,100,200,200,100",	//ширина колонок
 		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа",	//заголовки
-		"id,realname,eventdate,name,stval",	//поля
-		"SELECT o.id, o.eventdate, o.status, u.realname, c.name, s.name stval 
-		 FROM orders o, users u, clients c, status s 
-		 WHERE o.status > 1 AND o.status !=8 AND o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id AND o.status = s.id", //sql кроме даты
-		"o.eventdate,0,5", //период (поле,начало,конец)
+		"id,realname,eventdate,name,orderstatus",	//поля
+		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name 
+		 FROM orders o, users u, clients c 
+		 WHERE o.status > 1 AND o.status !=8 AND o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
+		"o.eventdate,0,35", //период (поле,начало,конец)
 		"view,Просмотр заказа,Просмотр;edit,Редактирование заказа,Редактировать;events,Просмотр мероприятий,Мероприятия"  //кнопки
 		);
 		
@@ -56,11 +56,11 @@ fixednavbar();
 		"Заказы других менеджеров", //заголовок
 		"50,100,200,200,100",	//ширина колонок
 		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа",	//заголовки
-		"id,realname,eventdate,name,stval",	//поля
-		"SELECT o.id, o.eventdate, o.status, u.realname, c.name, s.name stval
-		 FROM orders o, users u, clients c, status s 
-		 WHERE o.status > 1 AND o.status !=8 AND o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id AND o.status = s.id", //sql кроме даты 
-		"o.eventdate,0,5", //период (поле,начало,конец)
+		"id,realname,eventdate,name,orderstatus",	//поля
+		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name
+		 FROM orders o, users u, clients c 
+		 WHERE o.status > 1 AND o.status !=8 AND o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
+		"o.eventdate,0,35", //период (поле,начало,конец)
 		"view,Просмотр заказа,Просмотр;edit,Редактирование заказа,Редактировать;events,Просмотр мероприятий,Мероприятия" //кнопки
 
 		);

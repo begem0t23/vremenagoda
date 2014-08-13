@@ -72,12 +72,12 @@ fixednavbar();
 		<div id=spanpage2 style="visibility: hidden">
 		<form id=frm2 role="form" data-toggle="validator">
 <?php		
-	$tsql = "select * from menu_types;";
+	$tsql = "select * from menus;";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
 	{	
 ?>
-<div id="tabs" style="max-width: 500px">
+<div id="tabs" style="min-width: 600px">
     <ul>
 <?php
 		$index=0;
@@ -92,26 +92,60 @@ fixednavbar();
 	}
 ?>
 <?php		
-	$tsql = "select * from menu_types;";
+	$tsql = "select * from menus;";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
 	{	
 ?>
 <?php
-		while ($row_menutype = mysql_fetch_array($r_menutype))
+			while ($row_menutype = mysql_fetch_array($r_menutype))
 		{
 			echo '<div id="menu-'.$row_menutype["id"].'">';
 			//$row_menutype["type_name"]
-			$tsql2 = "select * from menu_sections where menu_type_id=".$row_menutype["id"].";";
+			$tsql2 = "select * from dishes_in_menus where menuid=".$row_menutype["id"].";";
 			$r_menutype2 = mysql_query($tsql2);
 			if (mysql_num_rows($r_menutype2)>0)
 			{	
 				//echo '<ul class="list-group">';
+				echo '<table class = "tablesorter order">';
+				echo 	'<colgroup>
+						<col width="250" />
+						<col width="50" />
+						<col width="50" />
+						<col width="20" />
+						<col width="50" />
+						<col width="150" />
+						</colgroup>';
+
+				echo  '<thead>
+							<tr>
+							<th>Название</th>
+							<th>Порции</th>
+							<th>Цена</th>
+							<th>Кол-во</th>
+							<th>Комментарий</th>
+							<th>Действие</th>
+							</tr>
+							</thead>';
 				while ($row_menutype2 = mysql_fetch_array($r_menutype2))
 				{
-					//echo "<li>" . $row_menutype2["section_name"] . "</li>";
-					echo $row_menutype2["section_name"] . "<br>";
+				echo '<tr>';
+
+					$tsql3 = "select * from dishes where id=".$row_menutype2["dishid"].";";
+					$r_menutype3 = mysql_query($tsql3);
+					
+					if (mysql_num_rows($r_menutype3)>0)
+					{	
+						while ($row_menutype3 = mysql_fetch_array($r_menutype3))
+						{
+							echo '<td>'.$row_menutype3["title"].'</td><td>'.$row_menutype3["weight"].'</td><td>'.$row_menutype3["price"].'</td><td><input type="text" class="quant" size="2"></td><td><input type="text" class="note"></td><td><button type="button" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
+						}
+					}
+				echo '</tr>';
+					
 				}
+				echo '</table>';
+				
 				//echo '</ul>';
 			}
 			else {
@@ -196,6 +230,16 @@ fixednavbar();
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/inline.js"></script>
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/themes/default.js"></script>
 	
+	<!-- TableSorter core JavaScript ================================================== -->
+		<!-- choose a theme file -->
+<link rel="stylesheet" href="/css/theme.blue.css">
+
+<!-- load jQuery and tablesorter scripts -->
+<script type="text/javascript" src="/jquery/jquery.tablesorter.js"></script>
+<!-- tablesorter widgets (optional) -->
+<script type="text/javascript" src="/jquery/jquery.tablesorter.widgets.js"></script>
+
+
 	<script>
 		//x = $("#spanpage1").offset().left;
 		//y = $("#spanpage1").offset().top;
@@ -396,6 +440,15 @@ fixednavbar();
 		
 		$(document).ready(function(){
 			// когда страница загружена
+			
+			$(".order")
+  .tablesorter(
+  {
+      theme: 'blue',
+       widgets: ['zebra']
+    });
+	
+	
 			dosetrightpaginator();
 			doloadcreateform();
 			erasevaluesincookie();

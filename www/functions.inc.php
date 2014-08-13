@@ -22,9 +22,9 @@ $head_out = '<thead>
 </thead>';
 
 
-$tsql = "SELECT o.id, o.eventdate, o.status, u.realname, c.name, c.phone, s.name stval 
-		 FROM orders o, users u, clients c, status s 
-		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id AND o.status = s.id";
+$tsql = "SELECT o.id, o.eventdate, o.status, u.realname, c.name, c.phone 
+		 FROM orders o, users u, clients c
+		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id ";
 
 $rezult = mysql_query($tsql);
 
@@ -170,7 +170,7 @@ echo '<br /> Дальше вывод услуг с ценами но пока н
 
 function table($tname, $tcols, $thead, $tbody, $tsql, $tdate, $tbuts )
 {
-
+global $orderstatus;
 $curdate = new DateTime("now");
 $curdate = $curdate->format('Y-m-d');
 
@@ -240,13 +240,12 @@ foreach ($head as $key => $val)
 		$head_out = $head_out.'<th class="filter-false sorter-false"></th>';
 		}
 
-$head_out = $head_out.'</tr></thead>'.chr(10);
+//$head_out = $head_out.'<th>количество порций</th></tr></thead>'.chr(10);
 
 
 
 
 $rezult = mysql_query($tsql.$sqldate);
-
 
 if ( mysql_num_rows($rezult) > 0){
 	$body_out = '<tbody>'.chr(10);
@@ -258,8 +257,15 @@ if ( mysql_num_rows($rezult) > 0){
 					
 	foreach ($body as $key => $val) 
 		{
+		$curval = $rows[$val];
+		
+		if ($val == 'orderstatus') { 
+
+		$curval = $orderstatus[$curval];
+		}
+		
 		$body_out = $body_out.'<td>'.chr(10);
-		$body_out = $body_out.$rows[$val].chr(10);
+		$body_out = $body_out.$curval.chr(10);
 		$body_out = $body_out.'</td>'.chr(10);
 		}
 		
@@ -269,7 +275,7 @@ if ( mysql_num_rows($rezult) > 0){
 			$body_out = $body_out.'<td><button type="button" class="'.$but[0].'" title="'.$but[1].'">'.$but[2].'</button></td>';
 			}
 			
-	$body_out = $body_out.'</tr>'.chr(10);
+	//$body_out = $body_out.'<td><input type="text" class="quant"></td></tr>'.chr(10);
 	}
 
 
