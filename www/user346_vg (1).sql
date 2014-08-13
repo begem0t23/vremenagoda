@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Авг 13 2014 г., 14:45
+-- Время создания: Авг 13 2014 г., 15:26
 -- Версия сервера: 5.1.73
 -- Версия PHP: 5.3.28
 
@@ -491,11 +491,14 @@ INSERT INTO `dishes_in_menus` (`menuid`, `dishid`, `createdate`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `dishes_in_orders` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `orderid` int(11) NOT NULL,
   `dishid` int(11) NOT NULL,
+  `price` float(7,2) unsigned NOT NULL,
   `num` float NOT NULL,
-  `note` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `note` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -686,7 +689,7 @@ CREATE TABLE IF NOT EXISTS `services_in_orders` (
   `orderid` int(10) unsigned NOT NULL,
   `serviceid` int(10) unsigned NOT NULL,
   `price` float(7,2) unsigned NOT NULL,
-  `discont` float(7,2) unsigned NOT NULL,
+  `discont` int(3) unsigned NOT NULL DEFAULT '0',
   `comment` text CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='заказы услуг' AUTO_INCREMENT=1 ;
