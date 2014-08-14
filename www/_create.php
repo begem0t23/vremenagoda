@@ -91,22 +91,18 @@ fixednavbar();
 <?php		
 	}
 ?>
-<?php		
+<?php	
+
+	
 	$tsql = "select * from menus;";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
 	{	
-?>
-<?php
-			while ($row_menutype = mysql_fetch_array($r_menutype))
+
+	while ($row_menutype = mysql_fetch_array($r_menutype))
 		{
 			echo '<div id="menu-'.$row_menutype["id"].'">';
-			//$row_menutype["type_name"]
-			$tsql2 = "select * from dishes_in_menus where menuid=".$row_menutype["id"].";";
-			$r_menutype2 = mysql_query($tsql2);
-			if (mysql_num_rows($r_menutype2)>0)
-			{	
-				//echo '<ul class="list-group">';
+
 				echo '<table class = "tablesorter order">';
 				echo 	'<colgroup>
 						<col width="250" />
@@ -127,41 +123,71 @@ fixednavbar();
 							<th class="sorter-false">Действие</th>
 							</tr>
 							</thead>';
+
+	
+$tsql0 = "SELECT * 
+		 FROM menu_sections 
+		 ";
+$rezult0 = mysql_query($tsql0);
+
+	while ($rows0 = mysql_fetch_array($rezult0)) {
+
+	
+
+	
+	
+		$tsql01 = "SELECT * 
+		 FROM dishes 
+		WHERE menu_section = ".$rows0['id'].";";
+		
+		
+		$rezult01 = mysql_query($tsql01);
+		
+	
+		//echo $tsql01.'_'.mysql_num_rows($rezult01).'<br>';
+		
+		while ($rows01 = mysql_fetch_array($rezult01)) {
+
+		//echo 	$row_menutype["id"].'_'.$rows01['menu_section'].'_'.$rows01['id'].'<br>';
+		
+			$tsql2 = "select * from dishes_in_menus where menuid=".$row_menutype["id"]." and dishid = ".$rows01['id'].";";
+			$r_menutype2 = mysql_query($tsql2);
+			if (mysql_num_rows($r_menutype2)>0)
+			{	
+	
+
+					echo '<tbody><tr><th  colspan="6">'.chr(10);			
+		echo  $rows0['section_name'].chr(10);
+		echo '</th></tr></tbody>'.chr(10);
+
+		
 				while ($row_menutype2 = mysql_fetch_array($r_menutype2))
 				{
 				echo '<tr>';
 
-					$tsql3 = "select * from dishes where id=".$row_menutype2["dishid"].";";
-					$r_menutype3 = mysql_query($tsql3);
-					
-					if (mysql_num_rows($r_menutype3)>0)
-					{	
-						while ($row_menutype3 = mysql_fetch_array($r_menutype3))
-						{
-							echo '<td><span id=dishname'.$row_menutype3["id"].'>'.$row_menutype3["title"].'</span></td>
-							<td>'.$row_menutype3["weight"].'</td>
-							<td>'.$row_menutype3["price"].'</td>
-							<td><input type="text" id="quant'.$row_menutype3["id"].'" value="1" class="quant" size="1"></td>
-							<td><input id="note'.$row_menutype3["id"].'" type="text" class="note"></td>
-							<td><button type="button" name="adddish" id="adddish'.$row_menutype3["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
-						}
-					}
+							echo '<td><span id=dishname'.$rows01["id"].'>'.$rows01["title"].'</span></td>
+							<td>'.$rows01["weight"].'</td>
+							<td>'.$rows01["price"].'</td>
+							<td><input type="text" id="quant'.$rows01["id"].'" value="1" class="quant" size="1"></td>
+							<td><input id="note'.$rows01["id"].'" type="text" class="note"></td>
+							<td><button type="button" name="adddish" id="adddish'.$rows01["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
+
 				echo '</tr>';
 					
 				}
-				echo '</table>';
 				
-				//echo '</ul>';
 			}
-			else {
-				echo "меню не заполнено";
-			}
-			echo '</div>';
+
+			
 		}
-?>
-<?php		
+			
 	}
-?>		
+			echo '</table>';
+			echo '</div>';
+
+}	
+}
+?>			
 	
 	</div>		
 		<br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
