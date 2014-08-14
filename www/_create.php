@@ -143,7 +143,7 @@ fixednavbar();
 							<td>'.$row_menutype3["price"].'</td>
 							<td><input type="text" id="quant'.$row_menutype3["id"].'" value="1" class="quant" size="1"></td>
 							<td><input id="note'.$row_menutype3["id"].'" type="text" class="note"></td>
-							<td><button type="button" name="add" id="adddish'.$row_menutype3["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
+							<td><button type="button" name="adddish" id="adddish'.$row_menutype3["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 						}
 					}
 				echo '</tr>';
@@ -203,12 +203,17 @@ fixednavbar();
 
 				echo '<tr>';
 
+<<<<<<< HEAD
 							echo '<td><span id=dishname'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
 							<td><input id="price'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'"></td>
+=======
+							echo '<td><span id=servname'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
+							<td>'.$row_serv["price"].'</td>
+>>>>>>> origin/master
 							<td><input id="quantserv'.$row_serv["id"].'" type="text" size="2" value="1"></td>
 							<td><input id="discont'.$row_serv["id"].'" type="text" size="2"></td>
 							<td><input id="comment'.$row_serv["id"].'" type="text" size="20"></td>
-							<td><button type="button" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
+							<td><button type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
 							
 								
 					
@@ -226,7 +231,6 @@ fixednavbar();
 		</div>
 		<div id=spanpage4 style="visibility: hidden">
 		<form id=frm4 role="form" data-toggle="validator">
-Здесь будет сообщение о том, что не заполнены обязательные поля, либо значения полей неверные, после этого можно будет нажать СОХРАНИТЬ
 
 <div class="input-group">
   <span class="input-group-addon"><span class=rouble>Р</span></span>
@@ -443,6 +447,7 @@ fixednavbar();
 			$.removeCookie("guestcount");
 			$.removeCookie("hall");
 			$.removeCookie("dishes");
+			$.removeCookie("service");
 		}		
 		function setvaluesincookie()
 		{
@@ -493,7 +498,8 @@ fixednavbar();
 			$("#clientadd").click(docheckclientname);
 			$('#tabs').smartTab({selected: 1});		
 			
-			$( document ).on( "click", "button[name=add]", function() {
+			// добавление блюд в заказ
+			$( document ).on( "click", "button[name=adddish]", function() {
 				id = $(this).attr("id");
 				id = id.substr(7);
 				if ($(this).html()=="Удалить")
@@ -532,6 +538,49 @@ fixednavbar();
 				}
 				console.log($.cookie("dishes"));
 			});			
+			// добавление услуг в заказ
+			$( document ).on( "click", "button[name=addserv]", function() {
+				id = $(this).attr("id");
+				id = id.substr(7);
+				if ($(this).html()=="Удалить")
+				{
+					$(this).html("Добавить");				
+					$("#servname"+id).css("color", "");
+					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
+					if (services) {
+						var serviceall = $.parseJSON(services);
+						delete serviceall[id];
+						services = $.toJSON(serviceall);
+						$.cookie("service", services,{ expiry: 0});					
+					}
+				}
+				else
+				{
+					$(this).html("Удалить");
+					$("#servname"+id).css("color", "green");
+					var quantserv 	= $("#quantserv"+id).val();
+					var discont 	= $("#discont"+id).val();
+					var comment 	= $("#comment"+id).val();
+					
+					var services="";
+					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
+					if (services)
+					{
+						var serviceall = $.parseJSON(services);
+					}
+					else
+					{
+						var serviceall = {};
+					}
+					var element = {};
+					element = ({quantserv:quantserv, discont:discont, comment:comment});
+					serviceall[id] = element ;
+					services = $.toJSON(serviceall);
+					$.cookie("service", services,{ expiry: 0});
+				}
+				console.log($.cookie("service"));
+			});			
+
 			
 		});
 		
