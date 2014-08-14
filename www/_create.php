@@ -70,6 +70,9 @@ fixednavbar();
 			  </span>			  
 			</div>		
 		</div>
+		
+		<!-- тарелки -->		
+		
 		<div id=spanpage2 style="visibility: hidden">
 		<form id=frm2 role="form" data-toggle="validator">
 <?php		
@@ -194,7 +197,7 @@ $rezult0 = mysql_query($tsql0);
 		<br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
-		
+		<!-- услуги -->
 		<div id=spanpage3 style="visibility: hidden;">
 		<form id=frm3 role="form" data-toggle="validator">
   
@@ -404,7 +407,6 @@ $rezult0 = mysql_query($tsql0);
 				   .done(function(data) {
 					//alert(data);
 					erasevaluesincookie();
-					readvaluesincookie();
 					data = data.split("^");
 					$("#spanpage1").html("");
 					//alert(data[0]);
@@ -461,6 +463,7 @@ $rezult0 = mysql_query($tsql0);
 					$("#spanpage1").html(spanpage1);
 					$("#createform").html($("#spanpage"+curpage).html());
 					//alert($("#spanpage1").html());
+					readvaluesincookie();					
 				});
 			}
 		}
@@ -468,8 +471,12 @@ $rezult0 = mysql_query($tsql0);
 		{
 			if ($("#clientsearch").val())
 			{			
-				if ($.cookie("clientname")!=$("#clientsearch").val())
+				//alert($("#clientsearch").val());
+				if ($.cookie("clientname")!==$("#clientsearch").val())
 				{
+					//alert($.cookie("clientname"));
+					//alert($("#clientsearch").val());
+					
 					$.removeCookie("clientname");
 					$.removeCookie("clientfrom");
 					$.removeCookie("clientphone");
@@ -489,17 +496,14 @@ $rezult0 = mysql_query($tsql0);
 			//alert(curpage);
 			if (curpage==1)
 			{
-				var date = new Date();
-				var minutes = 30;
-				date.setTime(date.getTime() + (minutes * 60 * 1000));
-				$.cookie("clientname", $("body #clientname").val(),{ expiry: date});
-				$.cookie("clientfrom", $("body #clientfrom").val(),{ expiry: date});
-				$.cookie("clientphone", $("body #clientphone").val(),{ expiry: date});
-				$.cookie("clientemail", $("body #clientemail").val(),{ expiry: date});
-				$.cookie("dateevent", $("body #dateevent").val(),{ expiry: date});
-				$.cookie("timeevent", $("body #timeevent").val(),{ expiry: date});
-				$.cookie("guestcount", $("body #guestcount").val(),{ expiry: date});
-				$.cookie("hall", $("body #hall").val(),{ expiry: date});
+				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
+				$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
+				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
+				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
+				$.cookie("dateevent", $("body #dateevent").val(),{ expires: 1, path: '/' });
+				$.cookie("timeevent", $("body #timeevent").val(),{ expires: 1, path: '/' });
+				$.cookie("guestcount", $("body #guestcount").val(),{ expires: 1, path: '/' });
+				$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 			}
 			if (curpage==2)	{
 				// сохраняется в момент нажатия кнопок на вкладке
@@ -521,6 +525,43 @@ $rezult0 = mysql_query($tsql0);
 				$("body #timeevent").val($.cookie("timeevent"));
 				$("body #guestcount").val($.cookie("guestcount"));
 				$("body #hall").val($.cookie("hall"));
+			}
+			if (curpage==2)
+			{
+				/*$( "button[name=adddish]" ).each(function( index ) {
+				  console.log( index + ": " + $( this ).attr("id") );
+				});*/
+				dishes = "";
+				if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
+				if (dishes) {
+					var dishall = $.parseJSON(dishes);
+					$.each(dishall, function(index, value) {
+						console.log(index + " "+ value);
+						if (index)
+						{
+							$("#adddish"+index).html("Удалить");
+							$("#dishname"+index).css("color", "green");
+							$("#quant"+index).val();
+							$("#note"+index).val();
+							$("#quant"+index).attr("readonly","readonly");
+							$("#note"+index).attr("readonly","readonly");						
+						}
+					});					
+				}
+			}
+			if (curpage==3)
+			{
+				/*$( "button[name=adddish]" ).each(function( index ) {
+				  console.log( index + ": " + $( this ).attr("id") );
+				});*/
+				services = "";
+				if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
+				if (services) {
+					var serviceall = $.parseJSON(services);
+					$.each(serviceall, function(index, value) {
+						console.log(index + " "+ value);
+					});					
+				}
 			}
 		}		
 		
@@ -583,7 +624,7 @@ $rezult0 = mysql_query($tsql0);
 					dishes = $.toJSON(dishall);
 					$.cookie("dishes", dishes,{ expiry: 0});
 				}
-				console.log($.cookie("dishes"));
+				//console.log($.cookie("dishes"));
 			});			
 			// добавление услуг в заказ
 			$( document ).on( "click", "button[name=addserv]", function() {
@@ -625,7 +666,7 @@ $rezult0 = mysql_query($tsql0);
 					services = $.toJSON(serviceall);
 					$.cookie("service", services,{ expiry: 0});
 				}
-				console.log($.cookie("service"));
+				//console.log($.cookie("service"));
 			});			
 
 			
