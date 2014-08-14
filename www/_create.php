@@ -503,6 +503,8 @@ fixednavbar();
 				{
 					$(this).html("Добавить");				
 					$("#dishname"+id).css("color", "");
+					$("#quant"+id).removeAttr("readonly");
+					$("#note"+id).removeAttr("readonly");					
 					if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
 					if (dishes) {
 						var dishall = $.parseJSON(dishes);
@@ -518,6 +520,8 @@ fixednavbar();
 					var quant 	= $("#quant"+id).val();
 					var note 	= $("#note"+id).val();
 					var dishes="";
+					$("#quant"+id).attr("readonly","readonly");
+					$("#note"+id).attr("readonly","readonly");
 					if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
 					if (dishes)
 					{
