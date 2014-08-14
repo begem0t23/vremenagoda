@@ -138,7 +138,7 @@ fixednavbar();
 					{	
 						while ($row_menutype3 = mysql_fetch_array($r_menutype3))
 						{
-							echo '<td><span id=dishname'.$row_menutype3["id"].'>'.$row_menutype3["title"].'</span></td><td>'.$row_menutype3["weight"].'</td><td>'.$row_menutype3["price"].'</td><td><input type="text" id="quant'.$row_menutype3["id"].'" class="quant" size="2"></td><td><input id="note'.$row_menutype3["id"].'" type="text" class="note"></td><td><button type="button" name="add" id="adddish'.$row_menutype3["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
+							echo '<td><span id=dishname'.$row_menutype3["id"].'>'.$row_menutype3["title"].'</span></td><td>'.$row_menutype3["weight"].'</td><td>'.$row_menutype3["price"].'</td><td><input type="text" id="quant'.$row_menutype3["id"].'" value="1" class="quant" size="1"></td><td><input id="note'.$row_menutype3["id"].'" type="text" class="note"></td><td><button type="button" name="add" id="adddish'.$row_menutype3["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 						}
 					}
 				echo '</tr>';
@@ -409,6 +409,7 @@ fixednavbar();
 			$.removeCookie("dateevent");
 			$.removeCookie("guestcount");
 			$.removeCookie("hall");
+			$.removeCookie("dishes");
 		}		
 		function setvaluesincookie()
 		{
@@ -457,7 +458,7 @@ fixednavbar();
 			doloadcreateform();
 			erasevaluesincookie();
 			$("#clientadd").click(docheckclientname);
-			$('#tabs').smartTab({selected: 0});		
+			$('#tabs').smartTab({selected: 1});		
 			
 			$( document ).on( "click", "button[name=add]", function() {
 				id = $(this).attr("id");
@@ -466,10 +467,13 @@ fixednavbar();
 				{
 					$(this).html("Добавить");				
 					$("#dishname"+id).css("color", "");
-					var dishall = $.parseJSON(dishes);
-					delete dishall[id];
-					dishes = $.toJSON(dishall);
-					$.cookie("dishes", dishes,{ expiry: 0});					
+					if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
+					if (dishes) {
+						var dishall = $.parseJSON(dishes);
+						delete dishall[id];
+						dishes = $.toJSON(dishall);
+						$.cookie("dishes", dishes,{ expiry: 0});					
+					}
 				}
 				else
 				{
@@ -488,11 +492,12 @@ fixednavbar();
 						var dishall = {};
 					}
 					var element = {};
-					element = ({id:id, quant:quant, note:note});
+					element = ({quant:quant, note:note});
 					dishall[id] = element ;
 					dishes = $.toJSON(dishall);
 					$.cookie("dishes", dishes,{ expiry: 0});
 				}
+				console.log($.cookie("dishes"));
 			});			
 			
 		});
