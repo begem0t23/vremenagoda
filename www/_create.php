@@ -404,6 +404,7 @@ $rezult0 = mysql_query($tsql0);
 				   .done(function(data) {
 					//alert(data);
 					erasevaluesincookie();
+					readvaluesincookie();
 					data = data.split("^");
 					$("#spanpage1").html("");
 					//alert(data[0]);
@@ -432,7 +433,7 @@ $rezult0 = mysql_query($tsql0);
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
 					//spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
 					spanpage1+='<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
-					spanpage1+='<input required="required" data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control required" placeholder="Время проведения">';
+					spanpage1+='<input data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 					spanpage1+='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей">';
 					spanpage1+='</div>';
@@ -465,14 +466,22 @@ $rezult0 = mysql_query($tsql0);
 		}
 		function erasevaluesincookie()
 		{
-			$.removeCookie("clientfrom");
-			$.removeCookie("clientphone");
-			$.removeCookie("clientemail");
-			$.removeCookie("dateevent");
-			$.removeCookie("guestcount");
-			$.removeCookie("hall");
-			$.removeCookie("dishes");
-			$.removeCookie("service");
+			if ($("#clientsearch").val())
+			{			
+				if ($.cookie("clientname")!=$("#clientsearch").val())
+				{
+					$.removeCookie("clientname");
+					$.removeCookie("clientfrom");
+					$.removeCookie("clientphone");
+					$.removeCookie("clientemail");
+					$.removeCookie("dateevent");
+					$.removeCookie("timeevent");
+					$.removeCookie("guestcount");
+					$.removeCookie("hall");
+					$.removeCookie("dishes");
+					$.removeCookie("service");
+				}
+			}
 		}		
 		function setvaluesincookie()
 		{
@@ -480,15 +489,23 @@ $rezult0 = mysql_query($tsql0);
 			//alert(curpage);
 			if (curpage==1)
 			{
-				$.cookie("clientfrom", $("body #clientfrom").val(),{ expiry: 0});
-				$.cookie("clientphone", $("body #clientphone").val(),{ expiry: 0});
-				$.cookie("clientemail", $("body #clientemail").val(),{ expiry: 0});
-				$.cookie("dateevent", $("body #dateevent").val(),{ expiry: 0});
-				$.cookie("guestcount", $("body #guestcount").val(),{ expiry: 0});
-				$.cookie("hall", $("body #hall").val(),{ expiry: 0});
+				var date = new Date();
+				var minutes = 30;
+				date.setTime(date.getTime() + (minutes * 60 * 1000));
+				$.cookie("clientname", $("body #clientname").val(),{ expiry: date});
+				$.cookie("clientfrom", $("body #clientfrom").val(),{ expiry: date});
+				$.cookie("clientphone", $("body #clientphone").val(),{ expiry: date});
+				$.cookie("clientemail", $("body #clientemail").val(),{ expiry: date});
+				$.cookie("dateevent", $("body #dateevent").val(),{ expiry: date});
+				$.cookie("timeevent", $("body #timeevent").val(),{ expiry: date});
+				$.cookie("guestcount", $("body #guestcount").val(),{ expiry: date});
+				$.cookie("hall", $("body #hall").val(),{ expiry: date});
 			}
-			if (curpage==2)
-			{
+			if (curpage==2)	{
+				// сохраняется в момент нажатия кнопок на вкладке
+			}
+			if (curpage==3)	{
+				// сохраняется в момент нажатия кнопок на вкладке
 			}
 		}
 		function readvaluesincookie()
@@ -501,6 +518,7 @@ $rezult0 = mysql_query($tsql0);
 				$("body #clientphone").val($.cookie("clientphone"));
 				$("body #clientemail").val($.cookie("clientemail"));
 				$("body #dateevent").val($.cookie("dateevent"));
+				$("body #timeevent").val($.cookie("timeevent"));
 				$("body #guestcount").val($.cookie("guestcount"));
 				$("body #hall").val($.cookie("hall"));
 			}
@@ -519,7 +537,7 @@ $rezult0 = mysql_query($tsql0);
 	
 			dosetrightpaginator();
 			doloadcreateform();
-			erasevaluesincookie();
+			//erasevaluesincookie();
 			
 			$('#tabs').smartTab({selected: 1});		
 			
