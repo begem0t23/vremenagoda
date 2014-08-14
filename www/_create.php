@@ -65,7 +65,7 @@ fixednavbar();
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
 			  <span class="input-group-btn">
-				<button class="btn btn-default" id=clientadd name=clientadd type="button">Создать</button>
+				<button class="btn btn-default" onclick="docheckclientname();" id=clientadd name=clientadd type="button">Создать</button>
 			  </span>			  
 			</div>		
 		</div>
@@ -280,7 +280,8 @@ $rezult0 = mysql_query($tsql0);
 	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
-
+	<script src="/jquery/jquery.maskedinput.js"></script>
+	
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/bottom.js"></script>
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/bottomCenter.js"></script>
@@ -429,6 +430,7 @@ $rezult0 = mysql_query($tsql0);
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
 					//spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
 					spanpage1+='<input required="required" pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
+					spanpage1+='<input required="required" pattern="^([0-9]){2}:([0-9]){2}$" maxlength="5" type="text" id="timeevent" class="form-control required" placeholder="Время проведения">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 					spanpage1+='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей">';
 					spanpage1+='</div>';
@@ -516,9 +518,9 @@ $rezult0 = mysql_query($tsql0);
 			dosetrightpaginator();
 			doloadcreateform();
 			erasevaluesincookie();
-			$("#clientadd").bind ("click", function(){
-				docheckclientname();
-			});
+			$("#timeevent").mask("99:99");
+			$("#dateevent").mask("99.99.9999");
+			
 			$('#tabs').smartTab({selected: 1});		
 			
 			// добавление блюд в заказ
