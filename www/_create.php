@@ -65,7 +65,7 @@ fixednavbar();
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
 			  <span class="input-group-btn">
-				<button class="btn btn-default" id=clientadd name=clientadd type="button">Создать</button>
+				<button class="btn btn-default" id=clientadd type="button">Создать</button>
 			  </span>			  
 			</div>		
 		</div>
@@ -370,7 +370,7 @@ fixednavbar();
 				//alert(1);
 				$.get("_checkexistclient.php", {s:clientname, Rand: "<?php echo rand(); ?>"},
 				   function(){
-					console.log(clientname);
+					// нет
 				   })
 				   .done(function(data) {
 					//alert(data);
@@ -490,11 +490,7 @@ fixednavbar();
 			dosetrightpaginator();
 			doloadcreateform();
 			erasevaluesincookie();
-			
-			$("#clientadd").bind ("click", function(){
-				docheckclientname();
-			});
-			
+			$("#clientadd").click(docheckclientname);
 			$('#tabs').smartTab({selected: 1});		
 			
 			// добавление блюд в заказ
