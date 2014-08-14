@@ -204,7 +204,7 @@ fixednavbar();
 				echo '<tr>';
 
 							echo '<td><span id=dishname'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
-							<td>'.$row_serv["price"].'</td>
+							<td><input id="price'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'"></td>
 							<td><input id="quantserv'.$row_serv["id"].'" type="text" size="2" value="1"></td>
 							<td><input id="discont'.$row_serv["id"].'" type="text" size="2"></td>
 							<td><input id="comment'.$row_serv["id"].'" type="text" size="20"></td>
