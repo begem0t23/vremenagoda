@@ -119,12 +119,12 @@ fixednavbar();
 
 				echo  '<thead>
 							<tr>
-							<th>Название</th>
-							<th>Порции</th>
-							<th>Цена</th>
-							<th>Кол-во</th>
-							<th>Комментарий</th>
-							<th>Действие</th>
+							<th class="sorter-false">Название</th>
+							<th class="sorter-false">Порции</th>
+							<th class="sorter-false">Цена</th>
+							<th class="sorter-false">Кол-во</th>
+							<th class="sorter-false">Комментарий</th>
+							<th class="sorter-false">Действие</th>
 							</tr>
 							</thead>';
 				while ($row_menutype2 = mysql_fetch_array($r_menutype2))
@@ -138,7 +138,12 @@ fixednavbar();
 					{	
 						while ($row_menutype3 = mysql_fetch_array($r_menutype3))
 						{
-							echo '<td><span id=dishname'.$row_menutype3["id"].'>'.$row_menutype3["title"].'</span></td><td>'.$row_menutype3["weight"].'</td><td>'.$row_menutype3["price"].'</td><td><input type="text" id="quant'.$row_menutype3["id"].'" value="1" class="quant" size="1"></td><td><input id="note'.$row_menutype3["id"].'" type="text" class="note"></td><td><button type="button" name="add" id="adddish'.$row_menutype3["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
+							echo '<td><span id=dishname'.$row_menutype3["id"].'>'.$row_menutype3["title"].'</span></td>
+							<td>'.$row_menutype3["weight"].'</td>
+							<td>'.$row_menutype3["price"].'</td>
+							<td><input type="text" id="quant'.$row_menutype3["id"].'" value="1" class="quant" size="1"></td>
+							<td><input id="note'.$row_menutype3["id"].'" type="text" class="note"></td>
+							<td><button type="button" name="add" id="adddish'.$row_menutype3["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 						}
 					}
 				echo '</tr>';
@@ -162,32 +167,60 @@ fixednavbar();
 		<br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
-		<div id=spanpage3 style="visibility: hidden">
+		
+		<div id=spanpage3 style="visibility: hidden;">
 		<form id=frm3 role="form" data-toggle="validator">
-  <div class="col-lg-6">
-    <div class="input-group">
-      <span class="input-group-addon">
-        <input type="checkbox">
-      </span>
-      <input type="text" value="Музыканты" class="form-control">
-    </div><!-- /input-group -->
-  </div><br>
-  <div class="col-lg-6">
-    <div class="input-group">
-      <span class="input-group-addon">
-        <input type="checkbox">
-      </span>
-      <input type="text" value="Циркачи" class="form-control">
-    </div><!-- /input-group -->
-  </div><br>
-  <div class="col-lg-6">
-    <div class="input-group">
-      <span class="input-group-addon">
-        <input type="checkbox">
-      </span>
-      <input type="text" value="Фокусники" class="form-control">
-    </div><!-- /input-group -->
-  </div>
+  
+  <?php		
+	$tsql = "select * from services;";
+	$r_serv = mysql_query($tsql);
+	if (mysql_num_rows($r_serv)>0)
+	{	
+				echo '<table class = "tablesorter order"  style="width: 700px;">';
+				echo 	'<colgroup>
+						<col width="150" />
+						<col width="50" />
+						<col width="50" />
+						<col width="20" />
+						<col width="50" />
+						<col width="150" />
+						</colgroup>';
+
+				echo  '<thead>
+							<tr>
+							<th class="sorter-false">Название</th>
+							<th class="sorter-false">Цена</th>
+							<th class="sorter-false">Кол-во</th>
+							<th class="sorter-false">Скидка %</th>
+							<th class="sorter-false">Комментарий</th>
+							<th class="sorter-false">Действие</th>
+							</tr>
+							</thead>';
+	?>
+<?php
+			while ($row_serv = mysql_fetch_array($r_serv))
+		{
+
+				echo '<tr>';
+
+							echo '<td><span id=dishname'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
+							<td>'.$row_serv["price"].'</td>
+							<td><input id="quantserv'.$row_serv["id"].'" type="text" size="2" value="1"></td>
+							<td><input id="discont'.$row_serv["id"].'" type="text" size="2"></td>
+							<td><input id="comment'.$row_serv["id"].'" type="text" size="20"></td>
+							<td><button type="button" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
+							
+								
+					
+				echo '</tr>';
+					
+		}
+				echo '</table>';
+		
+?>
+<?php		
+	}
+?>	
 		<br><br><br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>

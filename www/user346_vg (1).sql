@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.8.2
+-- version 3.5.1
 -- http://www.phpmyadmin.net
 --
--- Хост: localhost
--- Время создания: Авг 13 2014 г., 15:26
--- Версия сервера: 5.1.73
--- Версия PHP: 5.3.28
+-- Host: 127.0.0.1
+-- Generation Time: Aug 14, 2014 at 02:46 PM
+-- Server version: 5.5.25
+-- PHP Version: 5.3.13
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- База данных: `user346_vg`
+-- Database: `user346_vg`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `avans`
+-- Table structure for table `avans`
 --
 
 CREATE TABLE IF NOT EXISTS `avans` (
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `avans` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `clients`
+-- Table structure for table `clients`
 --
 
 CREATE TABLE IF NOT EXISTS `clients` (
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
--- Дамп данных таблицы `clients`
+-- Dumping data for table `clients`
 --
 
 INSERT INTO `clients` (`id`, `name`, `phone`, `email`, `otkuda`) VALUES
@@ -63,7 +63,7 @@ INSERT INTO `clients` (`id`, `name`, `phone`, `email`, `otkuda`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `dishes`
+-- Table structure for table `dishes`
 --
 
 CREATE TABLE IF NOT EXISTS `dishes` (
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `dishes` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=337 ;
 
 --
--- Дамп данных таблицы `dishes`
+-- Dumping data for table `dishes`
 --
 
 INSERT INTO `dishes` (`id`, `title`, `description`, `weight`, `price`, `menu_section`, `createdate`) VALUES
@@ -423,7 +423,7 @@ INSERT INTO `dishes` (`id`, `title`, `description`, `weight`, `price`, `menu_sec
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `dishes_in_menus`
+-- Table structure for table `dishes_in_menus`
 --
 
 CREATE TABLE IF NOT EXISTS `dishes_in_menus` (
@@ -433,7 +433,7 @@ CREATE TABLE IF NOT EXISTS `dishes_in_menus` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Дамп данных таблицы `dishes_in_menus`
+-- Dumping data for table `dishes_in_menus`
 --
 
 INSERT INTO `dishes_in_menus` (`menuid`, `dishid`, `createdate`) VALUES
@@ -478,16 +478,16 @@ INSERT INTO `dishes_in_menus` (`menuid`, `dishid`, `createdate`) VALUES
 (3, 72, '2014-08-12 21:47:08'),
 (3, 82, '2014-08-12 21:47:08'),
 (3, 92, '2014-08-12 21:47:08'),
-(2, 102, '2014-08-12 21:47:08'),
-(2, 112, '2014-08-12 21:47:08'),
-(2, 122, '2014-08-12 21:47:08'),
-(2, 132, '2014-08-12 21:47:08'),
-(2, 142, '2014-08-12 21:47:08');
+(3, 102, '2014-08-14 07:05:21'),
+(3, 112, '2014-08-14 07:05:25'),
+(3, 122, '2014-08-14 07:05:30'),
+(3, 132, '2014-08-14 07:05:34'),
+(3, 142, '2014-08-14 07:05:38');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `dishes_in_orders`
+-- Table structure for table `dishes_in_orders`
 --
 
 CREATE TABLE IF NOT EXISTS `dishes_in_orders` (
@@ -503,7 +503,7 @@ CREATE TABLE IF NOT EXISTS `dishes_in_orders` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `hall`
+-- Table structure for table `hall`
 --
 
 CREATE TABLE IF NOT EXISTS `hall` (
@@ -514,7 +514,7 @@ CREATE TABLE IF NOT EXISTS `hall` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- Дамп данных таблицы `hall`
+-- Dumping data for table `hall`
 --
 
 INSERT INTO `hall` (`id`, `name`, `countofperson`) VALUES
@@ -524,7 +524,7 @@ INSERT INTO `hall` (`id`, `name`, `countofperson`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `menus`
+-- Table structure for table `menus`
 --
 
 CREATE TABLE IF NOT EXISTS `menus` (
@@ -535,7 +535,7 @@ CREATE TABLE IF NOT EXISTS `menus` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
--- Дамп данных таблицы `menus`
+-- Dumping data for table `menus`
 --
 
 INSERT INTO `menus` (`id`, `type_name`) VALUES
@@ -546,7 +546,7 @@ INSERT INTO `menus` (`id`, `type_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `menu_sections`
+-- Table structure for table `menu_sections`
 --
 
 CREATE TABLE IF NOT EXISTS `menu_sections` (
@@ -561,7 +561,7 @@ CREATE TABLE IF NOT EXISTS `menu_sections` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=56 ;
 
 --
--- Дамп данных таблицы `menu_sections`
+-- Dumping data for table `menu_sections`
 --
 
 INSERT INTO `menu_sections` (`id`, `section_name`, `level`, `parent_id`, `menu_type_id`, `sortid`) VALUES
@@ -624,7 +624,7 @@ INSERT INTO `menu_sections` (`id`, `section_name`, `level`, `parent_id`, `menu_t
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `menu_types`
+-- Table structure for table `menu_types`
 --
 
 CREATE TABLE IF NOT EXISTS `menu_types` (
@@ -637,7 +637,7 @@ CREATE TABLE IF NOT EXISTS `menu_types` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `orders`
+-- Table structure for table `orders`
 --
 
 CREATE TABLE IF NOT EXISTS `orders` (
@@ -653,7 +653,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
--- Дамп данных таблицы `orders`
+-- Dumping data for table `orders`
 --
 
 INSERT INTO `orders` (`id`, `creatorid`, `createdate`, `clientid`, `eventdate`, `status`, `managerid`, `hallid`) VALUES
@@ -666,7 +666,7 @@ INSERT INTO `orders` (`id`, `creatorid`, `createdate`, `clientid`, `eventdate`, 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `services`
+-- Table structure for table `services`
 --
 
 CREATE TABLE IF NOT EXISTS `services` (
@@ -676,12 +676,23 @@ CREATE TABLE IF NOT EXISTS `services` (
   `price` float(7,2) unsigned NOT NULL,
   `createdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+--
+-- Dumping data for table `services`
+--
+
+INSERT INTO `services` (`id`, `name`, `description`, `price`, `createdate`) VALUES
+(1, 'Музыкальная программа Диджей', '', 40000.00, '2014-08-14 00:00:00'),
+(2, 'Аренда зала (100 руб с человека)', '', 0.00, '2014-08-14 00:00:00'),
+(3, 'Аренда сцены (свет и мощность подключения)', '', 20000.00, '2014-08-14 00:00:00'),
+(4, 'Аренда балкона', '', 20000.00, '2014-08-14 00:00:00'),
+(5, 'Аренда зала после 24 часов (в час) 20000 рублей', '', 0.00, '2014-08-14 00:00:00');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `services_in_orders`
+-- Table structure for table `services_in_orders`
 --
 
 CREATE TABLE IF NOT EXISTS `services_in_orders` (
@@ -697,7 +708,7 @@ CREATE TABLE IF NOT EXISTS `services_in_orders` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
@@ -711,7 +722,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
--- Дамп данных таблицы `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `login`, `pass`, `realname`, `role`, `isactive`) VALUES
