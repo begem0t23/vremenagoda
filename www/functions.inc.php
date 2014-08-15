@@ -4,6 +4,52 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
+function dishes_in_section_by_menu($menu_id,$menu_section)
+{
+$dish = Array();
+$dish['count'] = 0;
+		$tsql01 = "SELECT d.id, d.title, d.weight, d.price, m.dishid FROM dishes d, dishes_in_menus m  WHERE d.menu_section = ".$menu_section." and m.menuid=".$menu_id." and m.dishid = d.id ;";
+		$rezult01 = mysql_query($tsql01);
+
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+			while ($rows01 = mysql_fetch_array($rezult01)) 
+			{			
+				$dish[$dish['count']]['id'] = $rows01['id'];
+				$dish[$dish['count']]['title'] = $rows01['title'];
+				$dish[$dish['count']]['weight'] = $rows01['weight'];
+				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish['count'] ++;
+			}
+		}
+return $dish;
+}
+
+
+
+function print_dishes($items)
+{
+	if ($items['count'] > 0)
+	{
+		for($i=0;$i<$items['count'];$i++)
+		{			
+			echo '<tr>';
+			echo '<td><span id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
+							<td>'.$items[$i]["weight"].'</td>
+							<td>'.$items[$i]["price"].'</td>
+							<td><input type="text" id="quant'.$items[$i]["id"].'" value="1" class="quant" size="1"></td>
+							<td><input id="note'.$items[$i]["id"].'" type="text" class="note"></td>
+							<td><button type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
+
+			echo '</tr>';					
+		}
+	}
+}
+
+
+
+
+
 function report_client($tname,$zid)
 {
 echo '<h3>'.$tname.'</h3>'.chr(10);

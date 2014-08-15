@@ -30,6 +30,16 @@
   content: "–";
   position: absolute;
   top: 0.15em; }
+  
+  .level_0{
+  background-color: #A7FDBE !important;
+  }
+    .level_1{
+  background-color: #FFB8BE !important;
+  }
+    .level_2{
+  background-color: #F5F5A3 !important;
+  }
 </style>  
 
   </head>
@@ -97,7 +107,7 @@ fixednavbar();
 ?>
 <?php	
 
-	
+	//сборка массива секций с блюдами для конкретного меню
 	$tsql = "select * from menus;";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
@@ -128,64 +138,128 @@ fixednavbar();
 							</tr>
 							</thead>';
 
-	
-$tsql0 = "SELECT * 
-		 FROM menu_sections 
+	$sections = Array();
+		$tsql0 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '0' ORDER BY `sortid` ASC;
 		 ";
-$rezult0 = mysql_query($tsql0);
+		$rezult0 = mysql_query($tsql0);
 
 	while ($rows0 = mysql_fetch_array($rezult0)) {
-
-	
-
 	
 	
-		$tsql01 = "SELECT * 
-		 FROM dishes 
-		WHERE menu_section = ".$rows0['id'].";";
+
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
 		
-		
-		$rezult01 = mysql_query($tsql01);
-		
+	$sections[$rows0['id']]['name'] = $rows0['section_name'];
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['children'] = 0;
+	$sections[$rows0['id']]['items'] = $zzz;
 	
-		//echo $tsql01.'_'.mysql_num_rows($rezult01).'<br>';
-		
-		while ($rows01 = mysql_fetch_array($rezult01)) {
+	
+		$tsql_1 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
+		 ";
+		$rezult_1 = mysql_query($tsql_1);
 
-		//echo 	$row_menutype["id"].'_'.$rows01['menu_section'].'_'.$rows01['id'].'<br>';
+	while ($rows_1 = mysql_fetch_array($rezult_1)) {
+
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id']);
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['children'] ++;
+	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name'];
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
+	$sections[$rows0['id']][$rows_1['id']]['items'] = $zzz;
+	
 		
-			$tsql2 = "select * from dishes_in_menus where menuid=".$row_menutype["id"]." and dishid = ".$rows01['id'].";";
-			$r_menutype2 = mysql_query($tsql2);
-			if (mysql_num_rows($r_menutype2)>0)
-			{	
+		$tsql_2 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."' ORDER BY `sortid` ASC
+		 ";
+	$rezult_2 = mysql_query($tsql_2);
+
+	while ($rows_2 = mysql_fetch_array($rezult_2)) {
+
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_2['id']);
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
 	
 
-					echo '<tbody><tr><th  colspan="6">'.chr(10);			
-		echo  $rows0['section_name'].chr(10);
-		echo '</th></tr></tbody>'.chr(10);
+	} //result_2
+			
+	} //result_1
+			
+	} //result0
+// конец сборки	
+	
+	
+	//цикл по массиву секций с блюдами для конкретного меню для вывода на экран
+	foreach ($sections as $num => $val) 
+	{
+	
+		if ($sections[$num]['dishes'] > 0) 
+		{	
+			
+			echo '<tbody><tr><th  colspan="6" class="level_0">'.chr(10);			
+			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
+			echo '</th></tr></tbody>'.chr(10);
 
-		
-				while ($row_menutype2 = mysql_fetch_array($r_menutype2))
-				{
-				echo '<tr>';
-
-							echo '<td><span id=dishname'.$rows01["id"].'>'.$rows01["title"].'</span></td>
-							<td>'.$rows01["weight"].'</td>
-							<td>'.$rows01["price"].'</td>
-							<td><input type="text" id="quant'.$rows01["id"].'" value="1" class="quant" size="1"></td>
-							<td><input id="note'.$rows01["id"].'" type="text" class="note"></td>
-							<td><button type="button" name="adddish" id="adddish'.$rows01["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
-
-				echo '</tr>';
-					
-				}
-				
+			if ($sections[$num]['items']['count'] > 0)
+			{
+				print_dishes($sections[$num]['items']);
 			}
+			
+			foreach ($val as $num1 => $val1) 
+			{
+				
+				if ($val[$num1]['dishes'] > 0) 
+				{	
+					echo '<tbody><tr><th  colspan="6" class="level_1">'.chr(10);			
+					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
+					echo '</th></tr></tbody>'.chr(10);
 
-			
+					if ($val[$num1]['items']['count'] > 0)
+					{
+						print_dishes($val[$num1]['items']);
+					}
+
+					
+					if (is_array($val1)) 
+					{
+						foreach ($val1 as $num2 => $val2) 
+						{
+	
+							if ($val1[$num2]['dishes'] > 0) 
+							{	
+								echo '<tbody><tr><th  colspan="6" class="level_2">'.chr(10);			
+								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
+								echo '</th></tr></tbody>'.chr(10);
+													
+								if ($val1[$num2]['items']['count'] > 0)
+								{
+									print_dishes($val1[$num2]['items']);
+								}
+
+							}
+	
+	
+	
+						}
+					}
+				}
+			}
+	
 		}
-			
 	}
+	
+	//конец цикла
+	
 			echo '</table>';
 			echo '</div>';
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 14, 2014 at 05:16 PM
+-- Generation Time: Aug 15, 2014 at 08:50 PM
 -- Server version: 5.5.25
 -- PHP Version: 5.3.13
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `menu_sections` (
   `sortid` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=62 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=63 ;
 
 --
 -- Dumping data for table `menu_sections`
@@ -59,7 +59,7 @@ INSERT INTO `menu_sections` (`id`, `section_name`, `level`, `parent_id`, `sortid
 (16, 'СЫР И ДЕСЕРТЫ', 1, 59, 0),
 (17, 'Сорбеты и мороженое "Movenpick"""', 1, 59, 0),
 (18, 'Шампанское, Просекко  и Игристые Вина', 1, 60, 0),
-(19, 'БЕЗАЛКОГОЛЬНЫЕ НАПИТКИ ', 1, 0, 0),
+(19, 'БЕЗАЛКОГОЛЬНЫЕ НАПИТКИ ', 0, 0, 3),
 (20, ' БЕЗАЛКОГОЛЬНЫЕ КОКТЕЙЛИ', 2, 19, 0),
 (21, 'ПИВО БУТЫЛОЧНОЕ /РАЗЛИВНОЕ ', 1, 60, 0),
 (22, 'КОКТЕЙЛИ ', 1, 60, 0),
@@ -100,8 +100,9 @@ INSERT INTO `menu_sections` (`id`, `section_name`, `level`, `parent_id`, `sortid
 (57, 'Мини-эклеры', 2, 15, 0),
 (58, 'Мини-пирожные', 2, 15, 0),
 (59, 'БЛЮДА', 0, 0, 0),
-(60, 'СПИРТНЫЕ НАПИТКИ', 0, 0, 0),
-(61, 'ВИННАЯ КАРТА', 0, 0, 0);
+(60, 'СПИРТНЫЕ НАПИТКИ', 0, 0, 1),
+(61, 'ВИННАЯ КАРТА', 0, 0, 2),
+(62, 'ВОДА', 1, 19, 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
