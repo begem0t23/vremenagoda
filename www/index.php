@@ -44,6 +44,10 @@ if (checklogin())
 	{
 		include("_create.php");
 	}
+	elseif ($qq == "uslugi")
+	{
+		include("_uslugi.php");
+	}
 	elseif ($qq == "debug")
 	{
 		var_dump($_SESSION);

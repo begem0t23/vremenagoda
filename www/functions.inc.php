@@ -4,6 +4,7 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
+
 function dishes_in_section_by_menu($menu_id,$menu_section)
 {
 $dish = Array();
@@ -391,7 +392,7 @@ function fixednavbar()
               <a href="?settings" class="dropdown-toggle" data-toggle="dropdown">Настройки<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li><a href="#">Меню блюд</a></li>
-                <li><a href="#">Меню услуг</a></li>
+                <li><a href="?uslugi">Меню услуг</a></li>
                 <li><a href="#">Другие настройки</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Учетная запись</li>
