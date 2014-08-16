@@ -14,7 +14,7 @@ $price = $_POST['servprice'];
 
 if ($id == 0) 
 	{
-		$tsql00 = "SELECT * FROM `services` WHERE `isactive` = '1' ORDER BY `order`  DESC;";
+		$tsql00 = "SELECT * FROM `services` WHERE `isactive` = '1' ORDER BY `orderby`  DESC;";
 		$rezult00 = mysql_query($tsql00);
 		if (mysql_num_rows($rezult00) > 0) 
 		{

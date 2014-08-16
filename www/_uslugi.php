@@ -88,7 +88,7 @@ fixednavbar();
       </div>
 <button type="button" name="changeserv" id="changeserv0" title="Добавить услугу">Добавить услугу</button>
  <?php		
-	$tsql = "SELECT * FROM `services` WHERE `isactive` = 1 ORDER BY `order` ASC;";
+	$tsql = "SELECT * FROM `services` WHERE `isactive` = 1 ORDER BY `orderby` ASC;";
 	$r_serv = mysql_query($tsql);
 	if (mysql_num_rows($r_serv)>0)
 	{	
