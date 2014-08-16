@@ -130,7 +130,7 @@ fixednavbar();
 				echo  '<thead>
 							<tr>
 							<th class="sorter-false">Название</th>
-							<th class="sorter-false">Порции</th>
+							<th class="sorter-false">Порции (кг)</th>
 							<th class="sorter-false">Цена</th>
 							<th class="sorter-false">Кол-во</th>
 							<th class="sorter-false">Комментарий</th>

@@ -35,7 +35,7 @@ function print_dishes($items)
 		{			
 			echo '<tr>';
 			echo '<td><span id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
-							<td>'.$items[$i]["weight"].'</td>
+							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
 							<td>'.$items[$i]["price"].'</td>
 							<td><input type="text" id="quant'.$items[$i]["id"].'" value="1" class="quant" size="1"></td>
 							<td><input id="note'.$items[$i]["id"].'" type="text" class="note"></td>
