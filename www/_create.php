@@ -307,7 +307,7 @@ fixednavbar();
 
 				echo '<tr>';
 
-							echo '<td><span id=dishname'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
+							echo '<td><span id=servicename'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
 							<td><input id="price'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'"></td>
 							<td><input id="quantserv'.$row_serv["id"].'" type="text" size="2" value="1"></td>
 							<td><input id="discont'.$row_serv["id"].'" type="text" size="2"></td>
@@ -610,13 +610,13 @@ fixednavbar();
 				if (dishes) {
 					var dishall = $.parseJSON(dishes);
 					$.each(dishall, function(index, value) {
-						console.log(index + " "+ value);
+						//console.log(index + " "+ value);
 						if (index)
 						{
 							$("#adddish"+index).html("Удалить");
 							$("#dishname"+index).css("color", "green");
-							$("#quant"+index).val();
-							$("#note"+index).val();
+							$("#quant"+index).val(value["quant"]);
+							$("#note"+index).val(value["note"]);
 							$("#quant"+index).attr("readonly","readonly");
 							$("#note"+index).attr("readonly","readonly");						
 						}
@@ -633,7 +633,18 @@ fixednavbar();
 				if (services) {
 					var serviceall = $.parseJSON(services);
 					$.each(serviceall, function(index, value) {
-						console.log(index + " "+ value);
+						//console.log(index + " "+ value);
+						if (index)
+						{
+							$("#addserv"+index).html("Удалить");
+							$("#servicename"+index).css("color", "green");
+							$("#quantserv"+index).val(value["quantserv"]);
+							$("#discont"+index).val(value["discont"]);
+							$("#comment"+index).val(value["comment"]);
+							$("#quant"+index).attr("readonly","readonly");
+							$("#note"+index).attr("readonly","readonly");						
+							$("#comment"+index).attr("readonly","readonly");
+						}
 					});					
 				}
 			}
