@@ -554,7 +554,7 @@ fixednavbar();
 				//alert($("#clientsearch").val());
 				if ($.cookie("clientname")!==$("#clientsearch").val())
 				{
-					alert($.cookie("clientname"));
+					//alert($.cookie("clientname"));
 					//alert($("#clientsearch").val());
 					
 					$.removeCookie("clientname");
@@ -648,6 +648,7 @@ fixednavbar();
 							$("#quantserv"+index).val(value["quantserv"]);
 							$("#discont"+index).val(value["discont"]);
 							$("#comment"+index).val(value["comment"]);
+							$("#price"+index).attr("readonly","readonly");
 							$("#quantserv"+index).attr("readonly","readonly");
 							$("#discont"+index).attr("readonly","readonly");						
 							$("#comment"+index).attr("readonly","readonly");
@@ -759,6 +760,12 @@ fixednavbar();
 				{
 					$(this).html("Добавить");				
 					$("#servname"+id).css("color", "");
+
+					$("#price"+id).removeAttr("readonly");
+					$("#quantserv"+id).removeAttr("readonly");
+					$("#discont"+id).removeAttr("readonly");
+					$("#comment"+id).removeAttr("readonly");
+
 					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
 					if (services) {
 						var serviceall = $.parseJSON(services);
@@ -776,6 +783,11 @@ fixednavbar();
 					var discont 	= $("#discont"+id).val();
 					var comment 	= $("#comment"+id).val();
 					
+					$("#price"+id).attr("readonly","readonly");
+					$("#quantserv"+id).attr("readonly","readonly");
+					$("#discont"+id).attr("readonly","readonly");
+					$("#comment"+id).attr("readonly","readonly");
+										
 					var services="";
 					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
 					if (services)
