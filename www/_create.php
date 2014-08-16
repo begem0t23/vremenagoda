@@ -314,7 +314,7 @@ fixednavbar();
 							<td><input id="quantserv'.$row_serv["id"].'" type="text" size="2" ';
 							if ($row_serv["byguestcount"]==1)
 							{
-								echo "class='.byguestcount'";
+								echo "readonly='readonly' class='.byguestcount'";
 							}
 							echo ' value="1"></td>
 							<td><input id="discont'.$row_serv["id"].'" type="text" size="2"></td>
@@ -660,7 +660,7 @@ fixednavbar();
 		}		
 		function setcountguestfields()
 		{
-			var warnchangeguestcount=0;
+			//var warnchangeguestcount=0;
 			//alert(1);
 			if (typeof $.cookie("guestcount") != 'undefined')
 			{
@@ -670,24 +670,24 @@ fixednavbar();
 					//alert($.cookie("guestcount"));
 					$("input[class*='byguestcount']").each(function() {
 						//alert($(this).val());
-						if ($(this).attr("readonly")!=="readonly") 
-						{
+						//if ($(this).attr("readonly")!=="readonly") 
+						//{
 							$(this).val($.cookie("guestcount"));
-						}
-						else
-						{
-							if ($(this).val()!=$.cookie("guestcount"))
-							{
-								warnchangeguestcount=1;
-							}
-						}
+						//}
+						//else
+						//{
+						//	if ($(this).val()!=$.cookie("guestcount"))
+						//	{
+						//		warnchangeguestcount=1;
+						//	}
+						//}
 					});					
 				}
 			}
-			if (warnchangeguestcount)
-			{
-				alert("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
-			}
+			//if (warnchangeguestcount)
+			//{
+				//alert("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
+			//}
 		}
 		$(document).ready(function(){
 			// когда страница загружена
@@ -759,10 +759,13 @@ fixednavbar();
 				if ($(this).html()=="Удалить")
 				{
 					$(this).html("Добавить");				
-					$("#servname"+id).css("color", "");
+					$("#servicename"+id).css("color", "");
 
 					$("#price"+id).removeAttr("readonly");
-					$("#quantserv"+id).removeAttr("readonly");
+					if ($("#quantserv"+id).attr("class")!="byguestcount")
+					{
+						$("#quantserv"+id).removeAttr("readonly");
+					}
 					$("#discont"+id).removeAttr("readonly");
 					$("#comment"+id).removeAttr("readonly");
 
@@ -777,7 +780,7 @@ fixednavbar();
 				else
 				{
 					$(this).html("Удалить");
-					$("#servname"+id).css("color", "green");
+					$("#servicename"+id).css("color", "green");
 					var priceserv 	= $("#price"+id).val();
 					var quantserv 	= $("#quantserv"+id).val();
 					var discont 	= $("#discont"+id).val();
