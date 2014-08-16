@@ -307,9 +307,18 @@ fixednavbar();
 
 				echo '<tr>';
 
+<<<<<<< HEAD
 							echo '<td><span id="servname'.$row_serv["id"].'">'.$row_serv["name"].'</span></td>
+=======
+							echo '<td><span id=servicename'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
+>>>>>>> origin/master
 							<td><input id="price'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'"></td>
-							<td><input id="quantserv'.$row_serv["id"].'" type="text" size="2" value="1"></td>
+							<td><input id="quantserv'.$row_serv["id"].'" type="text" size="2" ';
+							if ($row_serv["byguestcount"]==1)
+							{
+								echo "class='.byguestcount'";
+							}
+							echo ' value="1"></td>
 							<td><input id="discont'.$row_serv["id"].'" type="text" size="2"></td>
 							<td><input id="comment'.$row_serv["id"].'" type="text" size="20"></td>
 							<td><button type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
@@ -319,8 +328,7 @@ fixednavbar();
 				echo '</tr>';
 					
 		}
-				echo '</table>';
-		
+				echo '</table>';		
 ?>
 <?php		
 	}
@@ -548,7 +556,7 @@ fixednavbar();
 				//alert($("#clientsearch").val());
 				if ($.cookie("clientname")!==$("#clientsearch").val())
 				{
-					//alert($.cookie("clientname"));
+					alert($.cookie("clientname"));
 					//alert($("#clientsearch").val());
 					
 					$.removeCookie("clientname");
@@ -610,13 +618,13 @@ fixednavbar();
 				if (dishes) {
 					var dishall = $.parseJSON(dishes);
 					$.each(dishall, function(index, value) {
-						console.log(index + " "+ value);
+						//console.log(index + " "+ value);
 						if (index)
 						{
 							$("#adddish"+index).html("Удалить");
 							$("#dishname"+index).css("color", "green");
-							$("#quant"+index).val();
-							$("#note"+index).val();
+							$("#quant"+index).val(value["quant"]);
+							$("#note"+index).val(value["note"]);
 							$("#quant"+index).attr("readonly","readonly");
 							$("#note"+index).attr("readonly","readonly");						
 						}
@@ -633,12 +641,55 @@ fixednavbar();
 				if (services) {
 					var serviceall = $.parseJSON(services);
 					$.each(serviceall, function(index, value) {
-						console.log(index + " "+ value);
+						//console.log(index + " "+ value);
+						if (index)
+						{
+							$("#addserv"+index).html("Удалить");
+							$("#servicename"+index).css("color", "green");
+							$("#price"+index).val(value["price"]);
+							$("#quantserv"+index).val(value["quantserv"]);
+							$("#discont"+index).val(value["discont"]);
+							$("#comment"+index).val(value["comment"]);
+							$("#quantserv"+index).attr("readonly","readonly");
+							$("#discont"+index).attr("readonly","readonly");						
+							$("#comment"+index).attr("readonly","readonly");
+						}
+					});					
+				}
+				setcountguestfields();				
+			}
+		}		
+		function setcountguestfields()
+		{
+			var warnchangeguestcount=0;
+			//alert(1);
+			if (typeof $.cookie("guestcount") != 'undefined')
+			{
+				//alert(2);
+				if ($.isNumeric($.cookie("guestcount")))
+				{
+					//alert($.cookie("guestcount"));
+					$("input[class*='byguestcount']").each(function() {
+						//alert($(this).val());
+						if ($(this).attr("readonly")!=="readonly") 
+						{
+							$(this).val($.cookie("guestcount"));
+						}
+						else
+						{
+							if ($(this).val()!=$.cookie("guestcount"))
+							{
+								warnchangeguestcount=1;
+							}
+						}
 					});					
 				}
 			}
-		}		
-		
+			if (warnchangeguestcount)
+			{
+				alert("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
+			}
+		}
 		$(document).ready(function(){
 			// когда страница загружена
 			
@@ -655,7 +706,9 @@ fixednavbar();
 			//erasevaluesincookie();
 			
 			$('#tabs').smartTab({selected: 1});		
-			
+
+			setcountguestfields();
+					
 			// добавление блюд в заказ
 			$( document ).on( "click", "button[name=adddish]", function() {
 				id = $(this).attr("id");
