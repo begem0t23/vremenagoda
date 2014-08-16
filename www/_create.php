@@ -307,11 +307,9 @@ fixednavbar();
 
 				echo '<tr>';
 
-<<<<<<< HEAD
-							echo '<td><span id="servname'.$row_serv["id"].'">'.$row_serv["name"].'</span></td>
-=======
+
 							echo '<td><span id=servicename'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
->>>>>>> origin/master
+
 							<td><input id="price'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'"></td>
 							<td><input id="quantserv'.$row_serv["id"].'" type="text" size="2" ';
 							if ($row_serv["byguestcount"]==1)
