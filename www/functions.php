@@ -19,7 +19,7 @@ if ($id == 0)
 		if (mysql_num_rows($rezult00) > 0) 
 		{
 		$rows00 =	mysql_fetch_array($rezult00);
-		$order = $rows00['order'] + 1 ;
+		$order = $rows00['orderby'] + 1 ;
 		}
 	}
 	
@@ -32,7 +32,7 @@ if ($id == 0)
 		if (mysql_num_rows($rezult01) > 0) 
 		{
 		$rows01 =	mysql_fetch_array($rezult01);
-		$order = $rows01['order'];
+		$order = $rows01['orderby'];
 		
 		$update = "UPDATE `services` SET `isactive` = '0' WHERE  `services`.`id` = ".$id." ;";
 		
@@ -43,7 +43,7 @@ if ($id == 0)
 				}
 	}	
 	
-	$insert = "INSERT INTO `services` (`id`, `name`, `description`, `price`, `createdate`, `isactive`, `order`) VALUES (NULL, '".$name."', '".$description."', '".$price."', NOW(), '1', ".$order.");";
+	$insert = "INSERT INTO `services` (`id`, `name`, `description`, `price`, `createdate`, `isactive`, `orderby`) VALUES (NULL, '".$name."', '".$description."', '".$price."', NOW(), '1', ".$order.");";
 	
 	mysql_query($insert);
 	

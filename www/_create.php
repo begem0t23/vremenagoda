@@ -644,7 +644,7 @@ fixednavbar();
 						{
 							$("#addserv"+index).html("Удалить");
 							$("#servicename"+index).css("color", "green");
-							$("#price"+index).val(value["price"]);
+							$("#price"+index).val(value["priceserv"]);
 							$("#quantserv"+index).val(value["quantserv"]);
 							$("#discont"+index).val(value["discont"]);
 							$("#comment"+index).val(value["comment"]);
@@ -771,6 +771,7 @@ fixednavbar();
 				{
 					$(this).html("Удалить");
 					$("#servname"+id).css("color", "green");
+					var priceserv 	= $("#price"+id).val();
 					var quantserv 	= $("#quantserv"+id).val();
 					var discont 	= $("#discont"+id).val();
 					var comment 	= $("#comment"+id).val();
@@ -786,14 +787,20 @@ fixednavbar();
 						var serviceall = {};
 					}
 					var element = {};
-					element = ({quantserv:quantserv, discont:discont, comment:comment});
+					element = ({priceserv:priceserv, quantserv:quantserv, discont:discont, comment:comment});
 					serviceall[id] = element ;
 					services = $.toJSON(serviceall);
 					$.cookie("service", services,{ expiry: 0});
 				}
 				//console.log($.cookie("service"));
 			});			
-
+			
+		$(window).bind('beforeunload', function(){
+		  if (typeof $.cookie("clientname") != 'undefined')
+		  {
+			alert("Вы покидаете страницу создания заказа без сохранения данных.");
+		  }
+		});
 			
 		});
 		
