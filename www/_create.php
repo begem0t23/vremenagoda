@@ -535,7 +535,7 @@ fixednavbar();
 					if (mysql_num_rows($r_hall)>0)
 					{	
 						echo '<select id="hall" class="form-control">' . "";
-						echo '<option value="0">выберите зал</option>' . "";
+						echo '<option value="0" checked>выберите зал</option>' . "";
 						while ($row_hall = mysql_fetch_array($r_hall))
 						{	
 							echo '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
@@ -666,23 +666,26 @@ fixednavbar();
 				setcountguestfields();				
 			}
 			if (curpage==4) {
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<table border=0 width=100%>");
-				$("#resultform").append("<tr><td>Клиент: </td><td>"+$.cookie("clientname")+"</td></tr>");
-				/*
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				$("#resultform").append("<h3>Информация по заказу</h3>");
-				*/
-				$("#resultform").append("</table>");
+
+				var additional_pars = new Object();
+				additional_pars["cn"] = $.cookie("clientname");
+				additional_pars["ci"] = $("#clientid").val();
+				additional_pars["cp"] = $.cookie("clientphone");
+				additional_pars["ce"] = $.cookie("clientemail");
+				additional_pars["de"] = $.cookie("dateevent");
+				additional_pars["te"] = $.cookie("timeevent");
+				additional_pars["gc"] = $.cookie("guestcount");
+				additional_pars["hh"] = $.cookie("hall");	
+				additional_pars["dd"] = $.cookie("dishes");	
+				additional_pars["ss"] = $.cookie("service");
+				
+				$.post("_summary.php", additional_pars,
+				function(){
+				//console.log(clientname);
+				})
+				.done(function(data) {
+					$("#resultform").html(data);
+				});
 			}
 		}		
 		function setcountguestfields()
