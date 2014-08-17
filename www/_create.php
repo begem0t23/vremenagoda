@@ -276,12 +276,13 @@ fixednavbar();
 		<form id=frm3 role="form" data-toggle="validator">
   
   <?php		
-	$tsql = "select * from services;";
+	$tsql = "SELECT * FROM `services` WHERE `isactive` = 1 ORDER BY `orderby` ASC;";
 	$r_serv = mysql_query($tsql);
 	if (mysql_num_rows($r_serv)>0)
 	{	
 				echo '<table class = "tablesorter order"  style="width: 700px;">';
 				echo 	'<colgroup>
+						<col width="150" />
 						<col width="150" />
 						<col width="50" />
 						<col width="50" />
@@ -293,6 +294,7 @@ fixednavbar();
 				echo  '<thead>
 							<tr>
 							<th class="sorter-false">Название</th>
+							<th class="sorter-false">Описание</th>
 							<th class="sorter-false">Цена</th>
 							<th class="sorter-false">Кол-во</th>
 							<th class="sorter-false">Скидка %</th>
@@ -309,6 +311,8 @@ fixednavbar();
 
 
 							echo '<td><span id=servicename'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
+							
+							<td><span id=servicedescr'.$row_serv["id"].'>'.$row_serv["description"].'</span></td>
 
 							<td><input id="price'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'"></td>
 							<td><input id="quantserv'.$row_serv["id"].'" type="text" size="2" ';

@@ -10,7 +10,8 @@ $id = $_POST['servid'];
 $name = $_POST['servname'];
 $description = $_POST['servdescription'];
 $price = $_POST['servprice'];
-
+$byguestcount = 0;
+if( $_POST['byguestcount'] = 'true') $byguestcount = 1;
 
 if ($id == 0) 
 	{
@@ -43,7 +44,7 @@ if ($id == 0)
 				}
 	}	
 	
-	$insert = "INSERT INTO `services` (`id`, `name`, `description`, `price`, `createdate`, `isactive`, `orderby`) VALUES (NULL, '".$name."', '".$description."', '".$price."', NOW(), '1', ".$order.");";
+	$insert = "INSERT INTO `services` (`id`, `name`, `description`, `price`, `byguestcount`, `createdate`, `isactive`, `orderby`) VALUES (NULL, '".$name."', '".$description."', '".$price."', '".$byguestcount."',  NOW(), '1', ".$order.");";
 	
 	mysql_query($insert);
 	

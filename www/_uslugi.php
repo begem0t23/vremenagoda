@@ -71,6 +71,7 @@
 
 	<input type="text" id="price" placeholder="Цена" class="form-control" value="">
 
+	<div class="checkbox"> <label> <input id="byguestcount" type="checkbox" value="yes">Расчитывать цену по количству гостей.</label></div>
 
   </form>
 </div>
@@ -88,7 +89,11 @@ fixednavbar();
       </div>
 <button type="button" name="changeserv" id="changeserv0" title="Добавить услугу">Добавить услугу</button>
  <?php		
-	$tsql = "SELECT * FROM `services` WHERE `isactive` = 1 ORDER BY `orderby` ASC;";
+
+$bgs[0] = 'Нет';
+$bgs[1] = 'Да';
+
+ $tsql = "SELECT * FROM `services` WHERE `isactive` = 1 ORDER BY `orderby` ASC;";
 	$r_serv = mysql_query($tsql);
 	if (mysql_num_rows($r_serv)>0)
 	{	
@@ -105,6 +110,7 @@ fixednavbar();
 							<th class="sorter-false">Название</th>
 							<th class="sorter-false">Описание</th>
 							<th class="sorter-false">Цена</th>
+							<th class="sorter-false">От кол-ва гостей</th>
 							<th class="sorter-false">Действие</th>
 							</tr>
 							</thead>';
@@ -112,13 +118,13 @@ fixednavbar();
 <?php
 			while ($row_serv = mysql_fetch_array($r_serv))
 		{
-
 				echo '<tr>';
 
 							echo '
 							<td><span id="servname'.$row_serv["id"].'">'.$row_serv["name"].'</span></td>
 							<td><span id="servdescr'.$row_serv["id"].'">'.$row_serv["description"].'</span></td>
 							<td><span id="servprice'.$row_serv["id"].'">'.$row_serv["price"].'</span></td>
+							<td><span id="byguestcount'.$row_serv["id"].'">'.$bgs[$row_serv["byguestcount"]].'</span></td>
 							<td><button type="button" name="changeserv" id="changeserv'.$row_serv["id"].'" title="Изменить услугу">Изменить</button></td>';
 												
 				echo '</tr>';
@@ -181,9 +187,10 @@ fixednavbar();
       // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
       emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
       name = $( "#name" ),
+     byguestcount = $( "#byguestcount" ),
       description = $( "#description" ),
       price = $( "#price" ),
-      allFields = $( [] ).add( name ).add( description ).add( price ),
+      allFields = $( [] ).add( name ).add( description ).add( price ).add( byguestcount ),
       tips = $( ".validateTips" );
  
     function updateTips( t ) {
@@ -234,7 +241,7 @@ fixednavbar();
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'addservice', servname: name.val(), servdescription: description.val(), servprice: price.val(), servid: id}
+			data: { operation: 'addservice', servname: name.val(), servdescription: description.val(), servprice: price.val(), servid: id, byguestcount: byguestcount.prop('checked')}
 		})
 		.done(function( msg ) {
 			if(msg == 'yes'){
@@ -253,8 +260,8 @@ fixednavbar();
  
     dialog = $( "#dialog-form" ).dialog({
       autoOpen: false,
-      height: 300,
-      width: 350,
+      height: 350,
+      width: 400,
       modal: true,
       buttons: {
         "Сохранить": addUser,
@@ -276,6 +283,11 @@ fixednavbar();
     $( document ).on( "click", "button[name=changeserv]", function() {
 					id = $(this).attr("id");
 				id = id.substr(10);
+				bgs = $('#byguestcount'+id).html();
+				if (bgs == 'Да') 
+					{
+					$('#byguestcount').prop('checked','true');
+					}
 				$('#name').val($('#servname'+id).html());
 				$('#description').val($('#servdescr'+id).html());
 				$('#price').val($('#servprice'+id).html());
