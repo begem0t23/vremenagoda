@@ -9,7 +9,7 @@ function dishes_in_section_by_menu($menu_id,$menu_section)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT d.id, d.title, d.weight, d.price, m.dishid FROM dishes d, dishes_in_menus m  WHERE d.menu_section = ".$menu_section." and m.menuid=".$menu_id." and m.dishid = d.id ;";
+		$tsql01 = "SELECT d.id, d.title, d.description,  d.weight, d.price, m.dishid FROM dishes d, dishes_in_menus m  WHERE d.menu_section = ".$menu_section." and m.menuid=".$menu_id." and m.dishid = d.id AND m.isactive = '1'  AND d.isactive = '1' ;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -18,6 +18,7 @@ $dish['count'] = 0;
 			{			
 				$dish[$dish['count']]['id'] = $rows01['id'];
 				$dish[$dish['count']]['title'] = $rows01['title'];
+				$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
 				$dish['count'] ++;
@@ -48,7 +49,25 @@ function print_dishes($items)
 }
 
 
+function print_dishes_for_editor($items,$menuid,$sectionid)
+{
+$sectionid = substr($sectionid,1);
+$menuid = substr($menuid,1);
+	if ($items['count'] > 0)
+	{
+		for($i=0;$i<$items['count'];$i++)
+		{			
+			echo '<tr>';
+			echo '<td><span id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
+					<td><span id="dish_descr'.$items[$i]["id"].'">'.$items[$i]["description"].'</span></td>	
+							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
+							<td>'.$items[$i]["price"].'</td>
+							<td><button type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить блюдо из меню"><span class="glyphicon glyphicon-log-out"></span></button></td>';
 
+			echo '</tr>';					
+		}
+	}
+}
 
 
 function report_client($tname,$zid)
@@ -391,7 +410,7 @@ function fixednavbar()
 			?>">
               <a href="?settings" class="dropdown-toggle" data-toggle="dropdown">Настройки<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Меню блюд</a></li>
+                <li><a href="?menus">Меню блюд</a></li>
                 <li><a href="?uslugi">Меню услуг</a></li>
                 <li><a href="#">Другие настройки</a></li>
                 <li class="divider"></li>

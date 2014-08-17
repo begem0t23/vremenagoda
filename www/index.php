@@ -44,6 +44,10 @@ if (checklogin())
 	{
 		include("_create.php");
 	}
+	elseif ($qq == "menus")
+	{
+		include("_menus.php");
+	}
 	elseif ($qq == "uslugi")
 	{
 		include("_uslugi.php");
