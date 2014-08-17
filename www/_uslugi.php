@@ -55,27 +55,7 @@
 
 </head>
 <body>
- 
-<div id="dialog-form" title="Заполните информацию по услуге">
-  <p class="validateTips">Все поля должны быть заполнены.</p>
- 
-  <form>
-
-	<input type="text" id="name" placeholder="Название" class="form-control" value="">
-
-	
-
-	<input type="text" id="description" placeholder="Описание" class="form-control" value="">
-
-	
-
-	<input type="text" id="price" placeholder="Цена" class="form-control" value="">
-
-	<div class="checkbox"> <label> <input id="byguestcount" type="checkbox" value="yes">Расчитывать цену по количству гостей.</label></div>
-
-  </form>
-</div>
- 
+  
 <?php
 
 fixednavbar();
@@ -296,5 +276,14 @@ $bgs[1] = 'Да';
     });
   });
 	</script>
-  </body>
+ <div id="dialog-form" title="Заполните информацию по услуге">
+  <p class="validateTips">Все поля должны быть заполнены.</p>
+  <form>
+	<input type="text" id="name" placeholder="Название" class="form-control" value="">
+	<input type="text" id="description" placeholder="Описание" class="form-control" value="">
+	<input type="text" id="price" placeholder="Цена" class="form-control" value="">
+	<div class="checkbox"> <label> <input id="byguestcount" type="checkbox" value="yes">Расчитывать цену по количству гостей.</label></div>
+  </form>
+</div>
+ </body>
 </html>
