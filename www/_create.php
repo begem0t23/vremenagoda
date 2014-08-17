@@ -341,11 +341,15 @@ fixednavbar();
 		<div id=spanpage4 style="visibility: hidden">
 		<form id=frm4 role="form" data-toggle="validator">
 
+<div id=resultform>
+</div>
+		
 <div class="input-group">
   <span class="input-group-addon"><span class=rouble>Р</span></span>
   <input type="text" id=avans placeholder="аванс" class="form-control">
   <span class="input-group-addon">.00</span>
 </div>
+
 		<br><div class="input-group"><button class="btn btn-default" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</form>
 		</div>
@@ -419,7 +423,7 @@ fixednavbar();
 		}		
 		function dosetrightpaginator()
 		{
-			// Активация правильной кнопки выбора с раницы в зависимости от curpage
+			// Активация правильной кнопки выбора страницы в зависимости от curpage
 			erasedisablefromli();
 			//alert(curpage);
 			switch(curpage)
@@ -578,7 +582,7 @@ fixednavbar();
 		{
 			//alert($("body #clientfrom").val());
 			//alert(curpage);
-			if (curpage==1)
+			if ((curpage==1) && (typeof $("body #clientname").val() != 'undefined'))
 			{
 				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
 				$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
@@ -660,6 +664,25 @@ fixednavbar();
 					});					
 				}
 				setcountguestfields();				
+			}
+			if (curpage==4) {
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<table border=0 width=100%>");
+				$("#resultform").append("<tr><td>Клиент: </td><td>"+$.cookie("clientname")+"</td></tr>");
+				/*
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				$("#resultform").append("<h3>Информация по заказу</h3>");
+				*/
+				$("#resultform").append("</table>");
 			}
 		}		
 		function setcountguestfields()
