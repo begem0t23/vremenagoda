@@ -60,13 +60,13 @@
  
  
  <div id="dialog-adddish" title="Добавление блюда в меню">
-   <p class="validateTips">Блюда доступные для добавления в этой секции</p>
+   <p class="validateTips">Блюда этого раздела доступные для добавления в меню.</p>
 
-<table id = "dishes"  class="tablesorter dishestoadd" style="width: 800px;"><colgroup>
-						<col width="250">
-						<col width="250">
-						<col width="50">
-						<col width="50">
+<table id = "dishes"  class="tablesorter dishestoadd" style="width: 100%;"><colgroup>
+						<col width="450">
+						<col width="350">
+						<col width="100">
+						<col width="100">
 						<col width="30">
 						<col width="30">
 						<col width="30">
@@ -90,14 +90,14 @@
 							<td></td>
 							</tr></tbody></table>
 							
-<p class="validateTips">Блюда занятые в этой секции</p>
+<p class="validateTips">Блюда этого раздела уже добавленные в меню</p>
 
-<table id = "dishes2"  class="tablesorter dishestoadd" style="width: 800px;"><colgroup>
-						<col width="250">
-						<col width="250">
-						<col width="50">
-						<col width="50">
-						<col width="50">
+<table id = "dishes2"  class="tablesorter dishestoadd" style="width: 100%;"><colgroup>
+						<col width="450">
+						<col width="350">
+						<col width="100">
+						<col width="100">
+						<col width="100">
 						<col width="30">
 						<col width="30">
 						<col width="30">
@@ -126,25 +126,7 @@
 </div>
  
  <div id="dialog-editdish" title="Заполните информацию о блюде">
-   <p class="validateTips">Все поля должны быть заполнены.</p>
-
-  <form>
-
-	<input type="text" id="name" placeholder="Название" class="form-control" value="">
-
-	
-
-	<input type="text" id="description" placeholder="Описание" class="form-control" value="">
-
-	<input type="text" id="weight" placeholder="Вес в граммах" class="form-control" value="">
-
-
-	<input type="text" id="price" placeholder="Цена" class="form-control" value="">
-	<input type="hidden" id="menu_section"  value="">
-	<input type="hidden" id="dish_id"  value="0">
-
-
-  </form>
+ 
 </div>
 <?php
 
@@ -198,6 +180,41 @@ fixednavbar();
 
 	<script>
 
+	function delete_dish(dishid){
+	
+			$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'deletedish', dishid: dishid}
+		})
+		.done(function( msg ) {
+				if(msg == 'yes'){
+				alert ('Блюдо удалено из системы.');
+				get_dishes_for_add(menuid,sectionid);
+				print_menu_tree(menuid);
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+		});
+	
+	}
+	
+	
+	
+	function get_edit_dish_form(dishid,menuid,sectionid){
+	
+		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'geteditdishform',dishid: dishid, menuid: menuid, sectionid: sectionid}
+		})
+		.done(function( msg ) {
+			$( "#dialog-editdish" ).html(msg);
+			});	
+	}
+	
+	
+	
 		function print_menu_tree(cnt){
 
 			$.ajax({
@@ -207,24 +224,20 @@ fixednavbar();
 		})
 		.done(function( msg ) {
 			$( "#menutree" ).html(msg);
-			
-			$('#tabs').smartTab({selected: cnt});
-		
-			
-						$(".menus")
+			$(".menus")
 			.tablesorter(
 			{
 				theme: 'blue',
 				widgets: ['zebra']
 			});
-				
+			$('#tabs').smartTab({selected: cnt});
 		});
 	
 	}
 	
 	function dish_to_menu (dishid,menuid,sectionid){
 	
-				$.ajax({
+		$.ajax({
 			type: "POST",
 			url: "functions.php",
 			data: { operation: 'dishtomenu', menuid: menuid, dishid: dishid}
@@ -242,7 +255,7 @@ fixednavbar();
 	
 	function dish_from_menu (dishid,menuid,sectionid){
 	
-				$.ajax({
+		$.ajax({
 			type: "POST",
 			url: "functions.php",
 			data: { operation: 'dishfrommenu', menuid: menuid, dishid: dishid}
@@ -306,7 +319,7 @@ fixednavbar();
 
 print_menu_tree(1);			
 			
-$('#tabs').smartTab({selected: 1});		
+$('#tabs').smartTab({selected: 0});		
 
     var id, dialog, form, 
  
@@ -352,11 +365,22 @@ $('#tabs').smartTab({selected: 1});
     }
  
     function adddish() {
+		var	name = $( "#name" ),
+		description = $( "#description" ),
+		weight = $( "#weight" ),
+		price = $( "#price" ),
+		menu_section = $( "#menu_section" ),
+		dish_id = $( "#dish_id" ),
+		menu_id = $( "#menu_id" ),
+		allFields = $( [] ).add( name ).add( description ).add( price ).add( weight ).add( menu_section ).add( dish_id ).add( menu_id ),
+		tips = $( ".validateTips" );
+
+
       var valid = true;
       allFields.removeClass( "ui-state-error" );
  
       valid = valid && checkLength( name, "названия", 3, 250 );
-      valid = valid && checkLength( description, "описания", 10, 250 );
+      valid = valid && checkLength( description, "описания", 0, 250 );
       valid = valid && checkLength( weight, "веса", 2, 5 );
      valid = valid && checkLength( price, "цена", 1, 10 );
  
@@ -371,14 +395,14 @@ $('#tabs').smartTab({selected: 1});
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'adddish', dishname: name.val(), dishdescription: description.val(), dishweight: weight.val(), dishprice: price.val(), dishid: dish_id.val(), menu_section: menu_section.val()}
+			data: { operation: 'adddish', dishname: name.val(), dishdescription: description.val(), dishweight: weight.val(), dishprice: price.val(), dishid: dish_id.val(), menu_section: menu_section.val(), menuid: menu_id.val()}
 		})
 		.done(function( msg ) {
 			if(msg == 'yes'){
 				alert ('Информация о блюде сохранена.');
-				get_dishes_for_add(menuid,sectionid);
-				print_menu_tree(menuid);
-dialog3.dialog( "close" );
+				get_dishes_for_add(menu_id.val(),menu_section.val());
+				print_menu_tree(menu_id.val());
+				dialog3.dialog( "close" );
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -392,36 +416,39 @@ dialog3.dialog( "close" );
  
      dialog2 = $( "#dialog-adddish" ).dialog({
       autoOpen: false,
-      height: 450,
-      width: 850,
+	  position: [100,100],
+     height: '500',
+      width: '100%',
       modal: true,
       buttons: {
         "Отмена": function() {
           dialog2.dialog( "close" );
         }
       },
-      close: function() {
-
-        allFields.removeClass( "ui-state-error" );
-      }
+      open: function() {
+    }
     });
  
       dialog3 = $( "#dialog-editdish" ).dialog({
       autoOpen: false,
-      height: 350,
-      width: 400,
+	  position: [100,100],
+      height: '500',
+      width: '100%',
       modal: true,
       buttons: {
         "Сохранить": adddish,
         "Отмена": function() {
           dialog3.dialog( "close" );
+
         }
       },
       close: function() {
-        form[ 0 ].reset();
-        allFields.removeClass( "ui-state-error" );
-		   dialog2.dialog( "open" );
-      }
+	  dialog2.dialog( "open" );
+     },
+      open: function() {
+  
+	  
+	  }
     });
 	
  
@@ -448,34 +475,48 @@ dialog3.dialog( "close" );
 				dish_from_menu(dishid, menuid, sectionid);
     });
 
+	$( document ).on( "click", "button[name=deletedish]", function() {
+				dishid = $(this).attr("id");
+				menuid = $(this).attr("menuid");
+				sectionid = $(this).attr("sectionid");
+				if (confirm("Вы уверены что ходите удалить блюдо совсем?")) {
+					delete_dish(dishid);
+				} else {
+				}
+
+				
+    });
+
 	
 	$( document ).on( "click", "button[name=adddish]", function() {
 				id = $(this).attr("id");					
+				menutitle = $(this).attr("menutitle");					
+				sectiontitle = $(this).attr("sectiontitle");					
 				menuid = id.substr(7,1);
 				sectionid = id.substr(9);
 				get_dishes_for_add(menuid,sectionid);
-				dialog2.dialog('option', 'title', 'Добавление блюда в меню - '+menuid + ' раздел - ' + sectionid);
+				dialog2.dialog('option', 'title', 'Добавление блюд в:  "'+menutitle + '" / раздел: "' + sectiontitle + '"');
+
+				$( ".ui-dialog" ).css("margin-top", "70px");
 				dialog2.dialog( "open" );
+		
     });
 
 	$( document ).on( "click", "button[name=editdish]", function() {
 				dishid = $(this).attr("id");
 				menuid = $(this).attr("menuid");
 				sectionid = $(this).attr("sectionid");
+				get_edit_dish_form(dishid, menuid, sectionid);
+			dialog2.dialog( "close" );
+				$( ".ui-dialog" ).css("margin-top", "70px");
 
-				$('#name').val($('#dishname'+dishid).html());
-				$('#description').val($('#dishdescr'+dishid).html());
-				$('#price').val($('#dishprice'+dishid).html());
-				$('#weight').val($('#dishweight'+dishid).html());
-				$('#menu_section').val(sectionid);
-				$('#dish_id').val(dishid);
-	
-				dialog2.dialog( "close" );
 				dialog3.dialog( "open" );
     });
 	
 	
   });
+  
+ 
 	</script>
   </body>
 </html>

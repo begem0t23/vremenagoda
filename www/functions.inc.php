@@ -4,6 +4,27 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
+function dishes_in_section($menu_id,$menu_section)
+{
+$dish = Array();
+$dish['count'] = 0;
+		$tsql01 = "SELECT * FROM dishes WHERE menu_section = ".$menu_section."  AND isactive = '1' ;";
+		$rezult01 = mysql_query($tsql01);
+
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+			while ($rows01 = mysql_fetch_array($rezult01)) 
+			{			
+				$dish[$dish['count']]['id'] = $rows01['id'];
+				$dish[$dish['count']]['title'] = $rows01['title'];
+				$dish[$dish['count']]['description'] = $rows01['description'];
+				$dish[$dish['count']]['weight'] = $rows01['weight'];
+				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish['count'] ++;
+			}
+		}
+return $dish;
+}
 
 function dishes_in_section_by_menu($menu_id,$menu_section)
 {
@@ -62,7 +83,7 @@ $menuid = substr($menuid,1);
 					<td><span id="dish_descr'.$items[$i]["id"].'">'.$items[$i]["description"].'</span></td>	
 							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
 							<td>'.$items[$i]["price"].'</td>
-							<td><button type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить блюдо из меню"><span class="glyphicon glyphicon-log-out"></span></button></td>';
+							<td><button type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить блюдо из меню">Убрать из меню</button></td>';
 
 			echo '</tr>';					
 		}
