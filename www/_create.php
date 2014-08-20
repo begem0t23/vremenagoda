@@ -506,14 +506,15 @@ fixednavbar();
 					if (typeof data[4] == 'undefined') data[4]='';
 					if (data[0]=="OK"){
 						spanpage1+='<input type="text" readonly id=clientname value="'+clientname+'" class="form-control">';						
-						spanpage1+='<input type="hidden" id=clientid vale="'+data[1]+'">';						
+						spanpage1+='<input type="hidden" id=clientid value="'+data[1]+'">';						
 					}
 					else {
 						spanpage1+='<input type="text" readonly id=clientname value="'+clientname+'" class="form-control">';						
-						spanpage1+='<input type="hidden" id=clientid vale="0">';
+						spanpage1+='<input type="hidden" id=clientid value="0">';
 					}
+					//alert(data[2]);
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-phone-alt"></span></span>';
-					spanpage1+='<input required="required" type="text" id=clientphone value="'+data[2]+'" class="form-control required" placeholder="Телефон">';
+					spanpage1+='<input type="text" id=clientphone value="'+data[2]+'" class="form-control" placeholder="Телефон">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>';
 					spanpage1+='<input type="email" id=clientemail value="'+data[3]+'" class="form-control" placeholder="E-mail">';
 
@@ -522,7 +523,7 @@ fixednavbar();
 
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
 					//spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
-					spanpage1+='<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
+					spanpage1+='<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
 					spanpage1+='<input data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 					spanpage1+='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей">';
@@ -566,6 +567,7 @@ fixednavbar();
 					//alert($("#clientsearch").val());
 					
 					$.removeCookie("clientname");
+					$.removeCookie("clientid");
 					$.removeCookie("clientfrom");
 					$.removeCookie("clientphone");
 					$.removeCookie("clientemail");
@@ -584,7 +586,9 @@ fixednavbar();
 			//alert(curpage);
 			if ((curpage==1) && (typeof $("body #clientname").val() != 'undefined'))
 			{
+				//alert($("#clientid").val());
 				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
+				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
 				$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
 				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
 				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
@@ -606,13 +610,18 @@ fixednavbar();
 			//alert(curpage);
 			if (curpage==1)
 			{
-				$("body #clientfrom").val($.cookie("clientfrom"));
-				$("body #clientphone").val($.cookie("clientphone"));
-				$("body #clientemail").val($.cookie("clientemail"));
-				$("body #dateevent").val($.cookie("dateevent"));
-				$("body #timeevent").val($.cookie("timeevent"));
-				$("body #guestcount").val($.cookie("guestcount"));
-				$("body #hall").val($.cookie("hall"));
+				if (typeof $.cookie("clientname") != 'undefined')
+				{
+					//alert($.cookie("clientid"));
+					$("body #clientid").val($.cookie("clientid"));
+					$("body #clientfrom").val($.cookie("clientfrom"));
+					$("body #clientphone").val($.cookie("clientphone"));
+					$("body #clientemail").val($.cookie("clientemail"));
+					$("body #dateevent").val($.cookie("dateevent"));
+					$("body #timeevent").val($.cookie("timeevent"));
+					$("body #guestcount").val($.cookie("guestcount"));
+					$("body #hall").val($.cookie("hall"));
+				}
 			}
 			if (curpage==2)
 			{
@@ -669,7 +678,8 @@ fixednavbar();
 
 				var additional_pars = new Object();
 				additional_pars["cn"] = $.cookie("clientname");
-				additional_pars["ci"] = $("#clientid").val();
+				//alert($("#clientid").val());
+				additional_pars["ci"] = $.cookie("clientid");
 				additional_pars["cp"] = $.cookie("clientphone");
 				additional_pars["ce"] = $.cookie("clientemail");
 				additional_pars["de"] = $.cookie("dateevent");
@@ -753,7 +763,7 @@ fixednavbar();
 						var dishall = $.parseJSON(dishes);
 						delete dishall[id];
 						dishes = $.toJSON(dishall);
-						$.cookie("dishes", dishes,{ expiry: 0});					
+						$.cookie("dishes", dishes,{ expires: 1, path: '/' });				
 					}
 				}
 				else
@@ -778,7 +788,7 @@ fixednavbar();
 					element = ({quant:quant, note:note});
 					dishall[id] = element ;
 					dishes = $.toJSON(dishall);
-					$.cookie("dishes", dishes,{ expiry: 0});
+					$.cookie("dishes", dishes,{ expires: 1, path: '/' });
 				}
 				//console.log($.cookie("dishes"));
 			});			
@@ -804,7 +814,7 @@ fixednavbar();
 						var serviceall = $.parseJSON(services);
 						delete serviceall[id];
 						services = $.toJSON(serviceall);
-						$.cookie("service", services,{ expiry: 0});					
+						$.cookie("service", services,{ expires: 1, path: '/' });			
 					}
 				}
 				else
@@ -835,7 +845,7 @@ fixednavbar();
 					element = ({priceserv:priceserv, quantserv:quantserv, discont:discont, comment:comment});
 					serviceall[id] = element ;
 					services = $.toJSON(serviceall);
-					$.cookie("service", services,{ expiry: 0});
+					$.cookie("service", services,{ expires: 1, path: '/' });
 				}
 				//console.log($.cookie("service"));
 			});			
@@ -888,16 +898,16 @@ fixednavbar();
 		function dosaveorder()
 		{
 			//setvaluesincookie();
-			if ($("#clientname").val()!="") 
+			if ($.cookie("clientname")!="") 
 			{
-				if ($("#clientphone").val()!="") 
+				if ($.cookie("clientphone")!="") 
 				{
-					if ($("#clientfrom").val()!="") 
+					if ($.cookie("clientfrom")!="") 
 					{
 				
 						var additional_pars = new Object();
 						additional_pars["cn"] = $.cookie("clientname");
-						additional_pars["ci"] = $("#clientid").val();
+						additional_pars["ci"] = $.cookie("clientid");
 						additional_pars["cp"] = $.cookie("clientphone");
 						additional_pars["cf"] = $.cookie("clientfrom");
 						additional_pars["ce"] = $.cookie("clientemail");
@@ -914,14 +924,27 @@ fixednavbar();
 						// нет
 						})
 						.done(function(data) {
-							if (data=="OK")
+							//alert(data);
+							//var nn = noty({text:data});
+							data = data.split(":");
+							if (data[0]=="OK")
 							{
-								var nn = noty({text: 'Сохранено', type: 'information', timeout:5000, onClick: function(){delete nn;}});							
-								//docheckclientname();
+								var nn = noty({text: 'Сохранено, номер заказа ' + data[1], type: 'information', timeout:5000, onClick: function(){delete nn;}});							
+								$.removeCookie("clientname");
+								$.removeCookie("clientid");
+								$.removeCookie("clientfrom");
+								$.removeCookie("clientphone");
+								$.removeCookie("clientemail");
+								$.removeCookie("dateevent");
+								$.removeCookie("timeevent");
+								$.removeCookie("guestcount");
+								$.removeCookie("hall");
+								$.removeCookie("dishes");
+								$.removeCookie("service");							
 							}
 							else
 							{
-								var nn = noty({text: 'Ошибка ' + data, type: 'error', timeout:5000, onClick: function(){delete nn;}});														
+								var nn = noty({text: 'Ошибка ' + data[1], type: 'error', timeout:5000, onClick: function(){delete nn;}});														
 							}
 						});
 					}
