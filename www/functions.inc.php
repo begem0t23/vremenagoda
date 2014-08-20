@@ -4,6 +4,53 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
+function print_dishes_for_client_report($items,$sectionid)
+{
+$output = Array();
+$output['sum'] = 0;
+$sectionid = substr($sectionid,1);
+$menuid = substr($menuid,1);
+	if ($items['count'] > 0)
+	{
+		for($i=0;$i<$items['count'];$i++)
+		{	
+
+			$output['print'] = $output['print'].'<tr>
+							<td><span id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
+							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
+							<td>'.$items[$i]["price"].'</td>
+							<td><span id="dish_num'.$items[$i]["id"].'">'.$items[$i]["num"].'</span></td>
+							<td><span id="dish_cost'.$items[$i]["id"].'">'.($items[$i]["num"] * $items[$i]["price"]).'</span></td>
+							</tr>';					
+		}
+	}
+	return $output;
+}
+
+function dishes_in_section_by_order($order_id,$menu_section)
+{
+$dish = Array();
+$dish['count'] = 0;
+		$tsql01 = "SELECT d.id, d.title,   d.weight, do.price price2, do.num, do.note FROM dishes d,  dishes_in_orders do  WHERE d.menu_section = ".$menu_section." and do.orderid=".$order_id." and do.dishid = d.id   ;";
+		$rezult01 = mysql_query($tsql01);
+
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+			while ($rows01 = mysql_fetch_array($rezult01)) 
+			{	
+				$dish['sum'] = 	$dish['sum'] + ($rows01['num'] *  $rows01['price2']);
+				$dish[$dish['count']]['id'] = $rows01['id'];
+				$dish[$dish['count']]['title'] = $rows01['title'];
+				$dish[$dish['count']]['num'] = $rows01['num'];
+				$dish[$dish['count']]['note'] = $rows01['note'];
+				$dish[$dish['count']]['weight'] = $rows01['weight'];
+				$dish[$dish['count']]['price'] = $rows01['price2'];
+				$dish['count'] ++;
+			}
+		}
+return $dish;
+}
+
 function dishes_in_section($menu_id,$menu_section)
 {
 $dish = Array();
@@ -93,23 +140,25 @@ $menuid = substr($menuid,1);
 
 function report_client($tname,$zid)
 {
+$cs1 = 1;
+$cs2 = 4;
 echo '<h3>'.$tname.'</h3>'.chr(10);
 
 $cols_out = '<colgroup>
-<col width="250" />
-<col width="250" />
-<col width="250" />
-</colgroup>';
+			<col width="300">
+			<col width="50" class="tablenumbers">
+			<col width="70" class="tablenumbers">
+			<col width="70" class="tablenumbers">
+			<col width="80" class="tablenumbers">
+			</colgroup>';
 
-$head_out = '<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>';
+$head_out = '<thead><tr>
+
+<th colspan="'.($cs1 + $cs2).'">Информация по клиенту</th>
+</tr></thead>';
 
 
-$tsql = "SELECT o.id, o.eventdate, o.status, u.realname, c.name, c.phone 
+$tsql = "SELECT o.id, o.eventdate, o.status, u.realname, c.name, c.phone, o.hallid
 		 FROM orders o, users u, clients c
 		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id ";
 
@@ -120,137 +169,331 @@ $rezult = mysql_query($tsql);
 $rows = mysql_fetch_array($rezult);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td>Заказчик</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows['phone'].'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">Клиент</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['name'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td>Тип мероприятия</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'<td colspan="'.$cs1.'">Телефон</td>'.chr(10);
+		$body_out = $body_out.'<td colspan="'.$cs2.'">'.$rows['phone'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td>Дата проведения мероприятия</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows['eventdate'].'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">E-mail</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['email'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'">Информация по мероприятию</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td>Место проведения мероприятия</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">Дата</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['eventdate'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td>Время начала мероприятия</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">Время</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['eventtime'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td>Время окончания мероприятия</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">Помещение</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['hallid'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td>Количество гостей</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">Количество гостей</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">Где поле?</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td>Количество столов</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">Комментарий по размещению</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">Где поле?</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td>Количество человек за 1 столом</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows['name'].'</td>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'">Информация по меню</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 
-echo '<table id="report_client_param" class="table">'.chr(10);
-
-echo $cols_out.$head_out.$body_out;
-
-echo '</tbody></table>'.chr(10);
-
-$body_out = '';
 
 
 // Дальше вывод блюд с ценами но пока нет таблицы';
 
 
-$cols_out = '<colgroup>
-<col width="250" />
-<col width="50" />
-<col width="50" />
-<col width="50" />
-<col width="50" />
-</colgroup>';
-
-$head_out = '<thead>
+$body_out = $body_out.'
 <tr>
 <th>Наименование блюда</th>
-<th>Выход гр.</th>
-<th>Кол - во</th>
-<th>Цена руб.</th>
-<th>Итого руб.</th>
+<th>Вес</th>
+<th>Цена</th>
+<th>Количество</th>
+<th>Стоимость</th>
 </tr>
-</thead>';
+</tbody>';
 
 
 
-$tsql = "SELECT * 
-		 FROM menu_sections 
+	$sections = Array();
+		$tsql0 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '0' ORDER BY `sortid` ASC;
 		 ";
+		$rezult0 = mysql_query($tsql0);
 
-$rezult = mysql_query($tsql);
 
+	while ($rows0 = mysql_fetch_array($rezult0)) {
 	
 	
-while ($rows = mysql_fetch_array($rezult)) {
 
+	$zzz = dishes_in_section_by_order($zid,$rows0['id']);
+	$sections[$rows0['id']]['id'] = '_'.$rows0['id']; //непонял почему но без _ не работает
+	
+	$sections[$rows0['id']]['name'] = $rows0['section_name'];
+	
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']]['children'] = 0;
+	$sections[$rows0['id']]['items'] = $zzz;
+	
+	
+		$tsql_1 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
+		 ";
+		$rezult_1 = mysql_query($tsql_1);
 
-		$body_out = $body_out.'<tbody><tr><th  colspan="5">'.chr(10);			
-		$body_out = $body_out.$rows['section_name'].chr(10);
-		$body_out = $body_out.'</th></tr></tbody>'.chr(10);
+		while ($rows_1 = mysql_fetch_array($rezult_1)) {
 
-
+	$zzz = dishes_in_section_by_order($zid,$rows_1['id']);
+	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['children'] ++;
+	$sections[$rows0['id']][$rows_1['id']]['id'] = '_'.$rows_1['id'];
+	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name']; //непонял почему но без _ не работает
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['sum'] = $sections[$rows0['id']][$rows_1['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
+	$sections[$rows0['id']][$rows_1['id']]['items'] = $zzz;
+	
 		
-		$tsql2 = "SELECT * 
-		 FROM dishes 
-		 WHERE menu_section = ".$rows['id'];
+		$tsql_2 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."' ORDER BY `sortid` ASC
+		 ";
+	$rezult_2 = mysql_query($tsql_2);
 
-		$rezult2 = mysql_query($tsql2);
+	while ($rows_2 = mysql_fetch_array($rezult_2)) {
 
+	$zzz = dishes_in_section_by_order($zid,$rows_2['id']);
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['sum'] = $sections[$rows0['id']][$rows_1['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['id'] = '_'.$rows_2['id']; //непонял почему но без _ не работает
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sum'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
 	
-		while ($rows2 = mysql_fetch_array($rezult2)) {
 
-				$body_out = $body_out.'<tbody><tr>'.chr(10);			
-		$body_out = $body_out.'<td>'.$rows2['title'].'</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows2['weight'].'</td>'.chr(10);
-		$body_out = $body_out.'<td>2</td>'.chr(10);
-		$body_out = $body_out.'<td>'.$rows2['price'].'</td>'.chr(10);
-		$body_out = $body_out.'<td>'.($rows2['price'] * 2).'</td>'.chr(10);
-		$body_out = $body_out.'</tr></tbody>'.chr(10);
+	} //result_2
+			
+	} //result_1
+			
+	} //result0
+	
+// конец сборки	
+	
+	
+	//цикл по массиву секций с блюдами для конкретного меню для вывода на экран
+	foreach ($sections as $num => $val) 
+	{
+	
+		if ($sections[$num]['dishes'] > 0) 
+		{	
+			$level0_sum[$sections[$num]['id']] = $sections[$num]['sum']; 
+			$body_out = $body_out.'<tbody><tr><th  colspan="4" class="level_0">'.chr(10);			
+			$body_out = $body_out.$sections[$num]['name'].''.chr(10);
+			$body_out = $body_out.'</th><th class="level_0">'.chr(10);
+			$body_out = $body_out.'</th></tr></tbody>'.chr(10);
 
+			if ($sections[$num]['items']['count'] > 0)
+			{
+				$out = print_dishes_for_client_report($sections[$num]['items'], $sections[$num]['id'] );
+				$body_out = $body_out.$out['print'];
+			}
+			
+			foreach ($val as $num1 => $val1) 
+			{
 
-		}
-		
+					
+					if (is_array($val1)) 
+					{
+					
+					
+				if ($val[$num1]['dishes'] > 0) 
+				{	
+						if($val[$num1]['name']){
+							$body_out = $body_out.'<tbody><tr><th  colspan="4" class="level_1">'.chr(10);			
+							$body_out = $body_out.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].''.chr(10);
+							$body_out = $body_out.'</th><th class="level_1">'.chr(10);
+							$body_out = $body_out.'</th></tr></tbody>'.chr(10);
+						}
+
+						
+					if ($val[$num1]['items']['count'] > 0)
+					{
+					
+					
+					
+						$out = print_dishes_for_client_report($val[$num1]['items'],$val[$num1]['id']);
+						$body_out = $body_out.$out['print'];
 }
 
+						foreach ($val1 as $num2 => $val2) 
+						{
+	
+					if (is_array($val2)) 
+					{
+					if ($val1[$num2]['dishes'] > 0) 
+							{	
+						if($val1[$num2]['name']){
+							$body_out = $body_out.'<tbody><tr><th  colspan="4" class="level_2">'.chr(10);			
+							$body_out = $body_out.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].''.chr(10);
+							$body_out = $body_out.'</th><th class="level_2">'.chr(10);
+							$body_out = $body_out.'</th></tr></tbody>'.chr(10);
+						}
+
+													
+								if ($val1[$num2]['items']['count'] > 0)
+								{
+									$out = print_dishes_for_client_report($val1[$num2]['items'],$val1[$num2]['id']);
+									$body_out = $body_out.$out['print'];
+								}
+
+							}
+	
+					}
+	
+						}
+					}
+				}
+			}
+	
+		}
+	}
+	
+	//конец цикла
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'">Информация по услугам</th>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
 
 
-echo '<table id="report_client_param" class="tablesorter report_1_2">'.chr(10);
+	$body_out = $body_out.'
+<tr>
+<th>Наименование Услуги</th>
+<th>Скидка</th>
+<th>Цена</th>
+<th>Количество</th>
+<th>Стоимость</th>
+</tr>
+</tbody>';
+
+$service_sum =0;
+$service_discont = 0;
+		$tsql011 = "SELECT s.id, s.name,    so.price ,  so.discont , so.num, so.comment FROM services s,  services_in_orders so  WHERE  so.orderid=".$zid." AND so.serviceid = s.id   ;";
+		$rezult011 = mysql_query($tsql011);
+
+		if (mysql_num_rows($rezult011) > 0) 
+		{
+			while ($rows011 = mysql_fetch_array($rezult011)) 
+			{			
+	$service_sum = $service_sum + ($rows011["num"] * $rows011["price"]);
+	$service_discont = $service_discont + ($rows011["num"] * $rows011["price"] * ($rows011["discont"]/100));
+	
+						$body_out = $body_out.'<tr><td>'.$rows011["name"].'</td>
+							<td>'.$rows011["discont"].'%</td>
+							<td>'.$rows011["price"].'</td>
+							<td>'.$rows011["num"].'</td>
+							<td>'.($rows011["num"] * $rows011["price"] * (1-$rows011["discont"]/100)).'</td></tr>';					
+
+	
+			}
+		}
+	
+	//расчет сумм и скидок
+$eat_sum = $level0_sum['_59'] + $level0_sum['_60'];
+$drink_sum = $level0_sum['_61'] + $level0_sum['_19'];
+$eat_discont = 0;
+$drink_discont = 0;
+$psbor = 0;
+$nacenka = ($eat_sum + $drink_sum)/10;
+
+$summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $nacenka + $service_sum - $service_discont + $psbor;
+
+//////////////////////////////////
+			$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'">Итого:</th>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">Общая стоимость по блюдам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$eat_sum.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+		
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">Общая Скидка по блюдам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$eat_discont.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">Общая стоимость по напиткам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$drink_sum.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+		
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">Общая Скидка по напиткам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$drink_discont.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+		
+		
+		$body_out = $body_out.'<tr>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">Общая стоимость по услугам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$service_sum.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">Общая скидка по услугам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$service_discont.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">Наценка за обслуживание</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$nacenka.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">Пробковый сбор</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$psbor.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		
+				$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.$cs2.'">ИТОГО</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.$cs1.'">'.$summary.'</th>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+	
+echo '<table id="report_client_param" class="tablesorter report_client">'.chr(10);
 
 echo $cols_out.$head_out.$body_out;
 
 echo '</table>'.chr(10);
 
 
-
-
-
-
-echo '<br /> Дальше вывод услуг с ценами но пока нет таблицы';
 
 
 }

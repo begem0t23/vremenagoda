@@ -16,6 +16,19 @@
     <link href="/css/sticky-footer-navbar.css" rel="stylesheet">
   </head>
 
+<style>
+
+  
+  .level_0{
+  background-color: #A7FDBE !important;
+  }
+    .level_1{
+  background-color: #FFB8BE !important;
+  }
+    .level_2{
+  background-color: #F5F5A3 !important;
+  }
+</style>  
   <body>
 <?php
 
@@ -95,11 +108,11 @@ fixedbotbar();
 	
 $(function(){
 
- $(".report_1_2")
+ $(".report_client")
   .tablesorter(
   {
       theme: 'blue',
-       widgets: []
+       widgets: ['zebra']
     });
 	
   $(".baseview")
