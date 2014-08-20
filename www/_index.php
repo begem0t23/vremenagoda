@@ -48,7 +48,7 @@ fixednavbar();
 		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name 
 		 FROM orders o, users u, clients c 
 		 WHERE o.status > 1 AND o.status !=8 AND o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
-		"o.eventdate,0,35", //период (поле,начало,конец)
+		"", //период (поле,начало,конец)
 		"view,Просмотр заказа,Просмотр;edit,Редактирование заказа,Редактировать;events,Просмотр мероприятий,Мероприятия"  //кнопки
 		);
 		
@@ -60,7 +60,7 @@ fixednavbar();
 		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name
 		 FROM orders o, users u, clients c 
 		 WHERE o.status > 1 AND o.status !=8 AND o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
-		"o.eventdate,0,35", //период (поле,начало,конец)
+		"", //период (поле,начало,конец)
 		"view,Просмотр заказа,Просмотр;edit,Редактирование заказа,Редактировать;events,Просмотр мероприятий,Мероприятия" //кнопки
 
 		);
