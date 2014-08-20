@@ -158,9 +158,9 @@ $head_out = '<thead><tr>
 </tr></thead>';
 
 
-$tsql = "SELECT o.id, o.eventdate, o.status, u.realname, c.name, c.phone, o.hallid
-		 FROM orders o, users u, clients c
-		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id ";
+$tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, o.hallid, o.guestcount, h.name hallname
+		 FROM orders o, users u, clients c, hall h
+		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id AND o.hallid = h.id";
 
 $rezult = mysql_query($tsql);
 
@@ -200,17 +200,17 @@ $rows = mysql_fetch_array($rezult);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">Помещение</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['hallid'].'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['hallname'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">Количество гостей</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'">Где поле?</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['guestcount'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">Комментарий по размещению</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'">Где поле?</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'"></td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
