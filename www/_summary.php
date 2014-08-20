@@ -70,7 +70,7 @@ text-align: right;
 		$row_hall = mysql_fetch_array($r_hall);
 		echo  '<tr><td></td><td>Помещение</td><td colspan=5>'.$row_hall["name"].'</td></tr>';
 	}
-	if ($_POST["dd"])
+	if (@$_POST["dd"])
 	{
 		echo  '<thead>
 				<tr>
@@ -105,7 +105,7 @@ text-align: right;
 		}
 		echo  '<tr><td></td><td colspan=4>Итого кухня:</td><td>'.$itogo_bluda.'</td><td></td></tr>';		
 	}
-	if ($_POST["ss"])
+	if (@$_POST["ss"])
 	{
 		echo  '<thead>
 				<tr>

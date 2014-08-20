@@ -433,14 +433,14 @@ function fixednavbar()
               <ul class="dropdown-menu" role="menu">
                 <li><a href="?menus">Меню блюд</a></li>
                 <li><a href="?uslugi">Меню услуг</a></li>
-                <li><a href="#">Другие настройки</a></li>
+                <!--<li><a href="#">Другие настройки</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Учетная запись</li>
                 <li><a href="#">Мои настройки</a></li>
-                <li><a href="#">Другие настройки</a></li>
+                <li><a href="#">Другие настройки</a></li>-->
               </ul>
             </li>			
-            <li class="dropdown">
+            <!--<li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Отчеты<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li><a href="#">Action</a></li>
@@ -451,7 +451,7 @@ function fixednavbar()
                 <li><a href="#">Separated link</a></li>
                 <li><a href="#">One more separated link</a></li>
               </ul>
-            </li>
+            </li>-->
             <li><a href="?logout">Выйти (<?php
 echo $_SESSION["curusername"];
 ?>)</a></li>

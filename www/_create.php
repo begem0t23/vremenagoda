@@ -896,13 +896,18 @@ fixednavbar();
 					{
 				
 						var additional_pars = new Object();
-						additional_pars["cn"] = $("#clientname").val();	
-						additional_pars["cp"] = $("#clientphone").val();	
-						additional_pars["cf"] = $("#clientfrom").val();	
-						additional_pars["ce"] = $("#clientemail").val();	
-						additional_pars["de"] = $("#dateevent").val();	
-						additional_pars["gc"] = $("#guestcount").val();	
-						additional_pars["hh"] = $("#hall").val();	
+						additional_pars["cn"] = $.cookie("clientname");
+						additional_pars["ci"] = $("#clientid").val();
+						additional_pars["cp"] = $.cookie("clientphone");
+						additional_pars["cf"] = $.cookie("clientfrom");
+						additional_pars["ce"] = $.cookie("clientemail");
+						additional_pars["de"] = $.cookie("dateevent");
+						additional_pars["te"] = $.cookie("timeevent");
+						additional_pars["gc"] = $.cookie("guestcount");
+						additional_pars["hh"] = $.cookie("hall");	
+						additional_pars["dd"] = $.cookie("dishes");	
+						additional_pars["ss"] = $.cookie("service");
+						additional_pars["aa"] = $("#avans").val();
 						additional_pars["rand"] = "<?php echo rand(); ?>";
 						$.post("_dosaveorder.php", additional_pars,
 						function(){
@@ -912,7 +917,7 @@ fixednavbar();
 							if (data=="OK")
 							{
 								var nn = noty({text: 'Сохранено', type: 'information', timeout:5000, onClick: function(){delete nn;}});							
-								docheckclientname();
+								//docheckclientname();
 							}
 							else
 							{
