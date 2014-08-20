@@ -69,10 +69,11 @@ if (@$ci)
 {
 	$managerid = 0; $creatorid = $_SESSION["curuserid"]; $status=1;
 	if ($_SESSION["curuserrole"]==5) $managerid = $_SESSION["curuserid"]; $status=2;
-	$tsql = "insert into orders (creatorid, createdate, clientid, eventdate, eventtime, status,managerid,hallid) 
+	$tsql = "insert into orders (creatorid, createdate, clientid, eventdate, eventtime, guestcount, status,managerid,hallid) 
 	values(".mysql_real_escape_string($creatorid).",CURDATE(), ".mysql_real_escape_string($ci)."
 	,'".mysql_real_escape_string(@$_POST["de"])."'
 	,'".mysql_real_escape_string(@$_POST["te"])."'
+	,'".mysql_real_escape_string(@$gc)."'
 	,'".mysql_real_escape_string($status)."'
 	,'".mysql_real_escape_string(@$managerid)."'
 	,'".mysql_real_escape_string(@$_POST["hh"])."');";
