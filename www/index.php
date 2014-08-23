@@ -52,6 +52,10 @@ if (checklogin())
 	{
 		include("_uslugi.php");
 	}
+	elseif ($qq == "users")
+	{
+		include("_users.php");
+	}
 	elseif ($qq == "debug")
 	{
 		var_dump($_SESSION);

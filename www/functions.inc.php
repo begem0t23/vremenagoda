@@ -911,8 +911,9 @@ function fixednavbar()
 			?>">
               <a href="?settings" class="dropdown-toggle" data-toggle="dropdown">Настройки<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="?menus">Меню блюд</a></li>
-                <li><a href="?uslugi">Меню услуг</a></li>
+                <li><a href="?menus">Блюда и Меню</a></li>
+                <li><a href="?uslugi">Услуги</a></li>
+               <li><a href="?users">Пользователи</a></li>
                 <!--<li><a href="#">Другие настройки</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Учетная запись</li>
