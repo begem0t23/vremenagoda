@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
   <head>
     <meta charset="utf-8">
@@ -18,16 +18,7 @@
 
 <style>
 
-  
-  .level_0{
-  background-color: #A7FDBE !important;
-  }
-    .level_1{
-  background-color: #FFB8BE !important;
-  }
-    .level_2{
-  background-color: #F5F5A3 !important;
-  }
+	
 </style>  
   <body>
 <?php
@@ -78,9 +69,12 @@ fixednavbar();
 
 		);
 	} else {
+	$format = 'screen';
+	if($_GET['f'] == 'pdf') {$format = 'pdf';}
 		report_client(
 		"Заказ №".$_GET['view_zakazid'], //заголовок
-		$_GET['view_zakazid']
+		$_GET['view_zakazid'],
+		$format
 		);
 	}		
 	
@@ -108,7 +102,7 @@ fixedbotbar();
 	
 $(function(){
 
- $(".report_client")
+ $(".report_client2")
   .tablesorter(
   {
       theme: 'blue',

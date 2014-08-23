@@ -12,10 +12,15 @@ $sectionid = substr($sectionid,1);
 $menuid = substr($menuid,1);
 	if ($items['count'] > 0)
 	{
+$cnt = 0;			
 		for($i=0;$i<$items['count'];$i++)
 		{	
+$cnt++;
+$class =  '';
+			$xxx =round($cnt / 2);
+				if ($cnt == $xxx*2) {$class =  ' class="second_row"';}
 
-			$output['print'] = $output['print'].'<tr>
+			$output['print'] = $output['print'].'<tr'.$class.'>
 							<td><span id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
 							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
 							<td>'.$items[$i]["price"].'</td>
@@ -138,24 +143,15 @@ $menuid = substr($menuid,1);
 }
 
 
-function report_client($tname,$zid)
+function report_client($tname,$zid,$format)
 {
 $cs1 = 1;
 $cs2 = 4;
-echo '<h3>'.$tname.'</h3>'.chr(10);
 
-$cols_out = '<colgroup>
-			<col width="300">
-			<col width="50" class="tablenumbers">
-			<col width="70" class="tablenumbers">
-			<col width="70" class="tablenumbers">
-			<col width="80" class="tablenumbers">
-			</colgroup>';
 
-$head_out = '<thead><tr>
+$cols_out = '';
 
-<th colspan="'.($cs1 + $cs2).'">Информация по клиенту</th>
-</tr></thead>';
+$head_out = '';
 
 
 $tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, o.hallid, o.guestcount, h.name hallname
@@ -169,11 +165,16 @@ $rezult = mysql_query($tsql);
 $rows = mysql_fetch_array($rezult);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).' class="report_section" class="report_section"">Информация по клиенту</th>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+
+		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">Клиент</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['name'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td colspan="'.$cs1.'">Телефон</td>'.chr(10);
 		$body_out = $body_out.'<td colspan="'.$cs2.'">'.$rows['phone'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -184,8 +185,8 @@ $rows = mysql_fetch_array($rezult);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 
-		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'">Информация по мероприятию</th>'.chr(10);
+		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по мероприятию</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
@@ -193,7 +194,7 @@ $rows = mysql_fetch_array($rezult);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['eventdate'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">Время</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['eventtime'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -203,7 +204,7 @@ $rows = mysql_fetch_array($rezult);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['hallname'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">Количество гостей</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['guestcount'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -213,8 +214,8 @@ $rows = mysql_fetch_array($rezult);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'"></td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'">Информация по меню</th>'.chr(10);
+		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по меню</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 
@@ -225,11 +226,11 @@ $rows = mysql_fetch_array($rezult);
 
 $body_out = $body_out.'
 <tr>
-<th>Наименование блюда</th>
-<th>Вес</th>
-<th>Цена</th>
-<th>Количество</th>
-<th>Стоимость</th>
+<th  width="250" class="report_columns_head">Наименование блюда</th>
+<th  width="40" class="report_columns_head">Вес</th>
+<th  width="40" class="report_columns_head">Цена</th>
+<th  width="40" class="report_columns_head">Количество</th>
+<th  width="40" class="report_columns_head">Стоимость</th>
 </tr>
 </tbody>';
 
@@ -388,17 +389,17 @@ $body_out = $body_out.'
 	
 	//конец цикла
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'">Информация по услугам</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по услугам</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 
 	$body_out = $body_out.'
 <tr>
-<th>Наименование Услуги</th>
-<th>Скидка</th>
-<th>Цена</th>
-<th>Количество</th>
-<th>Стоимость</th>
+<th class="report_columns_head">Наименование Услуги</th>
+<th class="report_columns_head">Скидка</th>
+<th class="report_columns_head">Цена</th>
+<th class="report_columns_head">Количество</th>
+<th class="report_columns_head">Стоимость</th>
 </tr>
 </tbody>';
 
@@ -409,12 +410,17 @@ $service_discont = 0;
 
 		if (mysql_num_rows($rezult011) > 0) 
 		{
+		$cnt = 0;
 			while ($rows011 = mysql_fetch_array($rezult011)) 
-			{			
+			{	
+$cnt++;
+$class =  '';
+			$xxx =round($cnt / 2);
+				if ($cnt == $xxx*2) {$class =  ' class="second_row"';}
 	$service_sum = $service_sum + ($rows011["num"] * $rows011["price"]);
 	$service_discont = $service_discont + ($rows011["num"] * $rows011["price"] * ($rows011["discont"]/100));
 	
-						$body_out = $body_out.'<tr><td>'.$rows011["name"].'</td>
+						$body_out = $body_out.'<tr'.$class.'><td>'.$rows011["name"].'</td>
 							<td>'.$rows011["discont"].'%</td>
 							<td>'.$rows011["price"].'</td>
 							<td>'.$rows011["num"].'</td>
@@ -436,7 +442,7 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $nacenka + $s
 
 //////////////////////////////////
 			$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'">Итого:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Итого:</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
@@ -444,7 +450,7 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $nacenka + $s
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$eat_sum.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 		
-		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">Общая Скидка по блюдам</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$eat_discont.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -454,7 +460,7 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $nacenka + $s
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$drink_sum.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 		
-		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">Общая Скидка по напиткам</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$drink_discont.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -465,7 +471,7 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $nacenka + $s
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$service_sum.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);
+		$body_out = $body_out.'<tr class="second_row">'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">Общая скидка по услугам</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$service_discont.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -475,23 +481,251 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $nacenka + $s
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$nacenka.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">Пробковый сбор</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">'.$psbor.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		
-				$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.$cs2.'">ИТОГО</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="'.$cs1.'">'.$summary.'</th>'.chr(10);
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.$cs2.'"  class="summary_section">ИТОГО</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.$cs1.'" class="summary_section">'.$summary.'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
+		$style = '<style>
+
+
+/*For tables still need to write "cellspacing="0"" in code*/
+table {
+}
+caption, th, td {
+text-align:left;
+font-weight:normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+content:"";
+}
+blockquote, q {
+quotes:"" "";
+}
+
+
+
+
+.simple-little-table {
+width:700px;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#666;
+	font-size:12px;
+	_text-shadow: 1px 1px 0px #fff;
+	background:#fff;
+	_margin:15px;
+	border:#ccc 1px solid;
+	border-collapse:separate;
+
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+
+	-moz-box-shadow: 0 1px 2px #d1d1d1;
+	-webkit-box-shadow: 0 1px 2px #d1d1d1;
+	_box-shadow: 0 1px 2px #d1d1d1;
+	border-collapse:collapse;
+border-spacing:0;
+
+}
+
+.simple-little-table th {
+	font-weight:bold;
+	_padding:10px 13px 11px 13px;
+	_border-top:1px solid #2E2E2E;
+	_border-bottom:1px solid #2E2E2E;
+
+	background: #99bfe6;
+	_background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+	_background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+}
+.simple-little-table th:first-child{
+	text-align: left;
+	padding-left:20px;
+}
+.simple-little-table tr:first-child th:first-child{
+	-moz-border-radius-topleft:3px;
+	-webkit-border-top-left-radius:3px;
+	border-top-left-radius:3px;
+}
+.simple-little-table tr:first-child th:last-child{
+	-moz-border-radius-topright:3px;
+	-webkit-border-top-right-radius:3px;
+	border-top-right-radius:3px;
+}
+.simple-little-table tr{
+	text-align: center;
+	padding-left:20px;
+}
+.simple-little-table tr td:first-child{
+	text-align: left;
+	padding-left:20px;
+	border-left: 0;
+}
+.simple-little-table tr td {
+	 padding:4px;
+	border-top: 1px solid #ffffff;
+	border-bottom:1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
 	
-echo '<table id="report_client_param" class="tablesorter report_client">'.chr(10);
+	_background: #fFFFFF;
+	_background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#FFFFFF));
+	_background: -moz-linear-gradient(top,  #FFFFFF,  #FFFFFF);
+}
 
-echo $cols_out.$head_out.$body_out;
+.simple-little-table tr:nth-child(even) td{
+	_background: #ebf2fa;                                                                                                                
+	_background: -webkit-gradient(linear, left top, left bottom, from(#ebf2fa), to(#ebf2fa));
+	_background: -moz-linear-gradient(top,  #ebf2fa,  #ebf2fa);
+}
+.simple-little-table tr:last-child td{
+	border-bottom:0;
+}
+.simple-little-table tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:3px;
+	-webkit-border-bottom-left-radius:3px;
+	border-bottom-left-radius:3px;
+}
+.simple-little-table tr:last-child td:last-child{
+	-moz-border-radius-bottomright:3px;
+	-webkit-border-bottom-right-radius:3px;
+	border-bottom-right-radius:3px;
+}
+.simple-little-table tr:hover td{
+	background: #f2f2f2;
+	_background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+	_background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
+}
 
-echo '</table>'.chr(10);
+.simple-little-table a:link {
+	color: #666;
+	font-weight: bold;
+	text-decoration:none;
+}
+.simple-little-table a:visited {
+	color: #999999;
+	font-weight:bold;
+	text-decoration:none;
+}
+.simple-little-table a:active,
+.simple-little-table a:hover {
+	color: #bd5a35;
+	text-decoration:underline;
+}
+
+ 
+	
+  .level_0{
+  _padding:5px;
+  background-color: #FFD141 !important;
+  }
+    .level_1{
+	_padding:4px;
+  background-color: #FFF368 !important;
+  }
+    .level_2{
+	_padding:3px;
+  background-color: #FFFFC0 !important;
+  }
+  
+  	.report_columns_head{
+	font-size:12px;
+	 padding:10px;
+	color: #000;
+  background-color: #99bfe6 !important;
+   	border-left: 1px solid #e0e0e0;
+
+  }
+  
+	.report_section{
+	font-size:14px;
+	 padding:10px;
+	color: #fff;
+  background-color: #0761BD !important;
+  }
+
+	.summary_section{
+	font-size:14px;
+	 padding:10px;
+	color: #fff;
+  background-color: #189407 !important;
+ 
+  }
+   
+    .second_row {
+   	background-color: #ebf2fa;                                                                                                                
+	}
+    
+.contacts{
+width:700px;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#666;
+	font-size:12px;
+	_text-shadow: 1px 1px 0px #fff;
+	background:#fff;
+	border-bottom:#ccc 1px solid;
+	border-collapse:separate;
+border-collapse:collapse;
+border-spacing:10;
+}
+.contacts tr td{
+	padding:5px;
+
+}
+.contacts tr td table{
+	font-size:14px;
+
+}
+
+
+</style>  ';
+
+$html1 = '<html>
+<head> 
+<meta	http-equiv="Content-Type"	content="charset=utf-8" />
+    <style type="text/css">
+	    * {
+		  font-family: "DejaVu Serif Condensed", monospace;
+		}
+	  </style><javascript></head><body onload="ALERT("SSS");">';
+	  
+$html2 = '</body></html>';	  
+
+$header = '<table class="contacts"><tr><td width="200"><img src="images/logo.png" width="200"></td><td><table><tr><td width="70"><strong>Адрес:</strong></td><td>Москва, ЦПКиО им. Горького, Титовский проезд</td></tr><tr><td> <strong>Телефон:</strong></td><td> +7 (499) 237-1096</td></tr><tr><td><strong>Email:</strong></td><td> <a href="mailto:vremena-goda@mail.ru">vremena-goda@mail.ru</a></td></tr></table></p>
+</td></tr></table>';
+
+$footer ='<p><strong>Исполнительный директор ___________________________________________</strong></p><p><strong>Заказчик___________________________________________________________</strong></p>';
+
+$title = '<h3>'.$tname.'</h3>'.chr(10);		
+
+$table = '<table id="report_client_param" class="simple-little-table">'.chr(10).
+			$cols_out.$head_out.$body_out.
+			'</table>'.chr(10);
+
+$button1 = '<form action="_pdf.php" method="POST">
+			<button type="submit"  title="Скачать отчет по заказу в pdf">Скачать в PDF</button>
+			<textarea name="pdf" id="'.$zid.'"  cols="0" rows="0" style="display:none;">
+			'.$html1.$header.$title.$style.$table.$html2.'
+			</textarea>
+			</form>';
+
+$button2 = '<form action="_print.php" method="POST" target="_blank">
+			<button type="submit"  title="Скачать отчет по заказу в pdf">Распечатать</button>
+			<textarea name="print" id="'.$zid.'"  cols="0" rows="0" style="display:none;">
+			'.$header.$title.$style.$table.$footer.'
+			</textarea>
+			</form>';
+		
+
+	echo $style.'<table><tr><td width="450">'.$title.'</td><td width="130">'.$button1.'</td><td width="130">'.$button2.'</td></tr></table>'.$table;
+
 
 
 
