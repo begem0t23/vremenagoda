@@ -9,7 +9,7 @@
     
     <title><?php
 	echo PRODUCTNAME;
-	?> :: Пользователи</title>
+	?> :: Залы</title>
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -65,19 +65,19 @@ fixednavbar();
     <!-- Begin page content -->
     <div class="container">
       <div class="page-header">
-        <h3>Редактирование Списка Пользователей</h3>
+        <h3>Редактирование Списка Залов</h3>
       </div>
-<button type="button" role="1" name="adduser" id="0" title="Добавить пользователя">Добавить пользователя</button>
+<button type="button" role="1" name="addhall" id="0" title="Добавить Зал">Добавить Зал</button>
  <?php		
 
 $bgs[0] = 'Нет';
 $bgs[1] = 'Да';
 
- $tsql = "SELECT * FROM `users` WHERE `isactive` = 1 ORDER BY `id` ASC;";
+ $tsql = "SELECT * FROM `hall` WHERE `isactive` = 1 ORDER BY `id` ASC;";
 	$r_serv = mysql_query($tsql);
 	if (mysql_num_rows($r_serv)>0)
 	{	
-				echo '<table id = "users" class = "tablesorter users"  style="width: 100%;">';
+				echo '<table id = "halls" class = "tablesorter halls"  style="width: 100%;">';
 				echo 	'<colgroup>
 						<col width="35%" />
 						<col width="35%" />
@@ -88,10 +88,10 @@ $bgs[1] = 'Да';
 
 				echo  '<thead>
 							<tr>
-							<th class="sorter-false">Имя</th>
-							<th class="sorter-false">Логин/Email</th>
-							<th class="sorter-false">Роль/Права</th>
-							<th class="sorter-false" colspan="3">Действия</th>
+							<th class="sorter-false">Название</th>
+							<th class="sorter-false">Описание</th>
+							<th class="sorter-false">Количество персон</th>
+							<th class="sorter-false" colspan="2">Действия</th>
 							</tr>
 							</thead>';
 	?>
@@ -101,12 +101,11 @@ $bgs[1] = 'Да';
 				echo '<tr>';
 
 							echo '
-							<td><span id="username'.$row_serv["id"].'">'.$row_serv["realname"].'</span></td>
-							<td><span id="userlogin'.$row_serv["id"].'">'.$row_serv["login"].'</span></td>
-							<td><span id="userrole'.$row_serv["id"].'" >'.$userroles[$row_serv["role"]].'</span></td>
-							<td><button type="button" role="'.$row_serv["role"].'" name="changeuserdata" id="'.$row_serv["id"].'" title="Изменить данные">Изменить&nbsp;данные</button></td>
-							<td><button type="button" role="'.$row_serv["role"].'" name="changeuserpass" id="'.$row_serv["id"].'" title="Изменить пароль">Изменить&nbsp;пароль</button></td>
-							<td><button type="button" role="'.$row_serv["role"].'" name="deleteuser" id="'.$row_serv["id"].'" title="Удалить пользователя">Удалить</button></td>';
+							<td><span id="hallname'.$row_serv["id"].'">'.$row_serv["name"].'</span></td>
+							<td><span id="halldescr'.$row_serv["id"].'">'.$row_serv["description"].'</span></td>
+							<td><span id="hallcnt'.$row_serv["id"].'" >'.$row_serv["countofperson"].'</span></td>
+							<td><button type="button"  name="changehall" id="'.$row_serv["id"].'" title="Изменить данные">Изменить</button></td>
+							<td><button type="button"  name="deletehall" id="'.$row_serv["id"].'" title="Удалить Зал">Удалить</button></td>';
 												
 				echo '</tr>';
 					
@@ -150,17 +149,17 @@ $bgs[1] = 'Да';
 
 
 	<script>
-	function delete_user(userid){
+	function delete_hall(hallid){
 	
 			$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'deleteuser', userid: userid}
+			data: { operation: 'deletehall', hallid: hallid}
 		})
 		.done(function( msg ) {
 				if(msg == 'yes'){
-				alert ('Пользователь удалён из системы.');
-				location.href="?users";
+				alert ('Зал удалён из системы.');
+				location.href="?halls";
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -171,7 +170,7 @@ $bgs[1] = 'Да';
 			// когда страница загружена
 
 	
-			$(".users")
+			$(".halls")
 			.tablesorter(
 			{
 				theme: 'blue',
@@ -183,13 +182,11 @@ $bgs[1] = 'Да';
  
       // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
       emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-      userid = $( "#userid" ),
+      hallid = $( "#hallid" ),
       name = $( "#name" ),
-      login = $( "#login" ),
-     pass1 = $( "#pass1" ),
-      pass2 = $( "#pass2" ),
-      role = $( "#role" ),
-      allFields = $( [] ).add( name ).add( pass1 ).add( role ).add( pass2 ).add( login ).add( userid ),
+      descr = $( "#descr" ),
+      cnt = $( "#cnt" ),
+      allFields = $( [] ).add( name ).add( descr ).add( cnt ).add( hallid ),
       tips = $( ".validateTips" );
  
     function updateTips( t ) {
@@ -214,17 +211,21 @@ $bgs[1] = 'Да';
       }
     }
  
-     function checkpass( f, s ) {
-      if ( f.val() != s.val() ) {
-        f.addClass( "ui-state-error" );
-        s.addClass( "ui-state-error" );
-        updateTips( "Пароли не совпадают" );
+
+    function checkVal( o, n, min, max) {
+		
+      if ( o.val() > max || o.val() < min ) {
+
+        o.addClass( "ui-state-error" );
+        updateTips( "Значение " + n + " должно быть между " +
+          min + " и " + max + "." );
         return false;
       } else {
         return true;
       }
     }
-	
+ 
+ 
     function checkRegexp( o, regexp, n ) {
       if ( !( regexp.test( o.val() ) ) ) {
         o.addClass( "ui-state-error" );
@@ -235,49 +236,37 @@ $bgs[1] = 'Да';
       }
     }
  
-    function addUser() {
+    function addhall() {
       var valid = true;
       allFields.removeClass( "ui-state-error" );
 	
-    if (login.is(':visible')) 
-	{
-		valid = valid && checkRegexp( login, /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/, "Email заполнен неверно." );
-		// valid = valid && checkLength( login, "login/Email", 5, 100 );
-		valid = valid && checkLength( name, "Имя пользователя", 3, 50 );
-		valid = valid && checkLength( role, "Роль/Права", 1, 1 );
-		operation = "changeuserdata";
-	}
-	
-	if (pass1.is(':visible')) 
-	{
-		valid = valid && checkLength( pass1, "Пароль", 5, 20 );
-		valid = valid && checkLength( pass2, "Пароль", 5, 20 );
-		valid = valid && checkpass( pass2, pass1 );
-		operation = "changeuserpass";
-		
-	 }
+		valid = valid && checkLength( name, "Название Зала", 3, 50 );
+		//valid = valid && checkLength( descr, "Описание Зала", 10, 100 );
+		valid = valid && checkLength( cnt, "Количество Персон", 1, 3 );
+		valid = valid && checkVal( cnt, "Количество Персон", 1, 777 );
+		operation = "changehall";
 	 
-  	if (userid.val() == 0)
+  	if (hallid.val() == 0)
 	{
-		operation = "adduser";
+		operation = "addhall";
 	}
 
-     //valid = valid && checkRegexp( description, /^[a-z]([0-9a-z_\s])+$/i, "Недопустимые символы." );
-       //valid = valid && checkRegexp( price, /^([0-9.])+$/, "Цена должна состоять только из цифр : 0-9" );
- 
-      if ( valid ) 
+       valid = valid && checkRegexp( cnt, /^([0-9])+$/, "Цена должна состоять только из цифр : 0-9" );
+
+
+	   if ( valid ) 
 	  {
 
 	  
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: operation, username: name.val(), userpass: pass1.val(), userrole: role.val(), userid: userid.val(), userlogin: login.val()}
+			data: { operation: operation, hallname: name.val(), halldescr: descr.val(), hallcnt: cnt.val(), hallid: hallid.val()}
 		})
 		.done(function( msg ) {
 			if(msg == 'yes'){
-				alert ('Изменения в список пользователей внесены.');
-				location.href="?users";
+				alert ('Изменения в список залов внесены.');
+				location.href="?halls";
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -295,7 +284,7 @@ $bgs[1] = 'Да';
       width: 400,
       modal: true,
       buttons: {
-        "Сохранить": addUser,
+        "Сохранить": addhall,
         "Отмена": function() {
           dialog.dialog( "close" );
         }
@@ -311,51 +300,30 @@ $bgs[1] = 'Да';
       addUser();
     });
 
-    $( document ).on( "click", "button[name=changeuserdata]", function() {
+    $( document ).on( "click", "button[name=changehall]", function() {
 		id = $(this).attr("id");
 				
-		$('#name').show();		
-		$('#login').show();		
-		$('#role').show();		
-		$('#name').val($('#username'+id).html());
-		$('#login').val($('#userlogin'+id).html());
-		$('#role').val($(this).attr("role"));
-		$('#userid').val(id);
-		$('#pass1').hide();
- 		$('#pass2').hide();
+		$('#name').val($('#hallname'+id).html());
+		$('#descr').val($('#halldescr'+id).html());
+		$('#cnt').val($('#hallcnt'+id).html());
+		$('#hallid').val(id);
 		dialog.dialog( "open" );
     });
 	
-	  $( document ).on( "click", "button[name=changeuserpass]", function() {
-		id = $(this).attr("id");
-				
-		$('#name').hide();		
-		$('#login').hide();		
-		$('#role').hide();		
-		$('#userid').val(id);
-		$('#pass1').show();
- 		$('#pass2').show();
-		dialog.dialog( "open" );
-    });
+
 	
-		  $( document ).on( "click", "button[name=adduser]", function() {
+		  $( document ).on( "click", "button[name=addhall]", function() {
 		id = $(this).attr("id");
 				
-		$('#name').show();		
-		$('#login').show();		
-		$('#role').show();		
-		$('#userid').val(id);
-		$('#pass1').show();
- 		$('#pass2').show();
 		dialog.dialog( "open" );
     });
 	
 	
-	$( document ).on( "click", "button[name=deleteuser]", function() {
-		userid = $(this).attr("id");
+	$( document ).on( "click", "button[name=deletehall]", function() {
+		id = $(this).attr("id");
 				
-				if (confirm("Вы уверены что ходите удалить пользователя " + $('#username'+userid).html() + "?")) {
-					delete_user(userid);
+				if (confirm("Вы уверены что ходите удалить зал " + $('#hallname'+id).html() + "?")) {
+					delete_hall(id);
 				} else {
 				}
 
@@ -363,25 +331,15 @@ $bgs[1] = 'Да';
 	
   });
 	</script>
- <div id="dialog-form" title="Заполните информацию по пользователю.">
+ <div id="dialog-form" title="Заполните информацию по залу.">
   <p class="validateTips">Все поля должны быть заполнены.</p>
   <form>
-	<input type="text" id="login" placeholder="Email" class="form-control" value="">
-	<input type="text" id="name" placeholder="Имя пользователя" class="form-control" value="">
-	<input type="text" id="pass1" placeholder="Пароль" class="form-control" value="">
-	<input type="text" id="pass2" placeholder="Повторите пароль" class="form-control" value="">
-		<input type="hidden" id="userid"  class="form-control" value="">
+	<input type="text" id="name" placeholder="Название Зала" class="form-control" value="">
+	<input type="text" id="descr" placeholder="Описание Зала" class="form-control" value="">
+	<input type="text" id="cnt" placeholder="Количество Персон" class="form-control" value="">
+		<input type="hidden" id="hallid"  class="form-control" value="">
 
-	<select  id="role" class="form-control">
-	<?php
-	foreach($userroles as $num => $val) {
-	
-	echo '<option value="'.$num.'">'.$val.'</option>';
-	}
-	
-	?>
 
-	</select>
  </form>
 </div>
  </body>

@@ -5,6 +5,100 @@ $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 
+if($_POST['operation'] == 'changehall')
+{
+$id = $_POST['hallid'];
+$name = $_POST['hallname'];
+$descr = $_POST['halldescr'];
+$cnt = $_POST['hallcnt'];
+
+	if ($id > 0) 
+	{
+		$tsql01 = "SELECT * FROM `hall`  WHERE `id` = ".$id." ;";
+		$rezult01 = mysql_query($tsql01);
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+		$rows01 =	mysql_fetch_array($rezult01);
+		
+		$update = "UPDATE `hall` SET  `name` = '".$name."',  `description` = '".$descr."' ,  `countofperson` = '".$cnt."' WHERE  `hall`.`id` = ".$id." ;";
+		
+			mysql_query($update);
+
+		} else {
+				Echo "почемуто нет такой записи";	
+				}
+
+		$tsql02 = "SELECT * FROM `hall`  WHERE `id` = '".$id."' AND   `description` = '".$descr."' AND   `name` = '".$name."' AND `countofperson` = '".$cnt."' AND  `isactive` = '1' ;";
+		$rezult02 = mysql_query($tsql02);
+		if (mysql_num_rows($rezult02) > 0) 
+		{
+			echo 'yes';
+		}
+	}	
+}
+
+
+if($_POST['operation'] == 'addhall')
+{
+$id = $_POST['hallid'];
+$name = $_POST['hallname'];
+$descr = $_POST['halldescr'];
+$cnt = $_POST['hallcnt'];
+	
+if ($id == 0) 
+	{
+		$insert = "INSERT INTO `hall` (`id`, `name`,`description`, `countofperson`, `isactive`) VALUES (NULL, '".$name."', '".$descr."', '".$cnt."', '1');";
+	
+		mysql_query($insert);
+	
+		$tsql02 = "SELECT * FROM `hall`  WHERE   `description` = '".$descr."' AND   `name` = '".$name."' AND `countofperson` = '".$cnt."' AND  `isactive` = '1' ;";
+	
+		$rezult02 = mysql_query($tsql02);
+		if (mysql_num_rows($rezult02) > 0) 
+		{
+			echo 'yes';
+		}
+	}
+}
+
+
+
+
+if($_POST['operation'] == 'deletehall')
+{
+$id = $_POST['hallid'];
+
+
+if ($id > 0) 
+	{
+		$tsql01 = "SELECT * FROM `hall`  WHERE `id` = ".$id." ;";
+		$rezult01 = mysql_query($tsql01);
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+		$rows01 =	mysql_fetch_array($rezult01);
+		
+		$update = "UPDATE `hall` SET    `isactive` = '0' WHERE  `hall`.`id` = ".$id." ;";
+		
+			mysql_query($update);
+
+		} else {
+				Echo "почемуто нет такой записи";	
+				}
+
+		$tsql02 = "SELECT * FROM `hall`  WHERE `id` = '".$id."' AND    `isactive` = '0' ;";
+		$rezult02 = mysql_query($tsql02);
+		if (mysql_num_rows($rezult02) > 0) 
+		{
+			echo 'yes';
+		}	
+	}
+	
+}
+
+
+
+
+
 
 if($_POST['operation'] == 'changeuserdata')
 {
@@ -90,8 +184,6 @@ $login = $_POST['userlogin'];
 $pass = md5($_POST['userpass']);
 $role = $_POST['userrole'];
 
-	
-	
 if ($id == 0) 
 	{
 		$insert = "INSERT INTO `users` (`id`, `login`,`pass`, `realname`, `role`, `isactive`) VALUES (NULL, '".$login."', '".$pass."', '".$name."', '".$role."',  '1');";
@@ -105,7 +197,6 @@ if ($id == 0)
 			echo 'yes';
 		}
 	}
-	
 }
 
 
@@ -113,13 +204,7 @@ if ($id == 0)
 if($_POST['operation'] == 'deleteuser')
 {
 $id = $_POST['userid'];
-$name = $_POST['username'];
-$login = $_POST['userlogin'];
-$pass = md5($_POST['userpass']);
-$role = $_POST['userrole'];
 
-	
-	
 if ($id > 0) 
 	{
 		$tsql01 = "SELECT * FROM `users`  WHERE `id` = ".$id." ;";

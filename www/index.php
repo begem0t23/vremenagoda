@@ -56,6 +56,10 @@ if (checklogin())
 	{
 		include("_users.php");
 	}
+	elseif ($qq == "halls")
+	{
+		include("_halls.php");
+	}
 	elseif ($qq == "debug")
 	{
 		var_dump($_SESSION);

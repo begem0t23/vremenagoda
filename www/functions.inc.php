@@ -914,6 +914,7 @@ function fixednavbar()
                 <li><a href="?menus">Блюда и Меню</a></li>
                 <li><a href="?uslugi">Услуги</a></li>
                <li><a href="?users">Пользователи</a></li>
+               <li><a href="?halls">Залы</a></li>
                 <!--<li><a href="#">Другие настройки</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Учетная запись</li>
