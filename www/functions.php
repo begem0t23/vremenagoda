@@ -5,6 +5,149 @@ $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 
+
+if($_POST['operation'] == 'changeuserdata')
+{
+$id = $_POST['userid'];
+$name = $_POST['username'];
+$login = $_POST['userlogin'];
+//$pass = md5($_POST['userpass']);
+$role = $_POST['userrole'];
+
+	if ($id > 0) 
+	{
+		$tsql01 = "SELECT * FROM `users`  WHERE `id` = ".$id." ;";
+		$rezult01 = mysql_query($tsql01);
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+		$rows01 =	mysql_fetch_array($rezult01);
+		
+		$update = "UPDATE `users` SET `login` = '".$login."',  `realname` = '".$name."',  `role` = '".$role."' WHERE  `users`.`id` = ".$id." ;";
+		
+			mysql_query($update);
+
+		} else {
+				Echo "почемуто нет такой записи";	
+				}
+
+		$tsql02 = "SELECT * FROM `users`  WHERE `id` = '".$id."' AND  `login` = '".$login."' AND   `realname` = '".$name."' AND  `role` = '".$role."' AND  `isactive` = '1' ;";
+		$rezult02 = mysql_query($tsql02);
+		if (mysql_num_rows($rezult02) > 0) 
+		{
+			echo 'yes';
+		}
+
+	}	
+
+}
+
+
+
+
+
+if($_POST['operation'] == 'changeuserpass')
+{
+$id = $_POST['userid'];
+$name = $_POST['username'];
+$login = $_POST['userlogin'];
+$pass = md5($_POST['userpass']);
+$role = $_POST['userrole'];
+
+	if ($id > 0) 
+	{
+		$tsql01 = "SELECT * FROM `users`  WHERE `id` = ".$id." ;";
+		$rezult01 = mysql_query($tsql01);
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+		$rows01 =	mysql_fetch_array($rezult01);
+		
+		$update = "UPDATE `users` SET    `pass` = '".$pass."' WHERE  `users`.`id` = ".$id." ;";
+		
+			mysql_query($update);
+
+		} else {
+				Echo "почемуто нет такой записи";	
+				}
+
+		$tsql02 = "SELECT * FROM `users`  WHERE `id` = '".$id."'  AND  `pass` = '".$pass."';";
+		$rezult02 = mysql_query($tsql02);
+		if (mysql_num_rows($rezult02) > 0) 
+		{
+			echo 'yes';
+		}
+
+	}	
+
+}
+
+
+
+if($_POST['operation'] == 'adduser')
+{
+$id = $_POST['userid'];
+$name = $_POST['username'];
+$login = $_POST['userlogin'];
+$pass = md5($_POST['userpass']);
+$role = $_POST['userrole'];
+
+	
+	
+if ($id == 0) 
+	{
+		$insert = "INSERT INTO `users` (`id`, `login`,`pass`, `realname`, `role`, `isactive`) VALUES (NULL, '".$login."', '".$pass."', '".$name."', '".$role."',  '1');";
+	
+		mysql_query($insert);
+	
+		$tsql02 = "SELECT * FROM `users`  WHERE `login` = '".$login."' AND  `pass` = '".$pass."' AND  `realname` = '".$name."' AND  `role` = '".$role."' AND  `isactive` = '1' ;";
+		$rezult02 = mysql_query($tsql02);
+		if (mysql_num_rows($rezult02) > 0) 
+		{
+			echo 'yes';
+		}
+	}
+	
+}
+
+
+
+if($_POST['operation'] == 'deleteuser')
+{
+$id = $_POST['userid'];
+$name = $_POST['username'];
+$login = $_POST['userlogin'];
+$pass = md5($_POST['userpass']);
+$role = $_POST['userrole'];
+
+	
+	
+if ($id > 0) 
+	{
+		$tsql01 = "SELECT * FROM `users`  WHERE `id` = ".$id." ;";
+		$rezult01 = mysql_query($tsql01);
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+		$rows01 =	mysql_fetch_array($rezult01);
+		
+		$update = "UPDATE `users` SET    `isactive` = '0' WHERE  `users`.`id` = ".$id." ;";
+		
+			mysql_query($update);
+
+		} else {
+				Echo "почемуто нет такой записи";	
+				}
+
+		$tsql02 = "SELECT * FROM `users`  WHERE `id` = '".$id."' AND    `isactive` = '0' ;";
+		$rezult02 = mysql_query($tsql02);
+		if (mysql_num_rows($rezult02) > 0) 
+		{
+			echo 'yes';
+		}	
+	}
+	
+}
+
+
+
 if($_POST['operation'] == 'geteditdishform')
 {
 $dishid = $_POST['dishid'];

@@ -959,7 +959,7 @@ function checklogin()
 		{
 			$curusermd5 		= $_SESSION["curuser"];
 			$curusersessionmd5 	= $_SESSION["curusersession"];
-			$tsql = "select * from users where MD5(concat(login,pass,'" . $_SERVER['REMOTE_ADDR'] . "'))='" . $curusersessionmd5 . "';";
+			$tsql = "select * from users where `isactive` = '1' AND  MD5(concat(login,pass,'" . $_SERVER['REMOTE_ADDR'] . "'))='" . $curusersessionmd5 . "';";
 			$r_notasigned = mysql_query($tsql);
 			if (mysql_num_rows($r_notasigned)>0)
 			{	
