@@ -62,7 +62,7 @@ function dishes_in_section($menu_id,$menu_section)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT * FROM dishes WHERE menu_section = ".$menu_section."  AND isactive = '1' ;";
+		$tsql01 = "SELECT * FROM `dishes` WHERE `menu_section` = ".$menu_section."  AND `isactive` = '1' ;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -242,7 +242,7 @@ $body_out = $body_out.'
 	$sections = Array();
 		$tsql0 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '0' ORDER BY `sortid` ASC;
+		 WHERE `level` = '0' AND `isactive` = '1' ORDER BY `sortid` ASC;
 		 ";
 		$rezult0 = mysql_query($tsql0);
 
@@ -265,7 +265,7 @@ $body_out = $body_out.'
 	
 		$tsql_1 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
+		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
 		 ";
 		$rezult_1 = mysql_query($tsql_1);
 
@@ -287,7 +287,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']]['dishes'];
 		
 		$tsql_2 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."' ORDER BY `sortid` ASC
+		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
 		 ";
 	$rezult_2 = mysql_query($tsql_2);
 

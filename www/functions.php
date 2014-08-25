@@ -4,7 +4,36 @@ require_once("functions.inc.php");
 $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
+if($_POST['operation'] == 'deletesection')
+{
+$id = $_POST['sectionid'];
 
+
+	if ($id > 0) 
+	{
+		$tsql01 = "SELECT * FROM `menu_sections`  WHERE `id` = ".$id."  AND `isactive` = '1' ;";
+		$rezult01 = mysql_query($tsql01);
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+		
+			$update = "UPDATE `menu_sections` SET `isactive` = '0' WHERE  `id` = ".$id."  AND `isactive` = '1' ;";
+			mysql_query($update);
+		
+			$tsql02 = "SELECT * FROM `menu_sections`   WHERE `id` = ".$id."  AND   `isactive` = '0' ;";
+			$rezult02 = mysql_query($tsql02);
+			if (mysql_num_rows($rezult02) > 0) 
+				{
+				echo 'yes';
+				}	
+		
+		}
+	}
+
+}	
+	
+	
+	
+	
 
 if($_POST['operation'] == 'addsection')
 {
@@ -16,7 +45,7 @@ $orderby = $_POST['sectionorder'];
 if ($id == 0) 
 	{
 	
-	$tsql01 = "select * from `menu_sections` WHERE `parent_id` = '".$parent."';";
+	$tsql01 = "select * from `menu_sections` WHERE `parent_id` = '".$parent."'  AND `isactive` = '1' ;";
 	//echo $tsql01; 
 	$result01 = mysql_query($tsql01);
 	if (mysql_num_rows($result01)>0)
@@ -30,7 +59,7 @@ if ($id == 0)
 	else
 	{
 		$sortid = 1;
-			$tsql02 = "select * from `menu_sections` WHERE `id` = '".$parent."';";
+			$tsql02 = "select * from `menu_sections` WHERE `id` = '".$parent."'  AND `isactive` = '1' ;";
 			//echo $tsql02; 
 		$result02 = mysql_query($tsql02);
 		if (mysql_num_rows($result02)>0)
@@ -40,11 +69,11 @@ if ($id == 0)
 		}
 	
 	}	
-		$insert = "INSERT INTO `menu_sections` (`id`, `section_name`,`level`, `parent_id`, `sortid`) VALUES (NULL, '".$name."', '".$level."', '".$parent."', '".$sortid."');";
+		$insert = "INSERT INTO `menu_sections` (`id`, `section_name`,`level`, `parent_id`, `sortid`,`isactive`) VALUES (NULL, '".$name."', '".$level."', '".$parent."', '".$sortid."', '1');";
 	
 		mysql_query($insert);
 	
-		$tsql03 = "SELECT * FROM `menu_sections`  WHERE `section_name` = '".$name."' AND  `level` = '".$level."' AND  `parent_id` = '".$parent."' AND  `sortid` = '".$sortid."' ;";
+		$tsql03 = "SELECT * FROM `menu_sections`  WHERE `section_name` = '".$name."' AND  `level` = '".$level."' AND  `parent_id` = '".$parent."' AND  `sortid` = '".$sortid."'  AND `isactive` = '1' ;";
 		$rezult03 = mysql_query($tsql03);
 		if (mysql_num_rows($rezult03) > 0) 
 		{
@@ -63,7 +92,7 @@ $orderby = $_POST['sectionorder'];
 if ($id > 0) 
 	{
 	
-	$tsql01 = "select * from `menu_sections` WHERE `id` = '".$id."';";
+	$tsql01 = "select * from `menu_sections` WHERE `id` = '".$id."'  AND `isactive` = '1' ;";
 	//echo $tsql01; 
 	$result01 = mysql_query($tsql01);
 	if (mysql_num_rows($result01)>0)
@@ -97,7 +126,7 @@ if($_POST['operation'] == 'geteditsectionform')
 
 $sectionid = $_POST['sectionid'];
 		header('Content-Type: text/html; charset=utf-8');
-		$tsql_0 = "SELECT *  FROM `menu_sections`	 WHERE  `id` = '".$sectionid."' ; ";
+		$tsql_0 = "SELECT *  FROM `menu_sections`	 WHERE  `id` = '".$sectionid."'  AND `isactive` = '1' ; ";
 		$rezult_0 = mysql_query($tsql_0);
 
 	$rows_0 = mysql_fetch_array($rezult_0);
@@ -116,7 +145,7 @@ $sectionid = $_POST['sectionid'];
 	$sections = Array();
 		$tsql0 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '0' ORDER BY `sortid` ASC;
+		 WHERE `level` = '0'  AND `isactive` = '1' ORDER BY `sortid` ASC;
 		 ";
 		$rezult0 = mysql_query($tsql0);
 
@@ -132,7 +161,7 @@ $sectionid = $_POST['sectionid'];
 
 		$tsql_1 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
+		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
 		 ";
 		$rezult_1 = mysql_query($tsql_1);
 
@@ -151,7 +180,7 @@ $sectionid = $_POST['sectionid'];
 		
 		$tsql_2 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."' ORDER BY `sortid` ASC
+		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
 		 ";
 	$rezult_2 = mysql_query($tsql_2);
 
@@ -219,7 +248,7 @@ $sectionid = $_POST['sectionid'];
 if($_GET['operation'] == 'dishesorder')
 {
 
-	$tsql01 = "SELECT * FROM `menu_sections`  ORDER BY id ASC ;";
+	$tsql01 = "SELECT * FROM `menu_sections`  where `isactive` = '1'  ORDER BY id ASC ;";
 	$rezult01 = mysql_query($tsql01);
 	if (mysql_num_rows($rezult01) > 0) 
 	{
@@ -510,7 +539,7 @@ $sectionid = $_POST['sectionid'];
 	$sections = Array();
 		$tsql0 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '0' ORDER BY `sortid` ASC;
+		 WHERE `level` = '0'  AND `isactive` = '1' ORDER BY `sortid` ASC;
 		 ";
 		$rezult0 = mysql_query($tsql0);
 
@@ -531,7 +560,7 @@ $sectionid = $_POST['sectionid'];
 	
 		$tsql_1 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
+		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
 		 ";
 		$rezult_1 = mysql_query($tsql_1);
 
@@ -550,7 +579,7 @@ $sectionid = $_POST['sectionid'];
 		
 		$tsql_2 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."' ORDER BY `sortid` ASC
+		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
 		 ";
 	$rezult_2 = mysql_query($tsql_2);
 
@@ -985,7 +1014,7 @@ header('Content-Type: text/html; charset=utf-8');
 	$sections = Array();
 		$tsql0 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '0' ORDER BY `sortid` ASC;
+		 WHERE `level` = '0'  AND `isactive` = '1' ORDER BY `sortid` ASC;
 		 ";
 		$rezult0 = mysql_query($tsql0);
 
@@ -994,6 +1023,7 @@ header('Content-Type: text/html; charset=utf-8');
 	
 	
 
+	$yyy = dishes_in_section($row_menutype["id"],$rows0['id']);
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
 	$sections[$rows0['id']]['id'] = '_'.$rows0['id']; //непонял почему но без _ не работает
 	$sections[$rows0['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
@@ -1001,45 +1031,53 @@ header('Content-Type: text/html; charset=utf-8');
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
 	
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['alldishes'] = $sections[$rows0['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']]['children'] = 0;
 	$sections[$rows0['id']]['items'] = $zzz;
 	
 	
 		$tsql_1 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
+		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' AND `isactive` = '1'  ORDER BY `sortid` ASC
 		 ";
 		$rezult_1 = mysql_query($tsql_1);
 
 	while ($rows_1 = mysql_fetch_array($rezult_1)) {
 
+	$yyy = dishes_in_section($row_menutype["id"],$rows_1['id']);
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id']);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['alldishes'] = $sections[$rows0['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']]['id'] = '_'.$rows_1['id'];
 	$sections[$rows0['id']][$rows_1['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name']; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['alldishes'] = $sections[$rows0['id']][$rows_1['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
 	$sections[$rows0['id']][$rows_1['id']]['items'] = $zzz;
 	
 		
 		$tsql_2 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."' ORDER BY `sortid` ASC
+		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
 		 ";
 	$rezult_2 = mysql_query($tsql_2);
 
 	while ($rows_2 = mysql_fetch_array($rezult_2)) {
 
+	$yyy = dishes_in_section($row_menutype["id"],$rows_2['id']);
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_2['id']);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['alldishes'] = $sections[$rows0['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['alldishes'] = $sections[$rows0['id']][$rows_1['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['id'] = '_'.$rows_2['id']; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['alldishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
 	
 
@@ -1090,9 +1128,10 @@ header('Content-Type: text/html; charset=utf-8');
 					echo '<tbody><tr id="sec'.$val[$num1]['id'].'"  class = "dis'.$sections[$num]['id'].$class.'"><th  colspan="4" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val[$num1]['name'].' (Блюд: '.$val[$num1]['dishes'].') '.chr(10);
 					echo '</th><th class="level_1">'.chr(10);
-					echo  '<button class="level_1 btn btn-primary" type="button" name="adddish" sectiontitle="'.$val[$num1]['name'].'" menutitle="'.$row_menutype["type_name"].'" id="adddish'.$row_menutype["id"].$val[$num1]['id'].'" title="Добавть блюда в раздел"><span class="glyphicon glyphicon-plus"></span></button>'.chr(10);
+					echo '<textarea style="display:none;" id="sectiontitle'.$val[$num1]['id'].'">'.$val[$num1]['name'].'</textarea>'.chr(10);
+					echo  '<button class="level_1 btn btn-primary" type="button" name="adddish"  id="adddish'.$row_menutype["id"].$val[$num1]['id'].'" title="Добавть блюда в раздел"><span class="glyphicon glyphicon-plus"></span></button>'.chr(10);
 					echo '<button class="level_1 btn btn-primary" type="button" name="editsection" sectionid="'.$val[$num1]['id'].'"  menuid="0"   title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
-					echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.$val[$num1]['id'].'"  menuid="0"   title="удалить раздел"><span class="glyphicon glyphicon-remove"></span></button>'.chr(10);
+					echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.$val[$num1]['id'].'"  alldishes="'.$val[$num1]['alldishes'].'"  menuid="0"   title="удалить раздел"><span class="glyphicon glyphicon-remove"></span></button>'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 				}
 				if ($val[$num1]['dishes'] > 0) 
@@ -1120,9 +1159,10 @@ header('Content-Type: text/html; charset=utf-8');
 							echo '<tbody><tr id="sec'.$val1[$num2]['id'].'" class = "dis'.$val[$num1]['id'].$class.'  "><th  colspan="4" class="level_2">'.chr(10);			
 							echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val1[$num2]['name'].' (Блюд: '.$val1[$num2]['dishes'].') '.chr(10);
 							echo '</th><th class="level_2">'.chr(10);
+							echo '<textarea style="display:none;" id="sectiontitle'.$val1[$num2]['id'].'">'.$val1[$num2]['name'].'</textarea>'.chr(10);
 							echo  '<button class="level_2 btn btn-primary" type="button" name="adddish" id="adddish'.$row_menutype["id"].$val1[$num2]['id'].'" title="Добавть блюда в раздел"><span class="glyphicon glyphicon-plus"></span></button>'.chr(10);
 							echo '<button class="level_2 btn btn-primary" type="button" name="editsection" sectionid="'.$val1[$num2]['id'].'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
-							echo '<button class="level_2 btn btn-primary" type="button" name="deletesection" sectionid="'.$val1[$num2]['id'].'"  menuid="0"  id="'.$rows01["id"].'" title="удалить раздел"><span class="glyphicon glyphicon-remove"></span></button>'.chr(10);
+							echo '<button class="level_2 btn btn-primary" type="button" name="deletesection" sectionid="'.$val1[$num2]['id'].'" alldishes="'.$val1[$num2]['alldishes'].'" menuid="0"  id="'.$rows01["id"].'" title="удалить раздел"><span class="glyphicon glyphicon-remove"></span></button>'.chr(10);
 
 							echo '</th></tr></tbody>'.chr(10);
 		}

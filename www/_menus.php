@@ -279,6 +279,18 @@ normal_height()
 	return menuid;
 }
  
+ function curmenutitle() 
+ {
+  $('a').each(function(i,elem) 
+  {
+	if ($(this).hasClass("sel")) {
+		menutitle = $(this).text();
+		return false;
+		}
+	});
+	return menutitle;
+}
+ 
  function normal_height()
   {
   
@@ -289,7 +301,28 @@ $( ".stContainer" ).css("height", newh + "px")
 
  }
  
-	function delete_dish(dishid){
+ 
+ 
+	function delete_section(secid){
+	
+			$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'deletesection', sectionid: secid}
+		})
+		.done(function( msg ) {
+				if(msg == 'yes'){
+				alert ('Раздел удалён из системы.');
+				print_menu_tree(curmenu());
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+		});
+	
+	}
+	
+
+ function delete_dish(dishid,sectionid){
 	
 			$.ajax({
 			type: "POST",
@@ -299,8 +332,8 @@ $( ".stContainer" ).css("height", newh + "px")
 		.done(function( msg ) {
 				if(msg == 'yes'){
 				alert ('Блюдо удалено из системы.');
-				get_dishes_for_add(menuid,sectionid);
-				print_menu_tree(menuid);
+				get_dishes_for_add(curmenu(),sectionid);
+				print_menu_tree(curmenu());
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -511,8 +544,12 @@ $('#tabs').smartTab({selected: 0});
 		.done(function( msg ) {
 			if(msg == 'yes'){
 				alert ('Информация о блюде сохранена.');
-				get_dishes_for_add(menu_id.val(),menu_section.val());
-				print_menu_tree(menu_id.val());
+				menuid1 = curmenu();
+				get_dishes_for_add(menuid1,menu_section.val());
+				print_menu_tree(menuid1);
+				menutitle = curmenutitle();
+				sectiontitle = $( "#menu_section option:selected").text().replace('-','');
+				dialog2.dialog('option', 'title', 'Добавление блюд в:  "'+menutitle + '" / раздел: "' + sectiontitle + '"');
 				dialog3.dialog( "close" );
 				} else {
 				alert ('Что-то пошло не так. '+msg);
@@ -659,7 +696,7 @@ $('#tabs').smartTab({selected: 0});
 				menuid = $(this).attr("menuid");
 				sectionid = $(this).attr("sectionid");
 				if (confirm("Вы уверены что ходите удалить блюдо из системы?")) {
-					delete_dish(dishid);
+					delete_dish(dishid,sectionid);
 				} else {
 				}
 
@@ -669,10 +706,10 @@ $('#tabs').smartTab({selected: 0});
 	
 	$( document ).on( "click", "button[name=adddish]", function() {
 				id = $(this).attr("id");					
-				menutitle = $(this).attr("menutitle");					
-				sectiontitle = $(this).attr("sectiontitle");					
+				menutitle = curmenutitle();					
 				menuid = id.substr(7,1);
 				sectionid = id.substr(9);
+				sectiontitle = $("#sectiontitle_"+sectionid).val();					
 				get_dishes_for_add(menuid,sectionid);
 				dialog2.dialog('option', 'title', 'Добавление блюд в:  "'+menutitle + '" / раздел: "' + sectiontitle + '"');
 
@@ -746,6 +783,24 @@ normal_height()
 				dialog4.dialog( "open" );
 		
     });
+	
+	
+	$( document ).on( "click", "button[name=deletesection]", function() {
+			secid = $(this).attr("sectionid");
+			secid = secid.substr(1);
+			alldishes = $(this).attr("alldishes");
+
+			if (alldishes > 0) {
+				alert("Этот раздел удалить не возможно, так как к нему привязано " + alldishes + " блюд. \n Перенесите блюда в другие разделы или удалите их из системы.");
+			} else {
+					if (confirm("Вы уверены что ходите удалить раздел из системы?")) {
+						delete_section(secid);
+						} else {
+								}
+					}
+    });
+	
+	
 	
   });
   
