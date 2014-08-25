@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="description" content="">
-    <meta name="author" content="">
-    
+    <meta name="author" content="">   
     <title><?php
 	echo PRODUCTNAME;
 	?> :: Меню</title>
@@ -14,13 +13,11 @@
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="/css/sticky-footer-navbar.css" rel="stylesheet">
-
     <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
 	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
 	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
-
 <style>
 .rouble {
   position: relative; }
@@ -31,14 +28,17 @@
   position: absolute;
   top: 0.15em; }
   
-  .level_0{
-  background-color: #A7FDBE !important;
+ .level_0{
+	color: #000;
+  background-color: #FFD141 !important;
   }
     .level_1{
-  background-color: #FFB8BE !important;
+	color: #000;
+  background-color: #FFF368 !important;
   }
     .level_2{
-  background-color: #F5F5A3 !important;
+	color: #000;
+  background-color: #FFFFC0 !important;
   }
 </style>  
 
@@ -61,6 +61,7 @@
  
  <div id="dialog-adddish" title="Добавление блюда в меню">
    <p class="validateTips">Блюда этого раздела доступные для добавления в меню.</p>
+							<button class=" btn btn-primary" type="button" name="editdish" id="0" title="Создать блюдо">Создать новое блюдо</button>
 
 <table id = "dishes"  class="tablesorter dishestoadd" style="width: 100%;"><colgroup>
 						<col width="450">
@@ -76,9 +77,7 @@
 							<th class="sorter-false">Описание</th>
 							<th class="sorter-false">Вес</th>
 							<th class="sorter-false">Цена</th>
-							<th class="sorter-false"></th>
-							<th class="sorter-false"></th>
-							<th class="sorter-false"></th>
+							<th class="sorter-false" colspan="3">Действия</th>
 							</tr>
 							</thead>
 							<tbody><tr>
@@ -90,14 +89,15 @@
 							<td></td>
 							</tr></tbody></table>
 							
-<p class="validateTips">Блюда этого раздела уже добавленные в меню</p>
+<br>							
+<p class="validateTips">Блюда этого раздела  добавленные в другие меню</p>
 
 <table id = "dishes2"  class="tablesorter dishestoadd" style="width: 100%;"><colgroup>
 						<col width="450">
 						<col width="350">
 						<col width="100">
 						<col width="100">
-						<col width="100">
+						<col width="150">
 						<col width="30">
 						<col width="30">
 						<col width="30">
@@ -108,9 +108,7 @@
 							<th class="sorter-false">Вес</th>
 							<th class="sorter-false">Цена</th>
 							<th class="sorter-false">Меню</th>
-							<th class="sorter-false"></th>
-							<th class="sorter-false"></th>
-							<th class="sorter-false"></th>
+							<th class="sorter-false" colspan="3">Действия</th>
 							</tr>
 							</thead>
 							<tbody><tr>
@@ -122,10 +120,14 @@
 							<td></td>
 							<td></td>
 							</tr></tbody></table>						
-							<button class="level_1" type="button" name="editdish" id="0" title="Создать блюдо">Создать новое блюдо</button>
+							<button class="btn  btn-primary" type="button" name="editdish" id="0" title="Создать блюдо">Создать новое блюдо</button>
 </div>
  
  <div id="dialog-editdish" title="Заполните информацию о блюде">
+ 
+</div>
+
+ <div id="dialog-editsection" title="Заполните информацию о разделе">
  
 </div>
 <?php
@@ -162,6 +164,8 @@ fixednavbar();
 	<script src="/jquery/jquery.ui.datepicker-ru.js"></script>
 	<script src="/jquery/jquery-ui.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/bootstrap/js/bootstrap-button.js"></script>
+	
 	<script src="/jquery/validator.js"></script>
 	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
@@ -180,6 +184,108 @@ fixednavbar();
 
 	<script>
 
+	
+	function get_edit_section_form()
+	{
+		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'geteditsectionform'}
+		})
+		.done(function( msg ) {
+			$( "#dialog-editsection" ).html(msg);
+			});	
+	}
+	
+	
+	
+	function tree_hide(el,id)
+ {
+ view = "und";
+ if ($("button[name=viewall]").hasClass("active")) view = "";
+ if ($("button[name=viewfull]").hasClass("active")) view = ".full";
+ if ($("button[name=viewsect]").hasClass("active")) view = ".zero";
+
+ 
+ 			$(".dis_"+id).each(function(i,elem) 
+			{
+					if($(elem).attr("id"))
+					{
+						elid = $(elem).attr("id");
+						elid = elid.substr(4);
+						
+						tree_hide($("#tree_" + elid),elid);
+					}
+					
+			});
+	if(el) 
+		{
+			$(el).removeClass("glyphicon-minus");
+			$(el).addClass("glyphicon-plus");
+		}
+			$(".dis_"+id).hide() ;
+
+normal_height()
+
+ }
+ 
+ 
+ 
+ 	function tree_show(el,id)
+ {
+ 
+ view = "und";
+ if ($("button[name=viewall]").hasClass("active")) view = "";
+ if ($("button[name=viewfull]").hasClass("active")) view = "full";
+ if ($("button[name=viewsect]").hasClass("active")) view = "zero";
+
+ 			$(".dis_"+id).each(function(i,elem) 
+			{
+			
+					if($(elem).attr("id"))
+					{
+					
+						elid = $(elem).attr("id");
+						elid = elid.substr(4);
+						//alert(elid);
+						tree_show($("#tree_" + elid),elid);
+					}
+					
+			});
+			
+			if(el) 
+			{
+ 			$(el).removeClass("glyphicon-plus");
+			$(el).addClass("glyphicon-minus");
+			}
+			
+			$(".dis_"+id).show();
+
+			
+			normal_height()
+ }
+ 
+ 
+ 
+ function normal_height()
+  {
+  
+  $('a').each(function(i,elem) {
+	if ($(this).hasClass("sel")) {
+		menuid = $(this).attr("href");
+		menuid = menuid.substr(6);
+		return false;
+
+	}
+	
+	
+		});
+			
+ newh = $( "#menu_"+menuid ).height() + 30;
+$( ".stContainer" ).css("height", newh + "px")
+
+ }
+ 
 	function delete_dish(dishid){
 	
 			$.ajax({
@@ -301,7 +407,7 @@ fixednavbar();
 		$(document).ready(function(){
 			// когда страница загружена
 
-	
+
 			$(".menus")
 			.tablesorter(
 			{
@@ -317,7 +423,9 @@ fixednavbar();
 			});
 
 
-print_menu_tree(1);			
+print_menu_tree(1);		
+	
+	
 			
 $('#tabs').smartTab({selected: 0});		
 
@@ -414,10 +522,30 @@ $('#tabs').smartTab({selected: 0});
       return valid;
     }
  
+ 
+ 
+ 	     dialog4 = $( "#dialog-editsection" ).dialog({
+      autoOpen: false,
+	  position: [100,100],
+      height: '450',
+      width: '100%',
+      modal: true,
+      buttons: {
+   
+        "Отмена": function() {
+          dialog4.dialog( "close" );
+
+        }
+      },
+    });
+	
+	
+	
+	
      dialog2 = $( "#dialog-adddish" ).dialog({
       autoOpen: false,
 	  position: [100,100],
-     height: '500',
+     height: '450',
       width: '100%',
       modal: true,
       buttons: {
@@ -432,7 +560,7 @@ $('#tabs').smartTab({selected: 0});
       dialog3 = $( "#dialog-editdish" ).dialog({
       autoOpen: false,
 	  position: [100,100],
-      height: '500',
+      height: '450',
       width: '100%',
       modal: true,
       buttons: {
@@ -472,14 +600,18 @@ $('#tabs').smartTab({selected: 0});
 				dishid = $(this).attr("id");
 				menuid = $(this).attr("menuid");
 				sectionid = $(this).attr("sectionid");
-				dish_from_menu(dishid, menuid, sectionid);
+								if (confirm("Вы уверены что ходите убрать блюдо из меню?")) {
+					dish_from_menu(dishid, menuid, sectionid);
+				} else {
+				}
+				
     });
 
 	$( document ).on( "click", "button[name=deletedish]", function() {
 				dishid = $(this).attr("id");
 				menuid = $(this).attr("menuid");
 				sectionid = $(this).attr("sectionid");
-				if (confirm("Вы уверены что ходите удалить блюдо совсем?")) {
+				if (confirm("Вы уверены что ходите удалить блюдо из системы?")) {
 					delete_dish(dishid);
 				} else {
 				}
@@ -501,6 +633,7 @@ $('#tabs').smartTab({selected: 0});
 				dialog2.dialog( "open" );
 		
     });
+	
 
 	$( document ).on( "click", "button[name=editdish]", function() {
 				dishid = $(this).attr("id");
@@ -513,9 +646,53 @@ $('#tabs').smartTab({selected: 0});
 				dialog3.dialog( "open" );
     });
 	
+		$( document ).on( "click", ".tree", function() {
+				secid = $(this).attr("id");
+				secid =  secid.substr(5);
+				menuid = $(this).attr("menuid");
+				if ($(this).hasClass("glyphicon-minus"))
+				{			
+				tree_hide(this,secid)
+				} else {
+					tree_show(this,secid)
+						}					
+    });
+	
+	
+	$( document ).on( "click", "button[name=viewfull]", function() {
+			
+				$(".fullrow").show();
+			$(".glyphicon-plus").addClass("glyphicon-minus");
+			$(".glyphicon-plus").removeClass("glyphicon-plus");
+normal_height()
+				});
+	
+		$( document ).on( "click", "button[name=viewsect]", function() {
+			
+			$(".glyphicon-minus").addClass("glyphicon-plus");
+			$(".glyphicon-minus").removeClass("glyphicon-minus");
+			$(".dis_0 span").removeClass("glyphicon-plus");
+			$(".dis_0 span").addClass("glyphicon-minus");
+
+				$(".fullrow").hide();
+				normal_height()
+    });
+	
+
+
+	
+	
+		$( document ).on( "click", "button[name=addsection]", function() {
+				get_edit_section_form();
+				$( ".ui-dialog" ).css("margin-top", "70px");
+				dialog4.dialog( "open" );
+		
+    });
+	
 	
   });
   
+ 
  
 	</script>
   </body>

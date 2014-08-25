@@ -132,12 +132,12 @@ $menuid = substr($menuid,1);
 	{
 		for($i=0;$i<$items['count'];$i++)
 		{			
-			echo '<tr>';
+			echo '<tr class = "dis_'.$sectionid.' fullrow">';
 			echo '<td><span id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
 					<td><span id="dish_descr'.$items[$i]["id"].'">'.$items[$i]["description"].'</span></td>	
 							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
 							<td>'.$items[$i]["price"].'</td>
-							<td><button type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить блюдо из меню">Убрать из меню</button></td>';
+							<td colspan="2"><button class="btn btn-primary" type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить блюдо из меню">Убрать&nbsp;из&nbsp;меню</button></td>';
 
 			echo '</tr>';					
 		}
