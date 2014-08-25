@@ -5,6 +5,93 @@ $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 
+
+if($_POST['operation'] == 'addsection')
+{
+$id = $_POST['sectionid'];
+$name = $_POST['sectionname'];
+$parent = $_POST['sectionparent'];
+$orderby = $_POST['sectionorder'];
+
+if ($id == 0) 
+	{
+	
+	$tsql01 = "select * from `menu_sections` WHERE `parent_id` = '".$parent."';";
+	//echo $tsql01; 
+	$result01 = mysql_query($tsql01);
+	if (mysql_num_rows($result01)>0)
+	{	
+		$sortid = mysql_num_rows($result01) + 1; 
+		while ($rows01 = mysql_fetch_array($result01))
+		{
+		$level = $rows01['level'];
+		}
+	}
+	else
+	{
+		$sortid = 1;
+			$tsql02 = "select * from `menu_sections` WHERE `id` = '".$parent."';";
+			//echo $tsql02; 
+		$result02 = mysql_query($tsql02);
+		if (mysql_num_rows($result02)>0)
+		{	
+			$rows02 = mysql_fetch_array($result02);
+			$level = $rows02['level'] + 1;
+		}
+	
+	}	
+		$insert = "INSERT INTO `menu_sections` (`id`, `section_name`,`level`, `parent_id`, `sortid`) VALUES (NULL, '".$name."', '".$level."', '".$parent."', '".$sortid."');";
+	
+		mysql_query($insert);
+	
+		$tsql03 = "SELECT * FROM `menu_sections`  WHERE `section_name` = '".$name."' AND  `level` = '".$level."' AND  `parent_id` = '".$parent."' AND  `sortid` = '".$sortid."' ;";
+		$rezult03 = mysql_query($tsql03);
+		if (mysql_num_rows($rezult03) > 0) 
+		{
+			echo 'yes';
+		}
+	}
+}
+
+if($_POST['operation'] == 'editsection')
+{
+$id = $_POST['sectionid'];
+$name = $_POST['sectionname'];
+$parent = $_POST['sectionparent'];
+$orderby = $_POST['sectionorder'];
+
+if ($id > 0) 
+	{
+	
+	$tsql01 = "select * from `menu_sections` WHERE `id` = '".$id."';";
+	//echo $tsql01; 
+	$result01 = mysql_query($tsql01);
+	if (mysql_num_rows($result01)>0)
+	{	
+
+		while ($rows01 = mysql_fetch_array($result01))
+		{
+	
+	
+			$insert = "UPDATE `menu_sections` SET `section_name` = '".$name."' WHERE `id` = '".$id."' ;";
+	
+			mysql_query($insert);
+	
+			$tsql03 = "SELECT * FROM `menu_sections`  WHERE `section_name` = '".$name."' AND  `id` = '".$id."' ;";
+			$rezult03 = mysql_query($tsql03);
+			if (mysql_num_rows($rezult03) > 0) 
+			{
+				echo 'yes';
+			}
+		}
+	}
+	}
+}
+
+
+
+
+
 if($_POST['operation'] == 'geteditsectionform')
 {
 
@@ -14,15 +101,18 @@ $sectionid = $_POST['sectionid'];
 		$rezult_0 = mysql_query($tsql_0);
 
 	$rows_0 = mysql_fetch_array($rezult_0);
-  echo '<p class="validateTips">Поле "Описание" можно пока не заполнять.</p>
-  <form>
-	<input type="text" id="name" placeholder="Название" class="form-control" value="'.$rows_0['name'].'">
-	<input type="hidden" id="section_id"  value="'.$sectionid.'">
-	<br>
-	<p >Выберите родительский раздел</p>
-	<select id="menu_section" >';
-
 	
+	echo '<p class="validateTips">Пожалуйста заполните все поля.</p>
+	<form>
+	<textarea id="sectionname" placeholder="Название" class="form-control" cols="50">'.$rows_0['section_name'].'</textarea>
+	<input type="hidden" id="section_id"  value="'.$sectionid.'">
+	<br>';
+	
+	if ($sectionid == 0) 
+	{
+	echo '	<p >Выберите родительский раздел</p>
+			<select id="sectionparent" >';
+
 	$sections = Array();
 		$tsql0 = "SELECT * 
 		 FROM `menu_sections`  
@@ -33,18 +123,13 @@ $sectionid = $_POST['sectionid'];
 
 	while ($rows0 = mysql_fetch_array($rezult0)) {
 	
-	
-
 	$zzz = dishes_in_section($row_menutype["id"],$rows0['id']);
 	$sections[$rows0['id']]['id'] = '_'.$rows0['id']; //непонял почему но без _ не работает
 	$sections[$rows0['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
-	
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
-	
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] = 0;
-		
-	
+
 		$tsql_1 = "SELECT * 
 		 FROM `menu_sections`  
 		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
@@ -82,15 +167,12 @@ $sectionid = $_POST['sectionid'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
 	//$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
 	
-
 	} //result_2
 			
 	} //result_1
 			
 	} //result0
-	
 // конец сборки	
-	
 
 	//цикл по массиву секций с блюдами для конкретного меню для вывода на экран
 	foreach ($sections as $num => $val) 
@@ -100,8 +182,6 @@ $sectionid = $_POST['sectionid'];
 			
 			foreach ($val as $num1 => $val1) 
 			{
-				
-				
 					if (is_array($val1)) 
 					{
 					$sid = substr($val[$num1]['id'],1);
@@ -117,7 +197,7 @@ $sectionid = $_POST['sectionid'];
 							$sid = substr($val1[$num2]['id'],1);
 							$selected = '';
 							if ($sid == $sectionid) {$selected = 'selected = "selected"'; }
-							echo '<option value="'.$sid.'"  class="level_2" '.$selected.'>-------'.$val1[$num2]['name'].'</option>'.chr(10);
+							echo '<option disabled value="'.$sid.'"  class="level_2" '.$selected.'>-------'.$val1[$num2]['name'].'</option>'.chr(10);
 							
 							}
 						}
@@ -127,10 +207,10 @@ $sectionid = $_POST['sectionid'];
 	
 	//конец цикла
 
-echo '</select>
-  	</form>';
-	
-	
+	echo '</select>';
+	}
+
+  	echo '</form>';
 	
 }
 	
@@ -410,7 +490,7 @@ $sectionid = $_POST['sectionid'];
 
   <form>
 
-	<input type="text" id="name" placeholder="Название" class="form-control" value="<?php echo $rows_0['title']; ?>">
+	<textarea colls="50" id="name" placeholder="Название" class="form-control" ><?php echo $rows_0['title']; ?></textarea>
 
 	
 
@@ -741,9 +821,9 @@ $toadd = $_POST['toadd'];
 							<td><span id=dishdescr'.$rows01["id"].'>'.$rows01["description"].'</span></td>
 							<td><span id=dishweight'.$rows01["id"].'>'.$rows01["weight"].'</span></td>
 							<td><span id=dishprice'.$rows01["id"].'>'.$rows01["price"].'</span></td>
-							<td><button type="button" name="dishtomenu" sectionid="'.$sectionid.'"  menuid="'.$menuid.'" id="'.$rows01["id"].'" title="Добавть блюдо в меню"><span class="glyphicon glyphicon-log-in"></span></button></td>	
-							<td><button type="button" name="editdish" sectionid="'.$sectionid.'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать блюдо"><span class="glyphicon glyphicon-pencil"></span></button></td>	
-							<td><button type="button" name="deletedish" sectionid="'.$sectionid.'"  menuid="0"  id="'.$rows01["id"].'" title="Удалить блюдо"><span class="glyphicon glyphicon-remove"></span></button></td>	
+							<td><button type="button" class="btn btn-primary" name="dishtomenu" sectionid="'.$sectionid.'"  menuid="'.$menuid.'" id="'.$rows01["id"].'" title="Добавть блюдо в меню"><span class="glyphicon glyphicon-log-in"></span></button></td>	
+							<td><button type="button" class="btn btn-primary" name="editdish" sectionid="'.$sectionid.'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать блюдо"><span class="glyphicon glyphicon-pencil"></span></button></td>	
+							<td><button type="button" class="btn btn-primary" name="deletedish" sectionid="'.$sectionid.'"  menuid="0"  id="'.$rows01["id"].'" title="Удалить блюдо"><span class="glyphicon glyphicon-remove"></span></button></td>	
 						</tr>';
 				}
 
@@ -763,7 +843,7 @@ $toadd = $_POST['toadd'];
 							<td><span id=dishweight'.$rows01["id"].'>'.$rows01["weight"].'</span></td>
 							<td><span id=dishprice'.$rows01["id"].'>'.$rows01["price"].'</span></td>
 							<td><span id=dishmenu'.$rows01["id"].'>'.$rows02["type_name"].'</span></td>
-							<td colspan="3"><button class="btn btn-primary" type="button" name="dishfrommenu" sectionid="'.$sectionid.'"  menuid="'.$menuid.'"  id="'.$rows01["id"].'" title="Убрать блюдо из меню">Убрать&nbsp;из&nbsp;меню</button></td>		
+							<td colspan="3"><button class="btn btn-primary" type="button" name="dishfrommenu" sectionid="'.$sectionid.'"  menuid="'.$rows02["menuid"].'"  id="'.$rows01["id"].'" title="Убрать блюдо из меню">Убрать&nbsp;из&nbsp;меню</button></td>		
 							</tr>';
 					}
 				}
@@ -852,7 +932,7 @@ header('Content-Type: text/html; charset=utf-8');
   <button  name="viewsect" type="button" class="btn btn-primary">Свернуть список</button>
 </div>
 
-<button class="btn btn-primary" type="button" name="addsection"  title="Добавть раздел в меню">Добавить&nbsp;раздел</button>
+<button class="btn btn-primary" type="button" sectionid="0" name="addsection"  title="Добавть раздел в меню">Добавить&nbsp;раздел</button>
 
 <br><br>
 <div id="tabs" style="min-width: 700px; width: 100%;">
@@ -898,7 +978,7 @@ header('Content-Type: text/html; charset=utf-8');
 							<th class="sorter-false">Описание</th>
 							<th class="sorter-false">Вес (кг)</th>
 							<th class="sorter-false">Цена</th>
-							<th class="sorter-false" >Действия</th>
+							<th class="sorter-false" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Действия&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 							</tr>
 							</thead>';
 
@@ -1010,8 +1090,9 @@ header('Content-Type: text/html; charset=utf-8');
 					echo '<tbody><tr id="sec'.$val[$num1]['id'].'"  class = "dis'.$sections[$num]['id'].$class.'"><th  colspan="4" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val[$num1]['name'].' (Блюд: '.$val[$num1]['dishes'].') '.chr(10);
 					echo '</th><th class="level_1">'.chr(10);
-					echo  '<button class="level_1 btn btn-primary" type="button" name="adddish" sectiontitle="'.$val[$num1]['name'].'" menutitle="'.$row_menutype["type_name"].'" id="adddish'.$row_menutype["id"].$val[$num1]['id'].'" title="Добавть блюдо в меню">Добавить&nbsp;блюда</button>'.chr(10);
-
+					echo  '<button class="level_1 btn btn-primary" type="button" name="adddish" sectiontitle="'.$val[$num1]['name'].'" menutitle="'.$row_menutype["type_name"].'" id="adddish'.$row_menutype["id"].$val[$num1]['id'].'" title="Добавть блюда в раздел"><span class="glyphicon glyphicon-plus"></span></button>'.chr(10);
+					echo '<button class="level_1 btn btn-primary" type="button" name="editsection" sectionid="'.$val[$num1]['id'].'"  menuid="0"   title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
+					echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.$val[$num1]['id'].'"  menuid="0"   title="удалить раздел"><span class="glyphicon glyphicon-remove"></span></button>'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 				}
 				if ($val[$num1]['dishes'] > 0) 
@@ -1039,7 +1120,9 @@ header('Content-Type: text/html; charset=utf-8');
 							echo '<tbody><tr id="sec'.$val1[$num2]['id'].'" class = "dis'.$val[$num1]['id'].$class.'  "><th  colspan="4" class="level_2">'.chr(10);			
 							echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val1[$num2]['name'].' (Блюд: '.$val1[$num2]['dishes'].') '.chr(10);
 							echo '</th><th class="level_2">'.chr(10);
-							echo  '<button class="level_2 btn btn-primary" type="button" name="adddish" id="adddish'.$row_menutype["id"].$val1[$num2]['id'].'" title="Добавть блюдо в меню">Добавить&nbsp;блюда</button>'.chr(10);
+							echo  '<button class="level_2 btn btn-primary" type="button" name="adddish" id="adddish'.$row_menutype["id"].$val1[$num2]['id'].'" title="Добавть блюда в раздел"><span class="glyphicon glyphicon-plus"></span></button>'.chr(10);
+							echo '<button class="level_2 btn btn-primary" type="button" name="editsection" sectionid="'.$val1[$num2]['id'].'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
+							echo '<button class="level_2 btn btn-primary" type="button" name="deletesection" sectionid="'.$val1[$num2]['id'].'"  menuid="0"  id="'.$rows01["id"].'" title="удалить раздел"><span class="glyphicon glyphicon-remove"></span></button>'.chr(10);
 
 							echo '</th></tr></tbody>'.chr(10);
 		}

@@ -185,12 +185,13 @@ fixednavbar();
 	<script>
 
 	
-	function get_edit_section_form()
+	function get_edit_section_form(sectionid)
 	{
+	
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'geteditsectionform'}
+			data: { operation: 'geteditsectionform',sectionid: sectionid}
 		})
 		.done(function( msg ) {
 			$( "#dialog-editsection" ).html(msg);
@@ -265,21 +266,23 @@ normal_height()
 			normal_height()
  }
  
- 
- 
- function normal_height()
+ function curmenu() 
+ {
+  $('a').each(function(i,elem) 
   {
-  
-  $('a').each(function(i,elem) {
 	if ($(this).hasClass("sel")) {
 		menuid = $(this).attr("href");
 		menuid = menuid.substr(6);
 		return false;
-
-	}
-	
-	
-		});
+		}
+	});
+	return menuid;
+}
+ 
+ function normal_height()
+  {
+  
+ menuid = curmenu();
 			
  newh = $( "#menu_"+menuid ).height() + 30;
 $( ".stContainer" ).css("height", newh + "px")
@@ -524,6 +527,50 @@ $('#tabs').smartTab({selected: 0});
  
  
  
+ 
+ 
+   function addsection() {
+
+		var	section_id = $( "#section_id" ),
+		sectionname = $( "#sectionname" ),
+		sectionparent = $( "#sectionparent" ),
+		allFields = $( [] ).add( sectionname ).add( sectionparent ).add( section_id),
+		tips = $( ".validateTips" );
+		
+		operation = 'addsection';
+		if(section_id.val() > 0) {operation = 'editsection';}
+		
+      var valid = true;
+      allFields.removeClass( "ui-state-error" );
+ 
+      valid = valid && checkLength( sectionname, "названия", 3, 250 );
+  
+      if ( valid ) 
+	  {
+
+		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: operation,  sectionname: sectionname.val(), sectionparent: sectionparent.val(), sectionid: section_id.val()}
+		})
+		.done(function( msg ) {
+			if(msg == 'yes'){
+				alert ('Информация о разделе сохранена.');
+				print_menu_tree(curmenu());
+				dialog4.dialog( "close" );
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+		});
+		
+		
+		
+	}
+      return valid;
+    }
+ 
+ 
+ 
  	     dialog4 = $( "#dialog-editsection" ).dialog({
       autoOpen: false,
 	  position: [100,100],
@@ -531,7 +578,7 @@ $('#tabs').smartTab({selected: 0});
       width: '100%',
       modal: true,
       buttons: {
-   
+   "Сохранить": addsection,
         "Отмена": function() {
           dialog4.dialog( "close" );
 
@@ -683,12 +730,22 @@ normal_height()
 	
 	
 		$( document ).on( "click", "button[name=addsection]", function() {
-				get_edit_section_form();
+				secid = $(this).attr("sectionid");
+
+				get_edit_section_form(secid);
 				$( ".ui-dialog" ).css("margin-top", "70px");
 				dialog4.dialog( "open" );
 		
     });
 	
+			$( document ).on( "click", "button[name=editsection]", function() {
+				secid = $(this).attr("sectionid");
+				secid = secid.substr(1);
+				get_edit_section_form(secid);
+				$( ".ui-dialog" ).css("margin-top", "70px");
+				dialog4.dialog( "open" );
+		
+    });
 	
   });
   
