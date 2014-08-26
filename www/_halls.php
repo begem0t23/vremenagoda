@@ -67,7 +67,7 @@ fixednavbar();
       <div class="page-header">
         <h3>Редактирование Списка Залов</h3>
       </div>
-<button type="button" role="1" name="addhall" id="0" title="Добавить Зал">Добавить Зал</button>
+<button  class = "btn btn-primary"  type="button" role="1" name="addhall" id="0" title="Добавить Зал">Добавить Зал</button>
  <?php		
 
 $bgs[0] = 'Нет';
@@ -91,7 +91,7 @@ $bgs[1] = 'Да';
 							<th class="sorter-false">Название</th>
 							<th class="sorter-false">Описание</th>
 							<th class="sorter-false">Количество персон</th>
-							<th class="sorter-false" colspan="2">Действия</th>
+							<th class="sorter-false" >Действия</th>
 							</tr>
 							</thead>';
 	?>
@@ -104,8 +104,8 @@ $bgs[1] = 'Да';
 							<td><span id="hallname'.$row_serv["id"].'">'.$row_serv["name"].'</span></td>
 							<td><span id="halldescr'.$row_serv["id"].'">'.$row_serv["description"].'</span></td>
 							<td><span id="hallcnt'.$row_serv["id"].'" >'.$row_serv["countofperson"].'</span></td>
-							<td><button type="button"  name="changehall" id="'.$row_serv["id"].'" title="Изменить данные">Изменить</button></td>
-							<td><button type="button"  name="deletehall" id="'.$row_serv["id"].'" title="Удалить Зал">Удалить</button></td>';
+							<td><button  class = "btn btn-primary" type="button"  name="changehall" id="'.$row_serv["id"].'" title="Изменить данные"><span class="glyphicon glyphicon-pencil"></span></button>
+							<button  class = "btn btn-primary" type="button"  name="deletehall" id="'.$row_serv["id"].'" title="Удалить Зал"><span class="glyphicon glyphicon-trash"></span></button></td>';
 												
 				echo '</tr>';
 					
@@ -166,6 +166,8 @@ $bgs[1] = 'Да';
 		});
 	
 	}
+	
+	
 		$(document).ready(function(){
 			// когда страница загружена
 

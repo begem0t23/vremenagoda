@@ -67,7 +67,7 @@ fixednavbar();
       <div class="page-header">
         <h3>Редактирование услуг</h3>
       </div>
-<button type="button" name="changeserv" id="changeserv0" title="Добавить услугу">Добавить услугу</button>
+<button  class = "btn btn-primary"  type="button" name="changeserv" id="changeserv0" title="Добавить услугу">Добавить услугу</button>
  <?php		
 
 $bgs[0] = 'Нет';
@@ -92,7 +92,7 @@ $bgs[1] = 'Да';
 							<th class="sorter-false">Описание</th>
 							<th class="sorter-false">Цена</th>
 							<th class="sorter-false">От кол-ва гостей</th>
-							<th class="sorter-false">Действие</th>
+							<th class="sorter-false">Действия</th>
 							</tr>
 							</thead>';
 	?>
@@ -106,7 +106,8 @@ $bgs[1] = 'Да';
 							<td><span id="servdescr'.$row_serv["id"].'">'.$row_serv["description"].'</span></td>
 							<td><span id="servprice'.$row_serv["id"].'">'.$row_serv["price"].'</span></td>
 							<td><span id="byguestcount'.$row_serv["id"].'">'.$bgs[$row_serv["byguestcount"]].'</span></td>
-							<td><button type="button" name="changeserv" id="changeserv'.$row_serv["id"].'" title="Изменить услугу">Изменить</button></td>';
+							<td><button class = "btn btn-primary" type="button" name="changeserv" id="changeserv'.$row_serv["id"].'" title="Изменить услугу"><span class="glyphicon glyphicon-pencil"></span></button>
+							<button class = "btn btn-primary" type="button" name="deleteserv" id="deleteserv'.$row_serv["id"].'" title="Удалить услугу"><span class="glyphicon glyphicon-trash"></span></button></td>';
 												
 				echo '</tr>';
 					
@@ -150,7 +151,26 @@ $bgs[1] = 'Да';
 
 
 	<script>
-
+	function delete_serv(servid){
+	
+			$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'deleteservice', servid: servid}
+		})
+		.done(function( msg ) {
+				if(msg == 'yes'){
+				alert ('Услуга удалена из системы.');
+				location.href="?uslugi";
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+		});
+	
+	}
+	
+	
+	
 		$(document).ready(function(){
 			// когда страница загружена
 
@@ -275,6 +295,21 @@ $bgs[1] = 'Да';
 				
       dialog.dialog( "open" );
     });
+	
+	
+	    $( document ).on( "click", "button[name=deleteserv]", function() {
+					id = $(this).attr("id");
+				id = id.substr(10);
+				bgs = $('#byguestcount'+id).html();
+				sn = $('#servname'+id).html();				
+			if (confirm("Вы уверены что ходите удалить услугу " + $('#servname'+id).html() + "?")) {
+					delete_serv(id);
+				} else {
+				}
+
+    });
+	
+	
   });
 	</script>
  <div id="dialog-form" title="Заполните информацию по услуге">

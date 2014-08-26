@@ -850,9 +850,9 @@ $toadd = $_POST['toadd'];
 							<td><span id=dishdescr'.$rows01["id"].'>'.$rows01["description"].'</span></td>
 							<td><span id=dishweight'.$rows01["id"].'>'.$rows01["weight"].'</span></td>
 							<td><span id=dishprice'.$rows01["id"].'>'.$rows01["price"].'</span></td>
-							<td><button type="button" class="btn btn-primary" name="dishtomenu" sectionid="'.$sectionid.'"  menuid="'.$menuid.'" id="'.$rows01["id"].'" title="Добавть блюдо в меню"><span class="glyphicon glyphicon-log-in"></span></button></td>	
-							<td><button type="button" class="btn btn-primary" name="editdish" sectionid="'.$sectionid.'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать блюдо"><span class="glyphicon glyphicon-pencil"></span></button></td>	
-							<td><button type="button" class="btn btn-primary" name="deletedish" sectionid="'.$sectionid.'"  menuid="0"  id="'.$rows01["id"].'" title="Удалить блюдо"><span class="glyphicon glyphicon-remove"></span></button></td>	
+							<td><button type="button" class="btn btn-primary" name="dishtomenu" sectionid="'.$sectionid.'"  menuid="'.$menuid.'" id="'.$rows01["id"].'" title="Добавть блюдо в меню"><span class="glyphicon glyphicon-chevron-down"></span></button>	
+							<button type="button" class="btn btn-primary" name="editdish" sectionid="'.$sectionid.'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать блюдо"><span class="glyphicon glyphicon-pencil"></span></button>
+							<button type="button" class="btn btn-primary" name="deletedish" sectionid="'.$sectionid.'"  menuid="0"  id="'.$rows01["id"].'" title="Удалить блюдо"><span class="glyphicon glyphicon-trash"></span></button></td>	
 						</tr>';
 				}
 
@@ -872,7 +872,7 @@ $toadd = $_POST['toadd'];
 							<td><span id=dishweight'.$rows01["id"].'>'.$rows01["weight"].'</span></td>
 							<td><span id=dishprice'.$rows01["id"].'>'.$rows01["price"].'</span></td>
 							<td><span id=dishmenu'.$rows01["id"].'>'.$rows02["type_name"].'</span></td>
-							<td colspan="3"><button class="btn btn-primary" type="button" name="dishfrommenu" sectionid="'.$sectionid.'"  menuid="'.$rows02["menuid"].'"  id="'.$rows01["id"].'" title="Убрать блюдо из меню">Убрать&nbsp;из&nbsp;меню</button></td>		
+							<td ><button class="btn btn-primary" type="button" name="dishfrommenu" sectionid="'.$sectionid.'"  menuid="'.$rows02["menuid"].'"  id="'.$rows01["id"].'" title="Убрать блюдо из меню">Убрать&nbsp;из&nbsp;меню</button></td>		
 							</tr>';
 					}
 				}
@@ -943,6 +943,40 @@ if ($id == 0)
 		}
 	
 }
+
+
+
+if($_POST['operation'] == 'deleteservice')
+{
+$id = $_POST['servid'];
+
+
+if ($id > 0) 
+	{
+		$tsql01 = "SELECT * FROM `services`  WHERE `id` = ".$id." ;";
+		$rezult01 = mysql_query($tsql01);
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+		$rows01 =	mysql_fetch_array($rezult01);
+		
+		$update = "UPDATE `services` SET    `isactive` = '0' WHERE  `id` = ".$id." ;";
+		
+			mysql_query($update);
+
+		} else {
+				Echo "почемуто нет такой записи";	
+				}
+
+		$tsql02 = "SELECT * FROM `services`  WHERE `id` = '".$id."' AND    `isactive` = '0' ;";
+		$rezult02 = mysql_query($tsql02);
+		if (mysql_num_rows($rezult02) > 0) 
+		{
+			echo 'yes';
+		}	
+	}
+	
+}
+
 
 
 
@@ -1131,7 +1165,7 @@ header('Content-Type: text/html; charset=utf-8');
 					echo '<textarea style="display:none;" id="sectiontitle'.$val[$num1]['id'].'">'.$val[$num1]['name'].'</textarea>'.chr(10);
 					echo  '<button class="level_1 btn btn-primary" type="button" name="adddish"  id="adddish'.$row_menutype["id"].$val[$num1]['id'].'" title="Добавть блюда в раздел"><span class="glyphicon glyphicon-plus"></span></button>'.chr(10);
 					echo '<button class="level_1 btn btn-primary" type="button" name="editsection" sectionid="'.$val[$num1]['id'].'"  menuid="0"   title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
-					echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.$val[$num1]['id'].'"  alldishes="'.$val[$num1]['alldishes'].'"  menuid="0"   title="удалить раздел"><span class="glyphicon glyphicon-remove"></span></button>'.chr(10);
+					echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.$val[$num1]['id'].'"  alldishes="'.$val[$num1]['alldishes'].'"  menuid="0"   title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 				}
 				if ($val[$num1]['dishes'] > 0) 
@@ -1162,7 +1196,7 @@ header('Content-Type: text/html; charset=utf-8');
 							echo '<textarea style="display:none;" id="sectiontitle'.$val1[$num2]['id'].'">'.$val1[$num2]['name'].'</textarea>'.chr(10);
 							echo  '<button class="level_2 btn btn-primary" type="button" name="adddish" id="adddish'.$row_menutype["id"].$val1[$num2]['id'].'" title="Добавть блюда в раздел"><span class="glyphicon glyphicon-plus"></span></button>'.chr(10);
 							echo '<button class="level_2 btn btn-primary" type="button" name="editsection" sectionid="'.$val1[$num2]['id'].'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
-							echo '<button class="level_2 btn btn-primary" type="button" name="deletesection" sectionid="'.$val1[$num2]['id'].'" alldishes="'.$val1[$num2]['alldishes'].'" menuid="0"  id="'.$rows01["id"].'" title="удалить раздел"><span class="glyphicon glyphicon-remove"></span></button>'.chr(10);
+							echo '<button class="level_2 btn btn-primary" type="button" name="deletesection" sectionid="'.$val1[$num2]['id'].'" alldishes="'.$val1[$num2]['alldishes'].'" menuid="0"  id="'.$rows01["id"].'" title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
 
 							echo '</th></tr></tbody>'.chr(10);
 		}

@@ -67,7 +67,7 @@ fixednavbar();
       <div class="page-header">
         <h3>Редактирование Списка Пользователей</h3>
       </div>
-<button type="button" role="1" name="adduser" id="0" title="Добавить пользователя">Добавить пользователя</button>
+<button  class = "btn btn-primary" type="button" role="1" name="adduser" id="0" title="Добавить пользователя">Добавить пользователя</button>
  <?php		
 
 $bgs[0] = 'Нет';
@@ -91,7 +91,7 @@ $bgs[1] = 'Да';
 							<th class="sorter-false">Имя</th>
 							<th class="sorter-false">Логин/Email</th>
 							<th class="sorter-false">Роль/Права</th>
-							<th class="sorter-false" colspan="3">Действия</th>
+							<th class="sorter-false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Действия&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 							</tr>
 							</thead>';
 	?>
@@ -104,9 +104,9 @@ $bgs[1] = 'Да';
 							<td><span id="username'.$row_serv["id"].'">'.$row_serv["realname"].'</span></td>
 							<td><span id="userlogin'.$row_serv["id"].'">'.$row_serv["login"].'</span></td>
 							<td><span id="userrole'.$row_serv["id"].'" >'.$userroles[$row_serv["role"]].'</span></td>
-							<td><button type="button" role="'.$row_serv["role"].'" name="changeuserdata" id="'.$row_serv["id"].'" title="Изменить данные">Изменить&nbsp;данные</button></td>
-							<td><button type="button" role="'.$row_serv["role"].'" name="changeuserpass" id="'.$row_serv["id"].'" title="Изменить пароль">Изменить&nbsp;пароль</button></td>
-							<td><button type="button" role="'.$row_serv["role"].'" name="deleteuser" id="'.$row_serv["id"].'" title="Удалить пользователя">Удалить</button></td>';
+							<td><button class = "btn btn-primary" type="button" role="'.$row_serv["role"].'" name="changeuserdata" id="'.$row_serv["id"].'" title="Изменить данные"><span class="glyphicon glyphicon-pencil"></span></button>
+							<button class = "btn btn-primary"  type="button" role="'.$row_serv["role"].'" name="changeuserpass" id="'.$row_serv["id"].'" title="Изменить пароль"><span class="glyphicon glyphicon-edit"></span></button>
+							<button  class = "btn btn-primary" type="button" role="'.$row_serv["role"].'" name="deleteuser" id="'.$row_serv["id"].'" title="Удалить пользователя"><span class="glyphicon glyphicon-trash"></span></button></td>';
 												
 				echo '</tr>';
 					

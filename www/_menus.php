@@ -64,20 +64,19 @@
 							<button class=" btn btn-primary" type="button" name="editdish" id="0" title="Создать блюдо">Создать новое блюдо</button>
 
 <table id = "dishes"  class="tablesorter dishestoadd" style="width: 100%;"><colgroup>
-						<col width="450">
-						<col width="350">
-						<col width="100">
-						<col width="100">
-						<col width="30">
-						<col width="30">
-						<col width="30">
+						<col width="45%">
+						<col width="35%">
+						<col width="10%">
+						<col width="10%">
+						<col width="10%">
+					
 						</colgroup><thead>
 							<tr>
 							<th class="sorter-false">Название</th>
 							<th class="sorter-false">Описание</th>
 							<th class="sorter-false">Вес</th>
 							<th class="sorter-false">Цена</th>
-							<th class="sorter-false" colspan="3">Действия</th>
+							<th class="sorter-false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Действия&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 							</tr>
 							</thead>
 							<tbody><tr>
@@ -86,29 +85,28 @@
 							<td></td>
 							<td></td>
 							<td></td>
-							<td></td>
+			
 							</tr></tbody></table>
 							
 <br>							
 <p class="validateTips">Блюда этого раздела  добавленные в другие меню</p>
 
 <table id = "dishes2"  class="tablesorter dishestoadd" style="width: 100%;"><colgroup>
-						<col width="450">
-						<col width="350">
-						<col width="100">
-						<col width="100">
-						<col width="150">
-						<col width="30">
-						<col width="30">
-						<col width="30">
+						<col width="35%">
+						<col width="25%">
+						<col width="10%">
+						<col width="10%">
+						<col width="10%">
+						<col width="10%">
+						
 						</colgroup><thead>
 							<tr>
 							<th class="sorter-false">Название</th>
 							<th class="sorter-false">Описание</th>
 							<th class="sorter-false">Вес</th>
 							<th class="sorter-false">Цена</th>
-							<th class="sorter-false">Меню</th>
-							<th class="sorter-false" colspan="3">Действия</th>
+							<th class="sorter-false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Меню&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+							<th class="sorter-false" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Действия&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 							</tr>
 							</thead>
 							<tbody><tr>
