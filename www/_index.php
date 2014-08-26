@@ -30,18 +30,18 @@ fixednavbar();
     <div class="container">
       <div class="page-header">
 <?php	
-	
+	$q ='"';
 	if(!$_GET['view_zakazid']){
 		table(
 		"Новые заказы", //заголовок
-		"50,100,200,200,100",	//ширина колонок
+		"50,100,200,200",	//ширина колонок
 		"Номер Заказа,Дата Банкета,Клиент,Статус Заказа",	//заголовки
 		"id,eventdate,name,orderstatus",	//поля
 		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name
 		 FROM orders o, users u, clients c 
 		 WHERE o.status = 1 AND  o.creatorid = u.id AND o.clientid = c.id ", //sql кроме даты
 		"", //период (поле,начало,конец)
-		"view,Просмотр заказа,Просмотр" //кнопки
+		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>" //кнопки
 		);
 		
 		table(
@@ -53,7 +53,7 @@ fixednavbar();
 		 FROM orders o, users u, clients c 
 		 WHERE o.status > 1 AND o.status !=8 AND o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
 		"", //период (поле,начало,конец)
-		"view,Просмотр заказа,Просмотр;edit,Редактирование заказа,Редактировать;events,Просмотр мероприятий,Мероприятия"  //кнопки
+		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>;edit  btn btn-primary,Редактирование заказа,<span class=".$q."glyphicon glyphicon-pencil".$q."></span>;events btn btn-primary,Просмотр мероприятий,<span class=".$q."glyphicon glyphicon-list".$q."></span>"  //кнопки
 		);
 		
 		table(
@@ -65,7 +65,7 @@ fixednavbar();
 		 FROM orders o, users u, clients c 
 		 WHERE o.status > 1 AND o.status !=8 AND o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
 		"", //период (поле,начало,конец)
-		"view,Просмотр заказа,Просмотр;edit,Редактирование заказа,Редактировать;events,Просмотр мероприятий,Мероприятия" //кнопки
+		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>;edit  btn btn-primary,Редактирование заказа,<span class=".$q."glyphicon glyphicon-pencil".$q."></span>;events btn btn-primary,Просмотр мероприятий,<span class=".$q."glyphicon glyphicon-list".$q."></span>"  //кнопки
 
 		);
 	} else {
@@ -126,7 +126,7 @@ $(function(){
 		});
 
     	$('table').delegate('button.events', 'click' ,function(){
-			location.href ="?events_zakazid="+$(this).closest('tr').children().first().html()+"&r=<?echo rand();?>";
+			location.href ="?events";
 		});
 		
     	$('table').delegate('button.exit', 'click' ,function(){

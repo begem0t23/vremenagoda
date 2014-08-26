@@ -60,6 +60,10 @@ if (checklogin())
 	{
 		include("_halls.php");
 	}
+	elseif ($qq == "events")
+	{
+		include("_events.php");
+	}
 	elseif ($qq == "debug")
 	{
 		var_dump($_SESSION);

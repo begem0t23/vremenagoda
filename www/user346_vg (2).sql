@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 26, 2014 at 03:01 PM
+-- Generation Time: Aug 27, 2014 at 12:29 AM
 -- Server version: 5.5.25
 -- PHP Version: 5.3.13
 
@@ -638,6 +638,36 @@ INSERT INTO `dishes_in_orders` (`id`, `orderid`, `dishid`, `price`, `num`, `note
 (10, 9, 71, 250.00, 1, ''),
 (11, 9, 111, 1150.00, 12, ''),
 (12, 9, 131, 50.00, 1, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events_in_orders`
+--
+
+CREATE TABLE IF NOT EXISTS `events_in_orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `orderid` int(11) NOT NULL,
+  `title` text NOT NULL,
+  `todo` text NOT NULL,
+  `targetdate` date NOT NULL,
+  `notes` text NOT NULL,
+  `executiveid` int(11) NOT NULL,
+  `statusid` int(11) NOT NULL,
+  `createdate` datetime NOT NULL,
+  `creatorid` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `events_in_orders`
+--
+
+INSERT INTO `events_in_orders` (`id`, `orderid`, `title`, `todo`, `targetdate`, `notes`, `executiveid`, `statusid`, `createdate`, `creatorid`) VALUES
+(1, 8, 'Встреча с клиентом', 'Сдача третьего этапа: адрес нескучный сад', '2014-08-27', '', 2, 1, '2014-08-26 15:47:54', 2),
+(2, 8, 'погулять', 'Походить по нескучному саду', '2014-08-27', '', 2, 1, '2014-08-27 00:11:24', 2),
+(3, 8, 'проверка', 'раз два три как слышно', '2014-08-22', '', 2, 1, '2014-08-27 00:26:51', 2);
 
 -- --------------------------------------------------------
 

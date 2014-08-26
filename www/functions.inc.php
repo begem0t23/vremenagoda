@@ -713,21 +713,21 @@ $table = '<table id="report_client_param" class="simple-little-table">'.chr(10).
 			'</table>'.chr(10);
 
 $button1 = '<form action="_pdf.php" method="POST">
-			<button type="submit"  title="Скачать отчет по заказу в pdf">Скачать в PDF</button>
+			<button class = "btn btn-primary" type="submit"  title="Скачать отчет по заказу в pdf">.pdf</button>
 			<textarea name="pdf" id="'.$zid.'"  cols="0" rows="0" style="display:none;">
 			'.$html1.$header.$title.$style.$table.$html2.'
 			</textarea>
 			</form>';
 
 $button2 = '<form action="_print.php" method="POST" target="_blank">
-			<button type="submit"  title="Скачать отчет по заказу в pdf">Распечатать</button>
+			<button class = "btn btn-primary" type="submit"  title="Вывести отчет по заказу на принтер"><span class="glyphicon glyphicon-print"></span></button>
 			<textarea name="print" id="'.$zid.'"  cols="0" rows="0" style="display:none;">
 			'.$header.$title.$style.$table.$footer.'
 			</textarea>
 			</form>';
 		
 
-	echo $style.'<table><tr><td width="450">'.$title.'</td><td width="130">'.$button1.'</td><td width="130">'.$button2.'</td></tr></table>'.$table;
+	echo $style.'<table><tr><td width="600">'.$title.'</td><td>'.$button1.'</td><td>&nbsp;</td><td>'.$button2.'</td></tr></table>'.$table;
 
 
 
@@ -787,9 +787,9 @@ foreach ($cols as $key => $val)
      $cols_out = $cols_out.'<col width="'.$val.'" />'.chr(10);
 	}
 	
-	foreach ($buts as $key => $val)	
+	if($tbuts)	
 		{
-		$cols_out = $cols_out.'<col width="50" />'.chr(10);
+		$cols_out = $cols_out.'<col width="100" />'.chr(10);
 		}
 
 $cols_out = $cols_out.'</colgroup>'.chr(10);
@@ -802,9 +802,9 @@ foreach ($head as $key => $val)
      $head_out = $head_out.'<th>'.$val.'</th>'.chr(10);
 	}
 	
-	foreach ($buts as $key => $val)	
+	if($tbuts)	
 		{
-		$head_out = $head_out.'<th class="filter-false sorter-false"></th>';
+		$head_out = $head_out.'<th class="filter-false sorter-false">Действия</th>';
 		}
 
 //$head_out = $head_out.'<th>количество порций</th></tr></thead>'.chr(10);
@@ -835,12 +835,18 @@ if ( mysql_num_rows($rezult) > 0){
 		$body_out = $body_out.$curval.chr(10);
 		$body_out = $body_out.'</td>'.chr(10);
 		}
-		
-		foreach ($buts as $key => $val)	
-			{
-			$but = explode(',',$val);
-			$body_out = $body_out.'<td><button type="button" class="'.$but[0].'" title="'.$but[1].'">'.$but[2].'</button></td>';
-			}
+
+		if($tbuts)
+		{	
+			$body_out = $body_out.'<td>';
+			foreach ($buts as $key => $val)	
+				{
+				$but = explode(',',$val);
+				$body_out = $body_out.'<button type="button" class="'.$but[0].' " title="'.$but[1].'">'.$but[2].'</button>'.chr(10);
+				}
+			$body_out = $body_out.'</td>';
+		}
+			
 			
 	//$body_out = $body_out.'<td><input type="text" class="quant"></td></tr>'.chr(10);
 	}

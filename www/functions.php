@@ -4,6 +4,111 @@ require_once("functions.inc.php");
 $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
+
+
+
+
+if ($_POST['operation'] == 'saveevent') 
+{
+$id = $_POST['eventid'];
+$title = $_POST['eventtitle'];
+$todo = $_POST['eventtodo'];
+$date = $_POST['eventdate'];
+
+	if ($id > 0) 
+	{
+		$tsql01 = "SELECT * FROM `events_in_orders`  WHERE `id` = '".$id."'  ;";
+		$rezult01 = mysql_query($tsql01);
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+		
+			$update = "UPDATE `events_in_orders` SET `title` = '".$title."', `todo` = '".$todo."',`targetdate` = '".$date."'  WHERE  `id` = '".$id."'  ;";
+
+		mysql_query($update);
+		
+			$tsql02 = "SELECT * FROM `events_in_orders`   WHERE `id` = '".$id."' AND  `title` = '".$title."' AND `todo` = '".$todo."' AND `targetdate` = '".$date."'   ;";
+			$rezult02 = mysql_query($tsql02);
+			if (mysql_num_rows($rezult02) > 0) 
+				{
+				echo 'yes';
+				}	
+		
+		}
+	}
+
+
+
+	if ($id == 0) 
+	{
+		
+			$update = "INSERT INTO `events_in_orders` (`id`, `orderid`, `title`, `todo`, `targetdate`, `notes`, `executiveid`, `statusid`, `createdate`, `creatorid`) VALUES (NULL, '8', '".$title."', '".$todo."', '".$date."', '', '2', '1', NOW(), '2');";
+			mysql_query($update);
+		
+			$tsql02 = "SELECT * FROM `events_in_orders`   WHERE  `title` = '".$title."' AND `todo` = '".$todo."' AND `targetdate` = '".$date."'   ;";
+			$rezult02 = mysql_query($tsql02);
+			if (mysql_num_rows($rezult02) > 0) 
+				{
+				echo 'yes';
+				}	
+		
+		
+	}
+
+
+
+}
+
+
+
+
+if ($_POST['operation'] == 'getallevents') 
+{
+		header('Content-Type: text/html; charset=utf-8');
+
+
+	$tsql01 = "select * from `events_in_orders`  ;";
+	//echo $tsql01; 
+	$result01 = mysql_query($tsql01);
+	if (mysql_num_rows($result01)>0)
+	{			
+	$ech=$ech."[".chr(10);
+		
+		while ($rows01 = mysql_fetch_array($result01))
+		{
+	
+		$startdate = $rows01['targetdate'];
+		if($rows01['targettime'] > 0) 
+		{
+			$time = explode($rows01['targettime'],":");
+			$start = $startdate."T".$rows01['targettime'];
+		}
+			else
+		{
+			$start = $startdate;
+		}
+		
+			$start = $startdate;
+
+		$ech=$ech.'{'.chr(10);
+		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
+		$ech=$ech.'"title": "'.$rows01['title'].'",'.chr(10);
+		$ech=$ech.'"start": "'.$start.'",'.chr(10);
+		$ech=$ech.'"todo": "'.$rows01['todo'].'",'.chr(10);
+		$ech=$ech.'"date": "'.$start.'"'.chr(10);
+		
+		$ech=$ech."},".chr(10);
+		
+		}
+	}
+ $ech=substr($ech,0,strlen($ech)-2);
+$ech=$ech."]".chr(10);
+
+echo $ech;
+}
+
+
+
+
 if($_POST['operation'] == 'deletesection')
 {
 $id = $_POST['sectionid'];
