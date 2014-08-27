@@ -58,6 +58,7 @@ fixednavbar();
 ?>
 
     <!-- Begin page content -->
+	<a id="toTop" href="#"></a>
     <div class="container">
       <div class="page-header">
         <h3>Новый заказ</h3>
@@ -753,6 +754,29 @@ fixednavbar();
 			$('#tabs').smartTab({selected: 1});		
 
 			setcountguestfields();
+			$( document ).on( "change", "select[id=hall]", function() {			
+			//$("#hall").on("change", function() {
+				//alert($("#hall").val());
+				$.get("_checkhall.php", {id:$("#hall").val(), Rand: "<?php echo rand(); ?>"},
+				   function(data){})
+				   .done(function(data) {
+					//alert(data);
+					data = $.trim(data);
+					data = data.split("^");
+					if (data[0]=="OK")
+					{
+						if ((typeof data[1] != 'undefined') && ($("#guestcount").val()>0))
+						{
+							if (parseInt($("#guestcount").val())>parseInt(data[1]))
+							{
+								//console.log($("#guestcount").val());
+								//console.log(data[1]);
+								alert("Выбранный зал не подходит для данного количества гостей");
+							}
+						}
+					}
+				});				
+			});
 					
 			// добавление блюд в заказ
 			$( document ).on( "click", "button[name=adddish]", function() {
@@ -910,6 +934,7 @@ fixednavbar();
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());
 			readvaluesincookie();
+			$("body").animate({"scrollTop":0},"slow");
 			//$("#spanpage"+curpage).css("visibility","visible");
 		}
 		function dosaveorder()
