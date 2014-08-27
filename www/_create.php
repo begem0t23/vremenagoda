@@ -31,16 +31,18 @@
   position: absolute;
   top: 0.15em; }
   
-  .level_0{
-  background-color: #A7FDBE !important;
+.level_0{
+	color: #000;
+  background-color: #FFD141 !important;
   }
     .level_1{
-  background-color: #FFB8BE !important;
+	color: #000;
+  background-color: #FFF368 !important;
   }
     .level_2{
-  background-color: #F5F5A3 !important;
-  }
-</style>  
+	color: #000;
+  background-color: #FFFFC0 !important;
+  }</style>  
 
   </head>
 
@@ -323,7 +325,7 @@ fixednavbar();
 							echo ' value="1"></td>
 							<td><input id="discont'.$row_serv["id"].'" type="text" size="2"></td>
 							<td><input id="comment'.$row_serv["id"].'" type="text" size="20"></td>
-							<td><button type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
+							<td><button class = "btn btn-default" type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
 							
 								
 					
@@ -350,7 +352,7 @@ fixednavbar();
   <span class="input-group-addon">.00</span>
 </div>
 
-		<br><div class="input-group"><button class="btn btn-default" onClick="dosaveorder()" type="button">Сохранить</button></div>
+		<br><div class="input-group"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</form>
 		</div>
     </div>
@@ -636,6 +638,8 @@ fixednavbar();
 						//console.log(index + " "+ value);
 						if (index)
 						{
+							$("#adddish"+index).removeClass("btn-default");
+							$("#adddish"+index).addClass("btn-primary");
 							$("#adddish"+index).html("Удалить");
 							$("#dishname"+index).css("color", "green");
 							$("#quant"+index).val(value["quant"]);
@@ -659,6 +663,8 @@ fixednavbar();
 						//console.log(index + " "+ value);
 						if (index)
 						{
+							$("#addserv"+index).removeClass("btn-default");
+							$("#addserv"+index).addClass("btn-primary");
 							$("#addserv"+index).html("Удалить");
 							$("#servicename"+index).css("color", "green");
 							$("#price"+index).val(value["priceserv"]);
@@ -754,6 +760,9 @@ fixednavbar();
 				id = id.substr(7);
 				if ($(this).html()=="Удалить")
 				{
+							$(this).addClass("btn-default");
+							$(this).removeClass("btn-primary");
+				
 					$(this).html("Добавить");				
 					$("#dishname"+id).css("color", "");
 					$("#quant"+id).removeAttr("readonly");
@@ -768,6 +777,9 @@ fixednavbar();
 				}
 				else
 				{
+							$(this).removeClass("btn-default");
+							$(this).addClass("btn-primary");
+
 					$(this).html("Удалить");
 					$("#dishname"+id).css("color", "green");
 					var quant 	= $("#quant"+id).val();
@@ -798,6 +810,8 @@ fixednavbar();
 				id = id.substr(7);
 				if ($(this).html()=="Удалить")
 				{
+							$(this).addClass("btn-default");
+							$(this).removeClass("btn-primary");
 					$(this).html("Добавить");				
 					$("#servicename"+id).css("color", "");
 
@@ -819,6 +833,9 @@ fixednavbar();
 				}
 				else
 				{
+							
+						$(this).removeClass("btn-default");
+						$(this).addClass("btn-primary");
 					$(this).html("Удалить");
 					$("#servicename"+id).css("color", "green");
 					var priceserv 	= $("#price"+id).val();
