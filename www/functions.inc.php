@@ -159,12 +159,24 @@ $head_out = '';
 $tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, o.hallid, o.guestcount, h.name hallname
 		 FROM orders o, users u, clients c, hall h
 		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id AND o.hallid = h.id";
+		 
+$tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, o.hallid, o.guestcount
+		 FROM orders o, users u, clients c
+		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id";
+		 
 
 $rezult = mysql_query($tsql);
 
 	$body_out = '<tbody>'.chr(10);
 	
 $rows = mysql_fetch_array($rezult);
+	$hallname = '';
+	if($rows['hallid'] > 0){
+		$tsql11 = "SELECT * FROM `hall`  WHERE `id` = '".$rows['hallid']."' ;"; 
+		$rezult11 = mysql_query($tsql11);
+		$rows11 = mysql_fetch_array($rezult11);
+		$hallname =$rows11['name'] ;
+		}
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).' class="report_section" class="report_section"">Информация по клиенту</th>'.chr(10);
@@ -203,7 +215,7 @@ $rows = mysql_fetch_array($rezult);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">Помещение</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['hallname'].'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$hallname.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
@@ -409,8 +421,15 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 </tr>
 </tbody>';
 
+$eat_discont = 0;
+$drink_discont = 0;
+$probka = 0;
+$teapay = 0;
 $service_sum =0;
 $service_discont = 0;
+$eat_sum = $level0_sum['_59'] + $level0_sum['_60'];
+$drink_sum = $level0_sum['_61'] + $level0_sum['_19'];
+
 		$tsql011 = "SELECT s.id, s.name,    so.price ,  so.discont , so.num, so.comment FROM services s,  services_in_orders so  WHERE  so.orderid=".$zid." AND so.serviceid = s.id   ;";
 		$rezult011 = mysql_query($tsql011);
 
@@ -419,12 +438,38 @@ $service_discont = 0;
 		$cnt = 0;
 			while ($rows011 = mysql_fetch_array($rezult011)) 
 			{	
-$cnt++;
-$class =  '';
-			$xxx =round($cnt / 2);
-				if ($cnt == $xxx*2) {$class =  ' class="second_row"';}
-	$service_sum = $service_sum + ($rows011["num"] * $rows011["price"]);
-	$service_discont = $service_discont + ($rows011["num"] * $rows011["price"] * ($rows011["discont"]/100));
+			$show = 1;
+			
+			if($rows011["id"] == 8)
+			{
+				$probka = $rows['guestcount'] * $rows011["price"];
+				$show =0;		
+			}
+			if($rows011["id"] == 9)
+			{
+				$eat_discont = ($eat_sum * $rows011["price"])/100;
+				$show =0;		
+			}
+			if($rows011["id"] == 10)
+			{
+				$drink_discont = ($drink_sum * $rows011["price"])/100;
+				$show =0;		
+			}
+			if($rows011["id"] == 12)
+			{
+				$teapay = ($eat_sum + $drink_sum)/$rows011["price"];
+				$show =0;		
+			}
+			
+			if ($show == 1)
+				{
+			
+					$cnt++;
+					$class =  '';
+					$xxx =round($cnt / 2);
+					if ($cnt == $xxx*2) {$class =  ' class="second_row"';}
+					$service_sum = $service_sum + ($rows011["num"] * $rows011["price"]);
+					$service_discont = $service_discont + ($rows011["num"] * $rows011["price"] * ($rows011["discont"]/100));
 	
 						$body_out = $body_out.'<tr'.$class.'>
 							<td>'.$cnt.'</td>
@@ -434,22 +479,18 @@ $class =  '';
 							<td>'.$rows011["num"].'</td>
 							<td>'.($rows011["num"] * $rows011["price"] * (1-$rows011["discont"]/100)).'</td></tr>';					
 
-	
+				}
 			}
 		}
 	
 	//расчет сумм и скидок
-$eat_sum = $level0_sum['_59'] + $level0_sum['_60'];
-$drink_sum = $level0_sum['_61'] + $level0_sum['_19'];
-$eat_discont = 0;
-$drink_discont = 0;
 
-$nacenka = ($eat_sum + $drink_sum)/10;
 
-$summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $nacenka + $service_sum - $service_discont;
+
+$summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $service_sum - $service_discont + $probka;
 
 //////////////////////////////////
-			$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Итого:</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
@@ -486,9 +527,13 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $nacenka + $s
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Наценка за обслуживание</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$nacenka.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$teapay.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
+		$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Пробковый сбор</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$probka.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
 		
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - 1).'"  class="summary_section">ИТОГО</th>'.chr(10);
@@ -726,8 +771,14 @@ $button2 = '<form action="_print.php" method="POST" target="_blank">
 			</textarea>
 			</form>';
 		
+$button3 = '<form action="#" method="POST" >
+			<button class = "btn btn-primary" type="submit"  title="Отправить отчет по заказу клиенту"><span class="glyphicon glyphicon-envelope"></span></button>
+			<textarea name="email" id="'.$zid.'"  cols="0" rows="0" style="display:none;">
+			'.$html1.$header.$title.$style.$table.$html2.'
+			</textarea>
+			</form>';
 
-	echo $style.'<table><tr><td width="600">'.$title.'</td><td>'.$button1.'</td><td>&nbsp;</td><td>'.$button2.'</td></tr></table>'.$table;
+	echo $style.'<table><tr><td width="560">'.$title.'</td><td>'.$button1.'</td><td>&nbsp;</td><td>'.$button2.'</td><td>&nbsp;</td><td>'.$button3.'</td></tr></table>'.$table;
 
 
 

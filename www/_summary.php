@@ -84,6 +84,7 @@ text-align: right;
 				</tr>
 			</thead>';
 		$dishes = json_decode($_POST["dd"],true);
+		
 		$nom=1; $itogo_bluda=0;
 		foreach($dishes as $i=>$dd)
 		{

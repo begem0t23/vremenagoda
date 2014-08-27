@@ -270,7 +270,7 @@ fixednavbar();
 ?>			
 	
 	</div>		
-		<br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
+		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		<!-- услуги -->
@@ -323,7 +323,7 @@ fixednavbar();
 								echo "readonly='readonly' class='.byguestcount'";
 							}
 							echo ' value="1"></td>
-							<td><input id="discont'.$row_serv["id"].'" type="text" size="2"></td>
+							<td><input id="discont'.$row_serv["id"].'" type="text" size="2" value="0"></td>
 							<td><input id="comment'.$row_serv["id"].'" type="text" size="20"></td>
 							<td><button class = "btn btn-default" type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
 							
@@ -337,7 +337,7 @@ fixednavbar();
 <?php		
 	}
 ?>	
-		<br><br><br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
+		<br><br><br><div class="input-group"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		<div id=spanpage4 style="visibility: hidden">
@@ -351,7 +351,7 @@ fixednavbar();
   <input type="text" id=avans placeholder="аванс" class="form-control">
   <span class="input-group-addon">.00</span>
 </div>
-
+	
 		<br><div class="input-group"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</form>
 		</div>
@@ -548,7 +548,7 @@ fixednavbar();
 					?>';
 					spanpage1+='</div><br>';
 					
-					spanpage1+='<br><div class="input-group"><button class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>';
+					spanpage1+='<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
 					spanpage1+='</form>';
 					//alert(spanpage1);
 					$("#spanpage1").html(spanpage1);

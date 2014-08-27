@@ -129,10 +129,11 @@ if ($oi>0) {
 			".mysql_real_escape_string($ss["discont"]).",
 			".mysql_real_escape_string($ss["quantserv"]).",
 			'".mysql_real_escape_string($ss["comment"])."');";		
+
 			$r_order = mysql_query($tsql);			
 			//$stoimost = $ss["quantserv"] * $ss["priceserv"];
 			//if ($ss["discont"]) $stoimost = $stoimost - ($stoimost * $ss["discont"] / 100);
-			if (mysql_error()) die("ERR:7=" . mysql_error());			
+			if (mysql_error()) die("ERR:7=" .$tsql);			
 			//$stoimost = number_format($stoimost,2,".","");
 			//$itogo_uslugi+=$stoimost;
 			//echo  '<tr><td>'.$nom.'</td><td>'.$row_services["name"].'</td><td>';
