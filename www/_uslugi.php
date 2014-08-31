@@ -67,13 +67,13 @@ fixednavbar();
       <div class="page-header">
         <h3>Редактирование услуг</h3>
       </div>
-<button  class = "btn btn-primary"  type="button" name="changeserv" id="changeserv0" title="Добавить услугу">Добавить услугу</button>
+<button  class = "btn btn-primary" tocalc="0" type="button" name="changeserv" id="changeserv0" title="Добавить услугу">Добавить услугу</button>
  <?php		
 
 $bgs[0] = 'Нет';
 $bgs[1] = 'Да';
 
- $tsql = "SELECT * FROM `services` WHERE `isactive` = 1 ORDER BY `orderby` ASC;";
+ $tsql = "SELECT * FROM `services` WHERE `tocalculate` = '0' AND `isactive` = '1' ORDER BY `orderby` ASC;";
 	$r_serv = mysql_query($tsql);
 	if (mysql_num_rows($r_serv)>0)
 	{	
@@ -95,6 +95,47 @@ $bgs[1] = 'Да';
 							<th class="sorter-false">Действия</th>
 							</tr>
 							</thead>';
+
+			while ($row_serv = mysql_fetch_array($r_serv))
+		{
+				echo '<tr>';
+
+							echo '
+							<td><span id="servname'.$row_serv["id"].'">'.$row_serv["name"].'</span></td>
+							<td><span id="servdescr'.$row_serv["id"].'">'.$row_serv["description"].'</span></td>
+							<td><span id="servprice'.$row_serv["id"].'">'.$row_serv["price"].'</span></td>
+							<td><span id="byguestcount'.$row_serv["id"].'">'.$bgs[$row_serv["byguestcount"]].'</span></td>
+							<td><button class = "btn btn-primary" type="button" tocalc="0" name="changeserv" id="changeserv'.$row_serv["id"].'" title="Изменить услугу"><span class="glyphicon glyphicon-pencil"></span></button>
+							<button class = "btn btn-primary" type="button" name="deleteserv" id="deleteserv'.$row_serv["id"].'" title="Удалить услугу"><span class="glyphicon glyphicon-trash"></span></button></td>';
+												
+				echo '</tr>';
+					
+		}
+				echo '</table>';
+	}		
+		
+      echo '<br><h4>Системные скидки и наценки</h4>';
+	  
+		$tsql = "SELECT * FROM `services` WHERE `tocalculate` = '1' AND `isactive` = '1' ORDER BY `orderby` ASC;";
+	$r_serv = mysql_query($tsql);
+	if (mysql_num_rows($r_serv)>0)
+	{	
+				echo '<table id = "uslugi" class = "tablesorter uslugi"  style="width: 100%;">';
+				echo 	'<colgroup>
+						<col width="35%" />
+						<col width="35%" />
+						<col width="10%" />
+						<col width="10%" />
+						</colgroup>';
+
+				echo  '<thead>
+							<tr>
+							<th class="sorter-false">Название</th>
+							<th class="sorter-false">Описание</th>
+							<th class="sorter-false">Цена</th>
+							<th class="sorter-false">Действия</th>
+							</tr>
+							</thead>';
 	?>
 <?php
 			while ($row_serv = mysql_fetch_array($r_serv))
@@ -105,17 +146,14 @@ $bgs[1] = 'Да';
 							<td><span id="servname'.$row_serv["id"].'">'.$row_serv["name"].'</span></td>
 							<td><span id="servdescr'.$row_serv["id"].'">'.$row_serv["description"].'</span></td>
 							<td><span id="servprice'.$row_serv["id"].'">'.$row_serv["price"].'</span></td>
-							<td><span id="byguestcount'.$row_serv["id"].'">'.$bgs[$row_serv["byguestcount"]].'</span></td>
-							<td><button class = "btn btn-primary" type="button" name="changeserv" id="changeserv'.$row_serv["id"].'" title="Изменить услугу"><span class="glyphicon glyphicon-pencil"></span></button>
-							<button class = "btn btn-primary" type="button" name="deleteserv" id="deleteserv'.$row_serv["id"].'" title="Удалить услугу"><span class="glyphicon glyphicon-trash"></span></button></td>';
+							<td><button class = "btn btn-primary" type="button" tocalc="1" name="changeserv" id="changeserv'.$row_serv["id"].'" title="Изменить услугу"><span class="glyphicon glyphicon-pencil"></span></button></td>';
 												
 				echo '</tr>';
 					
 		}
 				echo '</table>';
-		
-?>
-<?php		
+
+
 	}
 ?>		  
 
@@ -191,7 +229,8 @@ $bgs[1] = 'Да';
      byguestcount = $( "#byguestcount" ),
       description = $( "#description" ),
       price = $( "#price" ),
-      allFields = $( [] ).add( name ).add( description ).add( price ).add( byguestcount ),
+      to_calc = $( "#tocalc" ),
+      allFields = $( [] ).add( name ).add( to_calc ).add( description ).add( price ).add( byguestcount ),
       tips = $( ".validateTips" );
  
     function updateTips( t ) {
@@ -242,7 +281,7 @@ $bgs[1] = 'Да';
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'addservice', servname: name.val(), servdescription: description.val(), servprice: price.val(), servid: id, byguestcount: byguestcount.prop('checked')}
+			data: { operation: 'addservice', servname: name.val(), servdescription: description.val(), servprice: price.val(), servid: id, byguestcount: byguestcount.prop('checked'), tocalc: to_calc.val()}
 		})
 		.done(function( msg ) {
 			if(msg == 'yes'){
@@ -283,15 +322,28 @@ $bgs[1] = 'Да';
  
     $( document ).on( "click", "button[name=changeserv]", function() {
 					id = $(this).attr("id");
+					tocalc = $(this).attr("tocalc");
 				id = id.substr(10);
 				bgs = $('#byguestcount'+id).html();
 				if (bgs == 'Да') 
 					{
 					$('#byguestcount').prop('checked','true');
 					}
+					
+				if (tocalc == 1) 	{
+				$('#name').attr("readonly","readonly");
+				$('#bgs').hide();
+				}
+				if (tocalc == 0) 	{
+				$('#name').removeAttr("readonly");
+				$('#bgs').show();
+				}
+				
 				$('#name').val($('#servname'+id).html());
 				$('#description').val($('#servdescr'+id).html());
 				$('#price').val($('#servprice'+id).html());
+				$('#price').val($('#servprice'+id).html());
+				$('#tocalc').val(tocalc);
 				
       dialog.dialog( "open" );
     });
@@ -302,7 +354,7 @@ $bgs[1] = 'Да';
 				id = id.substr(10);
 				bgs = $('#byguestcount'+id).html();
 				sn = $('#servname'+id).html();				
-			if (confirm("Вы уверены что ходите удалить услугу " + $('#servname'+id).html() + "?")) {
+			if (confirm("Вы уверены что хотите удалить услугу " + $('#servname'+id).html() + "?")) {
 					delete_serv(id);
 				} else {
 				}
@@ -318,8 +370,9 @@ $bgs[1] = 'Да';
 	<input type="text" id="name" placeholder="Название" class="form-control" value="">
 	<input type="text" id="description" placeholder="Описание" class="form-control" value="">
 	<input type="text" id="price" placeholder="Цена" class="form-control" value="">
-	<div class="checkbox"> <label> <input id="byguestcount" type="checkbox" value="yes">Расчитывать цену по количству гостей.</label></div>
-  </form>
+	<div class="checkbox" id="bgs"> <label> <input id="byguestcount" type="checkbox" value="yes">Расчитывать цену по количству гостей.</label></div>
+ 	<input type="hidden" id="tocalc"  class="form-control" value="">
+ </form>
 </div>
  </body>
 </html>

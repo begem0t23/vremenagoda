@@ -1002,12 +1002,13 @@ $id = $_POST['servid'];
 $name = $_POST['servname'];
 $description = $_POST['servdescription'];
 $price = $_POST['servprice'];
+$tocalc = $_POST['tocalc'];
 $byguestcount = 0;
 if( $_POST['byguestcount'] = 'true') $byguestcount = 1;
 
 if ($id == 0) 
 	{
-		$tsql00 = "SELECT * FROM `services` WHERE `isactive` = '1' ORDER BY `orderby`  DESC;";
+		$tsql00 = "SELECT * FROM `services` WHERE `tocalculate` = '0' AND `isactive` = '1' ORDER BY `orderby`  DESC;";
 		$rezult00 = mysql_query($tsql00);
 		if (mysql_num_rows($rezult00) > 0) 
 		{
@@ -1024,21 +1025,35 @@ if ($id == 0)
 		$rezult01 = mysql_query($tsql01);
 		if (mysql_num_rows($rezult01) > 0) 
 		{
-		$rows01 =	mysql_fetch_array($rezult01);
-		$order = $rows01['orderby'];
 		
-		$update = "UPDATE `services` SET `isactive` = '0' WHERE  `services`.`id` = ".$id." ;";
+		if($tocalc == '0')
+		{
+			$rows01 =	mysql_fetch_array($rezult01);
+			$order = $rows01['orderby'];
+		
+			$update = "UPDATE `services` SET `isactive` = '0' WHERE  `services`.`id` = ".$id." ;";
 		
 			mysql_query($update);
+		} else
+		{
+					$update = "UPDATE `services` SET `description` = '".$description."', `price` = '".$price."' WHERE  `services`.`id` = ".$id." ;";
+		
+					mysql_query($update);
 
+		
+		
+		}
 		} else {
 				Echo "почемуто нет такой записи";	
 				}
 	}	
 	
-	$insert = "INSERT INTO `services` (`id`, `name`, `description`, `price`, `byguestcount`, `createdate`, `isactive`, `orderby`) VALUES (NULL, '".$name."', '".$description."', '".$price."', '".$byguestcount."',  NOW(), '1', ".$order.");";
-	
-	mysql_query($insert);
+		if($tocalc == '0')
+		{
+		$insert = "INSERT INTO `services` (`id`, `name`, `description`, `price`, `byguestcount`, `createdate`, `isactive`, `orderby`, `tocalculate`) VALUES (NULL, '".$name."', '".$description."', '".$price."', '".$byguestcount."',  NOW(), '1', ".$order.", '0');";
+		}
+		
+		mysql_query($insert);
 	
 		$tsql02 = "SELECT * FROM `services`  WHERE `name` = '".$name."' AND  `description` = '".$description."' AND  `price` = '".$price."' AND  `isactive` = '1' ;";
 		$rezult02 = mysql_query($tsql02);
