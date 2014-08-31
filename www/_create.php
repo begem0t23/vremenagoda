@@ -349,7 +349,7 @@ fixednavbar();
 		
 <div class="input-group">
   <span class="input-group-addon"><span class=rouble>Р</span></span>
-  <input type="text" id=avans placeholder="аванс" class="form-control">
+  <input type="text" id=avans placeholder="Задаток" class="form-control">
   <span class="input-group-addon">.00</span>
 </div>
 	
@@ -462,8 +462,18 @@ fixednavbar();
 			$("#pageleft").prop("class","enabled");		
 			$("#pageright").prop("class","enabled");		
 		}
+		
+		
 		function shownextstep()
 		{
+			alladd = $(".btn-warning").length;
+			if(alladd > 0) 
+			{
+				alert("Остались недобавленные блюда: " + alladd);
+			} else
+			{
+		
+		
 			//alert(1);
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			//alert(x);
@@ -482,7 +492,9 @@ fixednavbar();
 			//$("#spanpage"+curpage).css("visibility","visible");
 			$("#page"+curpage).click();
 			return true;
+			}
 		}
+		
 		function docheckclientname()
 		{
 			//alert(1);
@@ -640,6 +652,7 @@ fixednavbar();
 						if (index)
 						{
 							$("#adddish"+index).removeClass("btn-default");
+							$("#adddish"+index).removeClass("disabled");
 							$("#adddish"+index).addClass("btn-primary");
 							$("#adddish"+index).html("Удалить");
 							$("#dishname"+index).css("color", "green");
@@ -779,12 +792,61 @@ fixednavbar();
 			});
 					
 			// добавление блюд в заказ
+			$( document ).on( "change", "input[name=quant]", function() {
+				id = $(this).attr("id");
+				id = id.substr(5);
+
+				if($(this).val() != "") 
+				{
+					$("#adddish"+id).removeClass("btn-default");
+					$("#adddish"+id).removeClass("disabled");
+					$("#adddish"+id).addClass("btn-warning");
+				
+				} else
+				{
+					$("#adddish"+id).addClass("disabled");
+					if($("#note"+id).val() == '') 
+					{
+						$("#adddish"+id).addClass("btn-default");
+						$("#adddish"+id).removeClass("btn-warning");
+					}
+				
+				}
+				
+			});
+
+			
+			$( document ).on( "change", "input[name=note]", function() {
+				id = $(this).attr("id");
+				id = id.substr(4);
+
+				if($(this).val() != "") 
+				{
+					$("#adddish"+id).removeClass("btn-default");
+					$("#adddish"+id).addClass("btn-warning");
+				
+				} else
+				{
+					if($("#quant"+id).val() == '') 
+					{
+						$("#adddish"+id).addClass("btn-default");
+						$("#adddish"+id).removeClass("btn-warning");
+						$("#adddish"+id).addClass("disabled");
+					}
+				
+				}
+				
+			});			
+			
+			
+			
+			
 			$( document ).on( "click", "button[name=adddish]", function() {
 				id = $(this).attr("id");
 				id = id.substr(7);
 				if ($(this).html()=="Удалить")
 				{
-							$(this).addClass("btn-default");
+							$(this).addClass("btn-warning");
 							$(this).removeClass("btn-primary");
 				
 					$(this).html("Добавить");				
@@ -799,9 +861,10 @@ fixednavbar();
 						$.cookie("dishes", dishes,{ expires: 1, path: '/' });				
 					}
 				}
+
 				else
 				{
-							$(this).removeClass("btn-default");
+							$(this).removeClass("btn-warning");
 							$(this).addClass("btn-primary");
 
 					$(this).html("Удалить");
@@ -904,6 +967,13 @@ fixednavbar();
 		$("li[id*='page']").bind("click", function(){
 			// слушаем клики на элементы выбора страниц
 			id = $(this).prop("id");
+			alladd = $(".btn-warning").length;
+			if(alladd > 0) 
+			{
+				alert("Остались недобавленные блюда: " + alladd);
+			} else
+			{
+			
 			
 			//$("#spanpage"+curpage).html("");
 			//$("#createform").clone().appendTo( $("#spanpage"+curpage) );
@@ -927,7 +997,10 @@ fixednavbar();
 				}
 			}	
 			doloadcreateform();
+			}
 		});
+		
+		
 		function doloadcreateform()
 		{
 			// вывод правильного содержания вкладки в зависимости от curpage
