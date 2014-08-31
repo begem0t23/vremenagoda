@@ -48,6 +48,14 @@ if (checklogin())
 	{
 		include("_menus.php");
 	}
+	elseif ($qq == "dishes")
+	{
+		include("_dishes.php");
+	}
+	elseif ($qq == "sections")
+	{
+		include("_sections.php");
+	}
 	elseif ($qq == "uslugi")
 	{
 		include("_uslugi.php");

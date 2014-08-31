@@ -194,6 +194,9 @@ $name = $_POST['sectionname'];
 $parent = $_POST['sectionparent'];
 $orderby = $_POST['sectionorder'];
 
+$isdrink = 0;
+if( $_POST['isdrink'] == 'true') $isdrink = 1;
+
 if ($id > 0) 
 	{
 	
@@ -203,23 +206,44 @@ if ($id > 0)
 	if (mysql_num_rows($result01)>0)
 	{	
 
-		while ($rows01 = mysql_fetch_array($result01))
-		{
+		$rows01 = mysql_fetch_array($result01);
+		
 	
-	
-			$insert = "UPDATE `menu_sections` SET `section_name` = '".$name."' WHERE `id` = '".$id."' ;";
-	
+			$insert = "UPDATE `menu_sections` SET `section_name` = '".$name."', `isdrink` = '".$isdrink."' WHERE `id` = '".$id."' ;";
 			mysql_query($insert);
-	
-			$tsql03 = "SELECT * FROM `menu_sections`  WHERE `section_name` = '".$name."' AND  `id` = '".$id."' ;";
+			
+			$tsql03 = "SELECT * FROM `menu_sections`  WHERE `section_name` = '".$name."' AND `isdrink` = '".$isdrink."'  AND  `id` = '".$id."' ;";
 			$rezult03 = mysql_query($tsql03);
 			if (mysql_num_rows($rezult03) > 0) 
 			{
-				echo 'yes';
+				$ech = 'yes';
 			}
-		}
+			
+			$insert = "UPDATE `menu_sections` SET  `isdrink` = '".$isdrink."' WHERE `parent_id` = '".$id."' ;";
+			mysql_query($insert);
+
+			
+			$tsql02 = "select * from `menu_sections` WHERE `parent_id` = '".$id."'  AND `isactive` = '1' ;";
+			//echo $tsql02; 
+			$result02 = mysql_query($tsql02);
+			if (mysql_num_rows($result02)>0)
+			{	
+				while ($rows02 = mysql_fetch_array($result02))
+				{
+			
+					$insert = "UPDATE `menu_sections` SET  `isdrink` = '".$isdrink."' WHERE `parent_id` = '".$rows02['id']."' ;";
+					mysql_query($insert);
+	
+
+				}
+			}	
+	
+	
+		
 	}
 	}
+	
+	echo $ech;
 }
 
 
@@ -236,10 +260,13 @@ $sectionid = $_POST['sectionid'];
 
 	$rows_0 = mysql_fetch_array($rezult_0);
 	
+	$checked = '';
+	if($rows_0['isdrink'] == '1') $checked = ' checked="checked"';
 	echo '<p class="validateTips">Пожалуйста заполните все поля.</p>
 	<form>
 	<textarea id="sectionname" placeholder="Название" class="form-control" cols="50">'.$rows_0['section_name'].'</textarea>
-	<input type="hidden" id="section_id"  value="'.$sectionid.'">
+	<div class="checkbox" id="drnk"> <label> <input id="isdrink" type="checkbox" '.$checked.'>Раздел относится к напиткам.</label></div>
+ 	<input type="hidden" id="section_id"  value="'.$sectionid.'">
 	<br>';
 	
 	if ($sectionid == 0) 
@@ -928,7 +955,55 @@ $dishid = $_POST['dishid'];
 
 
 
+
+
+
 if($_POST['operation'] == 'getdishesforadd')
+{
+$menuid = $_POST['menuid'];
+$sectionid = $_POST['sectionid'];
+$toadd = $_POST['toadd'];
+
+		$tsql01 = "SELECT * FROM `dishes`   WHERE `menu_section` = ".$sectionid."  AND `isactive` = '1' ORDER BY `title` ASC;";
+		$rezult01 = mysql_query($tsql01);
+
+	if (mysql_num_rows($rezult01) > 0) 
+	{
+		header('Content-Type: text/html; charset=utf-8');
+
+		while ($rows01 = mysql_fetch_array($rezult01)) 
+		{	
+			$tsql02 = "SELECT d.menuid, m.type_name FROM dishes_in_menus d, menus m WHERE  d.dishid = ".$rows01["id"]." AND d.isactive = '1' AND d.menuid = m.id ;";
+			$rezult02 = mysql_query($tsql02);
+			if($toadd == 'free')
+			{
+				if (mysql_num_rows($rezult02) == 0) 
+				{	
+
+					echo '<tr>
+							<td><span id=dishname'.$rows01["id"].'>'.$rows01["title"].'</span></td>
+							<td><span id=dishdescr'.$rows01["id"].'>'.$rows01["description"].'</span></td>
+							<td><span id=dishweight'.$rows01["id"].'>'.$rows01["weight"].'</span></td>
+							<td><span id=dishprice'.$rows01["id"].'>'.$rows01["price"].'</span></td>
+							<td><button type="button" class="btn btn-primary" name="dishtomenu" sectionid="'.$sectionid.'"  menuid="'.$menuid.'" id="'.$rows01["id"].'" title="Добавть блюдо в меню">Добавить в меню</button></td>	
+						</tr>';
+				}
+
+			}
+
+		}
+			
+		
+	}
+
+}
+
+
+
+
+
+
+if($_POST['operation'] == 'getdishesforaddcopy')
 {
 $menuid = $_POST['menuid'];
 $sectionid = $_POST['sectionid'];
@@ -963,30 +1038,7 @@ $toadd = $_POST['toadd'];
 
 			}
 
-			if($toadd == 'notfree')
-			{
-
-				if (mysql_num_rows($rezult02) > 0) 
-				{	
-				$rows02 = mysql_fetch_array($rezult02);
-					if($menuid <> $rows02["menuid"]) 
-					{
-						echo '<tr>
-							<td><span id=dishname'.$rows01["id"].'>'.$rows01["title"].'</span></td>
-							<td><span id=dishdescr'.$rows01["id"].'>'.$rows01["description"].'</span></td>
-							<td><span id=dishweight'.$rows01["id"].'>'.$rows01["weight"].'</span></td>
-							<td><span id=dishprice'.$rows01["id"].'>'.$rows01["price"].'</span></td>
-							<td><span id=dishmenu'.$rows01["id"].'>'.$rows02["type_name"].'</span></td>
-							<td ><button class="btn btn-primary" type="button" name="dishfrommenu" sectionid="'.$sectionid.'"  menuid="'.$rows02["menuid"].'"  id="'.$rows01["id"].'" title="Убрать блюдо из меню">Убрать&nbsp;из&nbsp;меню</button></td>		
-							</tr>';
-					}
-				}
-
-			}
-
-
-
-			}
+		}
 			
 		
 	}
@@ -1004,7 +1056,7 @@ $description = $_POST['servdescription'];
 $price = $_POST['servprice'];
 $tocalc = $_POST['tocalc'];
 $byguestcount = 0;
-if( $_POST['byguestcount'] = 'true') $byguestcount = 1;
+if( $_POST['byguestcount'] == 'true') $byguestcount = 1;
 
 if ($id == 0) 
 	{
@@ -1104,24 +1156,39 @@ if ($id > 0)
 if($_POST['operation'] == 'printmenutree')
 {
 	
-	$tsql = "select * from menus;";
+		$isdrink[0][0] = 'Блюд';
+		$isdrink[1][0] = 'Напитков';
+		$isdrink[0][1] = 'Блюда';
+		$isdrink[1][1] = 'Напитки';
+	
+	
+	$tsql = "select * from menus where isactive='1';";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
 	{
 header('Content-Type: text/html; charset=utf-8');	
-?>
-<div class="btn-group" >
-  <button  name="viewfull"  type="button" class="btn btn-primary ">Развернуть список</button>
-  <button  name="viewsect" type="button" class="btn btn-primary">Свернуть список</button>
-</div>
 
-<button class="btn btn-primary" type="button" sectionid="0" name="addsection"  title="Добавть раздел в меню">Добавить&nbsp;раздел</button>
+echo '<div class="btn-group" >
+  <button  name="viewfull" onClick="viewtree(1);" type="button" class="btn btn-primary ">Развернуть список</button>
+  <button  name="viewsect" onClick="viewtree(0);" type="button" class="btn btn-primary">Свернуть список</button>
+</div>'.chr(10);
 
-<br><br>
+if ($_POST['typetree'] == 'dishes')
+{
+echo '<button class=" btn btn-primary" type="button" name="editdish" id="0" title="Создать блюдо">Создать новое блюдо</button>';
+} 
+
+if ($_POST['typetree'] == 'sections')
+ 
+{
+echo '<button class="btn btn-primary" type="button" sectionid="0" name="addsection"  title="Добавть раздел в меню">Добавить&nbsp;раздел</button>';
+}
+
+echo '<br><br>
 <div id="tabs" style="min-width: 700px; width: 100%;">
-    <ul>
-<?php
-		$index=0;
+    <ul>';
+
+	$index=0;
 		while ($row_menutype = mysql_fetch_array($r_menutype))
 		{
 			echo '<li><a href="#menu-'.$row_menutype["id"].'" onClick="showST('.$index.')">'.$row_menutype["type_name"].'</a></li>';
@@ -1134,7 +1201,7 @@ header('Content-Type: text/html; charset=utf-8');
 
 	 
 	//сборка массива секций с блюдами для конкретного меню
-	$tsql = "select * from menus;";
+	$tsql = "select * from menus where isactive ='1';";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
 	{	
@@ -1183,6 +1250,7 @@ header('Content-Type: text/html; charset=utf-8');
 	$sections[$rows0['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
 	
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
+	$sections[$rows0['id']]['isdrink'] = $rows0['isdrink'];
 	
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['alldishes'] = $sections[$rows0['id']]['alldishes'] + $yyy['count'];
@@ -1203,9 +1271,10 @@ header('Content-Type: text/html; charset=utf-8');
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['alldishes'] = $sections[$rows0['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']]['children'] ++;
-	$sections[$rows0['id']][$rows_1['id']]['id'] = '_'.$rows_1['id'];
+	$sections[$rows0['id']][$rows_1['id']]['id'] = '_'.$rows_1['id'];//непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
-	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name']; //непонял почему но без _ не работает
+	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name']; 
+	$sections[$rows0['id']][$rows_1['id']]['isdrink'] = $rows_1['isdrink']; 
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['alldishes'] = $sections[$rows0['id']][$rows_1['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
@@ -1230,6 +1299,7 @@ header('Content-Type: text/html; charset=utf-8');
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['id'] = '_'.$rows_2['id']; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['isdrink'] = $rows_2['isdrink'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['alldishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
@@ -1250,18 +1320,23 @@ header('Content-Type: text/html; charset=utf-8');
 	
 		if ($sections[$num]['dishes'] > 0) 
 		{	
+		
 								$tree = '';
 			if($sections[$num]['dishes'] >0) {$tree = '<span menuid="'.$row_menutype["id"].'" id="tree'.$sections[$num]['id'].'" class="tree glyphicon glyphicon-minus"></span>';}
 
 			echo '<tbody><tr id ="sec'.$sections[$num]['id'].'" class="dis_0"><th  colspan="4" class="level_0">'.chr(10);			
-			echo  $tree.'&nbsp;'.$sections[$num]['name'].' (Блюд: '.$sections[$num]['dishes'].') '.chr(10);
+			echo  $tree.'&nbsp;'.$sections[$num]['name'].' ('.$isdrink[$sections[$num]['isdrink']][0].': '.$sections[$num]['dishes'].') '.chr(10);
 			echo '</th><th class="level_0">'.chr(10);
-
+			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.chr(10);
+			if ($_POST['typetree'] == 'sections')
+			{
+				echo '<button class="level_0 btn btn-primary" type="button" isdrink="'.$sections[$num]['isdrink'].'" name="editsection" sectionid="'.$sections[$num]['id'].'"  menuid="0"   title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
+			}
 			echo '</th></tr></tbody>'.chr(10);
 
 			if ($sections[$num]['items']['count'] > 0)
 			{
-				print_dishes_for_editor($sections[$num]['items'], $sections[$num]['menuid'],$sections[$num]['id'] );
+				print_dishes_for_editor($sections[$num]['items'], $sections[$num]['menuid'],$sections[$num]['id'],$_POST['typetree'] );
 			}
 			
 			foreach ($val as $num1 => $val1) 
@@ -1280,12 +1355,18 @@ header('Content-Type: text/html; charset=utf-8');
 					}
 					
 					echo '<tbody><tr id="sec'.$val[$num1]['id'].'"  class = "dis'.$sections[$num]['id'].$class.'"><th  colspan="4" class="level_1">'.chr(10);			
-					echo  '&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val[$num1]['name'].' (Блюд: '.$val[$num1]['dishes'].') '.chr(10);
+					echo  '&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val[$num1]['name'].' ('.$isdrink[$val[$num1]['isdrink']][0].': '.$val[$num1]['dishes'].') '.chr(10);
 					echo '</th><th class="level_1">'.chr(10);
 					echo '<textarea style="display:none;" id="sectiontitle'.$val[$num1]['id'].'">'.$val[$num1]['name'].'</textarea>'.chr(10);
-					echo  '<button class="level_1 btn btn-primary" type="button" name="adddish"  id="adddish'.$row_menutype["id"].$val[$num1]['id'].'" title="Добавть блюда в раздел"><span class="glyphicon glyphicon-plus"></span></button>'.chr(10);
-					echo '<button class="level_1 btn btn-primary" type="button" name="editsection" sectionid="'.$val[$num1]['id'].'"  menuid="0"   title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
-					echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.$val[$num1]['id'].'"  alldishes="'.$val[$num1]['alldishes'].'"  menuid="0"   title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
+					if ($_POST['typetree'] == 'menu')
+					{
+						echo  '<button class="level_1 btn btn-primary" type="button" name="adddish"  id="adddish'.$row_menutype["id"].$val[$num1]['id'].'" title="Добавть блюда в раздел">Добавить '.$isdrink[$val[$num1]['isdrink']][1].'</button>'.chr(10);
+					}
+					if ($_POST['typetree'] == 'sections')
+					{
+						echo '<button class="level_1 btn btn-primary" type="button" isdrink="'.$val[$num1]['isdrink'].'" name="editsection" sectionid="'.$val[$num1]['id'].'"  menuid="0"   title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
+						echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.$val[$num1]['id'].'"  alldishes="'.$val[$num1]['alldishes'].'"  menuid="0"   title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
+					}
 					echo '</th></tr></tbody>'.chr(10);
 				}
 				if ($val[$num1]['dishes'] > 0) 
@@ -1293,7 +1374,10 @@ header('Content-Type: text/html; charset=utf-8');
 
 					if ($val[$num1]['items']['count'] >= 0)
 					{
-						print_dishes_for_editor($val[$num1]['items'],$val[$num1]['menuid'],$val[$num1]['id']);
+
+						
+						print_dishes_for_editor($val[$num1]['items'],$val[$num1]['menuid'],$val[$num1]['id'],$_POST['typetree']);
+						
 					}
 
 						foreach ($val1 as $num2 => $val2) 
@@ -1311,13 +1395,18 @@ header('Content-Type: text/html; charset=utf-8');
 							}
 
 							echo '<tbody><tr id="sec'.$val1[$num2]['id'].'" class = "dis'.$val[$num1]['id'].$class.'  "><th  colspan="4" class="level_2">'.chr(10);			
-							echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val1[$num2]['name'].' (Блюд: '.$val1[$num2]['dishes'].') '.chr(10);
+							echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val1[$num2]['name'].' ('.$isdrink[$val1[$num2]['isdrink']][0].': '.$val1[$num2]['dishes'].') '.chr(10);
 							echo '</th><th class="level_2">'.chr(10);
 							echo '<textarea style="display:none;" id="sectiontitle'.$val1[$num2]['id'].'">'.$val1[$num2]['name'].'</textarea>'.chr(10);
-							echo  '<button class="level_2 btn btn-primary" type="button" name="adddish" id="adddish'.$row_menutype["id"].$val1[$num2]['id'].'" title="Добавть блюда в раздел"><span class="glyphicon glyphicon-plus"></span></button>'.chr(10);
-							echo '<button class="level_2 btn btn-primary" type="button" name="editsection" sectionid="'.$val1[$num2]['id'].'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
-							echo '<button class="level_2 btn btn-primary" type="button" name="deletesection" sectionid="'.$val1[$num2]['id'].'" alldishes="'.$val1[$num2]['alldishes'].'" menuid="0"  id="'.$rows01["id"].'" title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
-
+							if ($_POST['typetree'] == 'menu')
+							{
+								echo  '<button class="level_2 btn btn-primary" type="button" name="adddish" id="adddish'.$row_menutype["id"].$val1[$num2]['id'].'" title="Добавть блюда в раздел">Добавить '.$isdrink[$val1[$num2]['isdrink']][1].'</button>'.chr(10);
+							}
+							if ($_POST['typetree'] == 'sections')
+							{
+								echo '<button class="level_2 btn btn-primary" type="button" isdrink="'.$val1[$num2]['isdrink'].'" name="editsection" sectionid="'.$val1[$num2]['id'].'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
+								echo '<button class="level_2 btn btn-primary" type="button" name="deletesection" sectionid="'.$val1[$num2]['id'].'" alldishes="'.$val1[$num2]['alldishes'].'" menuid="0"  id="'.$rows01["id"].'" title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
+							}
 							echo '</th></tr></tbody>'.chr(10);
 		}
 					if ($val1[$num2]['dishes'] > 0) 
@@ -1326,7 +1415,7 @@ header('Content-Type: text/html; charset=utf-8');
 													
 								if ($val1[$num2]['items']['count'] > 0)
 								{
-									print_dishes_for_editor($val1[$num2]['items'],$val1[$num2]['menuid'],$val1[$num2]['id']);
+									print_dishes_for_editor($val1[$num2]['items'],$val1[$num2]['menuid'],$val1[$num2]['id'],$_POST['typetree']);
 								}
 
 							}

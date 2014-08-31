@@ -8,7 +8,7 @@
     <meta name="author" content="">   
     <title><?php
 	echo PRODUCTNAME;
-	?> :: Меню</title>
+	?> :: Разделы</title>
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -106,7 +106,7 @@ fixednavbar();
     <!-- Begin page content -->
     <div class="container">
 		<div class="page-header">
-        <h3>Редактирование Меню</h3>
+        <h3>Редактирование Разделов</h3>
 		</div>
 		
 		<div id="menutree">
@@ -350,7 +350,7 @@ $( ".stContainer" ).css("height", newh + "px")
 			$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'printmenutree', typetree: 'menu'}
+			data: { operation: 'printmenutree', typetree: 'sections'}
 		})
 		.done(function( msg ) {
 			$( "#menutree" ).html(msg);

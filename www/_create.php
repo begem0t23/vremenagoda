@@ -89,7 +89,7 @@ fixednavbar();
 		<div id=spanpage2 style="visibility: hidden">
 		<form id=frm2 role="form" data-toggle="validator">
 <?php		
-	$tsql = "select * from menus;";
+	$tsql = "select * from menus where isactive ='1';";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
 	{	
@@ -111,7 +111,7 @@ fixednavbar();
 <?php	
 
 	//сборка массива секций с блюдами для конкретного меню
-	$tsql = "select * from menus;";
+	$tsql = "select * from menus where isactive ='1';";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
 	{	

@@ -124,8 +124,11 @@ function print_dishes($items)
 }
 
 
-function print_dishes_for_editor($items,$menuid,$sectionid)
+function print_dishes_for_editor($items,$menuid,$sectionid,$typetree)
 {
+if ($typetree == 'menu' OR $typetree == 'dishes')
+{
+
 $sectionid = substr($sectionid,1);
 $menuid = substr($menuid,1);
 	if ($items['count'] > 0)
@@ -137,11 +140,17 @@ $menuid = substr($menuid,1);
 					<td><span id="dish_descr'.$items[$i]["id"].'">'.$items[$i]["description"].'</span></td>	
 							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
 							<td>'.$items[$i]["price"].'</td>
-							<td colspan="2"><button class="btn btn-primary" type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить блюдо из меню">Убрать&nbsp;из&nbsp;меню</button></td>';
-
-			echo '</tr>';					
+							<td colspan="2">';
+							
+			if ($typetree == 'menu')
+			{
+				echo '<button class="btn btn-primary" type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить блюдо из меню">Убрать&nbsp;из&nbsp;меню</button>';
+			}
+			
+			echo '</td></tr>';					
 		}
 	}
+}
 }
 
 
@@ -968,7 +977,9 @@ function fixednavbar()
 			?>">
               <a href="?settings" class="dropdown-toggle" data-toggle="dropdown">Настройки<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="?menus">Блюда и Меню</a></li>
+                <li><a href="?dishes">Блюда и Напитки</a></li>
+                <li><a href="?sections">Разделы</a></li>
+                <li><a href="?menus">Меню</a></li>
                 <li><a href="?uslugi">Услуги</a></li>
                <li><a href="?users">Пользователи</a></li>
                <li><a href="?halls">Залы</a></li>
