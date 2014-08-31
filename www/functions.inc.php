@@ -114,7 +114,7 @@ function print_dishes($items)
 			echo '<td><span id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
 							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
 							<td>'.$items[$i]["price"].'</td>
-							<td><input type="text" id="quant'.$items[$i]["id"].'" value="1" onfocus="$(this).val(\'\');" class="quant" size="1"></td>
+							<td><input type="text" id="quant'.$items[$i]["id"].'" value="" onfocus="$(this).val(\'\');" class="quant" size="1"></td>
 							<td><input id="note'.$items[$i]["id"].'" type="text" class="note"></td>
 							<td><button  class = "btn btn-default" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 
@@ -855,7 +855,7 @@ foreach ($head as $key => $val)
 	
 	if($tbuts)	
 		{
-		$head_out = $head_out.'<th class="filter-false sorter-false">Действия</th>';
+		$head_out = $head_out.'<th class="filter-false sorter-false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Действия&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>';
 		}
 
 //$head_out = $head_out.'<th>количество порций</th></tr></thead>'.chr(10);

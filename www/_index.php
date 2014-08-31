@@ -53,7 +53,7 @@ fixednavbar();
 		 FROM orders o, users u, clients c 
 		 WHERE o.status > 1 AND o.status !=8 AND o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
 		"", //период (поле,начало,конец)
-		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>;edit  btn btn-primary,Редактирование заказа,<span class=".$q."glyphicon glyphicon-pencil".$q."></span>;events btn btn-primary,Просмотр мероприятий,<span class=".$q."glyphicon glyphicon-list".$q."></span>"  //кнопки
+		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>;edit  btn btn-primary,Редактирование заказа,<span class=".$q."glyphicon glyphicon-pencil".$q."></span>;events btn btn-primary,Просмотр мероприятий,<span class=".$q."glyphicon glyphicon-calendar".$q."></span>;payments btn btn-primary,Просмотр платежей,<span class=".$q."glyphicon glyphicon-book".$q."></span>"  //кнопки
 		);
 		
 		table(
@@ -65,8 +65,7 @@ fixednavbar();
 		 FROM orders o, users u, clients c 
 		 WHERE o.status > 1 AND o.status !=8 AND o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
 		"", //период (поле,начало,конец)
-		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>;edit  btn btn-primary,Редактирование заказа,<span class=".$q."glyphicon glyphicon-pencil".$q."></span>;events btn btn-primary,Просмотр мероприятий,<span class=".$q."glyphicon glyphicon-list".$q."></span>"  //кнопки
-
+		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>;edit  btn btn-primary,Редактирование заказа,<span class=".$q."glyphicon glyphicon-pencil".$q."></span>;events btn btn-primary,Просмотр мероприятий,<span class=".$q."glyphicon glyphicon-calendar".$q."></span>;payments btn btn-primary,Просмотр платежей,<span class=".$q."glyphicon glyphicon-book".$q."></span>"  //кнопки
 		);
 	} else {
 	$format = 'screen';

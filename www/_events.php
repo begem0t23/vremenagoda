@@ -21,18 +21,23 @@
     <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
-	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
+	<link href="/jquery/smarttab/styles/smart_tab.css" rel="stylesheet" type="text/css">	
 	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
 <link href='css/fullcalendar.css' rel='stylesheet' />
 <script src='jquery/moment.min.js'></script>
 <script src='jquery/fullcalendar.min.js'></script>
 <script src='jquery/ru.js'></script>
+	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
+
 <style>
 
 </style>
 <script>
 
 	$(document).ready(function() {
+	
+	$('#tabs2').smartTab({selected: 0});		
+
 			$('#external-events .fc-event').each(function() {
 		
 			// create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
@@ -80,11 +85,11 @@
 	
 	  $('#calendar').fullCalendar({
 	   aspectRatio: 1.5,
-	  height: 450,
+	  height: 470,
 	  	header: {
-				left: 'prev,next',
+				left: 'prev',
 				center: 'title',
-				right: ''
+				right: 'next'
 			},
 			selectable: true,
 			selectHelper: true,
@@ -233,8 +238,17 @@ fixednavbar();
     <!-- Begin page content -->
     <div class="container">
  
-   
+   <div id="tabs2" style="min-width: 700px; width: 100%;">
+    <ul>
+	<li><a href="#eventview1">Календарь</a></li>
+	<li><a href="#eventview2" >Список</a></li>
+	</ul>
+	<div id="eventview1" >
 	<div id='calendar'></div>
+	</div>
+	<div id="eventview2" >
+	<div id='list'></div>
+	</div>
 <?php
 
 //fixedbotbar();
