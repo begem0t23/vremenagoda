@@ -4,6 +4,9 @@ require_once("functions.inc.php");
 $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
+
+
+
 if ($_POST['operation'] == 'gethall') 
 {
 		header('Content-Type: text/html; charset=utf-8');
@@ -11,18 +14,34 @@ $hallid = $_POST['hallid'];
 			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `hallid` = '".$hallid."' ORDER BY `num` ASC;";
 			$rez_tab = mysql_query($tsql2);
 			if (mysql_num_rows($rez_tab)>0)
-			{	
+			{
+			
+			$ech = $ech.'<div id="hallplace-'.$hallid.'" class="hallplace">';
+
+			$tabquant = mysql_num_rows($rez_tab);
 				while ($row_tab = mysql_fetch_array($rez_tab))
 				{
-					echo '<div class="draggable" id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'">
-					Стол № '.$row_tab["num"].'<br> 
-					Людей <input type="text" size="1" hallid="'.$hallid.'" id="'.$row_tab["id"].'" name="tabpersons" value="'.$row_tab["persons"].'">
-					<div class="wrap">
-					</div>
+				$sumpersons = $sumpersons + $row_tab["persons"];
+					$ech = $ech.'<div class="table" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'">';
+					
+					for($i=0;$i<$row_tab["persons"];$i++)
+					{
+					$ech = $ech.'<div class="chiar" ischiar="1" tabid="'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"></div>';
+					}
+					
+					$ech = $ech.'<div class="tabnum">'.$row_tab["num"].'</div>
 					</div>';
 				}
+			$ech = $ech.'</div>';
 			}
+	echo '<div class="title"><h4>Количество столов: '.$tabquant.'. Количество персон: '.$sumpersons.'.</h4></div>';
+		echo $ech;
 }
+
+
+
+
+
 
 if ($_POST['operation'] == 'addtable') 
 {

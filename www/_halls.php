@@ -40,11 +40,16 @@
     .level_2{
   background-color: #F5F5A3 !important;
   }
-  
-  .draggable{width:100px; height:60px; padding:5px; border:1px solid #ddd; background-color:#eee}
+  .trash{display:block; width:70px; height: 40px; border:1px; background-color: #FFF333; position:relative; float:right;}
+  .table{width:40px; height:40px;  border:1px solid #ddd; background-color:#eee}
+  .newtable{width:40px; height:40px;  border:1px solid #ddd; background-color:#eee; position:absolute;}
   
     .hallplace {display:block; width:700px; height: 350px; border:1px; background-color: #FFFFC0;margin:15px; }
-</style>  
+   .chiar {display:block; width:15px; height: 15px; border:1px; background-color: #AADDC0; position:absolute; margin:5px}
+  .newchiar {display:block; width:25px; height: 25px; border:1px; background-color: #AADDC0; position:absolute; }
+
+	.tabnum{font-size:22px; padding:5px;}
+	</style>  
 
 
   <style>
@@ -107,9 +112,11 @@ $bgs[1] = 'Да';
 		{
 			echo '<div id="hall-'.$row_hall['id'].'" >';
 
-			echo '<button  class = "btn btn-primary" type="button"  name="addtable" id="'.$row_hall["id"].'" title="Добавить стол"><span class="glyphicon glyphicon-plus"></span></button>';
- 
-			echo '<div id="hallplace-'.$row_hall['id'].'" class="hallplace"></div>';
+			echo '<div class="newtable" >С</div>';
+ 			echo '<div class="trash" >Корзина</div>';
+ 			echo '<div class="newchiar" tabid="0" >м</div>';
+
+			echo '<div id="hallcontent-'.$row_hall['id'].'" class="hallcontent"></div>';
 			echo '</div>';
 					
 		}
@@ -196,16 +203,38 @@ $bgs[1] = 'Да';
 			data: { operation: 'gethall', hallid: hallid}
 			})
 			.done(function( msg ) {
-				$("#hallplace-"+hallid).html(msg);
-				$(".draggable").draggable({ 
+				$("#hallcontent-"+hallid).html(msg);
+				$(".newchiar").draggable({
+				helper: 'clone',
+				revert:"invalid",
+				stack: ".table"
+				});
+				$(".newtable").draggable({
+				helper: 'clone',
+				revert:"invalid"
+				});
+				$(".trash").droppable({  tolerance : 'touch', accept : '.table,.chiar', drop: deleteelm});
+
+				$("#hallcontent-"+hallid+" .hallplace").droppable({  tolerance : 'touch',accept : '.newtable, .table',  drop: addtable});
+				$("#hallcontent-"+hallid+" .table").draggable({ 
 					grid:[ 20, 20 ],
-					containment:"#hallplace-"+hallid, 
 					scroll:false, 
 					snap:"#hallplace-"+hallid,
+					revert:"invalid",
+					snapTolerance: 10 ,
 					stop: tabstop
 				});
 				
-				$(".draggable").each(function()
+				$("#hallcontent-"+hallid+" .table").droppable({  tolerance : 'touch',accept : '.newchiar, .chiar',  drop: addchiar});				
+				$("#hallcontent-"+hallid+" .table .chiar").draggable({ 
+					scroll:false, 
+					revert:"invalid",
+					stack: ".table"
+
+				});
+
+
+				$("#hallcontent-"+hallid+" .table").each(function()
 					{
 					ntop = parseInt($(this).attr('top'));
 					nleft = parseInt($(this).attr('left'));
@@ -214,32 +243,54 @@ $bgs[1] = 'Да';
 					
 				$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
 				
-	
+				
 					
 					});
-				
+				normal_height();
 			});
 	
 	}
 	
+	
+	function addchiar( event, ui ) {
+		alert(ui.draggable.attr('tabid'));
+		hallid = $(this).attr('hallid');
+		tabid = $(this).attr('id');
+		persons = $(this).attr('tabpersons');
+		alert(persons);
+		//change_table(hallid, tabid, persons, ntop, nleft);
+ 	}
+		function addtable( event, ui ) {
+		alert(ui.draggable.attr('tabid'));
+		hallid = $(this).attr('hallid');
+		tabid = $(this).attr('id');
+		persons = $(this).attr('tabpersons');
+		alert(persons);
+		//change_table(hallid, tabid, persons, ntop, nleft);
+ 	}
+	
+	
+		function deleteelm( event, ui ) {
+		alert(ui.draggable.attr('tabid'));
+		alert(ui.draggable.attr('ischiar'));
+
+		//change_table(hallid, tabid, persons, ntop, nleft);
+ 	}
+	
 	function tabstop( event, ui ) {
-	 var tleft = $(this).offset().left ;
-
-  var ttop = $(this).offset().top ;
+	var tleft = $(this).offset().left ;
+	var ttop = $(this).offset().top ;
   
-  ptop = $(this).parent().offset().top;
- pleft = $(this).parent().offset().left;
- 
- 
-//$(this).offset({top:ptop + 10,left: pleft + 10});
-hallid = $(this).children("input[name=tabpersons]").attr('hallid');
-tabid = $(this).children("input[name=tabpersons]").attr('id');
-persons = $(this).children("input[name=tabpersons]").val();
-ntop = ttop - ptop;
-nleft = tleft - pleft;
+	ptop = $(this).parent().offset().top;
+	pleft = $(this).parent().offset().left;
+  
+	hallid = $(this).attr('hallid');
+	tabid = $(this).attr('tabid');
+	persons = $(this).attr('tabpersons');
+	ntop = ttop - ptop;
+	nleft = tleft - pleft;
 
-
-change_table(hallid, tabid, persons, ntop, nleft);
+	change_table(hallid, tabid, persons, ntop, nleft);
  	}
 
 	
@@ -261,7 +312,16 @@ change_table(hallid, tabid, persons, ntop, nleft);
 	
 	}
 	
-	
+	function normal_height()
+  {
+  
+ hallid = curmenu();
+			
+ newh = $( "#hallcontent-"+hallid ).height() + 100;
+ //alert(newh);
+$( ".tabContent" ).css("height", newh + "px")
+
+ }
 	
 				
 	 function curmenu() 
@@ -283,9 +343,13 @@ change_table(hallid, tabid, persons, ntop, nleft);
 			// когда страница загружена
 			
 				
-	$('#halls').smartTab({selected: 0});		
+	$('#halls').smartTab({
+	selected: 0,
+	onShowTab:function(){get_hall(curmenu());}
+	
+	});		
 
-	get_hall(curmenu());
+	
 	
 	
 			
@@ -312,7 +376,7 @@ $(".draggable").draggable({
 });
 			
 			
-			
+	
 	
 	
 			$(".halls")
@@ -488,6 +552,10 @@ $(".draggable").draggable({
 		left = 
 		change_table(tabid,persons,top, left);		
 		});
+	
+	
+	
+	
 	
   });
 	</script>
