@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 31, 2014 at 10:32 PM
+-- Generation Time: Sep 01, 2014 at 08:30 PM
 -- Server version: 5.5.25
 -- PHP Version: 5.3.13
 
@@ -1270,6 +1270,23 @@ CREATE TABLE IF NOT EXISTS `payments_in_orders` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `prices_for_dishes`
+--
+
+CREATE TABLE IF NOT EXISTS `prices_for_dishes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dishid` int(11) NOT NULL,
+  `price` float NOT NULL,
+  `startdate` datetime NOT NULL,
+  `createdate` datetime NOT NULL,
+  `status` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `services`
 --
 
@@ -1344,6 +1361,36 @@ INSERT INTO `services_in_orders` (`id`, `orderid`, `serviceid`, `price`, `discon
 (14, 21, 9, 15.00, 0, 111, ''),
 (15, 21, 10, 10.00, 0, 111, ''),
 (16, 21, 12, 10.00, 0, 111, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tables_in_halls`
+--
+
+CREATE TABLE IF NOT EXISTS `tables_in_halls` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `num` int(11) NOT NULL,
+  `persons` int(11) NOT NULL,
+  `hallid` int(11) NOT NULL,
+  `top` int(11) NOT NULL,
+  `left` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `tables_in_halls`
+--
+
+INSERT INTO `tables_in_halls` (`id`, `num`, `persons`, `hallid`, `top`, `left`) VALUES
+(1, 1, 5, 1, 80, 0),
+(2, 2, 5, 1, 0, 120),
+(3, 3, 5, 1, 0, 460),
+(4, 4, 5, 1, 0, 600),
+(5, 5, 0, 1, 230, 600),
+(6, 6, 0, 1, 290, 340),
+(7, 7, 0, 1, 290, 60);
 
 -- --------------------------------------------------------
 

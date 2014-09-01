@@ -4,6 +4,64 @@ require_once("functions.inc.php");
 $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
+if ($_POST['operation'] == 'gethall') 
+{
+		header('Content-Type: text/html; charset=utf-8');
+$hallid = $_POST['hallid'];
+			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `hallid` = '".$hallid."' ORDER BY `num` ASC;";
+			$rez_tab = mysql_query($tsql2);
+			if (mysql_num_rows($rez_tab)>0)
+			{	
+				while ($row_tab = mysql_fetch_array($rez_tab))
+				{
+					echo '<div class="draggable" id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'">
+					Стол № '.$row_tab["num"].'<br> 
+					Людей <input type="text" size="1" hallid="'.$hallid.'" id="'.$row_tab["id"].'" name="tabpersons" value="'.$row_tab["persons"].'">
+					<div class="wrap">
+					</div>
+					</div>';
+				}
+			}
+}
+
+if ($_POST['operation'] == 'addtable') 
+{
+$hallid = $_POST['hallid'];
+$persons = $_POST['tabpersons'];
+
+			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `hallid` = ".$hallid." ORDER BY `num` desc;";
+			$rez_tab = mysql_query($tsql2);
+			$num=1;
+			if (mysql_num_rows($rez_tab)>0){
+			$row_tab = mysql_fetch_array($rez_tab);
+			$num = $row_tab['num'] + 1;
+			}
+			
+			$insert = "INSERT INTO `tables_in_halls` (`id`, `num`, `persons`, `hallid`, `top`, `left`) VALUES (NULL, '".$num."', '0', '".$hallid."', '0', '0');";
+			mysql_query($insert);
+
+			echo 'yes';
+}
+
+
+
+if ($_POST['operation'] == 'changetable') 
+{
+$id = $_POST['tabid'];
+
+$persons = $_POST['tabpersons'];
+$top = $_POST['tabtop'];
+$left = $_POST['tableft'];
+
+
+			
+			$update = "UPDATE `tables_in_halls` SET  `persons`  = '".$persons."',  `top` = '".$top."' , `left` = '".$left."' WHERE `id`  = '".$id."';";
+			mysql_query($update);
+
+			echo 'yes';
+}
+
+
 
 
 

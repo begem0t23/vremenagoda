@@ -40,6 +40,10 @@
     .level_2{
   background-color: #F5F5A3 !important;
   }
+  
+  .draggable{width:100px; height:60px; padding:5px; border:1px solid #ddd; background-color:#eee}
+  
+    .hallplace {display:block; width:700px; height: 350px; border:1px; background-color: #FFFFC0;margin:15px; }
 </style>  
 
 
@@ -65,60 +69,58 @@ fixednavbar();
     <!-- Begin page content -->
     <div class="container">
       <div class="page-header">
-        <h3>Редактирование Списка Залов</h3>
+        <h3>Редактирование Залов</h3>
       </div>
-<button  class = "btn btn-primary"  type="button" role="1" name="addhall" id="0" title="Добавить Зал">Добавить Зал</button>
+	  
+	    <div id="halls" style="min-width: 700px; width: 100%;">
+    <ul>
+	
+	<?php
+	
+	 $tsql = "SELECT * FROM `hall` WHERE `isactive` = 1 ORDER BY `id` ASC;";
+	$rez_hall = mysql_query($tsql);
+	if (mysql_num_rows($rez_hall)>0)
+	{	
+			while ($row_hall = mysql_fetch_array($rez_hall))
+		{
+			echo '<li><a href="#hall-'.$row_hall['id'].'">'.$row_hall['name'].'</a></li>'.chr(10);;
+		}
+	}
+	
+	
+	?>
+	<li><a href="#hall-0">+</a></li>
+
+	</ul>
+
+
  <?php		
 
 $bgs[0] = 'Нет';
 $bgs[1] = 'Да';
 
  $tsql = "SELECT * FROM `hall` WHERE `isactive` = 1 ORDER BY `id` ASC;";
-	$r_serv = mysql_query($tsql);
-	if (mysql_num_rows($r_serv)>0)
+	$rez_hall = mysql_query($tsql);
+	if (mysql_num_rows($rez_hall)>0)
 	{	
-				echo '<table id = "halls" class = "tablesorter halls"  style="width: 100%;">';
-				echo 	'<colgroup>
-						<col width="35%" />
-						<col width="35%" />
-						<col width="10%" />
-						<col width="10%" />
-						<col width="10%" />
-						</colgroup>';
-
-				echo  '<thead>
-							<tr>
-							<th class="sorter-false">Название</th>
-							<th class="sorter-false">Описание</th>
-							<th class="sorter-false">Количество персон</th>
-							<th class="sorter-false" >Действия</th>
-							</tr>
-							</thead>';
-	?>
-<?php
-			while ($row_serv = mysql_fetch_array($r_serv))
+			while ($row_hall = mysql_fetch_array($rez_hall))
 		{
-				echo '<tr>';
+			echo '<div id="hall-'.$row_hall['id'].'" >';
 
-							echo '
-							<td><span id="hallname'.$row_serv["id"].'">'.$row_serv["name"].'</span></td>
-							<td><span id="halldescr'.$row_serv["id"].'">'.$row_serv["description"].'</span></td>
-							<td><span id="hallcnt'.$row_serv["id"].'" >'.$row_serv["countofperson"].'</span></td>
-							<td><button  class = "btn btn-primary" type="button"  name="changehall" id="'.$row_serv["id"].'" title="Изменить данные"><span class="glyphicon glyphicon-pencil"></span></button>
-							<button  class = "btn btn-primary" type="button"  name="deletehall" id="'.$row_serv["id"].'" title="Удалить Зал"><span class="glyphicon glyphicon-trash"></span></button></td>';
-												
-				echo '</tr>';
+			echo '<button  class = "btn btn-primary" type="button"  name="addtable" id="'.$row_hall["id"].'" title="Добавить стол"><span class="glyphicon glyphicon-plus"></span></button>';
+ 
+			echo '<div id="hallplace-'.$row_hall['id'].'" class="hallplace"></div>';
+			echo '</div>';
 					
 		}
-				echo '</table>';
-		
-?>
-<?php		
+	
+						echo '<div id="hall-0" >';
+					echo '</div>';
 	}
 ?>		  
 
     </div>
-
+</div>
 <?php
 
 //fixedbotbar();
@@ -149,6 +151,98 @@ $bgs[1] = 'Да';
 
 
 	<script>
+	function add_table(hallid){
+	 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'addtable', hallid: hallid}
+			})
+			.done(function( msg ) {
+				if(msg == 'yes'){
+				get_hall(hallid);
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+	
+	}
+	
+
+	function change_table(hallid,tabid,persons,ntop,nleft){
+
+	 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'changetable', tabid: tabid, tabpersons:persons, tabtop: ntop, tableft: nleft}
+			})
+			.done(function( msg ) {
+				if(msg == 'yes'){
+				get_hall(hallid);
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+	
+	}
+	
+
+
+
+	function get_hall(hallid){
+
+	  		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'gethall', hallid: hallid}
+			})
+			.done(function( msg ) {
+				$("#hallplace-"+hallid).html(msg);
+				$(".draggable").draggable({ 
+					grid:[ 20, 20 ],
+					containment:"#hallplace-"+hallid, 
+					scroll:false, 
+					snap:"#hallplace-"+hallid,
+					stop: tabstop
+				});
+				
+				$(".draggable").each(function()
+					{
+					ntop = parseInt($(this).attr('top'));
+					nleft = parseInt($(this).attr('left'));
+					ptop = $(this).parent().offset().top;
+					pleft = $(this).parent().offset().left;
+					
+				$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
+				
+	
+					
+					});
+				
+			});
+	
+	}
+	
+	function tabstop( event, ui ) {
+	 var tleft = $(this).offset().left ;
+
+  var ttop = $(this).offset().top ;
+  
+  ptop = $(this).parent().offset().top;
+ pleft = $(this).parent().offset().left;
+ 
+ 
+//$(this).offset({top:ptop + 10,left: pleft + 10});
+hallid = $(this).children("input[name=tabpersons]").attr('hallid');
+tabid = $(this).children("input[name=tabpersons]").attr('id');
+persons = $(this).children("input[name=tabpersons]").val();
+ntop = ttop - ptop;
+nleft = tleft - pleft;
+
+
+change_table(hallid, tabid, persons, ntop, nleft);
+ 	}
+
+	
 	function delete_hall(hallid){
 	
 			$.ajax({
@@ -168,9 +262,58 @@ $bgs[1] = 'Да';
 	}
 	
 	
+	
+				
+	 function curmenu() 
+ {
+  $('a').each(function(i,elem) 
+  {
+	if ($(this).hasClass("sel")) {
+		menuid = $(this).attr("href");
+		menuid = menuid.substr(6);
+		return false;
+		}
+	});
+	return menuid;
+}		
+			
+			
+			
 		$(document).ready(function(){
 			// когда страница загружена
+			
+				
+	$('#halls').smartTab({selected: 0});		
 
+	get_hall(curmenu());
+	
+	
+			
+			var $startEl = $(".start"),
+$dragEl = $(".drag"),
+$stopEl = $(".stop");
+var counts = [0, 0, 0];
+
+//Делаем элемент с id = draggable перетаскиваемым и устанавливаем обработчики
+$(".draggable").draggable({
+  start: function(){
+    counts[0]++;
+    $("span.count", $startEl).text(counts[0]);
+  },
+  drag: function(){
+    counts[1]++;
+    $("span.count", $dragEl).text(counts[1]);
+  },
+  stop: function(){
+  alert($(this).draggable('option', 'cursorAt'));
+    counts[2]++;
+    $("span.count", $stopEl).text(counts[2]);
+  }
+});
+			
+			
+			
+	
 	
 			$(".halls")
 			.tablesorter(
@@ -330,6 +473,21 @@ $bgs[1] = 'Да';
 				}
 
     });
+	
+	
+	
+		$( document ).on( "click", "button[name=addtable]", function() {
+		hallid = $(this).attr("id");
+		add_table(hallid)		
+		});
+
+		$( document ).on( "click", "button[name=addtable]", function() {
+		tabid = $(this).attr("id");
+		persons = $("#tabpersons"+id).val();
+		top = $("#table"+id).parent
+		left = 
+		change_table(tabid,persons,top, left);		
+		});
 	
   });
 	</script>

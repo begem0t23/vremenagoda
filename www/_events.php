@@ -249,6 +249,7 @@ fixednavbar();
 	<div id="eventview2" >
 	<div id='list'></div>
 	</div>
+ </div>
 <?php
 
 //fixedbotbar();
