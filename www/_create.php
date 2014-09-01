@@ -325,26 +325,22 @@ fixednavbar();
 		{
 		$btnclass = 'btn-default disabled';
 			$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
-			$discont ='<input id="discont'.$row_serv["id"].'" type="text" size="2" value="0">';
+			$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
 			$tocalcrowclass = "";
 			$proc = '';
 			$tocalc = 'tocalc=""';
 			if ($row_serv["tocalculate"] == '1') 
 			{
-		
-
-			$discont = '';
-			$proc='%';
-			$tocalc = 'tocalc="1"';
+				$discont = '';
+				$proc='%';
+				$tocalc = 'tocalc="1"';
+				$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="hidden" size="2" value="0">';
 				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="checkbox" value="" checked="checked">';
-				
 				$tocalcrowclass = 'tocalcrow';
 			}
 			if ($row_serv["byguestcount"]==1)
 							{
-
 								$quant =  '<input bgs="1" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="checkbox" value="">';
-
 							}
 									
 			echo '<tr >';
@@ -354,7 +350,7 @@ fixednavbar();
 							
 							<td class = "'.$tocalcrowclass.'"><span id=servicedescr'.$row_serv["id"].'>'.$row_serv["description"].'</span></td>
 
-							<td class = "'.$tocalcrowclass.'"><input  '.$tocalc.' name="priceserv" id="price'.$row_serv["id"].'" type="text" size="5" value="'.number_format($row_serv["price"],0,'','').$proc.'"></td>
+							<td class = "'.$tocalcrowclass.'"><input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.number_format($row_serv["price"],0,'','').$proc.'"></td>
 							<td class = "'.$tocalcrowclass.'">
 							 
 							'.$quant.'
@@ -362,7 +358,7 @@ fixednavbar();
 							<td class = "'.$tocalcrowclass.'">
 							'.$discont.'
 							</td>
-							<td class = "'.$tocalcrowclass.'"><input name="comment" id="comment'.$row_serv["id"].'" type="text" size="20"></td>
+							<td class = "'.$tocalcrowclass.'"><input name="commentserv" id="commentserv'.$row_serv["id"].'" type="text" size="20"></td>
 							<td class = "'.$tocalcrowclass.'"><button '.$tocalc.' class = "btn '.$btnclass.' " type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
 							
 								
@@ -503,10 +499,9 @@ fixednavbar();
 		
 		function shownextstep()
 		{
-			alladd = $(".btn-warning").length;
-			if(alladd > 0) 
+		alladd = $("#createform  .btn-warning").length;			if(alladd > 0) 
 			{
-				alert("Остались недобавленные блюда: " + alladd);
+				alert("Остались недобавленные позиции: " + alladd);
 			} else
 			{
 		
@@ -720,14 +715,14 @@ fixednavbar();
 							$("#addserv"+index).addClass("btn-primary");
 							$("#addserv"+index).html("Удалить");
 							$("#servicename"+index).css("color", "green");
-							$("#price"+index).val(value["priceserv"]);
+							$("#priceserv"+index).val(value["priceserv"]);
 							$("#quantserv"+index).val(value["quantserv"]);
-							$("#discont"+index).val(value["discont"]);
-							$("#comment"+index).val(value["comment"]);
-							$("#price"+index).attr("readonly","readonly");
+							$("#discontserv"+index).val(value["discont"]);
+							$("#commentserv"+index).val(value["comment"]);
+							$("#priceserv"+index).attr("readonly","readonly");
 							$("#quantserv"+index).attr("readonly","readonly");
-							$("#discont"+index).attr("readonly","readonly");						
-							$("#comment"+index).attr("readonly","readonly");
+							$("#discontserv"+index).attr("readonly","readonly");						
+							$("#commentserv"+index).attr("readonly","readonly");
 						}
 					});					
 				}
@@ -790,6 +785,17 @@ fixednavbar();
 		}
 		$(document).ready(function(){
 			// когда страница загружена
+			
+			
+			$( document ).on( "click", ".navbar a", function() 
+			{
+					alladd = $("#createform  .btn-warning").length;			
+					if(alladd > 0) 
+					{
+						alert("Остались недобавленные позиции: " + alladd);
+						return false;
+					} 
+			});
 			
 			
 					$("button[tocalc=1]").each(function() 
@@ -960,7 +966,7 @@ fixednavbar();
 			
 					$( document ).on( "blur", "input[name=priceserv]", function() {
 					tocalc = $(this).attr("tocalc");
-					if (tocalc == 1) 
+					if (tocalc == 1 & $(this).val()) 
 						{
 					
 						$(this).val($(this).val().replace("%","") + "%");
@@ -968,6 +974,33 @@ fixednavbar();
 					});
 
 		
+		
+		
+		
+		
+					$( document ).on( "focus", "input[name=discontserv]", function() {
+					
+					tocalc = $(this).attr("tocalc");
+					if (tocalc != 1) 
+						{
+				
+						$(this).val($(this).val().replace("%",""));
+						}
+					});
+			
+					$( document ).on( "blur", "input[name=discontserv]", function() {
+					tocalc = $(this).attr("tocalc");
+					if (tocalc != 1 & $(this).val()) 
+						{
+					
+						$(this).val($(this).val().replace("%","") + "%");
+						}
+					});
+
+
+
+
+					
 					$( document ).on( "change", "input[name=quantserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(9);
@@ -992,16 +1025,21 @@ fixednavbar();
 					}
 				}
 
-				if($(this).val() != "") 
+				if($(this).val() != '') 
 				{
 					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).removeClass("disabled");
 					$("#addserv"+id).addClass("btn-warning");
+					
+					if($("#discontserv"+id).val() != '') 
+					{
+						$("#addserv"+id).removeClass("disabled");					
+					}
 				
 				} else
 				{
 					$("#addserv"+id).addClass("disabled");
-					if($("#comment"+id).val() == '') 
+					
+					if($("#commentserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
 					{
 						$("#addserv"+id).addClass("btn-default");
 						$("#addserv"+id).removeClass("btn-warning");
@@ -1012,9 +1050,38 @@ fixednavbar();
 			});
 
 			
-			$( document ).on( "change", "input[name=comment]", function() {
+			$( document ).on( "change", "input[name=discontserv]", function() {
 				id = $(this).attr("id");
-				id = id.substr(7);
+				id = id.substr(11);
+
+				if($(this).val() != "") 
+				{
+					$("#addserv"+id).removeClass("btn-default");
+					$("#addserv"+id).addClass("btn-warning");
+					if($("#quantserv"+id).val() != '') 
+					{
+						$("#addserv"+id).removeClass("disabled");					
+					}
+				
+				} else
+				{
+					$("#addserv"+id).addClass("disabled");
+					
+					if($("#quantserv"+id).val() == '' & $("#commentserv"+id).val() == '') 
+					{
+						$("#addserv"+id).addClass("btn-default");
+						$("#addserv"+id).removeClass("btn-warning");
+					
+					}
+				
+				}
+				
+			});			
+		
+			
+				$( document ).on( "change", "input[name=commentserv]", function() {
+				id = $(this).attr("id");
+				id = id.substr(11);
 
 				if($(this).val() != "") 
 				{
@@ -1023,7 +1090,7 @@ fixednavbar();
 				
 				} else
 				{
-					if($("#quantserv"+id).val() == '') 
+					if($("#quantserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
 					{
 						$("#addserv"+id).addClass("btn-default");
 						$("#addserv"+id).removeClass("btn-warning");
@@ -1034,8 +1101,9 @@ fixednavbar();
 				
 			});			
 		
-			
-			
+
+
+		
 			
 			$( document ).on( "click", "button[name=addserv]", function() {
 				id = $(this).attr("id");
@@ -1047,13 +1115,13 @@ fixednavbar();
 					$(this).html("Добавить");				
 					$("#servicename"+id).css("color", "");
 
-					$("#price"+id).removeAttr("readonly");
+					$("#priceserv"+id).removeAttr("readonly");
 					if ($("#quantserv"+id).attr("class")!="byguestcount")
 					{
 						$("#quantserv"+id).removeAttr("readonly");
 					}
-					$("#discont"+id).removeAttr("readonly");
-					$("#comment"+id).removeAttr("readonly");
+					$("#discontserv"+id).removeAttr("readonly");
+					$("#commentserv"+id).removeAttr("readonly");
 
 					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
 					if (services) {
@@ -1070,15 +1138,15 @@ fixednavbar();
 						$(this).addClass("btn-primary");
 					$(this).html("Удалить");
 					$("#servicename"+id).css("color", "green");
-					var priceserv 	= $("#price"+id).val();
+					var priceserv 	= $("#priceserv"+id).val().replace("%","");
 					var quantserv 	= $("#quantserv"+id).val();
-					var discont 	= $("#discont"+id).val();
-					var comment 	= $("#comment"+id).val();
+					var discont 	= $("#discontserv"+id).val().replace("%","");
+					var comment 	= $("#commentserv"+id).val();
 					
-					$("#price"+id).attr("readonly","readonly");
+					$("#priceserv"+id).attr("readonly","readonly");
 					$("#quantserv"+id).attr("readonly","readonly");
-					$("#discont"+id).attr("readonly","readonly");
-					$("#comment"+id).attr("readonly","readonly");
+					$("#discontserv"+id).attr("readonly","readonly");
+					$("#commentserv"+id).attr("readonly","readonly");
 										
 					var services="";
 					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
