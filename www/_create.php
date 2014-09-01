@@ -42,7 +42,17 @@
     .level_2{
 	color: #000;
   background-color: #FFFFC0 !important;
-  }</style>  
+  }
+  
+  .tocalcrow{
+     background-color: #DDFFC0 !important;
+  }
+  
+ tr.odd  td.tocalcrow{
+     background-color: #ACFF7E	 !important;
+  }
+  
+  </style>  
 
   </head>
 
@@ -70,12 +80,16 @@ fixednavbar();
 		  <li id=page3><a href="#">3: Услуги</a></li>
 		  <li id=page4><a href="#">4: Сохранение</a></li>
 		  <li id=pageright><a href="#">&raquo;</a></li>
-		</ul>	
-		<div id=createform style="width: 400px">
+		</ul>
+
+
+			<div id=createform style="width: 100%;">
 		
-		</div>
-		<div id=spanpage1 style="visibility: hidden">
-			<div class="input-group">
+			</div>
+		
+
+		<div id=spanpage1 style="visibility: hidden;">
+			<div class="input-group"  style="width: 400px;">
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
 			  <span class="input-group-btn">
@@ -94,7 +108,7 @@ fixednavbar();
 	if (mysql_num_rows($r_menutype)>0)
 	{	
 ?>
-<div id="tabs" style="min-width: 600px">
+<div id="tabs" style="min-width: 600px; width: 100%;">
     <ul>
 <?php
 		$index=0;
@@ -118,9 +132,9 @@ fixednavbar();
 
 	while ($row_menutype = mysql_fetch_array($r_menutype))
 		{
-			echo '<div id="menu-'.$row_menutype["id"].'">';
+			echo '<div id="menu-'.$row_menutype["id"].'"  style="width: 100%;">';
 
-				echo '<table class = "tablesorter order">';
+				echo '<table class = "tablesorter order" style="width: 100%;">';
 				echo 	'<colgroup>
 						<col width="250" />
 						<col width="50" />
@@ -279,11 +293,11 @@ fixednavbar();
 		<form id=frm3 role="form" data-toggle="validator">
   
   <?php		
-	$tsql = "SELECT * FROM `services` WHERE `isactive` = 1 ORDER BY `orderby` ASC;";
+	$tsql = "SELECT * FROM `services` WHERE `isactive` = 1  ORDER BY `tocalculate` DESC,`orderby` ASC;";
 	$r_serv = mysql_query($tsql);
 	if (mysql_num_rows($r_serv)>0)
 	{	
-				echo '<table class = "tablesorter order"  style="width: 700px;">';
+				echo '<table class = "tablesorter order services"  style="width: 100%;">';
 				echo 	'<colgroup>
 						<col width="150" />
 						<col width="150" />
@@ -309,24 +323,47 @@ fixednavbar();
 <?php
 			while ($row_serv = mysql_fetch_array($r_serv))
 		{
+		$btnclass = 'btn-default disabled';
+			$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
+			$discont ='<input id="discont'.$row_serv["id"].'" type="text" size="2" value="0">';
+			$tocalcrowclass = "";
+			$proc = '';
+			$tocalc = 'tocalc=""';
+			if ($row_serv["tocalculate"] == '1') 
+			{
+		
 
-				echo '<tr>';
-
-
-							echo '<td><span id=servicename'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
-							
-							<td><span id=servicedescr'.$row_serv["id"].'>'.$row_serv["description"].'</span></td>
-
-							<td><input id="price'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'"></td>
-							<td><input id="quantserv'.$row_serv["id"].'" type="text" size="2" ';
-							if ($row_serv["byguestcount"]==1)
+			$discont = '';
+			$proc='%';
+			$tocalc = 'tocalc="1"';
+				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="checkbox" value="" checked="checked">';
+				
+				$tocalcrowclass = 'tocalcrow';
+			}
+			if ($row_serv["byguestcount"]==1)
 							{
-								echo "readonly='readonly' class='.byguestcount'";
+
+								$quant =  '<input bgs="1" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="checkbox" value="">';
+
 							}
-							echo ' value="1"></td>
-							<td><input id="discont'.$row_serv["id"].'" type="text" size="2" value="0"></td>
-							<td><input id="comment'.$row_serv["id"].'" type="text" size="20"></td>
-							<td><button class = "btn btn-default" type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
+									
+			echo '<tr >';
+
+
+							echo '<td class = "'.$tocalcrowclass.'"><span id=servicename'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
+							
+							<td class = "'.$tocalcrowclass.'"><span id=servicedescr'.$row_serv["id"].'>'.$row_serv["description"].'</span></td>
+
+							<td class = "'.$tocalcrowclass.'"><input  '.$tocalc.' name="priceserv" id="price'.$row_serv["id"].'" type="text" size="5" value="'.number_format($row_serv["price"],0,'','').$proc.'"></td>
+							<td class = "'.$tocalcrowclass.'">
+							 
+							'.$quant.'
+							</td>
+							<td class = "'.$tocalcrowclass.'">
+							'.$discont.'
+							</td>
+							<td class = "'.$tocalcrowclass.'"><input name="comment" id="comment'.$row_serv["id"].'" type="text" size="20"></td>
+							<td class = "'.$tocalcrowclass.'"><button '.$tocalc.' class = "btn '.$btnclass.' " type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
 							
 								
 					
@@ -678,6 +715,8 @@ fixednavbar();
 						if (index)
 						{
 							$("#addserv"+index).removeClass("btn-default");
+							$("#addserv"+index).removeClass("btn-warning");
+							$("#addserv"+index).removeClass("disabled");
 							$("#addserv"+index).addClass("btn-primary");
 							$("#addserv"+index).html("Удалить");
 							$("#servicename"+index).css("color", "green");
@@ -751,6 +790,20 @@ fixednavbar();
 		}
 		$(document).ready(function(){
 			// когда страница загружена
+			
+			
+					$("button[tocalc=1]").each(function() 
+			{
+			
+				if ($(this).html() == "Добавить")
+				{
+				
+					$(this).removeClass("btn-default");
+					$(this).removeClass("disabled");
+					$(this).addClass("btn-warning");
+				}
+			});
+			
 			
 			$(".order")
 			.tablesorter(
@@ -891,13 +944,105 @@ fixednavbar();
 				}
 				//console.log($.cookie("dishes"));
 			});			
+			
+			
+			
+			
 			// добавление услуг в заказ
+					$( document ).on( "focus", "input[name=priceserv]", function() {
+					tocalc = $(this).attr("tocalc");
+					if (tocalc == 1) 
+						{
+				
+						$(this).val($(this).val().replace("%",""));
+						}
+					});
+			
+					$( document ).on( "blur", "input[name=priceserv]", function() {
+					tocalc = $(this).attr("tocalc");
+					if (tocalc == 1) 
+						{
+					
+						$(this).val($(this).val().replace("%","") + "%");
+						}
+					});
+
+		
+					$( document ).on( "change", "input[name=quantserv]", function() {
+				id = $(this).attr("id");
+				id = id.substr(9);
+				tocalc = $(this).attr("tocalc");
+				bgs = $(this).attr("bgs");
+				
+				if (tocalc == 1) 
+				{
+					if (!$(this).prop('checked'))
+					{
+					$(this).prop('checked',true);
+					alert("Эта позиция обязательна для формирования заказа. Вы можете изменить ее позже.");
+					}
+				}
+				
+				if (bgs == 1) 
+				{
+					$(this).val('');
+					if ($(this).prop('checked'))
+					{
+					$(this).val('1');
+					}
+				}
+
+				if($(this).val() != "") 
+				{
+					$("#addserv"+id).removeClass("btn-default");
+					$("#addserv"+id).removeClass("disabled");
+					$("#addserv"+id).addClass("btn-warning");
+				
+				} else
+				{
+					$("#addserv"+id).addClass("disabled");
+					if($("#comment"+id).val() == '') 
+					{
+						$("#addserv"+id).addClass("btn-default");
+						$("#addserv"+id).removeClass("btn-warning");
+					}
+				
+				}
+				
+			});
+
+			
+			$( document ).on( "change", "input[name=comment]", function() {
+				id = $(this).attr("id");
+				id = id.substr(7);
+
+				if($(this).val() != "") 
+				{
+					$("#addserv"+id).removeClass("btn-default");
+					$("#addserv"+id).addClass("btn-warning");
+				
+				} else
+				{
+					if($("#quantserv"+id).val() == '') 
+					{
+						$("#addserv"+id).addClass("btn-default");
+						$("#addserv"+id).removeClass("btn-warning");
+						$("#addserv"+id).addClass("disabled");
+					}
+				
+				}
+				
+			});			
+		
+			
+			
+			
 			$( document ).on( "click", "button[name=addserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(7);
 				if ($(this).html()=="Удалить")
 				{
-							$(this).addClass("btn-default");
+							$(this).addClass("btn-warning");
 							$(this).removeClass("btn-primary");
 					$(this).html("Добавить");				
 					$("#servicename"+id).css("color", "");
@@ -921,7 +1066,7 @@ fixednavbar();
 				else
 				{
 							
-						$(this).removeClass("btn-default");
+						$(this).removeClass("btn-warning");
 						$(this).addClass("btn-primary");
 					$(this).html("Удалить");
 					$("#servicename"+id).css("color", "green");
@@ -967,10 +1112,15 @@ fixednavbar();
 		$("li[id*='page']").bind("click", function(){
 			// слушаем клики на элементы выбора страниц
 			id = $(this).prop("id");
-			alladd = $(".btn-warning").length;
+
+			alladd = $("#createform  .btn-warning").length;
+
+
+			
+			
 			if(alladd > 0) 
 			{
-				alert("Остались недобавленные блюда: " + alladd);
+				alert("Остались недобавленные позиции: " + alladd);
 			} else
 			{
 			

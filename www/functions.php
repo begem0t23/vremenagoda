@@ -663,7 +663,7 @@ $sectionid = $_POST['sectionid'];
 	<input type="text" id="price" placeholder="Цена" class="form-control" value="<?php echo $rows_0['price']; ?>">
 	<input type="hidden" id="dish_id"  value="<?php echo $dishid; ?>">
 	<br>
-	  <p >Находится в разделе (можно изменить):</p>
+	  <p >Привязать к разделу:</p>
 
 	<select id="menu_section" >
 <?php	
@@ -772,37 +772,11 @@ $sectionid = $_POST['sectionid'];
 	
 	//конец цикла
 
-?>
-  </select>
+
   
   
-  	<br><br>
-	  <p >Находится в меню  (можно изменить):</p>
-
-	<select id="menu_id" >
-<?php	
-							$selected = '';
-							if ( $menuid == 0) {$selected = 'selected = "selected"'; }
-								echo '<option value="0"  '.$selected.'>Нигде</option>'.chr(10);
-
-	$sections = Array();
-		$tsql0 = "SELECT * 
-		 FROM `menus`  
-		  WHERE `isactive` = '1' ORDER BY `orderby` ASC;
-		 ";
-		$rezult0 = mysql_query($tsql0);
-
-
-	while ($rows0 = mysql_fetch_array($rezult0)) {
-							$selected = '';
-							if ($rows0['id'] == $menuid) {$selected = 'selected = "selected"'; }
-								echo '<option value="'.$rows0['id'].'"  '.$selected.'>'.$rows0['type_name'].'</option>'.chr(10);
-
-	}
-	
-	
-	echo ' </select>';
-  echo '</form>';
+ 
+  echo '</select></form>';
   
   
 
