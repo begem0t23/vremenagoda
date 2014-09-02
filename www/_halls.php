@@ -40,12 +40,13 @@
     .level_2{
   background-color: #F5F5A3 !important;
   }
+  .right{float:right;}
   .trash{margin: 5px; display:block; width:70px; height: 25px; border:1px; background-color: red; position:relative; float:right;}
   .table{width:30px; height:30px;  border:1px solid #ddd; background-color:#eee;  }
   .newtable{margin: 5px; display:block;width:44px; height:40px;  border:1px solid #ddd; background-color:#eee; position:relative; float:right;}
    .newchiar {margin: 5px; display:block; width:30px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
 
-    .hallplace {display:block; width:700px; height: 350px; border:1px; background-color: #FFFFC0;margin:15px; }
+    .hallplace {display:block;  border:1px; background-color: #FFFFC0;margin:15px; }
    .chiar {display:block; width:11px; height: 11px; border:1px; background-color: #AADDC0; position:absolute;}
   
   .left-top{left:-16px; top:1px;}
@@ -67,7 +68,8 @@
   .bottom-right-corner{right:-16px; bottom:-16px;}
   
  
-	.tabnum{font-size:22px; margin: -7px 0px 0 -10px;}
+	.tabnum{font-size:22px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
+		
 	</style>  
 
 
@@ -107,7 +109,7 @@ fixednavbar();
 	{	
 			while ($row_hall = mysql_fetch_array($rez_hall))
 		{
-			echo '<li><a href="#hall-'.$row_hall['id'].'">'.$row_hall['name'].'</a></li>'.chr(10);;
+			echo '<li><a href="#hall-'.$row_hall['id'].'">'.$row_hall['description'].'</a></li>'.chr(10);;
 		}
 	}
 	
@@ -141,6 +143,20 @@ $bgs[1] = 'Да';
 		}
 	
 						echo '<div id="hall-0" >';
+						echo ' <div id="dialog-form" title="Заполните информацию по залу.">
+  <p class="validateTips">Для создания нового зала заполните форму.</p>
+  <form>
+	<input type="text" id="hallname" placeholder="Название Зала" class="form-control" value="">
+	<input type="text" id="halldescr" placeholder="Описание Зала" class="form-control" value="">
+	<input type="text" id="hallcnt" placeholder="Количество Персон" class="form-control" value="">
+	<br>
+	<button class="btn btn-default" onclick="addhall();">Создать</button>
+	<button class="btn btn-default right" onclick="form[ 0 ].reset(); " >Очистить</button>
+
+
+ </form>
+</div>';
+
 					echo '</div>';
 	}
 ?>		  
@@ -177,11 +193,43 @@ $bgs[1] = 'Да';
 
 
 	<script>
-	function add_table(hallid){
+	function hall_resize(hallid,nwidth,nheight){
 	 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'addtable', hallid: hallid}
+			data: { operation: 'hallresize', hallid: hallid, nwidth:nwidth, nheight: nheight}
+			})
+			.done(function( msg ) {
+				if(msg == 'yes'){
+				get_hall(curmenu());
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+	
+	}
+	
+	function change_tabnum(tabid,tabnum){
+	 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'changetabnum', tabid:tabid, tabnum: tabnum}
+			})
+			.done(function( msg ) {
+				if(msg == 'yes'){
+				get_hall(curmenu());
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+	
+	}
+	
+	function add_table(hallid,ntop,nleft){
+	 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'addtable', hallid: hallid, ntop:ntop, nleft:nleft}
 			})
 			.done(function( msg ) {
 				if(msg == 'yes'){
@@ -289,17 +337,19 @@ $bgs[1] = 'Да';
 				});
 				$(".newtable").draggable({
 				helper: 'clone',
-				revert:"invalid"
+				revert:"invalid",
+				  stop: addtable
 				});
+				
 				$(".trash").droppable({  tolerance : 'touch', accept : '.table,.chiar', drop: totrash});
 
-				$("#hallcontent-"+hallid+" .hallplace").droppable({  tolerance : 'touch',accept : '.newtable, .table',  drop: addtable});
+				$("#hallcontent-"+hallid+" .hallplace").droppable({  tolerance : 'fit',accept : '.newtable, .table'}).resizable({grid:10, resize: normal_height, stop: hallresize});
 				$("#hallcontent-"+hallid+" .table").draggable({ 
-					grid:[ 15, 15 ],
+					grid:[ 10, 10 ],
 					scroll:false, 
 					snap:"#hallplace-"+hallid,
 					revert:"invalid",
-					snapTolerance: 10 ,
+					snapTolerance: 5,
 					stop: tabstop
 				});
 				
@@ -359,20 +409,6 @@ $bgs[1] = 'Да';
 								$(this).addClass("placed");
 							}
 						
-							if(!$(this).parent().hasClass("top-left-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-left-ok");
-								$(this).addClass("top-left");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("top-right-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-right-ok");
-								$(this).addClass("top-right");
-								$(this).addClass("placed");
-							}
-
 
 							if(!$(this).parent().hasClass("bottom-left-ok") & !$(this).hasClass("placed"))
 							{
@@ -387,6 +423,21 @@ $bgs[1] = 'Да';
 								$(this).addClass("bottom-right");
 								$(this).addClass("placed");
 							}
+
+							if(!$(this).parent().hasClass("top-left-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("top-left-ok");
+								$(this).addClass("top-left");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("top-right-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("top-right-ok");
+								$(this).addClass("top-right");
+								$(this).addClass("placed");
+							}
+
 
 							if(!$(this).parent().hasClass("top-left-corner-ok") & !$(this).hasClass("placed"))
 							{
@@ -439,10 +490,18 @@ $bgs[1] = 'Да';
 	
 	
 	function addtable( event, ui ) {
-		tabid = ui.draggable.attr('tabid');
-		hallid = $(this).attr('hallid');
-		//alert(tabid +'_'+hallid);
-		if(tabid == 0) add_table(hallid);
+	tleft = ui.offset.left ;
+	ttop = ui.offset.top ;
+  	tabid = $(this).attr('tabid');
+	
+	pleft = $("#hallplace-"+curmenu()).offset().left;
+	ptop = $("#hallplace-"+curmenu()).offset().top;
+
+	ntop = ttop - ptop;
+	nleft = tleft - pleft;
+	if(tabid == 0) add_table(hallid,ntop,nleft);
+
+		
  	}
 	
 	
@@ -479,6 +538,15 @@ $bgs[1] = 'Да';
 	change_table(hallid, tabid, persons, ntop, nleft);
  	}
 
+
+	
+	function hallresize( event, ui ) {
+
+hall_resize(curmenu(), ui.size.width, ui.size.height);
+
+ 	}
+
+
 	
 	function delete_hall(hallid){
 	
@@ -503,9 +571,9 @@ $bgs[1] = 'Да';
   
  hallid = curmenu();
 			
- newh = $( "#hallcontent-"+hallid ).height() + 100;
+ newh = $( "#hallplace-"+hallid ).height() + 100;
  //alert(newh);
-$( ".tabContent" ).css("height", newh + "px")
+$( ".stContainer" ).css("height", newh + "px");
 
  }
 	
@@ -531,11 +599,15 @@ $( ".tabContent" ).css("height", newh + "px")
 				
 	$('#halls').smartTab({
 	selected: 0,
-	onShowTab:function(){get_hall(curmenu());}
+	autoHeight:false,
+	onShowTab:function(){
+	get_hall(curmenu());
+
+	}
 	
 	});		
 
-	
+
 	
 	
 			
@@ -577,122 +649,16 @@ $(".draggable").draggable({
  
       // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
       emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-      hallid = $( "#hallid" ),
       name = $( "#name" ),
       descr = $( "#descr" ),
       cnt = $( "#cnt" ),
-      allFields = $( [] ).add( name ).add( descr ).add( cnt ).add( hallid ),
+      allFields = $( [] ).add( name ).add( descr ).add( cnt ),
       tips = $( ".validateTips" );
  
-    function updateTips( t ) {
-      tips
-        .text( t )
-        .addClass( "ui-state-highlight" );
-      setTimeout(function() {
-        tips.removeClass( "ui-state-highlight", 1500 );
-      }, 500 );
-    }
- 
-    function checkLength( o, n, min, max ) {
-		
-      if ( o.val().length > max || o.val().length < min ) {
-
-        o.addClass( "ui-state-error" );
-        updateTips( "Длина " + n + " должна быть между " +
-          min + " и " + max + "." );
-        return false;
-      } else {
-        return true;
-      }
-    }
- 
-
-    function checkVal( o, n, min, max) {
-		
-      if ( o.val() > max || o.val() < min ) {
-
-        o.addClass( "ui-state-error" );
-        updateTips( "Значение " + n + " должно быть между " +
-          min + " и " + max + "." );
-        return false;
-      } else {
-        return true;
-      }
-    }
  
  
-    function checkRegexp( o, regexp, n ) {
-      if ( !( regexp.test( o.val() ) ) ) {
-        o.addClass( "ui-state-error" );
-        updateTips( n );
-        return false;
-      } else {
-        return true;
-      }
-    }
- 
-    function addhall() {
-      var valid = true;
-      allFields.removeClass( "ui-state-error" );
-	
-		valid = valid && checkLength( name, "Название Зала", 3, 50 );
-		//valid = valid && checkLength( descr, "Описание Зала", 10, 100 );
-		valid = valid && checkLength( cnt, "Количество Персон", 1, 3 );
-		valid = valid && checkVal( cnt, "Количество Персон", 1, 777 );
-		operation = "changehall";
-	 
-  	if (hallid.val() == 0)
-	{
-		operation = "addhall";
-	}
-
-       valid = valid && checkRegexp( cnt, /^([0-9])+$/, "Цена должна состоять только из цифр : 0-9" );
-
-
-	   if ( valid ) 
-	  {
-
-	  
-		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: operation, hallname: name.val(), halldescr: descr.val(), hallcnt: cnt.val(), hallid: hallid.val()}
-		})
-		.done(function( msg ) {
-			if(msg == 'yes'){
-				alert ('Изменения в список залов внесены.');
-				location.href="?halls";
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-		
-		
-		
-	}
-      return valid;
-    }
- 
-    dialog = $( "#dialog-form" ).dialog({
-      autoOpen: false,
-      height: 350,
-      width: 400,
-      modal: true,
-      buttons: {
-        "Сохранить": addhall,
-        "Отмена": function() {
-          dialog.dialog( "close" );
-        }
-      },
-      close: function() {
-        form[ 0 ].reset();
-        allFields.removeClass( "ui-state-error" );
-      }
-    });
- 
-    form = dialog.find( "form" ).on( "submit", function( event ) {
+    form = $( "#dialog-form" ).find( "form" ).on( "submit", function( event ) {
       event.preventDefault();
-      addUser();
     });
 
     $( document ).on( "click", "button[name=changehall]", function() {
@@ -726,35 +692,47 @@ $(".draggable").draggable({
 	
 	
 	
-		$( document ).on( "click", "button[name=addtable]", function() {
-		hallid = $(this).attr("id");
-		add_table(hallid)		
-		});
 
-		$( document ).on( "click", "button[name=addtable]", function() {
-		tabid = $(this).attr("id");
-		persons = $("#tabpersons"+id).val();
-		top = $("#table"+id).parent
-		left = 
-		change_table(tabid,persons,top, left);		
+		$( document ).on( "click", ".tabnum", function() {
+		tabid = $(this).parent().attr("tabid");
+		tabnum = $(this).html();
+	
+		newtabnum = prompt('Новое значение',tabnum)
+		if(newtabnum) change_tabnum(tabid, newtabnum);
 		});
-	
-	
-	
 	
 	
   });
+  
+
+    function addhall() {
+		name = $('#hallname').val();
+		descr = $('#halldescr').val();
+		cnt = $('#hallcnt').val();
+	
+		if (name != '' & descr != '' & cnt != '') {
+
+			$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'addhall', hallname: name, halldescr: descr, hallcnt: cnt}
+			})
+			.done(function( msg ) {
+			if(msg == 'yes'){
+				alert ('Добавлен новый зал. Отредактируте расположение посадочных мест');
+				location.href="?halls";
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+		
+		} else { alert('Заполните все поля');}	
+		
+	}
+
+ 
+
 	</script>
- <div id="dialog-form" title="Заполните информацию по залу.">
-  <p class="validateTips">Все поля должны быть заполнены.</p>
-  <form>
-	<input type="text" id="name" placeholder="Название Зала" class="form-control" value="">
-	<input type="text" id="descr" placeholder="Описание Зала" class="form-control" value="">
-	<input type="text" id="cnt" placeholder="Количество Персон" class="form-control" value="">
-		<input type="hidden" id="hallid"  class="form-control" value="">
 
-
- </form>
-</div>
  </body>
 </html>

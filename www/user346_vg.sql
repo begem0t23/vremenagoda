@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 01, 2014 at 08:30 PM
+-- Generation Time: Sep 02, 2014 at 09:33 PM
 -- Server version: 5.5.25
 -- PHP Version: 5.3.13
 
@@ -1057,16 +1057,19 @@ CREATE TABLE IF NOT EXISTS `hall` (
   `description` text NOT NULL,
   `countofperson` tinytext NOT NULL,
   `isactive` int(11) NOT NULL,
+  `width` int(11) NOT NULL,
+  `height` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 --
 -- Dumping data for table `hall`
 --
 
-INSERT INTO `hall` (`id`, `name`, `description`, `countofperson`, `isactive`) VALUES
-(1, 'Kaminniy zal', '', '20', 1),
-(2, 'Verhniy zal', '', '100', 1);
+INSERT INTO `hall` (`id`, `name`, `description`, `countofperson`, `isactive`, `width`, `height`) VALUES
+(1, 'Veranda', 'Веранда', '40', 1, 510, 270),
+(2, 'Verhniy zal', '2 этаж', '142', 1, 760, 480),
+(13, 'Беседки', 'Беседки', '48', 1, 330, 420);
 
 -- --------------------------------------------------------
 
@@ -1370,27 +1373,71 @@ INSERT INTO `services_in_orders` (`id`, `orderid`, `serviceid`, `price`, `discon
 
 CREATE TABLE IF NOT EXISTS `tables_in_halls` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `num` int(11) NOT NULL,
+  `num` text NOT NULL,
   `persons` int(11) NOT NULL,
   `hallid` int(11) NOT NULL,
   `top` int(11) NOT NULL,
   `left` int(11) NOT NULL,
+  `width` int(11) NOT NULL,
+  `height` int(11) NOT NULL,
+  `istable` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=180 ;
 
 --
 -- Dumping data for table `tables_in_halls`
 --
 
-INSERT INTO `tables_in_halls` (`id`, `num`, `persons`, `hallid`, `top`, `left`) VALUES
-(1, 1, 5, 1, 80, 0),
-(2, 2, 5, 1, 0, 120),
-(3, 3, 5, 1, 0, 460),
-(4, 4, 5, 1, 0, 600),
-(5, 5, 0, 1, 230, 600),
-(6, 6, 0, 1, 290, 340),
-(7, 7, 0, 1, 290, 60);
+INSERT INTO `tables_in_halls` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `width`, `height`, `istable`) VALUES
+(1, '66', 4, 1, 210, 30, 30, 30, 1),
+(20, '60', 4, 1, 20, 330, 30, 30, 1),
+(21, '62', 4, 1, 210, 430, 30, 30, 1),
+(22, '67', 6, 1, 40, 50, 30, 30, 1),
+(24, '65', 4, 1, 210, 120, 30, 30, 1),
+(25, '63', 4, 1, 210, 330, 30, 30, 1),
+(27, '61', 6, 1, 50, 430, 30, 30, 1),
+(28, '64', 4, 1, 210, 220, 30, 30, 1),
+(29, '10', 4, 2, 180, 20, 30, 30, 1),
+(30, '11', 4, 2, 210, 80, 30, 30, 1),
+(31, '12', 4, 2, 240, 20, 30, 30, 1),
+(32, '13', 4, 2, 270, 80, 30, 30, 1),
+(33, '14', 4, 2, 300, 20, 30, 30, 1),
+(37, '15', 10, 2, 420, 40, 30, 30, 1),
+(38, '30', 4, 2, 180, 710, 30, 30, 1),
+(39, '51', 4, 2, 160, 340, 30, 30, 1),
+(40, '31', 4, 2, 210, 650, 30, 30, 1),
+(41, '32', 4, 2, 240, 710, 30, 30, 1),
+(42, '33', 4, 2, 270, 650, 30, 30, 1),
+(43, '34', 4, 2, 300, 710, 30, 30, 1),
+(44, '35', 10, 2, 420, 700, 30, 30, 1),
+(45, '36', 4, 2, 440, 620, 30, 30, 1),
+(46, '20', 6, 2, 420, 240, 30, 30, 1),
+(47, '21', 6, 2, 420, 340, 30, 30, 1),
+(48, '22', 6, 2, 420, 430, 30, 30, 1),
+(49, '53', 4, 2, 160, 480, 30, 30, 1),
+(50, '50', 4, 2, 160, 270, 30, 30, 1),
+(51, '52', 4, 2, 160, 410, 30, 30, 1),
+(52, '40', 4, 2, 210, 210, 30, 30, 1),
+(53, '41', 4, 2, 270, 210, 30, 30, 1),
+(54, '42', 4, 2, 320, 270, 30, 30, 1),
+(55, '43', 4, 2, 320, 340, 30, 30, 1),
+(56, '44', 4, 2, 320, 410, 30, 30, 1),
+(57, '45', 4, 2, 320, 480, 30, 30, 1),
+(58, '46', 4, 2, 260, 540, 30, 30, 1),
+(59, '47', 4, 2, 210, 540, 30, 30, 1),
+(60, '54', 2, 2, 80, 380, 30, 30, 1),
+(61, '55', 2, 2, 40, 330, 30, 30, 1),
+(62, '56', 3, 2, 90, 290, 30, 30, 1),
+(63, '57', 3, 2, 20, 270, 30, 30, 1),
+(64, '58', 2, 2, 10, 380, 30, 30, 1),
+(67, '68', 4, 1, 20, 170, 30, 30, 1),
+(172, '71', 8, 13, 340, 60, 30, 30, 1),
+(173, '72', 8, 13, 250, 60, 30, 30, 1),
+(174, '73', 8, 13, 150, 60, 30, 30, 1),
+(175, '74', 8, 13, 50, 60, 30, 30, 1),
+(176, '75', 8, 13, 50, 250, 30, 30, 1),
+(177, '76', 8, 13, 150, 250, 30, 30, 1);
 
 -- --------------------------------------------------------
 
