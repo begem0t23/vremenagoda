@@ -16,13 +16,13 @@ $hallid = $_POST['hallid'];
 			if (mysql_num_rows($rez_tab)>0)
 			{
 			
-			$ech = $ech.'<div id="hallplace-'.$hallid.'" class="hallplace">';
+			$ech = $ech.'<div id="hallplace-'.$hallid.'" class="hallplace" hallid="'.$hallid.'">';
 
 			$tabquant = mysql_num_rows($rez_tab);
 				while ($row_tab = mysql_fetch_array($rez_tab))
 				{
 				$sumpersons = $sumpersons + $row_tab["persons"];
-					$ech = $ech.'<div class="table" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'">';
+					$ech = $ech.'<div class="table btn" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'">';
 					
 					for($i=0;$i<$row_tab["persons"];$i++)
 					{
@@ -56,11 +56,108 @@ $persons = $_POST['tabpersons'];
 			$num = $row_tab['num'] + 1;
 			}
 			
-			$insert = "INSERT INTO `tables_in_halls` (`id`, `num`, `persons`, `hallid`, `top`, `left`) VALUES (NULL, '".$num."', '0', '".$hallid."', '0', '0');";
+			$insert = "INSERT INTO `tables_in_halls` (`id`, `num`, `persons`, `hallid`, `top`, `left`) VALUES (NULL, '".$num."', '4', '".$hallid."', '0', '0');";
 			mysql_query($insert);
 
 			echo 'yes';
 }
+
+
+if ($_POST['operation'] == 'removetable') 
+{
+$tabid = $_POST['tabid'];
+$hallid = $_POST['hallid'];
+
+			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `hallid` = ".$hallid." ORDER BY `num` desc;";
+			$rez_tab = mysql_query($tsql2);
+
+			if (mysql_num_rows($rez_tab)>0){
+			$row_tab = mysql_fetch_array($rez_tab);
+			$maxnumid = $row_tab['id'];
+			}
+			
+			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `id` = ".$tabid." ;";
+			$rez_tab = mysql_query($tsql2);
+
+			if (mysql_num_rows($rez_tab)>0){
+			$row_tab = mysql_fetch_array($rez_tab);
+			$oldnum = $row_tab['num'];
+			}
+			
+			
+			$delete = "DELETE FROM `tables_in_halls`  WHERE `id`  = '".$tabid."';";
+			mysql_query($delete);
+
+			$update = "UPDATE `tables_in_halls` SET  `num`  = '".$oldnum."' WHERE `id`  = '".$maxnumid."';";
+			mysql_query($update);
+
+
+			echo 'yes';
+}
+
+
+
+if ($_POST['operation'] == 'addchiar') 
+{
+$fromtabid = $_POST['fromtabid'];
+$totabid = $_POST['totabid'];
+
+	if ($fromtabid > 0) 
+	{
+			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `id` = ".$fromtabid." ;";
+			$rez_tab = mysql_query($tsql2);
+			if (mysql_num_rows($rez_tab)>0)
+			{
+				$row_tab = mysql_fetch_array($rez_tab);
+				$persons = $row_tab['persons'] - 1;
+			}
+			
+			$update = "UPDATE `tables_in_halls` SET  `persons`  = '".$persons."' WHERE `id`  = '".$fromtabid."';";
+			mysql_query($update);
+
+	}		
+			
+			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `id` = ".$totabid." ;";
+			$rez_tab = mysql_query($tsql2);
+			if (mysql_num_rows($rez_tab)>0)
+			{
+				$row_tab = mysql_fetch_array($rez_tab);
+				$persons = $row_tab['persons'] + 1;
+			}
+			
+			$update = "UPDATE `tables_in_halls` SET  `persons`  = '".$persons."' WHERE `id`  = '".$totabid."';";
+			mysql_query($update);
+
+			
+			echo 'yes';
+			
+}
+
+
+
+if ($_POST['operation'] == 'removechiar') 
+{
+$tabid = $_POST['tabid'];
+			
+			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `id` = ".$tabid." ;";
+			$rez_tab = mysql_query($tsql2);
+			if (mysql_num_rows($rez_tab)>0)
+			{
+				$row_tab = mysql_fetch_array($rez_tab);
+				$persons = $row_tab['persons'] - 1;
+			}
+			
+			$update = "UPDATE `tables_in_halls` SET  `persons`  = '".$persons."' WHERE `id`  = '".$tabid."';";
+			mysql_query($update);
+
+			
+			echo 'yes';
+			
+}
+
+
+
+
 
 
 

@@ -40,15 +40,34 @@
     .level_2{
   background-color: #F5F5A3 !important;
   }
-  .trash{display:block; width:70px; height: 40px; border:1px; background-color: #FFF333; position:relative; float:right;}
-  .table{width:40px; height:40px;  border:1px solid #ddd; background-color:#eee}
-  .newtable{width:40px; height:40px;  border:1px solid #ddd; background-color:#eee; position:absolute;}
-  
-    .hallplace {display:block; width:700px; height: 350px; border:1px; background-color: #FFFFC0;margin:15px; }
-   .chiar {display:block; width:15px; height: 15px; border:1px; background-color: #AADDC0; position:absolute; margin:5px}
-  .newchiar {display:block; width:25px; height: 25px; border:1px; background-color: #AADDC0; position:absolute; }
+  .trash{margin: 5px; display:block; width:70px; height: 25px; border:1px; background-color: red; position:relative; float:right;}
+  .table{width:30px; height:30px;  border:1px solid #ddd; background-color:#eee;  }
+  .newtable{margin: 5px; display:block;width:44px; height:40px;  border:1px solid #ddd; background-color:#eee; position:relative; float:right;}
+   .newchiar {margin: 5px; display:block; width:30px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
 
-	.tabnum{font-size:22px; padding:5px;}
+    .hallplace {display:block; width:700px; height: 350px; border:1px; background-color: #FFFFC0;margin:15px; }
+   .chiar {display:block; width:11px; height: 11px; border:1px; background-color: #AADDC0; position:absolute;}
+  
+  .left-top{left:-16px; top:1px;}
+  .left-bottom{left:-16px; bottom:1px;}
+
+  .right-top{right:-16px; top:1px;}
+  .right-bottom{right:-16px; bottom:1px;}
+
+  .top-left{left:1px; top:-16px;}
+  .top-right{right:1px; top:-16px;}
+
+  .bottom-left{left:1px; bottom:-16px;}
+  .bottom-right{right:1px; bottom:-16px;}
+
+  .top-left-corner{left:-16px; top:-16px;}
+  .top-right-corner{right:-16px; top:-16px;}
+
+  .bottom-left-corner{left:-16px; bottom:-16px;}
+  .bottom-right-corner{right:-16px; bottom:-16px;}
+  
+ 
+	.tabnum{font-size:22px; margin: -7px 0px 0 -10px;}
 	</style>  
 
 
@@ -112,9 +131,9 @@ $bgs[1] = 'Да';
 		{
 			echo '<div id="hall-'.$row_hall['id'].'" >';
 
-			echo '<div class="newtable" >С</div>';
  			echo '<div class="trash" >Корзина</div>';
- 			echo '<div class="newchiar" tabid="0" >м</div>';
+ 			echo '<div class="newtable" tabid="0" >СТОЛ</div>';
+			echo '<div class="newchiar" tabid="0" >стул</div>';
 
 			echo '<div id="hallcontent-'.$row_hall['id'].'" class="hallcontent"></div>';
 			echo '</div>';
@@ -166,7 +185,24 @@ $bgs[1] = 'Да';
 			})
 			.done(function( msg ) {
 				if(msg == 'yes'){
-				get_hall(hallid);
+				get_hall(curmenu());
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+	
+	}
+	
+	
+		function add_chiar(fromtabid, totabid){
+	 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'addchiar', fromtabid: fromtabid, totabid: totabid}
+			})
+			.done(function( msg ) {
+				if(msg == 'yes'){
+				get_hall(curmenu());
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -175,6 +211,46 @@ $bgs[1] = 'Да';
 	}
 	
 
+	
+		
+	function remove_table(hallid,tabid){
+	 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'removetable', hallid:hallid, tabid: tabid}
+			})
+			.done(function( msg ) {
+				if(msg == 'yes'){
+				get_hall(curmenu());
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+
+	}
+	
+	
+	
+	function remove_chiar(tabid){
+	 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'removechiar', tabid: tabid}
+			})
+			.done(function( msg ) {
+				if(msg == 'yes'){
+				get_hall(curmenu());
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+	}
+
+	
+	
+	
+	
+	
 	function change_table(hallid,tabid,persons,ntop,nleft){
 
 	 		$.ajax({
@@ -203,7 +279,9 @@ $bgs[1] = 'Да';
 			data: { operation: 'gethall', hallid: hallid}
 			})
 			.done(function( msg ) {
-				$("#hallcontent-"+hallid).html(msg);
+				$("#hallcontent-"+hallid).html(msg);//закачали хтмл
+				
+				//присвоение дрэг и дроп
 				$(".newchiar").draggable({
 				helper: 'clone',
 				revert:"invalid",
@@ -213,11 +291,11 @@ $bgs[1] = 'Да';
 				helper: 'clone',
 				revert:"invalid"
 				});
-				$(".trash").droppable({  tolerance : 'touch', accept : '.table,.chiar', drop: deleteelm});
+				$(".trash").droppable({  tolerance : 'touch', accept : '.table,.chiar', drop: totrash});
 
 				$("#hallcontent-"+hallid+" .hallplace").droppable({  tolerance : 'touch',accept : '.newtable, .table',  drop: addtable});
 				$("#hallcontent-"+hallid+" .table").draggable({ 
-					grid:[ 20, 20 ],
+					grid:[ 15, 15 ],
 					scroll:false, 
 					snap:"#hallplace-"+hallid,
 					revert:"invalid",
@@ -234,6 +312,7 @@ $bgs[1] = 'Да';
 				});
 
 
+				//расстановка столов по координатам
 				$("#hallcontent-"+hallid+" .table").each(function()
 					{
 					ntop = parseInt($(this).attr('top'));
@@ -242,10 +321,107 @@ $bgs[1] = 'Да';
 					pleft = $(this).parent().offset().left;
 					
 				$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
-				
-				
-					
+									
 					});
+					
+					
+					
+				// расстановка стульев вокруг столов
+				
+					$("#hallcontent-"+hallid+" .table .chiar").each(function()
+					{
+						
+							if(!$(this).parent().hasClass("left-top-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("left-top-ok");
+								$(this).addClass("left-top");
+								$(this).addClass("placed");
+							}
+							
+							if(!$(this).parent().hasClass("left-bottom-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("left-bottom-ok");
+								$(this).addClass("left-bottom");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("right-top-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("right-top-ok");
+								$(this).addClass("right-top");
+								$(this).addClass("placed");
+							}
+							
+							if(!$(this).parent().hasClass("right-bottom-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("right-bottom-ok");
+								$(this).addClass("right-bottom");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("top-left-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("top-left-ok");
+								$(this).addClass("top-left");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("top-right-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("top-right-ok");
+								$(this).addClass("top-right");
+								$(this).addClass("placed");
+							}
+
+
+							if(!$(this).parent().hasClass("bottom-left-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("bottom-left-ok");
+								$(this).addClass("bottom-left");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("bottom-right-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("bottom-right-ok");
+								$(this).addClass("bottom-right");
+								$(this).addClass("placed");
+							}
+
+							if(!$(this).parent().hasClass("top-left-corner-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("top-left-corner-ok");
+								$(this).addClass("top-left-corner");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("bottom-left-corner-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("bottom-left-corner-ok");
+								$(this).addClass("bottom-left-corner");
+								$(this).addClass("placed");
+							}
+
+							if(!$(this).parent().hasClass("top-right-corner-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("top-right-corner-ok");
+								$(this).addClass("top-right-corner");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("bottom-right-corner-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("bottom-right-corner-ok");
+								$(this).addClass("bottom-right-corner");
+								$(this).addClass("placed");
+							}
+
+
+					});
+
+				
+				
+				
 				normal_height();
 			});
 	
@@ -253,29 +429,39 @@ $bgs[1] = 'Да';
 	
 	
 	function addchiar( event, ui ) {
-		alert(ui.draggable.attr('tabid'));
-		hallid = $(this).attr('hallid');
-		tabid = $(this).attr('id');
-		persons = $(this).attr('tabpersons');
-		alert(persons);
-		//change_table(hallid, tabid, persons, ntop, nleft);
- 	}
-		function addtable( event, ui ) {
-		alert(ui.draggable.attr('tabid'));
-		hallid = $(this).attr('hallid');
-		tabid = $(this).attr('id');
-		persons = $(this).attr('tabpersons');
-		alert(persons);
-		//change_table(hallid, tabid, persons, ntop, nleft);
- 	}
-	
-	
-		function deleteelm( event, ui ) {
-		alert(ui.draggable.attr('tabid'));
-		alert(ui.draggable.attr('ischiar'));
+		fromtabid = ui.draggable.attr('tabid');
 
-		//change_table(hallid, tabid, persons, ntop, nleft);
+		totabid = $(this).attr('id');
+		totabid = totabid.substr(5);
+
+		add_chiar(fromtabid, totabid);
  	}
+	
+	
+	function addtable( event, ui ) {
+		tabid = ui.draggable.attr('tabid');
+		hallid = $(this).attr('hallid');
+		//alert(tabid +'_'+hallid);
+		if(tabid == 0) add_table(hallid);
+ 	}
+	
+	
+	function totrash( event, ui ) {
+		tabid = ui.draggable.attr('tabid');
+		hallid = ui.draggable.attr('hallid');
+		if(ui.draggable.attr('ischiar'))
+		
+		{
+			remove_chiar(tabid);
+		} else
+		{
+			remove_table(hallid, tabid);
+		}
+		
+	}
+	
+	
+	
 	
 	function tabstop( event, ui ) {
 	var tleft = $(this).offset().left ;
