@@ -18,20 +18,65 @@ $cnt = 0;
 $cnt++;
 $class =  '';
 			$xxx =round($cnt / 2);
-				if ($cnt == $xxx*2) {$class =  ' class="second_row"';}
-
-			$output['print'] = $output['print'].'<tr'.$class.'>
+			if ($cnt == $xxx*2) {$class =  ' class="second_row"';}
+			if($items[$i]["title"])
+				{
+					$output['print'] = $output['print'].'<tr'.$class.'>
 							<td>'.$items[$i]["cnt"].'</td>
 							<td><span id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
 							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
 							<td>'.$items[$i]["price"].'</td>
 							<td><span id="dish_num'.$items[$i]["id"].'">'.$items[$i]["num"].'</span></td>
 							<td><span id="dish_cost'.$items[$i]["id"].'">'.($items[$i]["num"] * $items[$i]["price"]).'</span></td>
-							</tr>';					
+							</tr>';
+				}							
 		}
 	}
 	return $output;
 }
+
+
+
+
+
+
+function print_dishes_for_order_summary($items,$sectionid)
+{
+$output = Array();
+$output['sum'] = 0;
+$sectionid = substr($sectionid,1);
+$menuid = substr($menuid,1);
+	if ($items['count'] > 0)
+	{
+$cnt = 0;			
+		for($i=0;$i<$items['count'];$i++)
+		{	
+$cnt++;
+$class =  '';
+			$xxx =round($cnt / 2);
+			if ($cnt == $xxx*2) {$class =  ' class="second_row"';}
+			if($items[$i]["title"])
+				{
+					$output['print'] = $output['print'].'<tr'.$class.'>
+							<td>'.$items[$i]["cnt"].'</td>
+							<td><span id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
+							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
+							<td>'.$items[$i]["price"].'</td>
+							<td><span id="dish_num'.$items[$i]["id"].'">'.$items[$i]["num"].'</span></td>
+							<td><span id="dish_cost'.$items[$i]["id"].'">'.($items[$i]["num"] * $items[$i]["price"]).'</span></td>
+							<td><span id="dish_note'.$items[$i]["id"].'">'.$items[$i]["note"].'</span></td>
+							</tr>';
+				}							
+		}
+	}
+	return $output;
+}
+
+
+
+
+
+
 
 function dishes_in_section_by_order($order_id,$menu_section,$cnt)
 {
@@ -79,6 +124,45 @@ $dish['count'] = 0;
 		}
 return $dish;
 }
+
+
+function dishes_in_section_for_summary($menu_section,$dishes,$cnt)
+{
+$dish = Array();
+$dish['count'] = 0;
+		$tsql01 = "SELECT * FROM `dishes` WHERE `menu_section` = ".$menu_section."  AND `isactive` = '1' ;";
+		$rezult01 = mysql_query($tsql01);
+
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+			while ($rows01 = mysql_fetch_array($rezult01)) 
+			{	
+				foreach($dishes as $j=>$dd)
+				{
+				if ($rows01['id'] == $j)
+				{
+
+					$dish['sum'] = 	$dish['sum'] + ($dd["quant"] * $rows01['price']);
+		
+					$dish[$dish['count']]['id'] = $rows01['id'];
+					$dish[$dish['count']]['title'] = $rows01['title'];
+					$dish[$dish['count']]['description'] = $rows01['description'];
+					$dish[$dish['count']]['num'] = $dd["quant"];
+					$dish[$dish['count']]['note'] = $dd["note"];
+					$dish[$dish['count']]['weight'] = $rows01['weight'];
+					$dish[$dish['count']]['price'] = $rows01['price'];
+					$dish[$dish['count']]['cnt'] = $cnt + $dish['count'] +1;
+					$dish['count'] ++;
+				}
+				}
+			}
+		}
+return $dish;
+}
+
+
+
+
 
 function dishes_in_section_by_menu($menu_id,$menu_section)
 {
