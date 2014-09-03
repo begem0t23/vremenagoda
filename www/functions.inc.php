@@ -276,6 +276,7 @@ $body_out = $body_out.'
 	$sections[$rows0['id']]['id'] = '_'.$rows0['id']; //непонял почему но без _ не работает
 	
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
+	$sections[$rows0['id']]['isdrink'] = $rows0['isdrink'];
 	
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
@@ -297,8 +298,11 @@ $body_out = $body_out.'
 	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] ++;
-	$sections[$rows0['id']][$rows_1['id']]['id'] = '_'.$rows_1['id'];
-	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name']; //непонял почему но без _ не работает
+	$sections[$rows0['id']][$rows_1['id']]['id'] = '_'.$rows_1['id']; //непонял почему но без _ не работает
+	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name'];
+
+	$sections[$rows0['id']][$rows_1['id']]['isdrink'] = $rows_1['isdrink']; 
+
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['sum'] = $sections[$rows0['id']][$rows_1['id']]['sum'] + $zzz['sum'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
@@ -323,6 +327,9 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']]['dishes'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['id'] = '_'.$rows_2['id']; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
+	
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['isdrink'] = $rows_2['isdrink'];	
+	
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sum'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sum'] + $zzz['sum'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
@@ -345,6 +352,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 		if ($sections[$num]['dishes'] > 0) 
 		{	
 			$level0_sum[$sections[$num]['id']] = $sections[$num]['sum']; 
+			$sum[$sections[$num]['isdrink']] = $sum[$sections[$num]['isdrink']] + $sections[$num]['sum']; 
 			$body_out = $body_out.'<tbody><tr><th  colspan="'.($cs1 + $cs2).'" class="level_0">'.chr(10);			
 			$body_out = $body_out.$sections[$num]['name'].''.chr(10);
 			$body_out = $body_out.'</th></tr></tbody>'.chr(10);
@@ -438,6 +446,8 @@ $service_sum =0;
 $service_discont = 0;
 $eat_sum = $level0_sum['_59'] + $level0_sum['_60'];
 $drink_sum = $level0_sum['_61'] + $level0_sum['_19'];
+$eat_sum = $sum[0] ;
+$drink_sum = $sum[1];
 
 		$tsql011 = "SELECT s.id, s.name,    so.price ,  so.discont , so.num, so.comment FROM services s,  services_in_orders so  WHERE  so.orderid=".$zid." AND so.serviceid = s.id   ;";
 		$rezult011 = mysql_query($tsql011);
@@ -500,7 +510,7 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 
 //////////////////////////////////
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Итого:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Итоги:</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
@@ -514,6 +524,11 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -1 ).'" class="lite_summary_section">Итого по Блюдам:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="1" class="lite_summary_section">'.($eat_sum - $eat_discont).'</th>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая стоимость по напиткам</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$drink_sum.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -524,6 +539,11 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 		$body_out = $body_out.'</tr>'.chr(10);
 		
 		
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -1 ).'" class="lite_summary_section">Итого по Напиткам:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="1" class="lite_summary_section">'.($drink_sum - $drink_discont).'</th>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
 		$body_out = $body_out.'<tr>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая стоимость по услугам</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$service_sum.'</td>'.chr(10);
@@ -532,6 +552,11 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая скидка по услугам</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$service_discont.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -1 ).'" class="lite_summary_section">Итого по Услугам:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="1" class="lite_summary_section">'.($service_sum - $service_discont).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
@@ -545,7 +570,7 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 		$body_out = $body_out.'</tr>'.chr(10);
 		
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - 1).'"  class="summary_section">ИТОГО</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - 1).'"  class="summary_section">ИТОГО:</th>'.chr(10);
 		$body_out = $body_out.'<th  colspan="1" class="summary_section">'.$summary.'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
@@ -711,6 +736,13 @@ border-spacing:0;
 	.summary_section{
 	font-size:14px;
 	 padding:10px;
+	color: #fff;
+  background-color: #189407 !important;
+ 
+  }
+ 	.lite_summary_section{
+	font-size:12px;
+	 padding:1px;
 	color: #fff;
   background-color: #189407 !important;
  

@@ -42,7 +42,6 @@
   }
   .right{float:right;}
   .trash{margin: 5px; display:block; width:70px; height: 25px; border:1px; background-color: red; position:relative; float:right;}
-  .table{width:30px; height:30px;  border:1px solid #ddd; background-color:#eee;  }
   .newtable{margin: 5px; display:block;width:44px; height:40px;  border:1px solid #ddd; background-color:#eee; position:relative; float:right;}
    .newchiar {margin: 5px; display:block; width:30px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
 

@@ -51,7 +51,37 @@
  tr.odd  td.tocalcrow{
      background-color: #ACFF7E	 !important;
   }
+   .right{float:right;}
+  .trash{margin: 5px; display:block; width:70px; height: 25px; border:1px; background-color: red; position:relative; float:right;}
+
+  .newtable{margin: 5px; display:block;width:44px; height:40px;  border:1px solid #ddd; background-color:#eee; position:relative; float:right;}
+   .newchiar {margin: 5px; display:block; width:30px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
+
+   .hallplace {display:block;  border:1px; background-color: #FFFFC0;margin:15px; }
   
+   .chiar {display:block; width:11px; height: 11px; border:1px; background-color: #AADDC0; position:absolute;}
+  
+  .left-top{left:-16px; top:1px;}
+  .left-bottom{left:-16px; bottom:1px;}
+
+  .right-top{right:-16px; top:1px;}
+  .right-bottom{right:-16px; bottom:1px;}
+
+  .top-left{left:1px; top:-16px;}
+  .top-right{right:1px; top:-16px;}
+
+  .bottom-left{left:1px; bottom:-16px;}
+  .bottom-right{right:1px; bottom:-16px;}
+
+  .top-left-corner{left:-16px; top:-16px;}
+  .top-right-corner{right:-16px; top:-16px;}
+
+  .bottom-left-corner{left:-16px; bottom:-16px;}
+  .bottom-right-corner{right:-16px; bottom:-16px;}
+  
+ 
+	.tabnum{font-size:22px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
+		
   </style>  
 
   </head>
@@ -566,24 +596,49 @@ fixednavbar();
 					spanpage1+='<input type="email" id=clientemail value="'+data[3]+'" class="form-control" placeholder="E-mail">';
 
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
-					spanpage1+='<input type="text" id=clientfrom onkeyup="" value="'+data[4]+'" class="form-control required" placeholder="откуда пришёл"></div><br>';
-
+					spanpage1+='<?php
+					$tsql2 = "select * from `client_from` ;";
+					$r_from = mysql_query($tsql2);
+					if (mysql_num_rows($r_from)>0)
+					{	
+						echo '<select id="clientfrom2" class="form-control">' . "";
+						echo '<option value="0">Укажите откуда пришел</option>' . "";
+						?>';
+						<?php
+						while ($row_from = mysql_fetch_array($r_from))
+						{	
+						?>
+						sel = '';
+						if(data[4] == '<?php  echo $row_from["name"]; ?>') sel = ' selected="selected"';
+						spanpage1+='<option'+ sel +'<?php	
+						echo ' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
+						?>';
+						<?php
+						}
+						?>
+						spanpage1+='<?php
+						echo '<option value="999">Другое</option>' . "";
+						echo '</select>' . "";
+					}
+					?>';
+					spanpage1+='<input type="text" id="clientfrom" style="display:none;" value="'+data[4]+'" class="form-control" placeholder="Укажите откуда пришел">';
+					spanpage1+='</div><br>';
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
 					//spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
-					spanpage1+='<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
+					spanpage1+='<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent"  onchange="activatehall();" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
 					spanpage1+='<input data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
-					spanpage1+='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей">';
+					spanpage1+='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей" onchange="activatehall();">';
 					spanpage1+='</div>';
 
 					spanpage1+='<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
 					spanpage1+='<?php
-					$tsql = "select * from hall;";
+					$tsql = "select * from hall where `isactive` = '1';";
 					$r_hall = mysql_query($tsql);
 					if (mysql_num_rows($r_hall)>0)
 					{	
-						echo '<select id="hall" class="form-control">' . "";
-						echo '<option value="0" checked>выберите зал</option>' . "";
+						echo '<select id="hall" class="form-control" disabled>' . "";
+						echo '<option value="0" checked>Укажите дату и количество гостей</option>' . "";
 						while ($row_hall = mysql_fetch_array($r_hall))
 						{	
 							echo '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
@@ -592,6 +647,7 @@ fixednavbar();
 					}
 					?>';
 					spanpage1+='</div><br>';
+					spanpage1+='<br><div  id="selectedhall"></div>';
 					
 					spanpage1+='<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
 					spanpage1+='</form>';
@@ -624,6 +680,7 @@ fixednavbar();
 					$.removeCookie("hall");
 					$.removeCookie("dishes");
 					$.removeCookie("service");
+					$.removeCookie("tables");
 				}
 			}
 		}		
@@ -659,7 +716,7 @@ fixednavbar();
 			{
 				if (typeof $.cookie("clientname") != 'undefined')
 				{
-					//alert($.cookie("clientid"));
+					
 					$("body #clientid").val($.cookie("clientid"));
 					$("body #clientfrom").val($.cookie("clientfrom"));
 					$("body #clientphone").val($.cookie("clientphone"));
@@ -668,8 +725,17 @@ fixednavbar();
 					$("body #timeevent").val($.cookie("timeevent"));
 					$("body #guestcount").val($.cookie("guestcount"));
 					$("body #hall").val($.cookie("hall"));
+
+					if($.cookie("hall") > 0)
+					{	
+						$("body #hall").removeAttr("disabled");
+						get_selected_hall($.cookie("hall"));
+					}
 				}
+				
+				
 			}
+			
 			if (curpage==2)
 			{
 				/*$( "button[name=adddish]" ).each(function( index ) {
@@ -742,6 +808,7 @@ fixednavbar();
 				additional_pars["hh"] = $.cookie("hall");	
 				additional_pars["dd"] = $.cookie("dishes");	
 				additional_pars["ss"] = $.cookie("service");
+				additional_pars["tt"] = $.cookie("tables");
 				
 				$.post("_summary.php", additional_pars,
 				function(){
@@ -826,7 +893,26 @@ fixednavbar();
 			$('#tabs').smartTab({selected: 1});		
 
 			setcountguestfields();
-			$( document ).on( "change", "select[id=hall]", function() {			
+				$( document ).on( "change", "#clientfrom", function() {	
+		
+			});
+			
+			
+				$( document ).on( "change", "#clientfrom2", function() {	
+					$("#clientfrom").hide();
+		
+					if ($("#clientfrom2").val() == '999')
+						{
+							$("#clientfrom").show();
+							$("#clientfrom").val("");
+						} else
+						{
+							$("#clientfrom").val($("#clientfrom2 option:selected").text());
+							$("#clientfrom").hide();
+						}
+			
+			});
+			$( document ).on( "change", "#hall", function() {			
 			//$("#hall").on("change", function() {
 				//alert($("#hall").val());
 				$.get("_checkhall.php", {id:$("#hall").val(), Rand: "<?php echo rand(); ?>"},
@@ -844,6 +930,13 @@ fixednavbar();
 								//console.log($("#guestcount").val());
 								//console.log(data[1]);
 								alert("Выбранный зал не подходит для данного количества гостей");
+								$("#hall option[value=0]").attr('selected','selected');
+							
+								
+							} else 
+							{
+								get_selected_hall($("#hall").val());
+							
 							}
 						}
 					}
@@ -1102,7 +1195,7 @@ fixednavbar();
 			});			
 		
 
-
+	
 		
 			
 			$( document ).on( "click", "button[name=addserv]", function() {
@@ -1166,6 +1259,64 @@ fixednavbar();
 				}
 				//console.log($.cookie("service"));
 			});			
+			
+			
+	$( document ).on( "click", ".tabnum", function() {
+		tabid = $(this).parent().attr("tabid");
+	
+
+	tabnum = $(this).html();
+
+			if($(this).parent().hasClass("btn-success"))
+			{
+					$(this).parent().removeClass("btn-success");
+					$(this).parent().addClass("btn-primary");
+
+					var tables="";
+					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
+					if (tables)
+					{
+						var taball = $.parseJSON(tables);
+					}
+					else
+					{
+						var taball = {};
+					}
+					var element = {};
+					element = ({tabid:tabid, tabnum:tabnum});
+					taball[tabid] = element ;
+					tables = $.toJSON(taball);
+					$.cookie("tables", tables,{ expires: 1, path: '/' });
+
+				
+			} else 
+			{
+				
+				if($(this).parent().hasClass("btn-primary"))
+				{
+					$(this).parent().addClass("btn-success");
+					$(this).parent().removeClass("btn-primary");
+
+					var tables="";
+					
+					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
+					if (tables) {
+						var taball = $.parseJSON(tables);
+						delete taball[tabid];
+						tables = $.toJSON(taball);
+						$.cookie("tables", tables,{ expires: 1, path: '/' });				
+					}
+				}
+			}
+	});
+			
+			
+			
+			
+			
+			
+			
+			
 			
 		$(window).bind('beforeunload', function(){
 		  if (typeof $.cookie("clientname") != 'undefined')
@@ -1250,6 +1401,7 @@ fixednavbar();
 						additional_pars["hh"] = $.cookie("hall");	
 						additional_pars["dd"] = $.cookie("dishes");	
 						additional_pars["ss"] = $.cookie("service");
+						additional_pars["tt"] = $.cookie("tables");
 						additional_pars["aa"] = $("#avans").val();
 						additional_pars["rand"] = "<?php echo rand(); ?>";
 						$.post("_dosaveorder.php", additional_pars,
@@ -1274,6 +1426,7 @@ fixednavbar();
 								$.removeCookie("hall");
 								$.removeCookie("dishes");
 								$.removeCookie("service");							
+								$.removeCookie("tables");							
 							}
 							else
 							{
@@ -1296,6 +1449,175 @@ fixednavbar();
 				var nn = noty({text: 'Название клиента не может быть пустым', type: 'error', timeout:5000, onClick: function(){delete nn;}});
 			}
 		}
+		
+		function activatehall(){
+edate1 = $("#dateevent").val() == "__.__.____";
+edate2 = $("#dateevent").val() == "";
+eguest = $("#guestcount").val() == "";
+
+			if( !edate1  & !edate2 & !eguest  )
+			{
+				$("#hall").removeAttr("disabled");
+				$("#hall option[value=0]").text("Выберите зал");
+			}else
+			{
+				$("#hall option[value=0]").attr('selected','selected');
+				$("#hall").attr("disabled","disabled");
+				$("#hall option[value=0]").text("Укажите дату и количество гостей");
+
+			}
+		}
+		
+		
+		function get_selected_hall(hallid)
+		{
+
+	  		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'gethall', hallid: hallid, fororder:'yes'}
+			})
+			.done(function( msg ) {
+				$("#selectedhall").html(msg);//закачали хтмл
+				
+
+
+				//расстановка столов по координатам
+				$("#selectedhall .table").each(function()
+					{
+					ntop = parseInt($(this).attr('top'));
+					nleft = parseInt($(this).attr('left'));
+					ptop = $(this).parent().offset().top;
+					pleft = $(this).parent().offset().left;
+					
+				$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
+						
+					});
+					
+					
+					
+				// расстановка стульев вокруг столов
+				
+					$("#selectedhall .table .chiar").each(function()
+					{
+						
+							if(!$(this).parent().hasClass("left-top-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("left-top-ok");
+								$(this).addClass("left-top");
+								$(this).addClass("placed");
+							}
+							
+							if(!$(this).parent().hasClass("left-bottom-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("left-bottom-ok");
+								$(this).addClass("left-bottom");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("right-top-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("right-top-ok");
+								$(this).addClass("right-top");
+								$(this).addClass("placed");
+							}
+							
+							if(!$(this).parent().hasClass("right-bottom-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("right-bottom-ok");
+								$(this).addClass("right-bottom");
+								$(this).addClass("placed");
+							}
+						
+
+							if(!$(this).parent().hasClass("bottom-left-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("bottom-left-ok");
+								$(this).addClass("bottom-left");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("bottom-right-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("bottom-right-ok");
+								$(this).addClass("bottom-right");
+								$(this).addClass("placed");
+							}
+
+							if(!$(this).parent().hasClass("top-left-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("top-left-ok");
+								$(this).addClass("top-left");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("top-right-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("top-right-ok");
+								$(this).addClass("top-right");
+								$(this).addClass("placed");
+							}
+
+
+							if(!$(this).parent().hasClass("top-left-corner-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("top-left-corner-ok");
+								$(this).addClass("top-left-corner");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("bottom-left-corner-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("bottom-left-corner-ok");
+								$(this).addClass("bottom-left-corner");
+								$(this).addClass("placed");
+							}
+
+							if(!$(this).parent().hasClass("top-right-corner-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("top-right-corner-ok");
+								$(this).addClass("top-right-corner");
+								$(this).addClass("placed");
+							}
+						
+							if(!$(this).parent().hasClass("bottom-right-corner-ok") & !$(this).hasClass("placed"))
+							{
+								$(this).parent().addClass("bottom-right-corner-ok");
+								$(this).addClass("bottom-right-corner");
+								$(this).addClass("placed");
+							}
+
+
+					});
+
+									tables = "";
+				if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
+				if (tables) {
+					var taball = $.parseJSON(tables);
+					$.each(taball, function(index, value) 
+					{
+						console.log(index + " "+ value['tabnum']);
+						if (index)
+						{
+
+							$("#table"+index).removeClass("btn-success");
+							$("#table"+index).addClass("btn-primary");
+
+						}					
+					});
+				}
+				
+	
+			});
+	
+	
+	
+
+
+				
+	}
+		
+		
 	</script>
   </body>
 </html>

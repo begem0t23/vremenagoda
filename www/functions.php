@@ -9,6 +9,7 @@ if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 if ($_POST['operation'] == 'gethall') 
 {
 $hallid = $_POST['hallid'];
+$fororder = $_POST['fororder'];
 		header('Content-Type: text/html; charset=utf-8');
 
 		$tsql2 = "SELECT * FROM `hall` WHERE `id` = '".$hallid."';";
@@ -20,23 +21,31 @@ $hallid = $_POST['hallid'];
 				$hallwidth = $row_tab['width'];
 				$hallheight = $row_tab['height'];
 			}
-				
 
-
-
-			$ech = $ech.'<div id="hallplace-'.$hallid.'" class="hallplace" hallid="'.$hallid.'" style="width:'.$hallwidth.'; height:'.$hallheight.'; ">';
+			$ech = $ech.'<div  id="hallplace-'.$hallid.'" class="hallplace" hallid="'.$hallid.'" style="width:'.$hallwidth.'px; height:'.$hallheight.'px; ">';
 
 			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `hallid` = '".$hallid."' and `istable` = '1' ORDER BY `num` ASC;";
 			$rez_tab = mysql_query($tsql2);
 			if (mysql_num_rows($rez_tab)>0)
 			{
 			
-
 			$tabquant = mysql_num_rows($rez_tab);
 				while ($row_tab = mysql_fetch_array($rez_tab))
 				{
+			$inorder='btn-success';	
+			
+			if($fororder == 'yes')
+			{
+				$tsql02 = "SELECT * FROM `tables_in_orders` WHERE `tableid` = '".$row_tab["id"]."';";
+				$rez_tab0 = mysql_query($tsql02);
+				if (mysql_num_rows($rez_tab0)>0)
+				{
+					$inorder = 'btn-danger';
+				}
+			}
+			
 				$sumpersons = $sumpersons + $row_tab["persons"];
-					$ech = $ech.'<div class="table btn" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'">';
+					$ech = $ech.'<div class="table btn '.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; ">';
 					
 					for($i=0;$i<$row_tab["persons"];$i++)
 					{

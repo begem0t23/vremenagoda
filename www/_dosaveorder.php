@@ -29,6 +29,7 @@ $hh = @$_POST["hh"];
 $dd = @$_POST["dd"];
 $ss = @$_POST["ss"];
 $aa = @$_POST["aa"];
+$tt = @$_POST["tt"];
 
 //die("ERR:".$ci);
 
@@ -98,9 +99,9 @@ if ($oi>0) {
 		{
 			$row_dishes = mysql_fetch_array($r_dishes);
 			$tsql = "insert into dishes_in_orders (orderid,dishid,price,num,note) values (".mysql_real_escape_string($oi).",
-			".mysql_real_escape_string($row_dishes["id"]).",
-			".mysql_real_escape_string($row_dishes["price"]).",
-			".mysql_real_escape_string($dd["quant"]).",
+			'".mysql_real_escape_string($row_dishes["id"])."',
+			'".mysql_real_escape_string($row_dishes["price"])."',
+			'".mysql_real_escape_string($dd["quant"])."',
 			'".mysql_real_escape_string($dd["note"])."');";
 			$r_order = mysql_query($tsql);	
 			if (mysql_error()) die("ERR:5=" . mysql_error());			
@@ -124,10 +125,10 @@ if ($oi>0) {
 		{
 			$row_services = mysql_fetch_array($r_services);
 			$tsql = "insert into services_in_orders (orderid,serviceid,price,discont,num,comment) values (".mysql_real_escape_string($oi).",
-			".mysql_real_escape_string($row_services["id"]).",
-			".mysql_real_escape_string($ss["priceserv"]).",
-			".mysql_real_escape_string($ss["discont"]).",
-			".mysql_real_escape_string($ss["quantserv"]).",
+			'".mysql_real_escape_string($row_services["id"])."',
+			'".mysql_real_escape_string($ss["priceserv"])."',
+			'".mysql_real_escape_string($ss["discont"])."',
+			'".mysql_real_escape_string($ss["quantserv"])."',
 			'".mysql_real_escape_string($ss["comment"])."');";		
 
 			$r_order = mysql_query($tsql);			
@@ -153,6 +154,23 @@ if ($oi>0) {
 			die("ERR:6=не найден идентификатор услуги");
 		}
 	}
+	
+
+
+	$tables = json_decode($tt,true);
+		
+	foreach($tables as $i=>$tt)
+	{
+	
+			$tsql = "insert into tables_in_orders (orderid,tableid) values ('".$oi."','".$i."');";		
+
+			$r_order = mysql_query($tsql);			
+			if (mysql_error()) die("ERR:8=" .$tsql);			
+
+
+	}
+
+	
 	echo "OK:".$oi;
 }
 ?>
