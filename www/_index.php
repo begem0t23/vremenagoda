@@ -132,10 +132,38 @@ $(function(){
 			location.href ="/?r=<?echo rand();?>";
 		});
 
-  
+     dialog = $( "#sendemail-form" ).dialog({
+      autoOpen: false,
+      height: 350,
+      width: 400,
+      modal: true,
+      buttons: {
+        "Сохранить": sendemail,
+        "Отмена": function() {
+          dialog.dialog( "close" );
+        }
+      },
+      close: function() {
+        form[ 0 ].reset();
+        allFields.removeClass( "ui-state-error" );
+      }
+    });
+ 
+    form = dialog.find( "form" ).on( "submit", function( event ) {
+      event.preventDefault();
+      addUser();
+    });
 });
 
 </script>	
     <!-- Placed at the end of the document so the pages load faster -->
+	<div id="sendemail-form" title="Заполните информацию по пользователю.">
+  <p class="validateTips">Отправить отчет по E-mail.</p>
+  <form>
+	<input type="text" id="email" placeholder="Email Клиента" class="form-control" value="">
+	<input type="text" id="name" placeholder="Имя Клиента" class="form-control" value="">
+	<textarea rows = "20" placeholder="Текст Сообщения" class="form-control"></textarea>
+ </form>
+</div>
   </body>
 </html>

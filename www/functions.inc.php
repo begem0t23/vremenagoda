@@ -137,22 +137,24 @@ $dish['count'] = 0;
 		{
 			while ($rows01 = mysql_fetch_array($rezult01)) 
 			{	
+			if (count($dishes) > 0){
 				foreach($dishes as $j=>$dd)
 				{
-				if ($rows01['id'] == $j)
-				{
+					if ($rows01['id'] == $j)
+					{
 
-					$dish['sum'] = 	$dish['sum'] + ($dd["quant"] * $rows01['price']);
+						$dish['sum'] = 	$dish['sum'] + ($dd["quant"] * $rows01['price']);
 		
-					$dish[$dish['count']]['id'] = $rows01['id'];
-					$dish[$dish['count']]['title'] = $rows01['title'];
-					$dish[$dish['count']]['description'] = $rows01['description'];
-					$dish[$dish['count']]['num'] = $dd["quant"];
-					$dish[$dish['count']]['note'] = $dd["note"];
-					$dish[$dish['count']]['weight'] = $rows01['weight'];
-					$dish[$dish['count']]['price'] = $rows01['price'];
-					$dish[$dish['count']]['cnt'] = $cnt + $dish['count'] +1;
-					$dish['count'] ++;
+						$dish[$dish['count']]['id'] = $rows01['id'];
+						$dish[$dish['count']]['title'] = $rows01['title'];
+						$dish[$dish['count']]['description'] = $rows01['description'];
+						$dish[$dish['count']]['num'] = $dd["quant"];
+							$dish[$dish['count']]['note'] = $dd["note"];
+						$dish[$dish['count']]['weight'] = $rows01['weight'];
+						$dish[$dish['count']]['price'] = $rows01['price'];
+						$dish[$dish['count']]['cnt'] = $cnt + $dish['count'] +1;
+						$dish['count'] ++;
+					}
 				}
 				}
 			}
@@ -257,7 +259,7 @@ $tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.e
 		 FROM orders o, users u, clients c, hall h
 		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id AND o.hallid = h.id";
 		 
-$tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, o.hallid, o.guestcount
+$tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, o.hallid, o.guestcount, o.type, o.comment
 		 FROM orders o, users u, clients c
 		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id";
 		 
@@ -321,11 +323,16 @@ $rows = mysql_fetch_array($rezult);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.$cs1.'">Комментарий по размещению</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'"></td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">Тип мероприятия</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['type'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">Комментарий по размещению</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['comment'].'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr ">'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по меню</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
@@ -901,7 +908,7 @@ $button2 = '<form action="_print.php" method="POST" target="_blank">
 			</form>';
 		
 $button3 = '<form action="#" method="POST" >
-			<button class = "btn btn-primary" type="submit"  title="Отправить отчет по заказу клиенту"><span class="glyphicon glyphicon-envelope"></span></button>
+			<button name="sendemail" onclick="openemail();" class = "btn btn-primary" type="submit"  title="Отправить отчет по заказу клиенту"><span class="glyphicon glyphicon-envelope"></span></button>
 			<textarea name="email" id="'.$zid.'"  cols="0" rows="0" style="display:none;">
 			'.$html1.$header.$title.$style.$table.$html2.'
 			</textarea>

@@ -82,6 +82,7 @@
  
 	.tabnum{font-size:22px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
 		
+		#weightcalc {position:fixed; top:420px; left:60px;}
   </style>  
 
   </head>
@@ -132,7 +133,9 @@ fixednavbar();
 		
 		<div id=spanpage2 style="visibility: hidden">
 		<form id=frm2 role="form" data-toggle="validator">
-<?php		
+
+		<button id="weightcalc" class="btn btn-default">Общий вес: 0г<br>Вес на человека: 0г</button>
+		<?php		
 	$tsql = "select * from menus where isactive ='1';";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
@@ -161,7 +164,7 @@ fixednavbar();
 	{	
 
 	while ($row_menutype = mysql_fetch_array($r_menutype))
-		{
+		{ 
 			echo '<div id="menu-'.$row_menutype["id"].'"  style="width: 100%;">';
 
 				echo '<table class = "tablesorter order" style="width: 100%;">';
@@ -409,7 +412,19 @@ fixednavbar();
 
 <div id=resultform>
 </div>
-		
+<br>		
+<div class="input-group">
+  <span class="input-group-addon"><span ></span></span>
+  <input type="text" id="type" placeholder="тип мероприятия" class="form-control">
+  <span class="input-group-addon"></span>
+</div>
+<br>		
+<div class="input-group">
+  <span class="input-group-addon"><span class=rouble></span></span>
+  <textarea id="comment" placeholder="Комментарий по проведению" class="form-control"></textarea>
+  <span class="input-group-addon"></span>
+</div>
+<br>		
 <div class="input-group">
   <span class="input-group-addon"><span class=rouble>Р</span></span>
   <input type="text" id=avans placeholder="Задаток" class="form-control">
@@ -1426,7 +1441,8 @@ fixednavbar();
 								$.removeCookie("hall");
 								$.removeCookie("dishes");
 								$.removeCookie("service");							
-								$.removeCookie("tables");							
+								$.removeCookie("tables");	
+								location.href="?view_zakazid="+data[1];
 							}
 							else
 							{
