@@ -1061,7 +1061,7 @@ $sectionid = $_POST['sectionid'];
 					{
 					$sid = substr($val[$num1]['id'],1);
 					$selected = '';
-					if ($sid == $sectionid) {$selected = 'selected = "selected"'; }
+					if ($sectionid==$val[$num1]['id']) {$selected = 'selected = "selected"'; }
 						echo '<option value="'.$sid.'"  class="level_1" '.$selected.'>---'.$val[$num1]['name'].'</option>'.chr(10);
 
 						foreach ($val1 as $num2 => $val2) 
@@ -1071,7 +1071,7 @@ $sectionid = $_POST['sectionid'];
 							{
 							$sid = substr($val1[$num2]['id'],1);
 							$selected = '';
-							if ($sid == $sectionid) {$selected = 'selected = "selected"'; }
+							if ($sectionid == $val1[$num2]['id']) {$selected = 'selected = "selected"'; }
 							echo '<option value="'.$sid.'"  class="level_2" '.$selected.'>-------'.$val1[$num2]['name'].'</option>'.chr(10);
 							
 							}
@@ -1444,6 +1444,8 @@ if($_POST['operation'] == 'printmenutree')
 		$isdrink[1][0] = 'Напитков';
 		$isdrink[0][1] = 'Блюда';
 		$isdrink[1][1] = 'Напитки';
+		$isdrink[0][2] = 'Блюдо';
+		$isdrink[1][2] = 'Напиток';
 	
 	
 	$tsql = "select * from menus where isactive='1';";
@@ -1451,12 +1453,13 @@ if($_POST['operation'] == 'printmenutree')
 	if (mysql_num_rows($r_menutype)>0)
 	{
 header('Content-Type: text/html; charset=utf-8');	
-
+if ($_POST['typetree'] == 'dishes' OR $_POST['typetree'] == 'menu')
+{
 echo '<div class="btn-group" >
   <button  name="viewfull" onClick="viewtree(1);" type="button" class="btn btn-primary ">Развернуть список</button>
   <button  name="viewsect" onClick="viewtree(0);" type="button" class="btn btn-primary">Свернуть список</button>
 </div>'.chr(10);
-
+}
 if ($_POST['typetree'] == 'dishes')
 {
 echo '<button class=" btn btn-primary" type="button" name="editdish" id="0" title="Создать блюдо">Создать новое блюдо</button>';
@@ -1644,7 +1647,11 @@ echo '<br><br>
 					echo '<textarea style="display:none;" id="sectiontitle'.$val[$num1]['id'].'">'.$val[$num1]['name'].'</textarea>'.chr(10);
 					if ($_POST['typetree'] == 'menu')
 					{
-						echo  '<button class="level_1 btn btn-primary" type="button" name="adddish"  id="adddish'.$row_menutype["id"].$val[$num1]['id'].'" title="Добавть блюда в раздел">Добавить '.$isdrink[$val[$num1]['isdrink']][1].'</button>'.chr(10);
+						echo  '<button class="level_1 btn btn-primary" type="button" name="adddish"  id="adddish'.$row_menutype["id"].$val[$num1]['id'].'" title="Добавть блюда в раздел">Добавить '.$isdrink[$val[$num1]['isdrink']][2].'</button>'.chr(10);
+					}
+					if ($_POST['typetree'] == 'dishes')
+					{
+						echo  '<button class="level_1 btn btn-primary" type="button" secid="'.$val[$num1]['id'].'" name="editdish"  id="editdish'.$row_menutype["id"].$val[$num1]['id'].'" title="Создать в этом разделе">Создать '.$isdrink[$val[$num1]['isdrink']][2].'</button>'.chr(10);
 					}
 					if ($_POST['typetree'] == 'sections')
 					{
@@ -1686,6 +1693,10 @@ echo '<br><br>
 							{
 								echo  '<button class="level_2 btn btn-primary" type="button" name="adddish" id="adddish'.$row_menutype["id"].$val1[$num2]['id'].'" title="Добавть блюда в раздел">Добавить '.$isdrink[$val1[$num2]['isdrink']][1].'</button>'.chr(10);
 							}
+					if ($_POST['typetree'] == 'dishes')
+					{
+						echo  '<button class="level_2 btn btn-primary" type="button" secid="'.$val1[$num2]['id'].'"  name="editdish"  id="editdish'.$row_menutype["id"].$val1[$num2]['id'].'" title="Создать в этом разделе">Создать '.$isdrink[$val1[$num2]['isdrink']][2].'</button>'.chr(10);
+					}
 							if ($_POST['typetree'] == 'sections')
 							{
 								echo '<button class="level_2 btn btn-primary" type="button" isdrink="'.$val1[$num2]['isdrink'].'" name="editsection" sectionid="'.$val1[$num2]['id'].'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);

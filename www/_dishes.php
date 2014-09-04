@@ -699,10 +699,10 @@ $('#tabs').smartTab({selected: 0});
 	$( document ).on( "click", "button[name=editdish]", function() {
 				dishid = $(this).attr("id");
 				menuid = $(this).attr("menuid");
-				sectionid = $(this).attr("sectionid");
+				sectionid = $(this).attr("secid");
 				get_edit_dish_form(dishid, menuid, sectionid);
-			dialog2.dialog( "close" );
-				$( ".ui-dialog" ).css("margin-top", "70px");
+				//dialog2.dialog( "close" );
+				//$( ".ui-dialog" ).css("margin-top", "70px");
 
 				dialog3.dialog( "open" );
     });

@@ -230,6 +230,10 @@ $menuid = substr($menuid,1);
 			{
 				echo '<button class="btn btn-primary" type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить блюдо из меню">Убрать&nbsp;из&nbsp;меню</button>';
 			}
+			if ($typetree == 'dishes')
+			{
+				echo '<button class="btn btn-default" type="button" name="editdish" menuid="'.$menuid.'" secid="'.$sectionid.'" id="editdish'.$items[$i]["id"].'" class="edit" title="Редактировать">Редактировать</button>';
+			}
 			
 			echo '</td></tr>';					
 		}
