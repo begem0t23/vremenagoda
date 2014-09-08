@@ -1,6 +1,6 @@
 <?php
 
-define ("PRODUCTNAME","ВРЕМЕНА ГОДА");
+define ("PRODUCTNAME","Времена года");
 $userroles = array(1 => "guest", 2 => "operator", 5 => "manager", 8 => "director", 9 => "admin");
 $orderstatus = array(0 => "Отмена", 1 => "Новый", 2 => "В работе", 4 => "Получена предоплата", 6 => "Полная предоплата", 8 => "Выполнен");
 $paymenttypes = array(0 => "Задаток", 1 => "Перерасход");

@@ -121,7 +121,7 @@ $(function(){
 		});
 
    		$('table').delegate('button.edit', 'click' ,function(){
-			location.href ="?edit_zakazid="+$(this).closest('tr').children().first().html()+"&r=<?echo rand();?>";
+			location.href ="?edit/"+$(this).closest('tr').children().first().html()+"/";
 		});
 
     	$('table').delegate('button.events', 'click' ,function(){

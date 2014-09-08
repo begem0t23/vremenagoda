@@ -7,6 +7,12 @@ require_once("functions.inc.php");
 		header('Content-Type: text/html; charset=utf-8');
 
 $qq = @$_SERVER['QUERY_STRING'];
+
+if (strpos($qq,"/")>0)
+{
+	$q = explode("/",$qq);
+}
+
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 //die($_POST["dosend"]);
@@ -72,6 +78,10 @@ if (checklogin())
 	elseif ($qq == "events")
 	{
 		include("_events.php");
+	}
+	elseif ($qq == "edit")
+	{
+		include("_edit.php");
 	}
 	elseif ($qq == "debug")
 	{

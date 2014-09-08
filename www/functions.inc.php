@@ -137,7 +137,7 @@ $dish['count'] = 0;
 		{
 			while ($rows01 = mysql_fetch_array($rezult01)) 
 			{	
-			if (count($dishes) > 0){
+			if (count(@$dishes) > 0){
 				foreach($dishes as $j=>$dd)
 				{
 					if ($rows01['id'] == $j)
@@ -1081,6 +1081,7 @@ if (@$userroles[$_SESSION["curuserrole"]])
 function fixednavbar()
 {
 	global $userroles,$qq;
+	
 ?>
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -1089,7 +1090,9 @@ function fixednavbar()
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
           </button>
-          <a class="navbar-brand" href="#">Времена года</a>
+          <a class="navbar-brand" href="/"><?php
+		  echo PRODUCTNAME;
+		  ?></a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
