@@ -21,6 +21,7 @@ $ci = @$_POST["ci"];
 $cn = @$_POST["cn"];
 $cp = @$_POST["cp"];
 $cf = @$_POST["cf"];
+$cf4 = @$_POST["cf4"];
 $ce = @$_POST["ce"];
 $de = @$_POST["de"];
 $te = @$_POST["te"];
@@ -30,6 +31,8 @@ $dd = @$_POST["dd"];
 $ss = @$_POST["ss"];
 $aa = @$_POST["aa"];
 $tt = @$_POST["tt"];
+$tp = @$_POST["tp"];
+$cm = @$_POST["cm"];
 
 //die("ERR:".$ci);
 
@@ -54,7 +57,15 @@ if (@$ci)
 }
 else
 {
-	$tsql = "insert into clients (name,phone,email,otkuda) values('".mysql_escape_string(@$cn)."','".mysql_real_escape_string(@$_POST["cp"])."','".mysql_real_escape_string(@$_POST["ce"])."','".mysql_real_escape_string(@$_POST["cf"])."');";
+	$tsql = "insert into clients (name,phone,email,otkuda, agencyname) 
+	values(
+	'".mysql_escape_string(@$cn)."',
+	'".mysql_real_escape_string(@$_POST["cp"])."',
+	'".mysql_real_escape_string(@$_POST["ce"])."',
+	'".mysql_real_escape_string(@$_POST["cf"])."'),
+	'".mysql_real_escape_string(@$_POST["cf4"])."')
+	
+	;";
 	//die("ERR:".$tsql);
 	$r_client = mysql_query($tsql);
 	if (mysql_error()) die("ERR:8=" . mysql_error());
@@ -70,14 +81,17 @@ if (@$ci)
 {
 	$managerid = 0; $creatorid = $_SESSION["curuserid"]; $status=1;
 	if ($_SESSION["curuserrole"]==5) $managerid = $_SESSION["curuserid"]; $status=2;
-	$tsql = "insert into orders (creatorid, createdate, clientid, eventdate, eventtime, guestcount, status,managerid,hallid) 
+	$tsql = "insert into orders (creatorid, createdate, clientid, eventdate, eventtime, guestcount, status,managerid,hallid, type, comment) 
 	values(".mysql_real_escape_string($creatorid).",CURDATE(), ".mysql_real_escape_string($ci)."
 	,'".mysql_real_escape_string(@$_POST["de"])."'
 	,'".mysql_real_escape_string(@$_POST["te"])."'
 	,'".mysql_real_escape_string(@$gc)."'
 	,'".mysql_real_escape_string($status)."'
 	,'".mysql_real_escape_string(@$managerid)."'
-	,'".mysql_real_escape_string(@$_POST["hh"])."');";
+	,'".mysql_real_escape_string(@$_POST["hh"])."'
+	,'".mysql_real_escape_string(@$_POST["tp"])."'
+	,'".mysql_real_escape_string(@$_POST["cm"])."'
+	);";
 	$r_order = mysql_query($tsql);
 	$tsql = "SELECT LAST_INSERT_ID() from orders;";
 	$r_order = mysql_query($tsql);
@@ -169,6 +183,8 @@ if ($oi>0) {
 
 
 	}
+
+
 
 	
 	echo "OK:".$oi;

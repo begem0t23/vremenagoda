@@ -359,21 +359,24 @@ fixednavbar();
 		$btnclass = 'btn-default disabled';
 			$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
 			$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
+			$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].$proc.'">';
 			$tocalcrowclass = "";
 			$proc = '';
 			$tocalc = 'tocalc=""';
 			if ($row_serv["tocalculate"] == '1') 
 			{
+				$price='';
 				$discont = '';
-				$proc='%';
+				$proc='';
 				$tocalc = 'tocalc="1"';
-				$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="hidden" size="2" value="0">';
-				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="checkbox" value="" checked="checked">';
+				$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($row_serv["price"],0,'','').'">';
+				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
 				$tocalcrowclass = 'tocalcrow';
 			}
 			if ($row_serv["byguestcount"]==1)
 							{
-								$quant =  '<input bgs="1" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="checkbox" value="">';
+								$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>';
+				$discont ='<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
 							}
 									
 			echo '<tr >';
@@ -383,7 +386,9 @@ fixednavbar();
 							
 							<td class = "'.$tocalcrowclass.'"><span id=servicedescr'.$row_serv["id"].'>'.$row_serv["description"].'</span></td>
 
-							<td class = "'.$tocalcrowclass.'"><input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.number_format($row_serv["price"],0,'','').$proc.'"></td>
+							<td class = "'.$tocalcrowclass.'">
+							'.$price.'
+							</td>
 							<td class = "'.$tocalcrowclass.'">
 							 
 							'.$quant.'
@@ -425,11 +430,6 @@ fixednavbar();
   <span class="input-group-addon"></span>
 </div>
 <br>		
-<div class="input-group">
-  <span class="input-group-addon"><span class=rouble>Р</span></span>
-  <input type="text" id=avans placeholder="Задаток" class="form-control">
-  <span class="input-group-addon">.00</span>
-</div>
 	
 		<br><div class="input-group"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</form>
@@ -596,6 +596,7 @@ fixednavbar();
 					if (typeof data[2] == 'undefined') data[2]='';
 					if (typeof data[3] == 'undefined') data[3]='';
 					if (typeof data[4] == 'undefined') data[4]='';
+					if (typeof data[5] == 'undefined') data[5]='';
 					if (data[0]=="OK"){
 						spanpage1+='<input type="text" readonly id=clientname value="'+clientname+'" class="form-control">';						
 						spanpage1+='<input type="hidden" id=clientid value="'+data[1]+'">';						
@@ -636,14 +637,44 @@ fixednavbar();
 						echo '</select>' . "";
 					}
 					?>';
+
 					spanpage1+='<input type="text" id="clientfrom" style="display:none;" value="'+data[4]+'" class="form-control" placeholder="Укажите откуда пришел">';
+
+					spanpage1+='<?php
+					$tsql2 = "select * from `agenсies` ;";
+					$r_from = mysql_query($tsql2);
+					if (mysql_num_rows($r_from)>0)
+					{	
+						echo '<select id="clientfrom4" class="form-control" style="display:none;" >' . "";
+						echo '<option value="0">Укажите название агенства</option>' . "";
+						?>';
+						<?php
+						while ($row_from = mysql_fetch_array($r_from))
+						{	
+						?>
+						sel = '';
+						if(data[5] == '<?php  echo $row_from["name"]; ?>') sel = ' selected="selected"';
+						spanpage1+='<option'+ sel +'<?php	
+						echo ' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
+						?>';
+						<?php
+						}
+						?>
+						spanpage1+='<?php
+						echo '<option value="999">Другое</option>' . "";
+						echo '</select>' . "";
+					}
+					?>';
+
+					spanpage1+='<input type="text" id="clientfrom3" style="display:none;" value="'+data[5]+'" class="form-control" placeholder="Укажите откуда пришел">';
+
 					spanpage1+='</div><br>';
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
 					//spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
 					spanpage1+='<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent"  onchange="activatehall();" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
 					spanpage1+='<input data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
-					spanpage1+='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей" onchange="activatehall();">';
+					spanpage1+='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей" onkeyup="activatehall();">';
 					spanpage1+='</div>';
 
 					spanpage1+='<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
@@ -687,6 +718,7 @@ fixednavbar();
 					$.removeCookie("clientname");
 					$.removeCookie("clientid");
 					$.removeCookie("clientfrom");
+					$.removeCookie("clientfrom4");
 					$.removeCookie("clientphone");
 					$.removeCookie("clientemail");
 					$.removeCookie("dateevent");
@@ -709,6 +741,7 @@ fixednavbar();
 				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
 				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
 				$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
+				$.cookie("clientfrom4", $("body #clientfrom4").val(),{ expires: 1, path: '/' });
 				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
 				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
 				$.cookie("dateevent", $("body #dateevent").val(),{ expires: 1, path: '/' });
@@ -734,6 +767,7 @@ fixednavbar();
 					
 					$("body #clientid").val($.cookie("clientid"));
 					$("body #clientfrom").val($.cookie("clientfrom"));
+					$("body #clientfrom4").val($.cookie("clientfrom4"));
 					$("body #clientphone").val($.cookie("clientphone"));
 					$("body #clientemail").val($.cookie("clientemail"));
 					$("body #dateevent").val($.cookie("dateevent"));
@@ -908,11 +942,7 @@ fixednavbar();
 			$('#tabs').smartTab({selected: 1});		
 
 			setcountguestfields();
-				$( document ).on( "change", "#clientfrom", function() {	
-		
-			});
-			
-			
+				
 				$( document ).on( "change", "#clientfrom2", function() {	
 					$("#clientfrom").hide();
 		
@@ -924,10 +954,27 @@ fixednavbar();
 						{
 							$("#clientfrom").val($("#clientfrom2 option:selected").text());
 							$("#clientfrom").hide();
+							
+									if ($("#clientfrom2").val() == '1')
+									{
+									alert('dd');
+										$("#clientfrom4").show();
+									} else
+									{
+										$("#clientfrom3").val("");
+										$("#clientfrom4").hide();
+									
+									}
+
+						
 						}
 			
-			});
-			$( document ).on( "change", "#hall", function() {			
+				});
+			
+			
+			
+			
+			$( document ).on( "keyup", "#hall", function() {			
 			//$("#hall").on("change", function() {
 				//alert($("#hall").val());
 				$.get("_checkhall.php", {id:$("#hall").val(), Rand: "<?php echo rand(); ?>"},
@@ -959,7 +1006,7 @@ fixednavbar();
 			});
 					
 			// добавление блюд в заказ
-			$( document ).on( "change", "input[name=quant]", function() {
+			$( document ).on( "keyup", "input[name=quant]", function() {
 				id = $(this).attr("id");
 				id = id.substr(5);
 
@@ -983,7 +1030,7 @@ fixednavbar();
 			});
 
 			
-			$( document ).on( "change", "input[name=note]", function() {
+			$( document ).on( "keyup", "input[name=note]", function() {
 				id = $(this).attr("id");
 				id = id.substr(4);
 
@@ -1063,42 +1110,20 @@ fixednavbar();
 			
 			
 			// добавление услуг в заказ
-					$( document ).on( "focus", "input[name=priceserv]", function() {
-					tocalc = $(this).attr("tocalc");
-					if (tocalc == 1) 
-						{
-				
-						$(this).val($(this).val().replace("%",""));
-						}
-					});
-			
-					$( document ).on( "blur", "input[name=priceserv]", function() {
-					tocalc = $(this).attr("tocalc");
-					if (tocalc == 1 & $(this).val()) 
-						{
-					
-						$(this).val($(this).val().replace("%","") + "%");
-						}
-					});
-
-		
-		
 		
 		
 		
 					$( document ).on( "focus", "input[name=discontserv]", function() {
 					
 					tocalc = $(this).attr("tocalc");
-					if (tocalc != 1) 
-						{
 				
 						$(this).val($(this).val().replace("%",""));
-						}
+
 					});
 			
 					$( document ).on( "blur", "input[name=discontserv]", function() {
 					tocalc = $(this).attr("tocalc");
-					if (tocalc != 1 & $(this).val()) 
+					if ( $(this).val()) 
 						{
 					
 						$(this).val($(this).val().replace("%","") + "%");
@@ -1109,29 +1134,13 @@ fixednavbar();
 
 
 					
-					$( document ).on( "change", "input[name=quantserv]", function() {
+					$( document ).on( "keyup", "input[name=quantserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(9);
 				tocalc = $(this).attr("tocalc");
 				bgs = $(this).attr("bgs");
 				
-				if (tocalc == 1) 
-				{
-					if (!$(this).prop('checked'))
-					{
-					$(this).prop('checked',true);
-					alert("Эта позиция обязательна для формирования заказа. Вы можете изменить ее позже.");
-					}
-				}
 				
-				if (bgs == 1) 
-				{
-					$(this).val('');
-					if ($(this).prop('checked'))
-					{
-					$(this).val('1');
-					}
-				}
 
 				if($(this).val() != '') 
 				{
@@ -1157,10 +1166,52 @@ fixednavbar();
 				
 			});
 
-			
+		
+
+
 			$( document ).on( "change", "input[name=discontserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(11);
+				bgs = $(this).attr("bgs");
+				
+				if (bgs == 1) 
+				{
+					$(this).val('');
+					if ($(this).prop('checked'))
+					{
+					$(this).val('0');
+					}
+				}
+				
+				if($(this).val() != "") 
+				{
+					$("#addserv"+id).removeClass("btn-default");
+					$("#addserv"+id).addClass("btn-warning");
+					if($("#quantserv"+id).val() != '') 
+					{
+						$("#addserv"+id).removeClass("disabled");					
+					}
+				
+				} else
+				{
+					$("#addserv"+id).addClass("disabled");
+					
+					if(($("#quantserv"+id).val() == '' || bgs == 1) & $("#commentserv"+id).val() == '') 
+					{
+						$("#addserv"+id).addClass("btn-default");
+						$("#addserv"+id).removeClass("btn-warning");
+					
+					}
+				
+				}
+
+			});
+			
+			
+			$( document ).on( "keyup", "input[name=discontserv]", function() {
+				id = $(this).attr("id");
+				id = id.substr(11);
+				
 
 				if($(this).val() != "") 
 				{
@@ -1187,10 +1238,11 @@ fixednavbar();
 			});			
 		
 			
-				$( document ).on( "change", "input[name=commentserv]", function() {
+				$( document ).on( "keyup", "input[name=commentserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(11);
-
+				bgs = $("#discontserv"+id).attr("bgs");
+			
 				if($(this).val() != "") 
 				{
 					$("#addserv"+id).removeClass("btn-default");
@@ -1198,7 +1250,7 @@ fixednavbar();
 				
 				} else
 				{
-					if($("#quantserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
+					if(($("#quantserv"+id).val() == '' || bgs == 1) & $("#discontserv"+id).val() == '') 
 					{
 						$("#addserv"+id).addClass("btn-default");
 						$("#addserv"+id).removeClass("btn-warning");
@@ -1216,6 +1268,8 @@ fixednavbar();
 			$( document ).on( "click", "button[name=addserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(7);
+				bgs = $("#discontserv"+id).attr("bgs");
+				
 				if ($(this).html()=="Удалить")
 				{
 							$(this).addClass("btn-warning");
@@ -1229,6 +1283,7 @@ fixednavbar();
 						$("#quantserv"+id).removeAttr("readonly");
 					}
 					$("#discontserv"+id).removeAttr("readonly");
+					$("#discontserv"+id).removeAttr("disabled");
 					$("#commentserv"+id).removeAttr("readonly");
 
 					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
@@ -1246,14 +1301,18 @@ fixednavbar();
 						$(this).addClass("btn-primary");
 					$(this).html("Удалить");
 					$("#servicename"+id).css("color", "green");
-					var priceserv 	= $("#priceserv"+id).val().replace("%","");
+					var priceserv 	= $("#priceserv"+id).val();
 					var quantserv 	= $("#quantserv"+id).val();
-					var discont 	= $("#discontserv"+id).val().replace("%","");
+					var discont 	= $("#discontserv"+id).val();
 					var comment 	= $("#commentserv"+id).val();
-					
+		
 					$("#priceserv"+id).attr("readonly","readonly");
 					$("#quantserv"+id).attr("readonly","readonly");
 					$("#discontserv"+id).attr("readonly","readonly");
+					if (bgs == 1)
+					{
+										$("#discontserv"+id).attr("disabled","disabled");
+					}
 					$("#commentserv"+id).attr("readonly","readonly");
 										
 					var services="";
@@ -1267,6 +1326,7 @@ fixednavbar();
 						var serviceall = {};
 					}
 					var element = {};
+					
 					element = ({priceserv:priceserv, quantserv:quantserv, discont:discont, comment:comment});
 					serviceall[id] = element ;
 					services = $.toJSON(serviceall);
@@ -1325,13 +1385,7 @@ fixednavbar();
 			}
 	});
 			
-			
-			
-			
-			
-			
-			
-			
+	
 			
 		$(window).bind('beforeunload', function(){
 		  if (typeof $.cookie("clientname") != 'undefined')
@@ -1409,6 +1463,7 @@ fixednavbar();
 						additional_pars["ci"] = $.cookie("clientid");
 						additional_pars["cp"] = $.cookie("clientphone");
 						additional_pars["cf"] = $.cookie("clientfrom");
+						additional_pars["cf4"] = $.cookie("clientfrom4");
 						additional_pars["ce"] = $.cookie("clientemail");
 						additional_pars["de"] = $.cookie("dateevent");
 						additional_pars["te"] = $.cookie("timeevent");
@@ -1418,6 +1473,8 @@ fixednavbar();
 						additional_pars["ss"] = $.cookie("service");
 						additional_pars["tt"] = $.cookie("tables");
 						additional_pars["aa"] = $("#avans").val();
+						additional_pars["tp"] = $("#type").val();
+						additional_pars["cm"] = $("#comment").val();
 						additional_pars["rand"] = "<?php echo rand(); ?>";
 						$.post("_dosaveorder.php", additional_pars,
 						function(){
@@ -1433,6 +1490,7 @@ fixednavbar();
 								$.removeCookie("clientname");
 								$.removeCookie("clientid");
 								$.removeCookie("clientfrom");
+								$.removeCookie("clientfrom4");
 								$.removeCookie("clientphone");
 								$.removeCookie("clientemail");
 								$.removeCookie("dateevent");
