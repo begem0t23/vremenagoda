@@ -124,7 +124,7 @@ fixednavbar();
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
 			  <span class="input-group-btn">
-				<button class="btn btn-default" onclick="docheckclientname();" id=clientadd name=clientadd type="button">Создать</button>
+				<button class="btn btn-default" onclick="docheckclientname($('#clientsearch').val());" id=clientadd name=clientadd type="button">Создать</button>
 			  </span>			  
 			</div>		
 		</div>
@@ -370,15 +370,14 @@ fixednavbar();
 		$btnclass = 'btn-default disabled';
 			$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
 			$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
-			$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].$proc.'">';
+			$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
 			$tocalcrowclass = "";
-			$proc = '';
+	
 			$tocalc = 'tocalc=""';
 			if ($row_serv["tocalculate"] == '1') 
 			{
-				$price='';
-				$discont = '';
-				$proc='';
+			$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="hidden" size="5" value="0">';
+			$discont = '';
 				$tocalc = 'tocalc="1"';
 				$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($row_serv["price"],0,'','').'">';
 				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
@@ -527,6 +526,7 @@ fixednavbar();
 				break;
 				case 2:
 					$("#page2").prop("class","disabled");
+				
 				break;
 				case 3:
 					$("#page3").prop("class","disabled");				
@@ -586,12 +586,12 @@ fixednavbar();
 			}
 		}
 		
-		function docheckclientname()
+		function docheckclientname(clientname)
 		{
 			//alert(1);
 			// проверка имени клиента на существование, в зависимости от этого вывод правильной формы
 			// создания нового клиента или поля с заполненными значениями существующего
-			clientname = $("#clientsearch").val();
+			//clientname = $("#clientsearch").val();
 			if (clientname!="") {
 				//alert(1);
 				$.get("_checkexistclient.php", {s:clientname, Rand: "<?php echo rand(); ?>"},
@@ -919,7 +919,12 @@ fixednavbar();
 		$(document).ready(function(){
 			// когда страница загружена
 			
-			
+				if (typeof $.cookie("clientname") != 'undefined')
+				{
+					docheckclientname($.cookie("clientname"));
+				}
+
+				
 			$( document ).on( "click", ".navbar a", function() 
 			{
 					alladd = $("#createform  .btn-danger").length;			
@@ -957,7 +962,7 @@ fixednavbar();
 			doloadcreateform();
 			//erasevaluesincookie();
 			
-			$('#tabs').smartTab({selected: 1});		
+			$('#tabs').smartTab({selected: 0});		
 
 			setcountguestfields();
 				
@@ -975,7 +980,7 @@ fixednavbar();
 							
 									if ($("#clientfrom2").val() == '1')
 									{
-									alert('dd');
+								
 										$("#clientfrom4").show();
 									} else
 									{
@@ -1718,7 +1723,7 @@ eguest = $("#guestcount").val() == "";
 
 		wfood = 0;
 		wdrink = 0;
-		persons = $("#guestcount").val() * 1;
+		persons = $.cookie("guestcount") * 1;
 		if(persons > 0) 
 		{
 			$("#createform .btn-primary").each(function(){

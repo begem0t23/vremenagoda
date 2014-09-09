@@ -559,22 +559,22 @@ $drink_sum = $sum[1];
 			
 			if($rows011["id"] == 8)
 			{
-				$probka = $rows['guestcount'] * $rows011["price"];
+				$probka = $rows['guestcount'] * $rows011["discont"];
 				$show =0;		
 			}
 			if($rows011["id"] == 9)
 			{
-				$eat_discont = ($eat_sum * $rows011["price"])/100;
+				$eat_discont = ($eat_sum * $rows011["discont"])/100;
 				$show =0;		
 			}
 			if($rows011["id"] == 10)
 			{
-				$drink_discont = ($drink_sum * $rows011["price"])/100;
+				$drink_discont = ($drink_sum * $rows011["discont"])/100;
 				$show =0;		
 			}
 			if($rows011["id"] == 12)
 			{
-				$teapay = ($eat_sum + $drink_sum)/$rows011["price"];
+				$teapay = ($eat_sum + $drink_sum)/$rows011["discont"];
 				$show =0;		
 			}
 			

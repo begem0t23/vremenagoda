@@ -62,10 +62,9 @@ else
 	'".mysql_escape_string(@$cn)."',
 	'".mysql_real_escape_string(@$_POST["cp"])."',
 	'".mysql_real_escape_string(@$_POST["ce"])."',
-	'".mysql_real_escape_string(@$_POST["cf"])."'),
-	'".mysql_real_escape_string(@$_POST["cf4"])."')
-	
-	;";
+	'".mysql_real_escape_string(@$_POST["cf"])."',
+	'".mysql_real_escape_string(@$_POST["cf4"])."'
+	);";
 	//die("ERR:".$tsql);
 	$r_client = mysql_query($tsql);
 	if (mysql_error()) die("ERR:8=" . mysql_error());
@@ -130,9 +129,11 @@ if ($oi>0) {
 			die("ERR:4=не найден идентификатор блюда");
 		}
 	}
+
 	$services = json_decode($_POST["ss"],true);
 	foreach($services as $i=>$ss)
 	{
+
 		$tsql = "select * from services where id = ".mysql_escape_string($i).";";
 		$r_services = mysql_query($tsql);
 		if (mysql_num_rows($r_services)>0)
@@ -144,7 +145,7 @@ if ($oi>0) {
 			'".mysql_real_escape_string($ss["discont"])."',
 			'".mysql_real_escape_string($ss["quantserv"])."',
 			'".mysql_real_escape_string($ss["comment"])."');";		
-
+	
 			$r_order = mysql_query($tsql);			
 			//$stoimost = $ss["quantserv"] * $ss["priceserv"];
 			//if ($ss["discont"]) $stoimost = $stoimost - ($stoimost * $ss["discont"] / 100);
@@ -172,7 +173,7 @@ if ($oi>0) {
 
 
 	$tables = json_decode($tt,true);
-		
+		if($tables){
 	foreach($tables as $i=>$tt)
 	{
 	
@@ -184,7 +185,7 @@ if ($oi>0) {
 
 	}
 
-
+}
 
 	
 	echo "OK:".$oi;
