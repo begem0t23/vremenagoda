@@ -136,13 +136,13 @@ fixednavbar();
 
 		<span id="weightcalc" class="btn btn-default">
 			<div id="foodweightall">Общий вес: 0г</div>
-			<br>
+
 			<div id="foodweightaver">Средний вес: 0г</div>
-			<br>
+
 			<div id="drinkweightall">Общий объём: 0г</div>
-			<br>
+
 			<div id="drinkweightaver">Средний объём: 0г</div>
-			<br>
+
 		</span>
 		<?php		
 	$tsql = "select * from menus where isactive ='1';";
@@ -385,8 +385,9 @@ fixednavbar();
 			}
 			if ($row_serv["byguestcount"]==1)
 							{
-								$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>';
-				$discont ='<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
+								$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
+								<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
+				$discont ='';
 							}
 									
 			echo '<tr >';
@@ -997,7 +998,7 @@ fixednavbar();
 			
 			
 			
-			$( document ).on( "keyup", "#hall", function() {			
+			$( document ).on( "change", "#hall", function() {			
 			//$("#hall").on("change", function() {
 				//alert($("#hall").val());
 				$.get("_checkhall.php", {id:$("#hall").val(), Rand: "<?php echo rand(); ?>"},
@@ -1021,6 +1022,7 @@ fixednavbar();
 							} else 
 							{
 								get_selected_hall($("#hall").val());
+							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 							
 							}
 						}
@@ -1138,24 +1140,6 @@ fixednavbar();
 			// добавление услуг в заказ
 		
 		
-		
-					$( document ).on( "focus", "input[name=discontserv]", function() {
-					
-					tocalc = $(this).attr("tocalc");
-				
-						$(this).val($(this).val().replace("%",""));
-
-					});
-			
-					$( document ).on( "blur", "input[name=discontserv]", function() {
-					tocalc = $(this).attr("tocalc");
-					if ( $(this).val()) 
-						{
-					
-						$(this).val($(this).val().replace("%","") + "%");
-						}
-					});
-
 
 
 
@@ -1409,6 +1393,11 @@ fixednavbar();
 					}
 				}
 			}
+			
+		checkhallselect();
+			
+
+				
 	});
 			
 	
@@ -1709,7 +1698,7 @@ eguest = $("#guestcount").val() == "";
 					});
 				}
 				
-	
+				checkhallselect();
 			});
 	
 	
@@ -1758,7 +1747,21 @@ eguest = $("#guestcount").val() == "";
 		}
 		}
 		
+		function checkhallselect()
+		{
+			
+			if($("#createform .btn-primary").length > 1)
+			{			
+			$("#hall").attr("disabled","disabled");
+			} 
+			
+			
+			if($("#createform .btn-primary").length == 1)
+			{			
+			$("#hall").removeAttr("disabled");
+			} 
 		
+		}
 		
 	</script>
   </body>
