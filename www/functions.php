@@ -40,7 +40,7 @@ $fororder = $_POST['fororder'];
 				$rez_tab0 = mysql_query($tsql02);
 				if (mysql_num_rows($rez_tab0)>0)
 				{
-					$inorder = 'btn-danger';
+					$inorder = 'btn-warning';
 				}
 			}
 			
@@ -1478,7 +1478,7 @@ echo '<br><br>
 	$index=0;
 		while ($row_menutype = mysql_fetch_array($r_menutype))
 		{
-			echo '<li><a href="#menu-'.$row_menutype["id"].'" onClick="showST('.$index.')">'.$row_menutype["type_name"].'</a></li>';
+			echo '<li><a href="#menu-'.$row_menutype["id"].'" >'.$row_menutype["type_name"].'</a></li>';
 			$index++;
 		}
 ?>

@@ -82,7 +82,7 @@
  
 	.tabnum{font-size:22px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
 		
-		#weightcalc {position:fixed; top:420px; left:60px;}
+		#weightcalc {position:fixed; top:420px; left:20px;}
   </style>  
 
   </head>
@@ -134,7 +134,16 @@ fixednavbar();
 		<div id=spanpage2 style="visibility: hidden">
 		<form id=frm2 role="form" data-toggle="validator">
 
-		<button id="weightcalc" class="btn btn-default">Общий вес: 0г<br>Вес на человека: 0г</button>
+		<span id="weightcalc" class="btn btn-default">
+			<div id="foodweightall">Общий вес: 0г</div>
+			<br>
+			<div id="foodweightaver">Средний вес: 0г</div>
+			<br>
+			<div id="drinkweightall">Общий объём: 0г</div>
+			<br>
+			<div id="drinkweightaver">Средний объём: 0г</div>
+			<br>
+		</span>
 		<?php		
 	$tsql = "select * from menus where isactive ='1';";
 	$r_menutype = mysql_query($tsql);
@@ -200,12 +209,12 @@ fixednavbar();
 	
 
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
-		
+
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] = 0;
 	$sections[$rows0['id']]['items'] = $zzz;
-	
+	$sections[$rows0['id']]['items']['isdrink'] = $rows0['isdrink'];
 	
 		$tsql_1 = "SELECT * 
 		 FROM `menu_sections`  
@@ -222,6 +231,7 @@ fixednavbar();
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
 	$sections[$rows0['id']][$rows_1['id']]['items'] = $zzz;
+	$sections[$rows0['id']][$rows_1['id']]['items']['isdrink'] = $rows_1['isdrink'];
 	
 		
 		$tsql_2 = "SELECT * 
@@ -239,6 +249,7 @@ fixednavbar();
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items']['isdrink'] = $rows_2['isdrink'];
 	
 
 	} //result_2
@@ -481,6 +492,7 @@ fixednavbar();
 		function showST(tab_index){
 			event.preventDefault();
 			$('#tabs').smartTab('showTab',tab_index);
+
 		}
 		
 		function dosearchclient(t)
@@ -514,7 +526,7 @@ fixednavbar();
 					$("#page1").prop("class","disabled");				
 				break;
 				case 2:
-					$("#page2").prop("class","disabled");				
+					$("#page2").prop("class","disabled");
 				break;
 				case 3:
 					$("#page3").prop("class","disabled");				
@@ -569,6 +581,7 @@ fixednavbar();
 			$("#createform").html($("#spanpage"+curpage).html());			
 			//$("#spanpage"+curpage).css("visibility","visible");
 			$("#page"+curpage).click();
+						count_dish_weight();	
 			return true;
 			}
 		}
@@ -701,8 +714,10 @@ fixednavbar();
 					//alert(spanpage1);
 					$("#spanpage1").html(spanpage1);
 					$("#createform").html($("#spanpage"+curpage).html());
+	
 					//alert($("#spanpage1").html());
-					readvaluesincookie();					
+					readvaluesincookie();	
+					count_dish_weight();					
 				});
 			}
 		}
@@ -811,6 +826,7 @@ fixednavbar();
 						}
 					});					
 				}
+				
 			}
 			if (curpage==3)
 			{
@@ -1058,6 +1074,7 @@ fixednavbar();
 			
 			
 			$( document ).on( "click", "button[name=adddish]", function() {
+			
 				id = $(this).attr("id");
 				id = id.substr(7);
 				if ($(this).html()=="Удалить")
@@ -1106,6 +1123,8 @@ fixednavbar();
 					$.cookie("dishes", dishes,{ expires: 1, path: '/' });
 				}
 				//console.log($.cookie("dishes"));
+				
+					count_dish_weight();
 			});			
 			
 			
@@ -1449,6 +1468,7 @@ fixednavbar();
 			$("#createform").html($("#spanpage"+curpage).html());
 			readvaluesincookie();
 			$("body").animate({"scrollTop":0},"slow");
+						count_dish_weight();	
 			//$("#spanpage"+curpage).css("visibility","visible");
 		}
 		function dosaveorder()
@@ -1693,6 +1713,46 @@ eguest = $("#guestcount").val() == "";
 
 				
 	}
+		function count_dish_weight()
+		{
+
+		wfood = 0;
+		wdrink = 0;
+		persons = $("#guestcount").val() * 1;
+		if(persons > 0) 
+		{
+			$("#createform .btn-primary").each(function(){
+				if ($(this ).text() == 'Удалить') 
+				{
+					id = $(this).attr('id');
+					id = id.substr(7);
+					quant = $("#quant"+id).val();
+
+					if ($(this ).hasClass("weightfood"))
+					{
+						wfood+=$("#weightfood"+id).html() * 1 * quant;
+					}
+					if ($(this ).hasClass("weightdrink"))
+					{
+						wdrink+=$("#weightdrink"+id).html() * 1 * quant;
+					}
+				}
+			});
+
+			wfa = Number((wfood/persons).toFixed(2));
+			wfd = Number((wdrink/persons).toFixed(2));
+			
+			$("#foodweightall").html("Общий вес:" + wfood);
+			$("#foodweightaver").html("Средний вес:" + wfa);
+			$("#drinkweightall").html("Общий литраж:" + wdrink);
+			$("#drinkweightaver").html("Средний литраж:" + wfd);
+		}
+		else
+		{
+
+		}
+		}
+		
 		
 		
 	</script>
