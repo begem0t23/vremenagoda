@@ -102,7 +102,7 @@ fixednavbar();
 	<a id="toTop" href="#"></a>
     <div class="container">
       <div class="page-header">
-        <h3>Новый заказ</h3>
+        <h3>Редактирование заказа</h3>
       </div>
 		<ul class="pagination pagination-lg">
 		  <li id=pageleft><a href="#">&laquo;</a></li>
@@ -119,7 +119,7 @@ fixednavbar();
 			</div>
 		
 
-		<div id=$spanpage1 style="visibility: hidden; max-width: 400px;">
+		<div id=spanpage1 style="visibility: hidden; max-width: 400px;">
 		<?php
 if ($q[1]>0)
 {
@@ -139,34 +139,24 @@ if ($q[1]>0)
 		$spanpage1.='<input type="email" id=clientemail value="'.$row["email"].'" class="form-control" placeholder="E-mail">';
 
 		$spanpage1.='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
-		$spanpage1.='<?php
 		$tsql2 = "select * from `client_from` ;";
 		$r_from = mysql_query($tsql2);
 		if (mysql_num_rows($r_from)>0)
 		{	
-			echo '<select id="clientfrom2" class="form-control">' . "";
-			echo '<option value="0">Укажите откуда пришел</option>' . "";
-			?>';
-			<?php
+			$spanpage1.= '<select id="clientfrom2" class="form-control">' . "";
+			$spanpage1.= '<option value="0">Укажите откуда пришел</option>' . "";
 			while ($row_from = mysql_fetch_array($r_from))
 			{	
-			?>
-			sel = '';
-			if($row["otkuda"] == $row_from["name"]) $sel = ' selected="selected"';
-			$spanpage1.='<option'. $sel .' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
-			?>';
-			<?php
+				$sel = '';
+				if($row["otkuda"] == $row_from["name"]) $sel = ' selected="selected"';
+				$spanpage1.='<option'. $sel .' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
 			}
-			?>
-			$spanpage1.='<?php
-			echo '<option value="999">Другое</option>' . "";
-			echo '</select>' . "";
+			$spanpage1.='<option value="999">Другое</option>' . "";
+			$spanpage1.='</select>' . "";
 		}
-		?>';
-		$spanpage1.='<input type="text" id="clientfrom" style="display:none;" value="'+data[4]+'" class="form-control" placeholder="Укажите откуда пришел">';
+		$spanpage1.='<input type="text" id="clientfrom" style="display:none;" value="'.htmlspecialchars($row["otkuda"]).'" class="form-control" placeholder="Укажите откуда пришел">';
 		$spanpage1.='</div><br>';
 		$spanpage1.='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
-		//$spanpage1.='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
 		$spanpage1.='<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent"  onchange="activatehall();" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
 		$spanpage1.='<input data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
 		$spanpage1.='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
@@ -174,30 +164,25 @@ if ($q[1]>0)
 		$spanpage1.='</div>';
 
 		$spanpage1.='<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
-		$spanpage1.='<?php
+		
 		$tsql = "select * from hall where `isactive` = '1';";
 		$r_hall = mysql_query($tsql);
 		if (mysql_num_rows($r_hall)>0)
 		{	
-			echo '<select id="hall" class="form-control" disabled>' . "";
-			echo '<option value="0" checked>Укажите дату и количество гостей</option>' . "";
+			$spanpage1.= '<select id="hall" class="form-control" disabled>' . "";
+			$spanpage1.= '<option value="0" checked>Укажите дату и количество гостей</option>' . "";
 			while ($row_hall = mysql_fetch_array($r_hall))
 			{	
-				echo '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
+				$spanpage1.= '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
 			}
-			echo '</select>' . "";
+			$spanpage1.= '</select>' . "";
 		}
-		?>';
 		$spanpage1.='</div><br>';
 		$spanpage1.='<br><div  id="selectedhall"></div>';
 		
 		$spanpage1.='<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
-		$spanpage1.='</form></div>';
-		//alert($spanpage1);
-		$("#$spanpage1").html($spanpage1);
-		$("#createform").html($("#spanpage"+curpage).html());
-		//alert($("#$spanpage1").html());
-		readvaluesincookie();					
+		
+		echo $spanpage1;
 	}
 	else
 	{
@@ -209,7 +194,7 @@ else
 	echo "ID not correct";
 }
 		?>
-\		</div>
+		</div>
 		
 		<!-- тарелки -->		
 		
@@ -397,7 +382,7 @@ else
 
 }	
 }
-?>			
+?>				
 	
 	</div>		
 		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
@@ -626,10 +611,12 @@ else
 		
 		function shownextstep()
 		{
-		alladd = $("#createform  .btn-warning").length;			if(alladd > 0) 
+			alladd = $("#createform .btn-warning").length;			
+			if(alladd == 1110) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
-			} else
+			} 
+			else
 			{
 		
 		
@@ -852,7 +839,7 @@ else
 			$( document ).on( "click", ".navbar a", function() 
 			{
 					alladd = $("#createform  .btn-warning").length;			
-					if(alladd > 0) 
+					if(alladd == 23120) 
 					{
 						alert("Остались недобавленные позиции: " + alladd);
 						return false;
@@ -880,8 +867,9 @@ else
 				widgets: ['zebra']
 			});
 	
-	
+			//alert(1);
 			dosetrightpaginator();
+			//alert(2);
 			doloadcreateform();
 			erasevaluesincookie();
 			
@@ -1327,12 +1315,8 @@ else
 			// слушаем клики на элементы выбора страниц
 			id = $(this).prop("id");
 
-			alladd = $("#createform  .btn-warning").length;
-
-
-			
-			
-			if(alladd > 0) 
+			alladd = $("#createform  .btn-warning").length;			
+			if(alladd == 23120) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
 			} else
@@ -1367,6 +1351,7 @@ else
 		
 		function doloadcreateform()
 		{
+			//alert(curpage);
 			// вывод правильного содержания вкладки в зависимости от curpage
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());

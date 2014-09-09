@@ -79,7 +79,7 @@ if (checklogin())
 	{
 		include("_events.php");
 	}
-	elseif ($qq == "edit")
+	elseif (@$q[0] == "edit")
 	{
 		include("_edit.php");
 	}
