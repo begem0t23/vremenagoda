@@ -31,7 +31,7 @@ fixednavbar();
       <div class="page-header">
 <?php	
 	$q ='"';
-	if(!$_GET['view_zakazid']){
+	if(!@$_GET['view_zakazid']){
 		table(
 		"Новые заказы", //заголовок
 		"50,100,200,200",	//ширина колонок
@@ -69,7 +69,7 @@ fixednavbar();
 		);
 	} else {
 	$format = 'screen';
-	if($_GET['f'] == 'pdf') {$format = 'pdf';}
+	if(@$_GET['f'] == 'pdf') {$format = 'pdf';}
 		report_client(
 		"Заказ №".$_GET['view_zakazid'], //заголовок
 		$_GET['view_zakazid'],

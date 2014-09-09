@@ -113,14 +113,16 @@ fixednavbar();
 		  <li id=pageright><a href="#">&raquo;</a></li>
 		</ul>
 
-
+		<input type=hidden id=timestart value="<?php
+		echo time(); ?>">
+		
 			<div id=createform style="width: 100%;">
 		
 			</div>
 		
 
-		<div id=spanpage1 style="visibility: hidden; max-width: 400px;">
-			<div class="input-group"  style="max-width: 400px;">
+		<div id=spanpage1 style="visibility: hidden; max-width: 500px;">
+			<div class="input-group"  style="max-width: 500px;">
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
 			  <span class="input-group-btn">
@@ -211,7 +213,7 @@ fixednavbar();
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
 
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
-	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] = 0;
 	$sections[$rows0['id']]['items'] = $zzz;
 	$sections[$rows0['id']]['items']['isdrink'] = $rows0['isdrink'];
@@ -225,10 +227,10 @@ fixednavbar();
 	while ($rows_1 = mysql_fetch_array($rezult_1)) {
 
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id']);
-	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name'];
-	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = @$sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
 	$sections[$rows0['id']][$rows_1['id']]['items'] = $zzz;
 	$sections[$rows0['id']][$rows_1['id']]['items']['isdrink'] = $rows_1['isdrink'];
@@ -247,7 +249,7 @@ fixednavbar();
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
-	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = @$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items']['isdrink'] = $rows_2['isdrink'];
 	
@@ -279,7 +281,7 @@ fixednavbar();
 			foreach ($val as $num1 => $val1) 
 			{
 				
-				if ($val[$num1]['dishes'] > 0) 
+				if (@$val[$num1]['dishes'] > 0) 
 				{	
 					echo '<tbody><tr><th  colspan="6" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
@@ -296,7 +298,7 @@ fixednavbar();
 						foreach ($val1 as $num2 => $val2) 
 						{
 	
-							if ($val1[$num2]['dishes'] > 0) 
+							if (@$val1[$num2]['dishes'] > 0) 
 							{	
 								echo '<tbody><tr><th  colspan="6" class="level_2">'.chr(10);			
 								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
@@ -370,7 +372,7 @@ fixednavbar();
 		$btnclass = 'btn-default disabled';
 			$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
 			$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
-			$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
+			$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
 			$tocalcrowclass = "";
 	
 			$tocalc = 'tocalc=""';
@@ -428,16 +430,15 @@ fixednavbar();
 <div id=resultform>
 </div>
 <br>		
-<div class="input-group">
-  <span class="input-group-addon"><span ></span></span>
+<div class="input-group" style="max-width:500px">
+  <span class="input-group-addon"><span class="glyphicon glyphicon-gift"></span></span>
   <input type="text" id="type" placeholder="тип мероприятия" class="form-control">
-  <span class="input-group-addon"></span>
+partytypes
 </div>
 <br>		
-<div class="input-group">
-  <span class="input-group-addon"><span class=rouble></span></span>
+<div class="input-group" style="max-width:500px">
+  <span class="input-group-addon"><span class="glyphicon glyphicon-font"></span></span>
   <textarea id="comment" placeholder="Комментарий по проведению" class="form-control"></textarea>
-  <span class="input-group-addon"></span>
 </div>
 <br>		
 	
@@ -604,7 +605,7 @@ fixednavbar();
 					data = data.split("^");
 					$("#spanpage1").html("");
 					//alert(data[0]);
-					spanpage1 = '<div style="max-width: 400px"><form id=frm1 role="form" data-toggle="validator">';
+					spanpage1 = '<div style="max-width: 500px"><form id=frm1 role="form" data-toggle="validator">';
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 					if (typeof data[1] == 'undefined') data[1]='';
 					if (typeof data[2] == 'undefined') data[2]='';
@@ -697,7 +698,7 @@ fixednavbar();
 					$r_hall = mysql_query($tsql);
 					if (mysql_num_rows($r_hall)>0)
 					{	
-						echo '<select id="hall" class="form-control" disabled>' . "";
+						echo '<select name="hall" id="hall" class="form-control" disabled>' . "";
 						echo '<option value="0" checked>Укажите дату и количество гостей</option>' . "";
 						while ($row_hall = mysql_fetch_array($r_hall))
 						{	
@@ -744,6 +745,8 @@ fixednavbar();
 					$.removeCookie("dishes");
 					$.removeCookie("service");
 					$.removeCookie("tables");
+					//$.removeCookie("timestart");
+					
 				}
 			}
 		}		
@@ -756,7 +759,10 @@ fixednavbar();
 				//alert($("#clientid").val());
 				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
 				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
-				$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
+				if ($("body #clientfrom").val()!="Укажите откуда пришел")
+				{
+					$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
+				}
 				$.cookie("clientfrom4", $("body #clientfrom4").val(),{ expires: 1, path: '/' });
 				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
 				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
@@ -794,7 +800,7 @@ fixednavbar();
 					if($.cookie("hall") > 0)
 					{	
 						$("body #hall").removeAttr("disabled");
-						get_selected_hall($.cookie("hall"));
+						get_selected_hall($("body #hall").val());
 					}
 				}
 				
@@ -997,7 +1003,7 @@ fixednavbar();
 			
 			
 			
-			$( document ).on( "keyup", "#hall", function() {			
+			$( document ).on( "change", "#hall", function() {			
 			//$("#hall").on("change", function() {
 				//alert($("#hall").val());
 				$.get("_checkhall.php", {id:$("#hall").val(), Rand: "<?php echo rand(); ?>"},
@@ -1008,27 +1014,26 @@ fixednavbar();
 					data = data.split("^");
 					if (data[0]=="OK")
 					{
+						//alert(data[1]);
 						if ((typeof data[1] != 'undefined') && ($("#guestcount").val()>0))
 						{
 							if (parseInt($("#guestcount").val())>parseInt(data[1]))
 							{
-								//console.log($("#guestcount").val());
-								//console.log(data[1]);
-								alert("Выбранный зал не подходит для данного количества гостей");
-								$("#hall option[value=0]").attr('selected','selected');
-							
-								
-							} else 
-							{
-								get_selected_hall($("#hall").val());
-							
-							}
+								//alert("Выбранный зал не подходит для данного количества гостей");								
+								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
+							} 
+							get_selected_hall($("#hall").val());
 						}
 					}
 				});				
 			});
 					
 			// добавление блюд в заказ
+			//$( document ).on("change", "select[name=hall]", function ()
+			//{
+			//	get_selected_hall($("#hall").val());
+			//});
+			
 			$( document ).on( "keyup", "input[name=quant]", function() {
 				id = $(this).attr("id");
 				id = id.substr(5);

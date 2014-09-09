@@ -9,7 +9,7 @@ function print_dishes_for_client_report($items,$sectionid)
 $output = Array();
 $output['sum'] = 0;
 $sectionid = substr($sectionid,1);
-$menuid = substr($menuid,1);
+$menuid = substr(@$menuid,1);
 	if ($items['count'] > 0)
 	{
 $cnt = 0;			
@@ -21,7 +21,7 @@ $class =  '';
 			if ($cnt == $xxx*2) {$class =  ' class="second_row"';}
 			if($items[$i]["title"])
 				{
-					$output['print'] = $output['print'].'<tr'.$class.'>
+					$output['print'] = @$output['print'].'<tr'.$class.'>
 							<td>'.$items[$i]["cnt"].'</td>
 							<td><span id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
 							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
@@ -89,7 +89,7 @@ $dish['count'] = 0;
 		{
 			while ($rows01 = mysql_fetch_array($rezult01)) 
 			{	
-				$dish['sum'] = 	$dish['sum'] + ($rows01['num'] *  $rows01['price2']);
+				$dish['sum'] = 	@$dish['sum'] + ($rows01['num'] *  $rows01['price2']);
 				$dish[$dish['count']]['id'] = $rows01['id'];
 				$dish[$dish['count']]['title'] = $rows01['title'];
 				$dish[$dish['count']]['num'] = $rows01['num'];
@@ -193,7 +193,7 @@ return $dish;
 function print_dishes($items)
 {
 $wclass = 'weightfood';
-if ($items['isdrink'] == 1) $wclass = 'weightdrink';
+if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 
 	if ($items['count'] > 0)
 	{
@@ -370,17 +370,17 @@ $body_out = $body_out.'
 	
 	
 
-	$zzz = dishes_in_section_by_order($zid,$rows0['id'],$cntdish);
+	$zzz = dishes_in_section_by_order($zid,$rows0['id'],@$cntdish);
 	$sections[$rows0['id']]['id'] = '_'.$rows0['id']; //непонял почему но без _ не работает
 	
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
 	$sections[$rows0['id']]['isdrink'] = $rows0['isdrink'];
 	
-	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
-	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['sum'] = @$sections[$rows0['id']]['sum'] + @$zzz['sum'];
 	$sections[$rows0['id']]['children'] = 0;
 	$sections[$rows0['id']]['items'] = $zzz;
-	$cntdish = $cntdish + $sections[$rows0['id']]['dishes'] ;
+	$cntdish = @$cntdish + @$sections[$rows0['id']]['dishes'] ;
 
 	
 		$tsql_1 = "SELECT * 
@@ -393,7 +393,7 @@ $body_out = $body_out.'
 
 
 	$zzz = dishes_in_section_by_order($zid,$rows_1['id'],$cntdish);
-	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']]['sum'] = @$sections[$rows0['id']]['sum'] + @$zzz['sum'];
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']]['id'] = '_'.$rows_1['id']; //непонял почему но без _ не работает
@@ -401,8 +401,8 @@ $body_out = $body_out.'
 
 	$sections[$rows0['id']][$rows_1['id']]['isdrink'] = $rows_1['isdrink']; 
 
-	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
-	$sections[$rows0['id']][$rows_1['id']]['sum'] = $sections[$rows0['id']][$rows_1['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = @$sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['sum'] = @$sections[$rows0['id']][$rows_1['id']]['sum'] + @$zzz['sum'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
 	$sections[$rows0['id']][$rows_1['id']]['items'] = $zzz;
 $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']]['dishes'];
@@ -419,17 +419,17 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']]['dishes'];
 
 	$zzz = dishes_in_section_by_order($zid,$rows_2['id'],$cntdish);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
-	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']]['sum'] = @$sections[$rows0['id']]['sum'] + @$zzz['sum'];
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
-	$sections[$rows0['id']][$rows_1['id']]['sum'] = $sections[$rows0['id']][$rows_1['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']]['sum'] = @$sections[$rows0['id']][$rows_1['id']]['sum'] + @$zzz['sum'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['id'] = '_'.$rows_2['id']; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
 	
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['isdrink'] = $rows_2['isdrink'];	
 	
-	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
-	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sum'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = @$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sum'] = @$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sum'] + @$zzz['sum'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
 $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'];
 	
@@ -450,7 +450,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 		if ($sections[$num]['dishes'] > 0) 
 		{	
 			$level0_sum[$sections[$num]['id']] = $sections[$num]['sum']; 
-			$sum[$sections[$num]['isdrink']] = $sum[$sections[$num]['isdrink']] + $sections[$num]['sum']; 
+			$sum[$sections[$num]['isdrink']] = @$sum[$sections[$num]['isdrink']] + @$sections[$num]['sum']; 
 			$body_out = $body_out.'<tbody><tr><th  colspan="'.($cs1 + $cs2).'" class="level_0">'.chr(10);			
 			$body_out = $body_out.$sections[$num]['name'].''.chr(10);
 			$body_out = $body_out.'</th></tr></tbody>'.chr(10);
@@ -469,7 +469,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 					{
 					
 					
-				if ($val[$num1]['dishes'] > 0) 
+				if (@$val[$num1]['dishes'] > 0) 
 				{	
 						if($val[$num1]['name']){
 			$body_out = $body_out.'<tbody><tr><th  colspan="'.($cs1 + $cs2).'"  class="level_1">'.chr(10);			
@@ -492,7 +492,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 	
 					if (is_array($val2)) 
 					{
-					if ($val1[$num2]['dishes'] > 0) 
+					if (@$val1[$num2]['dishes'] > 0) 
 							{	
 						if($val1[$num2]['name']){
 			$body_out = $body_out.'<tbody><tr><th colspan="'.($cs1 + $cs2).'"  class="level_2">'.chr(10);			
@@ -543,7 +543,7 @@ $teapay = 0;
 $service_sum =0;
 $service_discont = 0;
 $eat_sum = $level0_sum['_59'] + $level0_sum['_60'];
-$drink_sum = $level0_sum['_61'] + $level0_sum['_19'];
+$drink_sum = @$level0_sum['_61'] + @$level0_sum['_19'];
 $eat_sum = $sum[0] ;
 $drink_sum = $sum[1];
 
@@ -574,7 +574,7 @@ $drink_sum = $sum[1];
 			}
 			if($rows011["id"] == 12)
 			{
-				$teapay = ($eat_sum + $drink_sum)/$rows011["discont"];
+				if ($rows011["discont"]>0) {$teapay = ($eat_sum + $drink_sum)/$rows011["discont"];} else {$teapay = ($eat_sum + $drink_sum);}
 				$show =0;		
 			}
 			
