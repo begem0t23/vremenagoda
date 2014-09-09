@@ -82,7 +82,7 @@ function dishes_in_section_by_order($order_id,$menu_section,$cnt)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT d.id, d.title,   d.weight, do.price price2, do.num, do.note FROM dishes d,  dishes_in_orders do  WHERE d.menu_section = ".$menu_section." and do.orderid=".$order_id." and do.dishid = d.id   ;";
+		$tsql01 = "SELECT dh.id, dh.name,   dh.weight, do.price price2, do.num, do.note FROM dishes_history dh,  dishes_in_orders do  WHERE dh.menu_section = ".$menu_section." and do.orderid=".$order_id." and do.dishid = dh.dishid  AND dh.isactive = '1' GROUP BY  dh.dishid ORDER BY dh.kogda DESC;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -91,7 +91,7 @@ $dish['count'] = 0;
 			{	
 				$dish['sum'] = 	$dish['sum'] + ($rows01['num'] *  $rows01['price2']);
 				$dish[$dish['count']]['id'] = $rows01['id'];
-				$dish[$dish['count']]['title'] = $rows01['title'];
+				$dish[$dish['count']]['title'] = $rows01['name'];
 				$dish[$dish['count']]['num'] = $rows01['num'];
 				$dish[$dish['count']]['note'] = $rows01['note'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
@@ -170,18 +170,21 @@ function dishes_in_section_by_menu($menu_id,$menu_section)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT d.id, d.title, d.description,  d.weight, d.price, m.dishid FROM dishes d, dishes_in_menus m  WHERE d.menu_section = ".$menu_section." and m.menuid=".$menu_id." and m.dishid = d.id AND m.isactive = '1'  AND d.isactive = '1' ;";
+		$tsql01 = "SELECT dh.id, dh.name, dh.weight, dh.price, dh.dishid  FROM dishes_history dh, dishes_in_menus dm WHERE dh.menu_section = '".$menu_section."' and dm.menuid = '".$menu_id."' and dm.dishid = dh.dishid AND dm.isactive = '1' AND dh.isactive = '1' AND dh.id IN (SELECT MAX(id) AS id FROM dishes_history GROUP BY dishid) ORDER BY dh.name ASC;";
 		$rezult01 = mysql_query($tsql01);
+
 
 		if (mysql_num_rows($rezult01) > 0) 
 		{
 			while ($rows01 = mysql_fetch_array($rezult01)) 
 			{			
 				$dish[$dish['count']]['id'] = $rows01['id'];
-				$dish[$dish['count']]['title'] = $rows01['title'];
-				$dish[$dish['count']]['description'] = $rows01['description'];
+				$dish[$dish['count']]['dishid'] = $rows01['dishid'];
+				$dish[$dish['count']]['title'] = $rows01['name'];
+				//$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish[$dish['count']]['kogda'] = $rows01['kogda'];
 				$dish['count'] ++;
 			}
 		}
@@ -201,12 +204,11 @@ if ($items['isdrink'] == 1) $wclass = 'weightdrink';
 		{			
 			echo '<tr>';
 			echo '<td><span id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
-							<td><div id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
+							<td><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 							<td>'.$items[$i]["price"].'</td>
-							<td><input type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
-							<td><input name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
-							<td><button class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
-
+							<td><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
+							<td><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
+							<td><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 			echo '</tr>';					
 		}
 	}
@@ -536,15 +538,15 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 </tr>
 </tbody>';
 
-$eat_discont = 0;
+$food_discont = 0;
 $drink_discont = 0;
 $probka = 0;
 $teapay = 0;
 $service_sum =0;
 $service_discont = 0;
-$eat_sum = $level0_sum['_59'] + $level0_sum['_60'];
+$food_sum = $level0_sum['_59'] + $level0_sum['_60'];
 $drink_sum = $level0_sum['_61'] + $level0_sum['_19'];
-$eat_sum = $sum[0] ;
+$food_sum = $sum[0] ;
 $drink_sum = $sum[1];
 
 		$tsql011 = "SELECT s.id, s.name,    so.price ,  so.discont , so.num, so.comment FROM services s,  services_in_orders so  WHERE  so.orderid=".$zid." AND so.serviceid = s.id   ;";
@@ -564,7 +566,7 @@ $drink_sum = $sum[1];
 			}
 			if($rows011["id"] == 9)
 			{
-				$eat_discont = ($eat_sum * $rows011["discont"])/100;
+				$food_discont = ($food_sum * $rows011["discont"])/100;
 				$show =0;		
 			}
 			if($rows011["id"] == 10)
@@ -574,7 +576,8 @@ $drink_sum = $sum[1];
 			}
 			if($rows011["id"] == 12)
 			{
-				$teapay = ($eat_sum + $drink_sum)/$rows011["discont"];
+				$teapay = ($food_sum + $drink_sum)/$rows011["discont"];
+				$teapayproc = ' ('.round($rows011["discont"],0).'%)';
 				$show =0;		
 			}
 			
@@ -602,9 +605,30 @@ $drink_sum = $sum[1];
 	
 	//расчет сумм и скидок
 
+	if (!$drink_sum) $drink_sum = 0;
+	if (!$food_sum) $food_sum = 0;
+	if (!$service_sum) $service_sum = 0;
+					$servdiscproc = '';
+					if($service_discont > 0 & $service_sum > 0) 
+					{
+					$servdiscproc = ' ('.(round($service_discont/$service_sum,2)*100).'%)';
+					}
+
+					$fooddiscproc = '';
+					if($food_discont > 0 & $food_sum > 0) 
+					{
+					$fooddiscproc = ' ('.(round($food_discont/$food_sum,2)*100).'%)';
+					}
+					
+					$drinkdiscproc = '';
+					if($drink_discont > 0 & $drink_sum > 0) 
+					{
+					$drinkdiscproc = ' ('.(round($drink_discont/$drink_sum,2)*100).'%)';
+					}
 
 
-$summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $service_sum - $service_discont + $probka;
+
+$summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $service_sum - $service_discont + $probka;
 
 //////////////////////////////////
 		$body_out = $body_out.'<tr>'.chr(10);			
@@ -613,17 +637,17 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая стоимость по блюдам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$eat_sum.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$food_sum.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 		
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая Скидка по блюдам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$eat_discont.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$food_discont.$fooddiscproc.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -1 ).'" class="lite_summary_section">Итого по Блюдам:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="1" class="lite_summary_section">'.($eat_sum - $eat_discont).'</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="1" class="lite_summary_section">'.($food_sum - $food_discont).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
@@ -633,7 +657,7 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 		
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая Скидка по напиткам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$drink_discont.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$drink_discont.$drinkdiscproc.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 		
 		
@@ -649,7 +673,7 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая скидка по услугам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$service_discont.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$service_discont.$servdiscproc.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			

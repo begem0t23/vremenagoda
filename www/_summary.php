@@ -467,7 +467,7 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Наценка за обслуживание</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$teapay.$teapayproc.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$teapay.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
