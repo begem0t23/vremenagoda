@@ -544,9 +544,10 @@ fixednavbar();
 		
 		function shownextstep()
 		{
-		alladd = $("#createform  .btn-warning").length;			if(alladd > 0) 
+		alladd = $("#createform  .btn-danger").length;			if(alladd > 0) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
+				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
 			} else
 			{
 		
@@ -825,7 +826,7 @@ fixednavbar();
 						if (index)
 						{
 							$("#addserv"+index).removeClass("btn-default");
-							$("#addserv"+index).removeClass("btn-warning");
+							$("#addserv"+index).removeClass("btn-danger");
 							$("#addserv"+index).removeClass("disabled");
 							$("#addserv"+index).addClass("btn-primary");
 							$("#addserv"+index).html("Удалить");
@@ -905,10 +906,11 @@ fixednavbar();
 			
 			$( document ).on( "click", ".navbar a", function() 
 			{
-					alladd = $("#createform  .btn-warning").length;			
+					alladd = $("#createform  .btn-danger").length;			
 					if(alladd > 0) 
 					{
 						alert("Остались недобавленные позиции: " + alladd);
+				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 						return false;
 					} 
 			});
@@ -922,7 +924,7 @@ fixednavbar();
 				
 					$(this).removeClass("btn-default");
 					$(this).removeClass("disabled");
-					$(this).addClass("btn-warning");
+					$(this).addClass("btn-danger");
 				}
 			});
 			
@@ -1014,7 +1016,7 @@ fixednavbar();
 				{
 					$("#adddish"+id).removeClass("btn-default");
 					$("#adddish"+id).removeClass("disabled");
-					$("#adddish"+id).addClass("btn-warning");
+					$("#adddish"+id).addClass("btn-danger");
 				
 				} else
 				{
@@ -1022,7 +1024,7 @@ fixednavbar();
 					if($("#note"+id).val() == '') 
 					{
 						$("#adddish"+id).addClass("btn-default");
-						$("#adddish"+id).removeClass("btn-warning");
+						$("#adddish"+id).removeClass("btn-danger");
 					}
 				
 				}
@@ -1037,14 +1039,14 @@ fixednavbar();
 				if($(this).val() != "") 
 				{
 					$("#adddish"+id).removeClass("btn-default");
-					$("#adddish"+id).addClass("btn-warning");
+					$("#adddish"+id).addClass("btn-danger");
 				
 				} else
 				{
 					if($("#quant"+id).val() == '') 
 					{
 						$("#adddish"+id).addClass("btn-default");
-						$("#adddish"+id).removeClass("btn-warning");
+						$("#adddish"+id).removeClass("btn-danger");
 						$("#adddish"+id).addClass("disabled");
 					}
 				
@@ -1060,7 +1062,7 @@ fixednavbar();
 				id = id.substr(7);
 				if ($(this).html()=="Удалить")
 				{
-							$(this).addClass("btn-warning");
+							$(this).addClass("btn-danger");
 							$(this).removeClass("btn-primary");
 				
 					$(this).html("Добавить");				
@@ -1078,7 +1080,7 @@ fixednavbar();
 
 				else
 				{
-							$(this).removeClass("btn-warning");
+							$(this).removeClass("btn-danger");
 							$(this).addClass("btn-primary");
 
 					$(this).html("Удалить");
@@ -1145,7 +1147,7 @@ fixednavbar();
 				if($(this).val() != '') 
 				{
 					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).addClass("btn-warning");
+					$("#addserv"+id).addClass("btn-danger");
 					
 					if($("#discontserv"+id).val() != '') 
 					{
@@ -1159,7 +1161,7 @@ fixednavbar();
 					if($("#commentserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
 					{
 						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-warning");
+						$("#addserv"+id).removeClass("btn-danger");
 					}
 				
 				}
@@ -1186,7 +1188,7 @@ fixednavbar();
 				if($(this).val() != "") 
 				{
 					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).addClass("btn-warning");
+					$("#addserv"+id).addClass("btn-danger");
 					if($("#quantserv"+id).val() != '') 
 					{
 						$("#addserv"+id).removeClass("disabled");					
@@ -1199,7 +1201,7 @@ fixednavbar();
 					if(($("#quantserv"+id).val() == '' || bgs == 1) & $("#commentserv"+id).val() == '') 
 					{
 						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-warning");
+						$("#addserv"+id).removeClass("btn-danger");
 					
 					}
 				
@@ -1216,7 +1218,7 @@ fixednavbar();
 				if($(this).val() != "") 
 				{
 					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).addClass("btn-warning");
+					$("#addserv"+id).addClass("btn-danger");
 					if($("#quantserv"+id).val() != '') 
 					{
 						$("#addserv"+id).removeClass("disabled");					
@@ -1229,7 +1231,7 @@ fixednavbar();
 					if($("#quantserv"+id).val() == '' & $("#commentserv"+id).val() == '') 
 					{
 						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-warning");
+						$("#addserv"+id).removeClass("btn-danger");
 					
 					}
 				
@@ -1246,14 +1248,14 @@ fixednavbar();
 				if($(this).val() != "") 
 				{
 					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).addClass("btn-warning");
+					$("#addserv"+id).addClass("btn-danger");
 				
 				} else
 				{
 					if(($("#quantserv"+id).val() == '' || bgs == 1) & $("#discontserv"+id).val() == '') 
 					{
 						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-warning");
+						$("#addserv"+id).removeClass("btn-danger");
 						$("#addserv"+id).addClass("disabled");
 					}
 				
@@ -1272,7 +1274,7 @@ fixednavbar();
 				
 				if ($(this).html()=="Удалить")
 				{
-							$(this).addClass("btn-warning");
+							$(this).addClass("btn-danger");
 							$(this).removeClass("btn-primary");
 					$(this).html("Добавить");				
 					$("#servicename"+id).css("color", "");
@@ -1297,7 +1299,7 @@ fixednavbar();
 				else
 				{
 							
-						$(this).removeClass("btn-warning");
+						$(this).removeClass("btn-danger");
 						$(this).addClass("btn-primary");
 					$(this).html("Удалить");
 					$("#servicename"+id).css("color", "green");
@@ -1401,7 +1403,7 @@ fixednavbar();
 			// слушаем клики на элементы выбора страниц
 			id = $(this).prop("id");
 
-			alladd = $("#createform  .btn-warning").length;
+			alladd = $("#createform  .btn-danger").length;
 
 
 			
@@ -1409,6 +1411,7 @@ fixednavbar();
 			if(alladd > 0) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
+				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 			} else
 			{
 			
