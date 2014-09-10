@@ -1738,4 +1738,39 @@ echo '<br><br>
 }	
 }
 }
+
+
+if($_POST['operation'] == 'sendemail')
+{
+        $mess = $_POST['textemail'];
+        $mess2 = $_POST['emailhtml'];
+
+        // подключаем файл класса для отправки почты
+       require 'class.phpmailer.php';
+       require 'class.smtp.php';
+
+        $mail = new PHPMailer();
+        $mail->From = 'info@vremena-goda.ru';           // от кого
+        $mail->FromName = 'www.vremena-goda.ru';   // от кого
+        $mail->AddAddress('petervolok@yandex.ru', 'Имя'); // кому - адрес, Имя
+
+        $mail->IsHTML(true);        // выставляем формат письма HTML
+        $mail->Subject = 'Заявка на документы с сайта';  // тема письма
+
+        // если был файл, то прикрепляем его к письму
+        if(isset($_FILES['file'])) {
+                 if($_FILES['file']['error'] == 0){
+                    $mail->AddAttachment($_FILES['file']['tmp_name'], $_FILES['file']['name']);
+                 }
+        }
+
+		$mess = $mess.'</table><br /><br />';
+
+        $mail->Body = $mess;
+
+        // отправляем наше письмо
+        if (!$mail->Send()) die ('Mailer Error: '.$mail->ErrorInfo);
+		
+		echo 'yes';
+}
 ?>

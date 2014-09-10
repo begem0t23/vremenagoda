@@ -75,6 +75,51 @@ fixednavbar();
 		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>;edit  btn btn-primary,Редактирование заказа,<span class=".$q."glyphicon glyphicon-pencil".$q."></span>;events btn btn-primary,Просмотр мероприятий,<span class=".$q."glyphicon glyphicon-calendar".$q."></span>;payments btn btn-primary,Просмотр платежей,<span class=".$q."glyphicon glyphicon-book".$q."></span>"  //кнопки
 		);
 	} else {
+	
+	
+	?>
+		<table class="payments"><tr>
+	<td> 
+<button class="btn btn-default">Просмотр платежей</button>
+</td>
+</tr><tr>
+<td>	
+<div class="input-group">
+  <span class="input-group-addon"><span >Новый платеж</span></span>
+  <input type="text" id="newpayment" placeholder="введите сумму" class="form-control" orderid="<?php echo $_GET['view_zakazid']; ?>" onkeyup="newpay();">
+  <span class="input-group-addon">Р</span>
+</div>	
+<div class="input-group" style="display:none;">
+  <span class="input-group-addon"><span >Способ оплаты</span></span>
+   <select id="newpaymethod" placeholder="" class="form-control" onchange="newpay();">
+ <option value="0" disabled selected>Выберите способ</option>
+ <option value="1">Наличные</option>
+ <option value="2">Безнал</option>
+ <option value="3">Банковская карта</option>
+  </select>
+  <span class="input-group-addon"></span>
+</div>	
+
+<div class="input-group" style="display:none;">
+ <span class="input-group-addon"><span >Дата оплаты</span></span>
+ <input name="newpaydate" data-mask="99.99.9999" maxlength="10" type="text" id="newpaydate" onchange="newpay();" onclick="$('#newpaydate' ).datepicker( 'show' );" class="form-control" placeholder="Дата платежа">
+  <span class="input-group-addon"></span>
+  </div>	
+  
+<div class="input-group" style="display:none;">
+ <button class="btn btn-default" onclick="addpayment();" id="newpayadd">Добавить</button>
+</div>	
+
+</td></tr>
+</table>
+	
+	
+	
+	<?php
+	
+	
+	
+	
 	$format = 'screen';
 	if(@$_GET['f'] == 'pdf') {$format = 'pdf';}
 		report_client(
@@ -82,6 +127,14 @@ fixednavbar();
 		$_GET['view_zakazid'],
 		$format
 		);
+	
+	
+	
+	
+	
+	
+	
+	
 	}		
 	
 ?>		
@@ -158,6 +211,8 @@ function newpay()
 	
 $(function(){
 
+$('#newpaydate').datepicker();
+
  $(".report_client2")
   .tablesorter(
   {
@@ -195,31 +250,59 @@ $(function(){
       width: 400,
       modal: true,
       buttons: {
-        "Сохранить": sendemail,
+        "Отправить": sendemail,
         "Отмена": function() {
           dialog.dialog( "close" );
         }
-      },
-      close: function() {
-        form[ 0 ].reset();
-        allFields.removeClass( "ui-state-error" );
       }
     });
  
-    form = dialog.find( "form" ).on( "submit", function( event ) {
-      event.preventDefault();
-      addUser();
-    });
+  
 });
+function sendemail()
+{
 
+//alert($('#textemail').text());
+		
+	function remove_table(hallid,tabid){
+	 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'sendemail', textemail:'xxx'}
+			})
+			.done(function( msg ) {
+				if(msg == 'yes'){
+				alert("Сообщение отправлено");
+				dialog.dialog('close');
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+
+	}
+	
+}
+function openemail()
+{
+dialog.dialog('open');
+}
 </script>	
     <!-- Placed at the end of the document so the pages load faster -->
 	<div id="sendemail-form" title="Заполните информацию по пользователю.">
   <p class="validateTips">Отправить отчет по E-mail.</p>
   <form>
 	<input type="text" id="email" placeholder="Email Клиента" class="form-control" value="">
-	<input type="text" id="name" placeholder="Имя Клиента" class="form-control" value="">
-	<textarea rows = "20" placeholder="Текст Сообщения" class="form-control"></textarea>
+	<input type="text" id="name" placeholder="Копия" class="form-control" value="">
+	<textarea rows = "20" id="textemail" placeholder="Текст Сообщения" class="form-control">Здравствуйте Уважаемый(ая) Имя!
+	
+	Высылаем Вам копию Вашего заказа для ознакомления и ждем Ваших комментарием.
+	
+	Спасибо!
+	
+	Менеджер по  работе с клиентами,
+	Имя Фамилия
+	
+	Ресторан Времена Года.</textarea>
  </form>
 </div>
   </body>

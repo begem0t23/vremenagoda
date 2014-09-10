@@ -486,7 +486,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 	
 		if ($sections[$num]['dishes'] > 0) 
 		{	
-			$level0_sum[$sections[$num]['id']] = $sections[$num]['sum']; 
+			//$level0_sum[$sections[$num]['id']] = $sections[$num]['sum']; 
 			$sum[$sections[$num]['isdrink']] = @$sum[$sections[$num]['isdrink']] + @$sections[$num]['sum']; 
 			$body_out = $body_out.'<tbody><tr><th  colspan="'.($cs1 + $cs2).'" class="level_0">'.chr(10);			
 			$body_out = $body_out.$sections[$num]['name'].''.chr(10);
@@ -579,9 +579,9 @@ $probka = 0;
 $teapay = 0;
 $service_sum =0;
 $service_discont = 0;
-$eat_sum = $level0_sum['_59'] + $level0_sum['_60'];
-$drink_sum = @$level0_sum['_61'] + @$level0_sum['_19'];
-$eat_sum = $sum[0] ;
+//$food_sum = $level0_sum['_59'] + $level0_sum['_60'];
+//$drink_sum = @$level0_sum['_61'] + @$level0_sum['_19'];
+$food_sum = $sum[0] ;
 $drink_sum = $sum[1];
 
 		$tsql011 = "SELECT s.id, s.name,    so.price ,  so.discont , so.num, so.comment FROM services s,  services_in_orders so  WHERE  so.orderid=".$zid." AND so.serviceid = s.id   ;";
@@ -613,12 +613,12 @@ $drink_sum = $sum[1];
 			{
 				if ($rows011["discont"]>0) 
 				{
-					$teapay = ($eat_sum + $drink_sum)/$rows011["discont"];
+					$teapay = round(($food_sum + $drink_sum)/$rows011["discont"],2);
 					$teapayproc = ' ('.round($rows011["discont"],0).'%)';					
 				} 
 				else 
 				{
-					$teapay = ($eat_sum + $drink_sum);
+					$teapay = ($food_sum + $drink_sum);
 					$teapayproc = ' (0%)';
 				}
 				$show =0;		
@@ -1019,48 +1019,14 @@ $button2 = '<form action="_print.php" method="POST" target="_blank">
 			</form>';
 		
 $button3 = '<form action="#" method="POST" >
-			<button name="sendemail" onclick="openemail();" class = "btn btn-primary" type="submit"  title="Отправить отчет по заказу клиенту"><span class="glyphicon glyphicon-envelope"></span></button>
-			<textarea name="email" id="'.$zid.'"  cols="0" rows="0" style="display:none;">
+			<button name="sendemail" onclick="openemail();" class = "btn btn-primary" type="button"  title="Отправить отчет по заказу клиенту"><span class="glyphicon glyphicon-envelope"></span></button>
+			<textarea name="emailhtml" id="emailhtml" orderid="'.$zid.'"  cols="0" rows="0" style="display:none;">
 			'.$html1.$header.$title.$style.$table.$html2.'
 			</textarea>
 			</form>';
 
 ?>
-	<table class="payments"><tr>
-	<td> 
-<button class="btn btn-default">Просмотр платежей</button>
-</td>
-</tr><tr>
-<td>	
-<div class="input-group">
-  <span class="input-group-addon"><span >Новый платеж</span></span>
-  <input type="text" id="newpayment" placeholder="введите сумму" class="form-control" orderid="'.$zid.'" onkeyup="newpay();">
-  <span class="input-group-addon">Р</span>
-</div>	
-<div class="input-group" style="display:none;">
-  <span class="input-group-addon"><span >Способ оплаты</span></span>
-   <select id="newpaymethod" placeholder="" class="form-control" onchange="newpay();">
- <option value="0" disabled selected>Выберите способ</option>
- <option value="1">Наличные</option>
- <option value="2">Безнал</option>
- <option value="3">Банковская карта</option>
-  </select>
-  <span class="input-group-addon"></span>
-</div>	
 
-<div class="input-group" style="display:none;">
- <span class="input-group-addon"><span >Дата оплаты</span></span>
- <input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="newpaydate" onchange="newpay();" onclick="$('#newpaydate').datepicker();$('#newpaydate' ).datepicker( 'show' );" class="form-control required hasDatepicker" placeholder="Дата платежа">
-  <span class="input-group-addon"></span>
-  </div>	
-  
-<div class="input-group" style="display:none;">
- <button class="btn btn-default" onclick="addpayment();" id="newpayadd">Добавить</button>
-</div>	
-
-</td></tr>
-</table>
-	
 			
 	<?php		
 			
