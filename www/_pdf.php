@@ -3,6 +3,7 @@
 require_once("dompdf/dompdf_config.inc.php");
 header('Content-Type: text/html; charset=utf-8');
 $pdf= $_POST['pdf'];
+$zid= $_POST['number'];
 //$pdf= file_get_contents('new.php');;
 
 		if ( get_magic_quotes_gpc() )

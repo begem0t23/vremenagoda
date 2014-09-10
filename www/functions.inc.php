@@ -994,6 +994,7 @@ $table = '<table id="report_client_param" class="simple-little-table">'.chr(10).
 
 $button1 = '<form action="_pdf.php" method="POST">
 			<button class = "btn btn-primary" type="submit"  title="Скачать отчет по заказу в pdf">.pdf</button>
+			<input type="hidden" name="number" value="'.$zid.'">
 			<textarea name="pdf" id="'.$zid.'"  cols="0" rows="0" style="display:none;">
 			'.$html1.$header.$title.$style.$table.$html2.'
 			</textarea>
