@@ -4,6 +4,41 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
+
+function checktablesondate($checkdate,$hallid) 
+{
+
+				$insert = "INSERT INTO  `tables_on_date` 
+				SELECT NULL, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle` , `group`, '0', FROM_UNIXTIME('".strtotime($checkdate)."') , '".$_SESSION["curuserid"]."'
+				FROM  `tables` WHERE `hallid` = '".$hallid."'" ;
+
+//echo $insert;
+
+		$tsql2 = "SELECT * FROM `tables_on_date` WHERE `hallid` = '".$hallid."' AND `date` = FROM_UNIXTIME('".strtotime($checkdate)."');";
+			$rez_tab = mysql_query($tsql2);
+			if (mysql_num_rows($rez_tab)==0)
+			{
+			
+				mysql_query($insert);
+
+				$tsql3 = "SELECT * FROM `tables_on_date` WHERE `id` = '".$hallid."' AND `date` = FROM_UNIXTIME('".strtotime($checkdate)."');";
+				$rez_tab3 = mysql_query($tsql3);
+				if (mysql_num_rows($rez_tab3) > 0)
+				{
+					return 'yes';
+				}
+
+			}
+			else
+			{
+				return 'yes';
+			}
+
+
+}
+
+
+
 function print_dishes_for_client_report($items,$sectionid)
 {
 $output = Array();
@@ -82,7 +117,7 @@ function dishes_in_section_by_order($order_id,$menu_section,$cnt)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT d.id, d.title,   d.weight, do.price price2, do.num, do.note FROM dishes d,  dishes_in_orders do  WHERE d.menu_section = ".$menu_section." and do.orderid=".$order_id." and do.dishid = d.id   ;";
+		$tsql01 = "SELECT dh.id, dh.name,   dh.weight, do.price price2, do.num, do.note FROM dishes_history dh,  dishes_in_orders do  WHERE dh.menu_section = ".$menu_section." and do.orderid=".$order_id." and do.dishid = dh.dishid  AND dh.isactive = '1' GROUP BY  dh.dishid ORDER BY dh.kogda DESC;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -91,7 +126,7 @@ $dish['count'] = 0;
 			{	
 				$dish['sum'] = 	@$dish['sum'] + ($rows01['num'] *  $rows01['price2']);
 				$dish[$dish['count']]['id'] = $rows01['id'];
-				$dish[$dish['count']]['title'] = $rows01['title'];
+				$dish[$dish['count']]['title'] = $rows01['name'];
 				$dish[$dish['count']]['num'] = $rows01['num'];
 				$dish[$dish['count']]['note'] = $rows01['note'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
@@ -170,18 +205,21 @@ function dishes_in_section_by_menu($menu_id,$menu_section)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT d.id, d.title, d.description,  d.weight, d.price, m.dishid FROM dishes d, dishes_in_menus m  WHERE d.menu_section = ".$menu_section." and m.menuid=".$menu_id." and m.dishid = d.id AND m.isactive = '1'  AND d.isactive = '1' ;";
+		$tsql01 = "SELECT dh.id, dh.name, dh.weight, dh.price, dh.dishid  FROM dishes_history dh, dishes_in_menus dm WHERE dh.menu_section = '".$menu_section."' and dm.menuid = '".$menu_id."' and dm.dishid = dh.dishid AND dm.isactive = '1' AND dh.isactive = '1' AND dh.id IN (SELECT MAX(id) AS id FROM dishes_history GROUP BY dishid) ORDER BY dh.name ASC;";
 		$rezult01 = mysql_query($tsql01);
+
 
 		if (mysql_num_rows($rezult01) > 0) 
 		{
 			while ($rows01 = mysql_fetch_array($rezult01)) 
 			{			
 				$dish[$dish['count']]['id'] = $rows01['id'];
-				$dish[$dish['count']]['title'] = $rows01['title'];
-				$dish[$dish['count']]['description'] = $rows01['description'];
+				$dish[$dish['count']]['dishid'] = $rows01['dishid'];
+				$dish[$dish['count']]['title'] = $rows01['name'];
+				//$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish[$dish['count']]['kogda'] = $rows01['kogda'];
 				$dish['count'] ++;
 			}
 		}
@@ -201,12 +239,11 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 		{			
 			echo '<tr>';
 			echo '<td><span id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
-							<td><div id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
+							<td><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 							<td>'.$items[$i]["price"].'</td>
-							<td><input type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
-							<td><input name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
-							<td><button class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
-
+							<td><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
+							<td><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
+							<td><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 			echo '</tr>';					
 		}
 	}
@@ -536,15 +573,21 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 </tr>
 </tbody>';
 
-$eat_discont = 0;
+$food_discont = 0;
 $drink_discont = 0;
 $probka = 0;
 $teapay = 0;
 $service_sum =0;
 $service_discont = 0;
+<<<<<<< HEAD
 $eat_sum = $level0_sum['_59'] + $level0_sum['_60'];
 $drink_sum = @$level0_sum['_61'] + @$level0_sum['_19'];
 $eat_sum = $sum[0] ;
+=======
+$food_sum = $level0_sum['_59'] + $level0_sum['_60'];
+$drink_sum = $level0_sum['_61'] + $level0_sum['_19'];
+$food_sum = $sum[0] ;
+>>>>>>> 612b69ca7bf3862b2a703006a2c0f7b7a6c0900d
 $drink_sum = $sum[1];
 
 		$tsql011 = "SELECT s.id, s.name,    so.price ,  so.discont , so.num, so.comment FROM services s,  services_in_orders so  WHERE  so.orderid=".$zid." AND so.serviceid = s.id   ;";
@@ -564,7 +607,7 @@ $drink_sum = $sum[1];
 			}
 			if($rows011["id"] == 9)
 			{
-				$eat_discont = ($eat_sum * $rows011["discont"])/100;
+				$food_discont = ($food_sum * $rows011["discont"])/100;
 				$show =0;		
 			}
 			if($rows011["id"] == 10)
@@ -574,7 +617,12 @@ $drink_sum = $sum[1];
 			}
 			if($rows011["id"] == 12)
 			{
+<<<<<<< HEAD
 				if ($rows011["discont"]>0) {$teapay = ($eat_sum + $drink_sum)/$rows011["discont"];} else {$teapay = ($eat_sum + $drink_sum);}
+=======
+				$teapay = ($food_sum + $drink_sum)/$rows011["discont"];
+				$teapayproc = ' ('.round($rows011["discont"],0).'%)';
+>>>>>>> 612b69ca7bf3862b2a703006a2c0f7b7a6c0900d
 				$show =0;		
 			}
 			
@@ -602,9 +650,30 @@ $drink_sum = $sum[1];
 	
 	//расчет сумм и скидок
 
+	if (!$drink_sum) $drink_sum = 0;
+	if (!$food_sum) $food_sum = 0;
+	if (!$service_sum) $service_sum = 0;
+					$servdiscproc = '';
+					if($service_discont > 0 & $service_sum > 0) 
+					{
+					$servdiscproc = ' ('.(round($service_discont/$service_sum,2)*100).'%)';
+					}
+
+					$fooddiscproc = '';
+					if($food_discont > 0 & $food_sum > 0) 
+					{
+					$fooddiscproc = ' ('.(round($food_discont/$food_sum,2)*100).'%)';
+					}
+					
+					$drinkdiscproc = '';
+					if($drink_discont > 0 & $drink_sum > 0) 
+					{
+					$drinkdiscproc = ' ('.(round($drink_discont/$drink_sum,2)*100).'%)';
+					}
 
 
-$summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $service_sum - $service_discont + $probka;
+
+$summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $service_sum - $service_discont + $probka;
 
 //////////////////////////////////
 		$body_out = $body_out.'<tr>'.chr(10);			
@@ -613,17 +682,17 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая стоимость по блюдам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$eat_sum.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$food_sum.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 		
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая Скидка по блюдам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$eat_discont.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$food_discont.$fooddiscproc.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -1 ).'" class="lite_summary_section">Итого по Блюдам:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="1" class="lite_summary_section">'.($eat_sum - $eat_discont).'</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="1" class="lite_summary_section">'.($food_sum - $food_discont).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
@@ -633,7 +702,7 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 		
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая Скидка по напиткам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$drink_discont.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$drink_discont.$drinkdiscproc.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 		
 		
@@ -649,7 +718,7 @@ $summary = $eat_sum - $eat_discont + $drink_sum - $drink_discont + $teapay + $se
 
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая скидка по услугам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$service_discont.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$service_discont.$servdiscproc.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
@@ -819,7 +888,7 @@ border-spacing:0;
 	font-size:12px;
 	 padding:10px;
 	color: #000;
-  background-color: #99bfe6 !important;
+  background-color: #c1d2e4 !important;
    	border-left: 1px solid #e0e0e0;
 
   }
@@ -828,21 +897,21 @@ border-spacing:0;
 	font-size:14px;
 	 padding:10px;
 	color: #fff;
-  background-color: #0761BD !important;
+  background-color: #66a6e7 !important;
   }
 
 	.summary_section{
 	font-size:14px;
 	 padding:10px;
 	color: #fff;
-  background-color: #189407 !important;
+  background-color: #6bcf5d !important;
  
   }
  	.lite_summary_section{
 	font-size:12px;
 	 padding:1px;
 	color: #fff;
-  background-color: #189407 !important;
+  background-color: #6bcf5d !important;
  
   }
    
@@ -851,18 +920,35 @@ border-spacing:0;
 	}
     
 .contacts{
-width:700px;
+width:750px;
 	font-family:Arial, Helvetica, sans-serif;
 	color:#666;
-	font-size:12px;
+	font-size:10px;
 	_text-shadow: 1px 1px 0px #fff;
 	background:#fff;
 	border-bottom:#ccc 1px solid;
 	border-collapse:separate;
 border-collapse:collapse;
-border-spacing:10;
+border-spacing:1px;
 }
 .contacts tr td{
+	padding:0px;
+
+}
+
+.payments{
+width:450px;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#666;
+	font-size:10px;
+	_text-shadow: 1px 1px 0px #fff;
+	background:#fff;
+	border-bottom:#ccc 1px solid;
+	border-collapse:separate;
+border-collapse:collapse;
+border-spacing:1px;
+}
+.payments tr td{
 	padding:5px;
 
 }
@@ -881,12 +967,36 @@ $html1 = '<html>
 	    * {
 		  font-family: "DejaVu Serif Condensed", monospace;
 		}
-	  </style><javascript></head><body onload="ALERT("SSS");">';
+	  </style><javascript></head><body>';
 	  
 $html2 = '</body></html>';	  
 
-$header = '<table class="contacts"><tr><td width="200"><img src="images/logo.png" width="200"></td><td><table><tr><td width="70"><strong>Адрес:</strong></td><td>Москва, ЦПКиО им. Горького, Титовский проезд</td></tr><tr><td> <strong>Телефон:</strong></td><td> +7 (499) 237-1096</td></tr><tr><td><strong>Email:</strong></td><td> <a href="mailto:vremena-goda@mail.ru">vremena-goda@mail.ru</a></td></tr></table></p>
-</td></tr></table>';
+$header = '<table class="contacts">
+<tr>
+<td width="140"><img src="images/logo.png" width="200"></td>
+<td>
+<table>
+<tr>
+<td width="50"><strong>Адрес:</strong></td>
+<td width="190">Москва, ЦПКиО им. Горького, Титовский проезд</td>
+</tr>
+<tr>
+<td> <strong>Телефон:</strong></td>
+<td> +7 (499) 237-1096</td>
+</tr>
+<tr>
+<td><strong>Email:</strong></td>
+<td> <a href="mailto:vremena-goda@mail.ru">vremena-goda@mail.ru</a></td>
+</tr>
+<tr>
+<td><strong>Сайт:</strong></td>
+<td> <a href="http://www.vremena-goda.ru">www.vremena-goda.ru</a></td>
+</tr>
+
+</table>
+</td>
+</tr>
+</table>';
 
 $footer ='<p><strong>Исполнительный директор ___________________________________________</strong></p><p><strong>Заказчик___________________________________________________________</strong></p>';
 
@@ -917,10 +1027,46 @@ $button3 = '<form action="#" method="POST" >
 			</textarea>
 			</form>';
 
+?>
+	<table class="payments"><tr>
+	<td> 
+<button class="btn btn-default">Просмотр платежей</button>
+</td>
+</tr><tr>
+<td>	
+<div class="input-group">
+  <span class="input-group-addon"><span >Новый платеж</span></span>
+  <input type="text" id="newpayment" placeholder="введите сумму" class="form-control" orderid="'.$zid.'" onkeyup="newpay();">
+  <span class="input-group-addon">Р</span>
+</div>	
+<div class="input-group" style="display:none;">
+  <span class="input-group-addon"><span >Способ оплаты</span></span>
+   <select id="newpaymethod" placeholder="" class="form-control" onchange="newpay();">
+ <option value="0" disabled selected>Выберите способ</option>
+ <option value="1">Наличные</option>
+ <option value="2">Безнал</option>
+ <option value="3">Банковская карта</option>
+  </select>
+  <span class="input-group-addon"></span>
+</div>	
+
+<div class="input-group" style="display:none;">
+ <span class="input-group-addon"><span >Дата оплаты</span></span>
+ <input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="newpaydate" onchange="newpay();" onclick="$('#newpaydate').datepicker();$('#newpaydate' ).datepicker( 'show' );" class="form-control required hasDatepicker" placeholder="Дата платежа">
+  <span class="input-group-addon"></span>
+  </div>	
+  
+<div class="input-group" style="display:none;">
+ <button class="btn btn-default" onclick="addpayment();" id="newpayadd">Добавить</button>
+</div>	
+
+</td></tr>
+</table>
+	
+			
+	<?php		
+			
 	echo $style.'<table><tr><td width="560">'.$title.'</td><td>'.$button1.'</td><td>&nbsp;</td><td>'.$button2.'</td><td>&nbsp;</td><td>'.$button3.'</td></tr></table>'.$table;
-
-
-
 
 
 }

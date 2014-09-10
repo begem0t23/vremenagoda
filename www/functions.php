@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("config.inc.php");
 require_once("functions.inc.php");
 $qq = @$_SERVER['QUERY_STRING'];
@@ -6,10 +7,18 @@ if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 
 
+
 if ($_POST['operation'] == 'gethall') 
 {
 $hallid = $_POST['hallid'];
+$dateevent = $_POST['dateevent'];
 $fororder = $_POST['fororder'];
+
+	if($fororder == 'yes')
+	{
+		checktablesondate($dateevent,$hallid);
+	}
+	
 		header('Content-Type: text/html; charset=utf-8');
 
 		$tsql2 = "SELECT * FROM `hall` WHERE `id` = '".$hallid."';";
@@ -24,7 +33,13 @@ $fororder = $_POST['fororder'];
 
 			$ech = $ech.'<div  id="hallplace-'.$hallid.'" class="hallplace" hallid="'.$hallid.'" style="width:'.$hallwidth.'px; height:'.$hallheight.'px; ">';
 
-			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `hallid` = '".$hallid."' and `istable` = '1' ORDER BY `num` ASC;";
+			$tsql2 = "SELECT t.*, tt.* FROM `tables` AS t, `table_types` AS tt WHERE t.hallid = '".$hallid."'  AND tt.typeid = t.typeid ORDER BY `num` ASC;";
+			
+			if($fororder == 'yes')
+			{
+			$tsql2 = "SELECT td.*, tt.* FROM `tables_on_date` AS td, `table_types` AS tt WHERE td.hallid = '".$hallid."'  AND tt.typeid = td.typeid AND td.date = FROM_UNIXTIME('".strtotime($dateevent)."') ORDER BY `num` ASC;";
+			}
+			
 			$rez_tab = mysql_query($tsql2);
 			if (mysql_num_rows($rez_tab)>0)
 			{
@@ -70,37 +85,27 @@ $fororder = $_POST['fororder'];
 if ($_POST['operation'] == 'addtable') 
 {
 $hallid = $_POST['hallid'];
+$typeid = $_POST['typeid'];
 $ntop = $_POST['ntop'];
 $nleft = $_POST['nleft'];
 $ntop = substr($ntop, 0, strlen($ntop)-1).'0';
 $nleft = substr($nleft, 0, strlen($nleft)-1).'0';
 
-			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `istable` = '1' ORDER BY `num` desc;";
+			$tsql2 = "SELECT t.*, tt.* FROM `tables` AS t, `table_types` AS tt WHERE t.hallid = '".$hallid."' AND t.typeid = tt.typeid ORDER BY t.num desc;";
 			$rez_tab = mysql_query($tsql2);
 			$num=1;
 			if (mysql_num_rows($rez_tab)>0){
-			$row_tab = mysql_fetch_array($rez_tab);
-			$num = $row_tab['num'] + 1;
+
+			$num = mysql_num_rows($rez_tab);
 			}
 			
-			$insert = "INSERT INTO `tables_in_halls` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `width`, `height`, `istable`) VALUES (NULL, '".$num."', '4', '".$hallid."', '".$ntop."', '".$nleft."', '30', '30', '1');";
+			$insert = "INSERT INTO `tables` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle`, `group`) VALUES (NULL, 'n".$num."', '0', '".$hallid."', '".$ntop."', '".$nleft."', '".$typeid."', '0','0');";
 			mysql_query($insert);
 
 			echo 'yes';
 }
 
 
-if ($_POST['operation'] == 'addobject') 
-{
-$hallid = $_POST['hallid'];
-$num = $_POST['tabnum'];
-
-
-			$insert = "INSERT INTO `tables_in_halls` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `width`, `height`, `istable`) VALUES (NULL, '".$num."', '0', '".$hallid."', '0', '0', '100', '100', '0');";
-			mysql_query($insert);
-
-			echo 'yes';
-}
 
 
 
@@ -109,7 +114,7 @@ if ($_POST['operation'] == 'removetable')
 $tabid = $_POST['tabid'];
 $hallid = $_POST['hallid'];
 			
-			$delete = "DELETE FROM `tables_in_halls`  WHERE `id`  = '".$tabid."';";
+			$delete = "DELETE FROM `tables`  WHERE `id`  = '".$tabid."';";
 			mysql_query($delete);
 
 			echo 'yes';
@@ -124,20 +129,20 @@ $totabid = $_POST['totabid'];
 
 	if ($fromtabid > 0) 
 	{
-		$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `id` = ".$fromtabid." ;";
+		$tsql2 = "SELECT * FROM `tables` WHERE `id` = ".$fromtabid." ;";
 		$rez_tab = mysql_query($tsql2);
 		if (mysql_num_rows($rez_tab)>0)
 		{
 				$row_tab = mysql_fetch_array($rez_tab);
 				$persons = $row_tab['persons'] - 1;
 			
-			$update = "UPDATE `tables_in_halls` SET  `persons`  = '".$persons."' WHERE `id`  = '".$fromtabid."';";
+			$update = "UPDATE `tables` SET  `persons`  = '".$persons."' WHERE `id`  = '".$fromtabid."';";
 			mysql_query($update);
 			
 		}
 	}		
 			
-		$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `id` = ".$totabid." ;";
+		$tsql2 = "SELECT * FROM `tables` WHERE `id` = ".$totabid." ;";
 		$rez_tab = mysql_query($tsql2);
 		if (mysql_num_rows($rez_tab)>0)
 		{
@@ -145,10 +150,10 @@ $totabid = $_POST['totabid'];
 				$persons = $row_tab['persons'] + 1;
 				$hallid = $row_tab['hallid'];			
 			
-			$update = "UPDATE `tables_in_halls` SET  `persons`  = '".$persons."' WHERE `id`  = '".$totabid."';";
+			$update = "UPDATE `tables` SET  `persons`  = '".$persons."' WHERE `id`  = '".$totabid."';";
 			mysql_query($update);
 
-			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `hallid` = '".$hallid."' and `istable` = '1' ORDER BY `num` ASC;";
+			$tsql2 = "SELECT * FROM `tables` WHERE `hallid` = '".$hallid."'  ORDER BY `num` ASC;";
 			$rez_tab = mysql_query($tsql2);
 			if (mysql_num_rows($rez_tab)>0)
 			{
@@ -174,7 +179,7 @@ if ($_POST['operation'] == 'removechiar')
 $tabid = $_POST['tabid'];
 
 			
-		$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `id` = ".$tabid." ;";
+		$tsql2 = "SELECT * FROM `tables` WHERE `id` = ".$tabid." ;";
 		$rez_tab = mysql_query($tsql2);
 		if (mysql_num_rows($rez_tab)>0)
 		{
@@ -182,12 +187,12 @@ $tabid = $_POST['tabid'];
 				$persons = $row_tab['persons'] - 1;
 				$hallid = $row_tab['hallid'];
 					
-			$update = "UPDATE `tables_in_halls` SET  `persons`  = '".$persons."' WHERE `id`  = '".$tabid."';";
+			$update = "UPDATE `tables` SET  `persons`  = '".$persons."' WHERE `id`  = '".$tabid."';";
 			mysql_query($update);		
 			echo 'yes';		
 			
 			
-			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `hallid` = '".$hallid."' and `istable` = '1' ORDER BY `num` ASC;";
+			$tsql2 = "SELECT * FROM `tables` WHERE `hallid` = '".$hallid."'  ORDER BY `num` ASC;";
 			$rez_tab = mysql_query($tsql2);
 			if (mysql_num_rows($rez_tab)>0)
 			{
@@ -229,7 +234,7 @@ $tabnum = $_POST['tabnum'];
 $tabid = $_POST['tabid'];
 			
 			
-			$update = "UPDATE `tables_in_halls` SET  `num`  = '".$tabnum."' WHERE `id`  = '".$tabid."';";
+			$update = "UPDATE `tables` SET  `num`  = '".$tabnum."' WHERE `id`  = '".$tabid."';";
 			mysql_query($update);
 
 			
@@ -255,7 +260,7 @@ $nleft = substr($nleft, 0, strlen($nleft)-1).'0';
 
 
 			
-			$update = "UPDATE `tables_in_halls` SET  `persons`  = '".$persons."',  `top` = '".$ntop."' , `left` = '".$nleft."' WHERE `id`  = '".$id."';";
+			$update = "UPDATE `tables` SET  `persons`  = '".$persons."',  `top` = '".$ntop."' , `left` = '".$nleft."' WHERE `id`  = '".$id."';";
 			mysql_query($update);
 
 			echo 'yes';
@@ -731,7 +736,7 @@ if ($height > $maxheight) $height = $maxheight;
 		{
 		$row_05 = mysql_fetch_array($rezult05);
 		
-			$tsql2 = "SELECT * FROM `tables_in_halls` WHERE `istable` = '1' ORDER BY `num`+0 desc;";
+			$tsql2 = "SELECT * FROM `tables` WHERE `istable` = '1' ORDER BY `num`+0 desc;";
 			$rez_tab = mysql_query($tsql2);
 			$num=1;
 			if (mysql_num_rows($rez_tab)>0){
@@ -755,7 +760,7 @@ if ($height > $maxheight) $height = $maxheight;
 			if ($i == ($tables - 1))  $pint =  $tabfree;
 
 			$num ++;
-			$insert = "INSERT INTO `tables_in_halls` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `width`, `height`, `istable`) VALUES (NULL, '".$num."', '".$pint."', '".$row_05['id']."', '".$ntop."', '".$nleft."', '30', '30', '1');";
+			$insert = "INSERT INTO `tables` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `width`, `height`, `istable`) VALUES (NULL, '".$num."', '".$pint."', '".$row_05['id']."', '".$ntop."', '".$nleft."', '30', '30', '1');";
 			mysql_query($insert);
 			
 			$tabcnt = $tabcnt + $pint;

@@ -40,10 +40,15 @@
     .level_2{
   background-color: #F5F5A3 !important;
   }
+  
+   .newtable1{width:35px; height:25px;}
+  .newtable2{width:50px; height:50px;}
+
   .right{float:right;}
   .trash{margin: 5px; display:block; width:70px; height: 25px; border:1px; background-color: red; position:relative; float:right;}
-  .newtable{margin: 5px; display:block;width:44px; height:40px;  border:1px solid #ddd; background-color:#eee; position:relative; float:right;}
-   .newchiar {margin: 5px; display:block; width:30px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
+  .newtable{margin: 5px; display:block;  border:1px solid #ddd; background-color:#eee; position:relative; float:right;}
+   
+   .newchiar {margin: 5px; display:block; width:25px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
 
     .hallplace {display:block;  border:1px; background-color: #FFFFC0;margin:15px; }
    .chiar {display:block; width:11px; height: 11px; border:1px; background-color: #AADDC0; position:absolute;}
@@ -67,7 +72,7 @@
   .bottom-right-corner{right:-16px; bottom:-16px;}
   
  
-	.tabnum{font-size:22px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
+	.tabnum{font-size:18px; margin: -9px 0px 0 -8px; width:100%;height:100%;}
 		
 	</style>  
 
@@ -133,7 +138,8 @@ $bgs[1] = 'Да';
 			echo '<div id="hall-'.$row_hall['id'].'" >';
 
  			echo '<div class="trash" >Корзина</div>';
- 			echo '<div class="newtable" tabid="0" >СТОЛ</div>';
+ 			echo '<div class="newtable newtable2" tabid="0" typeid="2">Стол</div>';
+ 			echo '<div class="newtable newtable1" tabid="0" typeid="1">Стол</div>';
 			echo '<div class="newchiar" tabid="0" >стул</div>';
 
 			echo '<div id="hallcontent-'.$row_hall['id'].'" class="hallcontent"></div>';
@@ -224,11 +230,11 @@ $bgs[1] = 'Да';
 	
 	}
 	
-	function add_table(hallid,ntop,nleft){
+	function add_table(hallid,ntop,nleft,typeid){
 	 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'addtable', hallid: hallid, ntop:ntop, nleft:nleft}
+			data: { operation: 'addtable', hallid: hallid, ntop:ntop, nleft:nleft, typeid:typeid}
 			})
 			.done(function( msg ) {
 				if(msg == 'yes'){
@@ -492,13 +498,14 @@ $bgs[1] = 'Да';
 	tleft = ui.offset.left ;
 	ttop = ui.offset.top ;
   	tabid = $(this).attr('tabid');
+  	typeid = $(this).attr('typeid');
 	
 	pleft = $("#hallplace-"+curmenu()).offset().left;
 	ptop = $("#hallplace-"+curmenu()).offset().top;
 
 	ntop = ttop - ptop;
 	nleft = tleft - pleft;
-	if(tabid == 0) add_table(hallid,ntop,nleft);
+	if(tabid == 0) add_table(hallid,ntop,nleft,typeid);
 
 		
  	}

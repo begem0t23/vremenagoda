@@ -10,11 +10,18 @@
     <title><?php
 	echo PRODUCTNAME;
 	?></title>
-    <!-- Bootstrap core CSS -->
+     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="/css/sticky-footer-navbar.css" rel="stylesheet">
-  </head>
+
+    <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
+    <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
+    <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
+	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
+	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
+
+ </head>
 
 <style>
 
@@ -86,8 +93,16 @@ fixedbotbar();
 ?>
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <script src="/jquery/jquery.min.js"></script>
+   <script src="/jquery/jquery.min.js"></script>
+	<script src="/jquery/jquery.ui.datepicker-ru.js"></script>
+	<script src="/jquery/jquery-ui.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/jquery/validator.js"></script>
+	<script src="/jquery/jquery.cookie.js"></script>
+	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
+	<script src="/jquery/jquery.json-2.4.js"></script>
+	
+	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 <!-- TableSorter core JavaScript ================================================== -->
 		<!-- choose a theme file -->
 <link rel="stylesheet" href="/css/theme.blue.css">
@@ -98,6 +113,48 @@ fixedbotbar();
 <script type="text/javascript" src="/jquery/jquery.tablesorter.widgets.js"></script>
 
 <script type="text/javascript">
+	
+function newpay()
+{
+
+	val1 = $("#newpayment").val();
+
+	if(val1)
+	{
+		$("#newpaymethod").parent().show();
+	}
+	else
+	{
+		$("#newpaymethod").parent().hide();	
+		$("#newpaydate").parent().hide();	
+		$("#newpayadd").parent().hide();	
+	}
+	
+		val2 = $("#newpaymethod").val();
+
+	if(val2 > 0)
+	{
+		$("#newpaydate").parent().show();
+	}
+	else
+	{
+		$("#newpaydate").parent().hide();	
+		$("#newpayadd").parent().hide();	
+	}
+	
+	val3 = $("#newpaydate").val();
+
+	if(val3)
+	{
+		$("#newpayadd").parent().show();
+	}
+	else
+	{
+		$("#newpayadd").parent().hide();	
+	}
+
+}	
+	
 	
 $(function(){
 
