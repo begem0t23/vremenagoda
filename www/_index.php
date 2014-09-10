@@ -80,10 +80,12 @@ fixednavbar();
 	?>
 		<table class="payments"><tr>
 	<td> 
-<button class="btn btn-default">Просмотр платежей</button>
+<button class="btn btn-default" oncklick="allpaymentsview();">Просмотр платежей</button>
+<div id="allpayments" style="display:none;"></div>
 </td>
 </tr><tr>
 <td>	
+
 <div class="input-group">
   <span class="input-group-addon"><span >Новый платеж</span></span>
   <input type="text" id="newpayment" placeholder="введите сумму" class="form-control" orderid="<?php echo $_GET['view_zakazid']; ?>" onkeyup="newpay();">
@@ -107,7 +109,7 @@ fixednavbar();
   </div>	
   
 <div class="input-group" style="display:none;">
- <button class="btn btn-default" onclick="addpayment();" id="newpayadd">Добавить</button>
+ <button class="btn btn-default" onclick="add_payment();" id="newpayadd">Добавить</button>
 </div>	
 
 </td></tr>
@@ -118,8 +120,6 @@ fixednavbar();
 	<?php
 	
 	
-	
-	
 	$format = 'screen';
 	if(@$_GET['f'] == 'pdf') {$format = 'pdf';}
 		report_client(
@@ -127,13 +127,6 @@ fixednavbar();
 		$_GET['view_zakazid'],
 		$format
 		);
-	
-	
-	
-	
-	
-	
-	
 	
 	}		
 	
@@ -323,6 +316,51 @@ function openemail()
 {
 dialog.dialog('open');
 }
+
+
+
+
+
+
+
+	function add_payment(){
+	orderid = $("#newpayment").attr('orderid');
+			$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'addpayment', orderid:orderid, paysum: $("#newpayment").val(), paymeth:$("#newpaymethod").val(), paydate:$("#newpaydate").val()}
+		})
+		.done(function( msg ) {
+				if(msg == 'yes'){
+					get_all_payments(orderid);
+					} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+		});
+	}
+
+	function get_all_payments(orderid)
+	{
+	orderid = $("#newpayment").attr('orderid');
+				$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'getallpayments', orderid:orderid}
+		})
+		.done(function( msg ) {
+				if(msg == 'yes'){
+					$("#allpayments").html(msg);
+					} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+		});
+	}
+
+	
+	
+	
+	
+
 </script>	
     <!-- Placed at the end of the document so the pages load faster -->
 	<div id="sendemail-form" title="Заполните информацию по пользователю.">

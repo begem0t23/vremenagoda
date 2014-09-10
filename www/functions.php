@@ -5,6 +5,53 @@ require_once("functions.inc.php");
 $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
+
+
+
+if ($_POST['operation'] == 'addpayment') 
+{
+$orderid = $_POST['orderid'];
+$paysum = $_POST['paysum'];
+$paymeth = $_POST['paymeth'];
+$paydate = $_POST['paydate'];
+
+
+			$insert = "INSERT INTO `payments_in_orders` (`id`,`orderid`, `summa`, `method`, `createdby`,`paymentdate`,`createdate`) VALUES (NULL, '".$orderid."', '".$paysum."', '".$paymeth."', '".$_SESSION["curuserid"]."', '".convert_date($paydate)."', NOW());";
+			
+			mysql_query($insert);
+
+			echo 'yes';
+}
+
+
+
+if ($_POST['operation'] == 'getallpayments') 
+{
+$orderid = $_POST['orderid'];
+$paysum = $_POST['paysum'];
+$paymeth = $_POST['paymeth'];
+$paydate = $_POST['paydate'];
+
+
+		$tsql2 = "SELECT * FROM `payments_in_orders` WHERE `orderid` = '".$orderid."';";
+			$rez_tab = mysql_query($tsql2);
+			//$ech .= mysql_error(); 
+			if (mysql_num_rows($rez_tab)>0)
+			{
+				while ($row_tab = mysql_fetch_array($rez_tab))
+				{
+				
+				
+				}
+			}
+
+
+}
+
+
+
+
+
 if ($_POST['operation'] == 'gethall') 
 {
 $ech = "";
