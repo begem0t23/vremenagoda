@@ -515,7 +515,7 @@ else
 
 			if ($sections[$num]['items']['count'] > 0)
 			{
-				print_dishes($sections[$num]['items']);
+				print_dishes_for_edit($sections[$num]['items'],$q[1]);
 			}
 			
 			foreach ($val as $num1 => $val1) 
@@ -529,7 +529,7 @@ else
 
 					if ($val[$num1]['items']['count'] > 0)
 					{
-						print_dishes($val[$num1]['items']);
+						print_dishes_for_edit($val[$num1]['items'],$q[1]);
 					}
 
 					
@@ -546,7 +546,7 @@ else
 													
 								if ($val1[$num2]['items']['count'] > 0)
 								{
-									print_dishes($val1[$num2]['items']);
+									print_dishes_for_edit($val1[$num2]['items'],$q[1]);
 								}
 
 							}
@@ -608,55 +608,92 @@ else
 							</thead>';
 	?>
 <?php
-			while ($row_serv = mysql_fetch_array($r_serv))
+
+		$service_in_order = array();
+		$r_service_in_order = mysql_query("SELECT * FROM `services_in_orders` so where so.orderid=" . $q[1]);
+		while ($row_service_in_order = mysql_fetch_array($r_service_in_order))
 		{
-		$btnclass = 'btn-default disabled';
-			$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
-			$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
-			$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
-			$tocalcrowclass = "";
-	
-			$tocalc = 'tocalc=""';
-			if ($row_serv["tocalculate"] == '1') 
+			$service_in_order[$row_service_in_order["id"]] = array("serviceid"=>$row_service_in_order["serviceid"],
+			"price"=>$row_service_in_order["price"], 
+			"discont"=>$row_dish_in_order["discont"],
+			"num"=>$row_service_in_order["num"],"comment"=>$row_service_in_order["comment"]);
+		}
+
+		while ($row_serv = mysql_fetch_array($r_serv))
+		{
+			if ($service_in_order[$row_serv["id"]])
 			{
-			$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="hidden" size="5" value="0">';
-			$discont = '';
-				$tocalc = 'tocalc="1"';
-				$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($row_serv["price"],0,'','').'">';
-				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
-				$tocalcrowclass = 'tocalcrow';
+				$item = $service_in_order[$row_serv["id"]];
+				$butname = "Удалить";
+				$btnclass = 'btn-primary';
+				$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["num"].'">';
+				$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["discont"].'" name="discontserv">';
+				$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$item["price"].'">';
+				$tocalcrowclass = "";
+		
+				$tocalc = 'tocalc=""';
+				if ($row_serv["tocalculate"] == '1') 
+				{
+					$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="hidden" size="5" value="0">';
+					$discont = '';
+					$tocalc = 'tocalc="1"';
+					$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($item["price"],0,'','').'">';
+					$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
+					$tocalcrowclass = 'tocalcrow';
+				}
+				if ($row_serv["byguestcount"]==1)
+				{
+					$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" value="'.$item["num"].'" type="text" disabled>
+					<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="'.$item["discont"].'">';
+					$discont ='';
+				}
+										
 			}
-			if ($row_serv["byguestcount"]==1)
-							{
-								$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
-								<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
-								$discont ='';
-							}
-									
+			else
+			{
+				$butname = "Добавить";
+				$btnclass = 'btn-default disabled';
+				$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
+				$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
+				$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
+				$tocalcrowclass = "";
+		
+				$tocalc = 'tocalc=""';
+				if ($row_serv["tocalculate"] == '1') 
+				{
+				$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="hidden" size="5" value="0">';
+				$discont = '';
+					$tocalc = 'tocalc="1"';
+					$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($row_serv["price"],0,'','').'">';
+					$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
+					$tocalcrowclass = 'tocalcrow';
+				}
+				if ($row_serv["byguestcount"]==1)
+				{
+					$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
+					<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
+					$discont ='';
+				}
+										
+			}			
 			echo '<tr >';
+			echo '<td class = "'.$tocalcrowclass.'"><span id=servicename'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
+			
+			<td class = "'.$tocalcrowclass.'"><span id=servicedescr'.$row_serv["id"].'>'.$row_serv["description"].'</span></td>
 
-
-							echo '<td class = "'.$tocalcrowclass.'"><span id=servicename'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
-							
-							<td class = "'.$tocalcrowclass.'"><span id=servicedescr'.$row_serv["id"].'>'.$row_serv["description"].'</span></td>
-
-							<td class = "'.$tocalcrowclass.'">
-							'.$price.'
-							</td>
-							<td class = "'.$tocalcrowclass.'">
-							 
-							'.$quant.'
-							</td>
-							<td class = "'.$tocalcrowclass.'">
-							'.$discont.'
-							</td>
-							<td class = "'.$tocalcrowclass.'"><input name="commentserv" id="commentserv'.$row_serv["id"].'" type="text" size="20"></td>
-							<td class = "'.$tocalcrowclass.'"><button '.$tocalc.' class = "btn '.$btnclass.' " type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
-							
-								
-					
-				echo '</tr>';
-					
+			<td class = "'.$tocalcrowclass.'">
+			'.$price.'
+			</td>
+			<td class = "'.$tocalcrowclass.'">
+			 
+			'.$quant.'
+			</td>
+			<td class = "'.$tocalcrowclass.'">
+			'.$discont.'
+			</td>
+			<td class = "'.$tocalcrowclass.'"><input name="commentserv" id="commentserv'.$row_serv["id"].'" type="text" size="20"></td>
+			<td class = "'.$tocalcrowclass.'"><button '.$tocalc.' class = "btn '.$btnclass.' " type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">'.$butname.'</button></td>';		
+			echo '</tr>';
 		}
 				echo '</table>';		
 ?>
