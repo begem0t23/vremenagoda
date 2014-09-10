@@ -129,60 +129,58 @@ if ($q[1]>0)
 	{
 		$row = mysql_fetch_array($r_user);
 		//echo "OK^" . $row["id"]."^" . $row["phone"]."^" . $row["email"]."^" . $row["otkuda"];
-		$spanpage1 = '<div style="max-width: 400px"><form id=frm1 role="form" data-toggle="validator">';
-		$spanpage1.='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
-		$spanpage1.='<input type="text" readonly id=clientname value="'.htmlspecialchars($row["name"]).'" class="form-control">';						
-		$spanpage1.='<input type="hidden" id=clientid value="'.$row["id"].'">';						
-		$spanpage1.='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-phone-alt"></span></span>';
-		$spanpage1.='<input type="text" id=clientphone value="'.$row["phone"].'" class="form-control" placeholder="Телефон">';
-		$spanpage1.='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>';
-		$spanpage1.='<input type="email" id=clientemail value="'.$row["email"].'" class="form-control" placeholder="E-mail">';
+		echo '<div style="max-width: 400px"><form id=frm1 role="form" data-toggle="validator">';
+		echo '<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
+		echo '<input type="text" readonly id=clientname value="'.htmlspecialchars($row["name"]).'" class="form-control">';						
+		echo '<input type="hidden" id=clientid value="'.$row["id"].'">';						
+		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-phone-alt"></span></span>';
+		echo '<input type="text" id=clientphone value="'.htmlspecialchars($row["phone"]).'" class="form-control" placeholder="Телефон">';
+		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>';
+		echo '<input type="email" id=clientemail value="'.htmlspecialchars($row["email"]).'" class="form-control" placeholder="E-mail">';
 
-		$spanpage1.='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
+		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
 		$tsql2 = "select * from `client_from` ;";
 		$r_from = mysql_query($tsql2);
 		if (mysql_num_rows($r_from)>0)
 		{	
-			$spanpage1.= '<select id="clientfrom2" class="form-control">' . "";
-			$spanpage1.= '<option value="0">Укажите откуда пришел</option>' . "";
+			echo  '<select id="clientfrom2" class="form-control">' . "";
+			echo  '<option value="0">Укажите откуда пришел</option>' . "";
 			while ($row_from = mysql_fetch_array($r_from))
 			{	
 				$sel = '';
 				if($row["otkuda"] == $row_from["name"]) $sel = ' selected="selected"';
-				$spanpage1.='<option'. $sel .' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
+				echo '<option'. $sel .' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
 			}
-			$spanpage1.='<option value="999">Другое</option>' . "";
-			$spanpage1.='</select>' . "";
+			echo '<option value="999">Другое</option>' . "";
+			echo '</select>' . "";
 		}
-		$spanpage1.='<input type="text" id="clientfrom" style="display:none;" value="'.htmlspecialchars($row["otkuda"]).'" class="form-control" placeholder="Укажите откуда пришел">';
-		$spanpage1.='</div><br>';
-		$spanpage1.='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
-		$spanpage1.='<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent"  onchange="activatehall();" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
-		$spanpage1.='<input data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
-		$spanpage1.='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
-		$spanpage1.='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей" onchange="activatehall();">';
-		$spanpage1.='</div>';
+		echo '<input type="text" id="clientfrom" style="display:none;" value="'.htmlspecialchars($row["otkuda"]).'" class="form-control" placeholder="Укажите откуда пришел">';
+		echo '</div><br>';
+		echo '<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
+		echo '<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent"  onchange="activatehall();" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
+		echo '<input data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
+		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
+		echo '<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей" onchange="activatehall();">';
+		echo '</div>';
 
-		$spanpage1.='<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
+		echo '<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
 		
 		$tsql = "select * from hall where `isactive` = '1';";
 		$r_hall = mysql_query($tsql);
 		if (mysql_num_rows($r_hall)>0)
 		{	
-			$spanpage1.= '<select id="hall" class="form-control" disabled>' . "";
-			$spanpage1.= '<option value="0" checked>Укажите дату и количество гостей</option>' . "";
+			echo  '<select id="hall" class="form-control" disabled>' . "";
+			echo  '<option value="0" checked>Укажите дату и количество гостей</option>' . "";
 			while ($row_hall = mysql_fetch_array($r_hall))
 			{	
-				$spanpage1.= '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
+				echo  '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
 			}
-			$spanpage1.= '</select>' . "";
+			echo  '</select>' . "";
 		}
-		$spanpage1.='</div><br>';
-		$spanpage1.='<br><div  id="selectedhall"></div>';
+		echo '</div><br>';
+		echo '<br><div  id="selectedhall"></div>';
 		
-		$spanpage1.='<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
-		
-		echo $spanpage1;
+		echo '<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
 	}
 	else
 	{
@@ -871,7 +869,7 @@ else
 			dosetrightpaginator();
 			//alert(2);
 			doloadcreateform();
-			erasevaluesincookie();
+			//erasevaluesincookie();
 			
 			$('#tabs').smartTab({selected: 1});		
 
@@ -1355,7 +1353,7 @@ else
 			// вывод правильного содержания вкладки в зависимости от curpage
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());
-			readvaluesincookie();
+			//readvaluesincookie();
 			$("body").animate({"scrollTop":0},"slow");
 			//$("#spanpage"+curpage).css("visibility","visible");
 		}
