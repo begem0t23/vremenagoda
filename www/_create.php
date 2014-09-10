@@ -114,8 +114,7 @@ fixednavbar();
 		  <li id=pageright><a href="#">&raquo;</a></li>
 		</ul>
 
-		<input type=hidden id=timestart value="<?php
-		echo time(); ?>">
+		<input type=hidden id=timestart value="">
 		
 			<div id=createform style="width: 100%;">
 		
@@ -775,6 +774,7 @@ partytypes
 					erasevaluesincookie();
 					data = data.split("^");
 					$("#spanpage1").html("");
+					$("#timestart").val($.now());
 					//alert(data[0]);
 					spanpage1 = '<div style="max-width: 500px"><form id=frm1 role="form" data-toggle="validator">';
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
@@ -1665,6 +1665,7 @@ partytypes
 						additional_pars["dd"] = $.cookie("dishes");	
 						additional_pars["ss"] = $.cookie("service");
 						additional_pars["tt"] = $.cookie("tables");
+						additional_pars["ts"] = $("#timestart").val();
 						additional_pars["aa"] = $("#avans").val();
 						additional_pars["tp"] = $("#type").val();
 						additional_pars["cm"] = $("#comment").val();

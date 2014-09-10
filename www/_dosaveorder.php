@@ -31,6 +31,7 @@ $dd = @$_POST["dd"];
 $ss = @$_POST["ss"];
 $aa = @$_POST["aa"];
 $tt = @$_POST["tt"];
+$ts = @$_POST["ts"];
 $tp = @$_POST["tp"];
 $cm = @$_POST["cm"];
 
@@ -80,7 +81,7 @@ if (@$ci)
 {
 	$managerid = 0; $creatorid = $_SESSION["curuserid"]; $status=1;
 	if ($_SESSION["curuserrole"]==5) $managerid = $_SESSION["curuserid"]; $status=2;
-	$tsql = "insert into orders (creatorid, createdate, clientid, eventdate, eventtime, guestcount, status,managerid,hallid, type, comment) 
+	$tsql = "insert into orders (creatorid, createdate, clientid, eventdate, eventtime, guestcount, status,managerid,hallid, type, comment, totaltime) 
 	values(".mysql_real_escape_string($creatorid).",CURDATE(), ".mysql_real_escape_string($ci)."
 	,FROM_UNIXTIME('".strtotime(@$_POST["de"])."')
 	,'".mysql_real_escape_string(@$_POST["te"])."'
@@ -90,6 +91,7 @@ if (@$ci)
 	,'".mysql_real_escape_string(@$_POST["hh"])."'
 	,'".mysql_real_escape_string(@$_POST["tp"])."'
 	,'".mysql_real_escape_string(@$_POST["cm"])."'
+	,'".mysql_real_escape_string(time()-$ts)."'
 	);";
 	$r_order = mysql_query($tsql);
 	$tsql = "SELECT LAST_INSERT_ID() from orders;";
