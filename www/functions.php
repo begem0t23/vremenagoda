@@ -7,6 +7,7 @@ if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 if ($_POST['operation'] == 'gethall') 
 {
+$ech = "";
 $hallid = $_POST['hallid'];
 $dateevent = $_POST['dateevent'];
 $fororder = $_POST['fororder'];
@@ -20,6 +21,7 @@ $fororder = $_POST['fororder'];
 
 		$tsql2 = "SELECT * FROM `hall` WHERE `id` = '".$hallid."';";
 			$rez_tab = mysql_query($tsql2);
+			//$ech .= mysql_error(); 
 			if (mysql_num_rows($rez_tab)>0)
 			{
 				$row_tab = mysql_fetch_array($rez_tab);
@@ -42,6 +44,7 @@ $fororder = $_POST['fororder'];
 			}
 			
 			$rez_tab = mysql_query($tsql2);
+			//$ech .= mysql_error(); 
 			if (mysql_num_rows($rez_tab)>0)
 			{
 			
@@ -54,6 +57,7 @@ $fororder = $_POST['fororder'];
 			{
 				$tsql02 = "SELECT * FROM `tables_in_orders` WHERE `tableid` = '".$row_tab["id"]."';";
 				$rez_tab0 = mysql_query($tsql02);
+				//$ech .= mysql_error(); 
 				if (mysql_num_rows($rez_tab0)>0)
 				{
 					$inorder = 'btn-warning';
@@ -75,7 +79,7 @@ $fororder = $_POST['fororder'];
 						$ech = $ech.'</div>';
 
 	echo '<div class="title"><h4>Количество столов: '.$tabquant.'. Количество персон: '.$sumpersons.'.</h4></div>';
-		echo $ech;
+	echo $ech;
 }
 
 if ($_POST['operation'] == 'addtable') 
