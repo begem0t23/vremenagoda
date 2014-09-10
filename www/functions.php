@@ -5,9 +5,6 @@ require_once("functions.inc.php");
 $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
-
-
-
 if ($_POST['operation'] == 'gethall') 
 {
 $hallid = $_POST['hallid'];
@@ -76,11 +73,6 @@ $fororder = $_POST['fororder'];
 	echo '<div class="title"><h4>Количество столов: '.$tabquant.'. Количество персон: '.$sumpersons.'.</h4></div>';
 		echo $ech;
 }
-
-
-
-
-
 
 if ($_POST['operation'] == 'addtable') 
 {
@@ -173,7 +165,6 @@ $totabid = $_POST['totabid'];
 }
 
 
-
 if ($_POST['operation'] == 'removechiar') 
 {
 $tabid = $_POST['tabid'];
@@ -213,7 +204,6 @@ $tabid = $_POST['tabid'];
 }
 
 
-
 if ($_POST['operation'] == 'hallresize') 
 {
 $hallid = $_POST['hallid'];
@@ -243,11 +233,6 @@ $tabid = $_POST['tabid'];
 }
 
 
-
-
-
-
-
 if ($_POST['operation'] == 'changetable') 
 {
 $id = $_POST['tabid'];
@@ -265,10 +250,6 @@ $nleft = substr($nleft, 0, strlen($nleft)-1).'0';
 
 			echo 'yes';
 }
-
-
-
-
 
 
 if ($_POST['operation'] == 'saveevent') 
@@ -322,8 +303,6 @@ $date = $_POST['eventdate'];
 }
 
 
-
-
 if ($_POST['operation'] == 'getallevents') 
 {
 		header('Content-Type: text/html; charset=utf-8');
@@ -370,8 +349,6 @@ echo $ech;
 }
 
 
-
-
 if($_POST['operation'] == 'deletesection')
 {
 $id = $_POST['sectionid'];
@@ -399,10 +376,6 @@ $id = $_POST['sectionid'];
 
 }	
 	
-	
-	
-	
-
 if($_POST['operation'] == 'addsection')
 {
 $id = $_POST['sectionid'];
@@ -508,9 +481,6 @@ if ($id > 0)
 	
 	echo $ech;
 }
-
-
-
 
 
 if($_POST['operation'] == 'geteditsectionform')
@@ -668,8 +638,6 @@ if($_GET['operation'] == 'dishesorder')
 
 }	
 	
-
-
 
 if($_POST['operation'] == 'changehall')
 {

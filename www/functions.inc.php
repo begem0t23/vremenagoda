@@ -4,7 +4,6 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
-
 function checktablesondate($checkdate,$hallid) 
 {
 
@@ -38,7 +37,6 @@ function checktablesondate($checkdate,$hallid)
 }
 
 
-
 function print_dishes_for_client_report($items,$sectionid)
 {
 $output = Array();
@@ -69,11 +67,6 @@ $class =  '';
 	}
 	return $output;
 }
-
-
-
-
-
 
 function print_dishes_for_order_summary($items,$sectionid)
 {
@@ -106,11 +99,6 @@ $class =  '';
 	}
 	return $output;
 }
-
-
-
-
-
 
 
 function dishes_in_section_by_order($order_id,$menu_section,$cnt)
