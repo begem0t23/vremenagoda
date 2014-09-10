@@ -925,6 +925,23 @@ border-spacing:1px;
 	padding:0px;
 
 }
+
+.payments{
+width:450px;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#666;
+	font-size:10px;
+	_text-shadow: 1px 1px 0px #fff;
+	background:#fff;
+	border-bottom:#ccc 1px solid;
+	border-collapse:separate;
+border-collapse:collapse;
+border-spacing:1px;
+}
+.payments tr td{
+	padding:5px;
+
+}
 .contacts tr td table{
 	font-size:14px;
 
@@ -1000,10 +1017,46 @@ $button3 = '<form action="#" method="POST" >
 			</textarea>
 			</form>';
 
+?>
+	<table class="payments"><tr>
+	<td> 
+<button class="btn btn-default">Просмотр платежей</button>
+</td>
+</tr><tr>
+<td>	
+<div class="input-group">
+  <span class="input-group-addon"><span >Новый платеж</span></span>
+  <input type="text" id="newpayment" placeholder="введите сумму" class="form-control" orderid="'.$zid.'" onkeyup="newpay();">
+  <span class="input-group-addon">Р</span>
+</div>	
+<div class="input-group" style="display:none;">
+  <span class="input-group-addon"><span >Способ оплаты</span></span>
+   <select id="newpaymethod" placeholder="" class="form-control" onchange="newpay();">
+ <option value="0" disabled selected>Выберите способ</option>
+ <option value="1">Наличные</option>
+ <option value="2">Безнал</option>
+ <option value="3">Банковская карта</option>
+  </select>
+  <span class="input-group-addon"></span>
+</div>	
+
+<div class="input-group" style="display:none;">
+ <span class="input-group-addon"><span >Дата оплаты</span></span>
+ <input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="newpaydate" onchange="newpay();" onclick="$('#newpaydate').datepicker();$('#newpaydate' ).datepicker( 'show' );" class="form-control required hasDatepicker" placeholder="Дата платежа">
+  <span class="input-group-addon"></span>
+  </div>	
+  
+<div class="input-group" style="display:none;">
+ <button class="btn btn-default" onclick="addpayment();" id="newpayadd">Добавить</button>
+</div>	
+
+</td></tr>
+</table>
+	
+			
+	<?php		
+			
 	echo $style.'<table><tr><td width="560">'.$title.'</td><td>'.$button1.'</td><td>&nbsp;</td><td>'.$button2.'</td><td>&nbsp;</td><td>'.$button3.'</td></tr></table>'.$table;
-
-
-
 
 
 }
