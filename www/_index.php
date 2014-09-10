@@ -267,7 +267,7 @@ function sendemail()
 	 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'sendemail', textemail:'xxx'}
+			data: { operation: 'sendemail', textemail:$('#textemail').text()}
 			})
 			.done(function( msg ) {
 				if(msg == 'yes'){
@@ -295,16 +295,16 @@ dialog.dialog('open');
   <form>
 	<input type="text" id="email" placeholder="Email Клиента" class="form-control" value="">
 	<input type="text" id="name" placeholder="Копия" class="form-control" value="">
-	<textarea rows = "20" id="textemail" placeholder="Текст Сообщения" class="form-control">Здравствуйте Уважаемый(ая) Имя!
-	
+	<textarea rows = "20" id="textemail" placeholder="Текст Сообщения" class="form-control">Здравствуйте Уважаемый(ая) Имя! 
+	<br><br>
 	Высылаем Вам копию Вашего заказа для ознакомления и ждем Ваших комментарием.
-	
+	<br><br>
 	Спасибо!
-	
-	Менеджер по  работе с клиентами,
-	Имя Фамилия
-	
-	Ресторан Времена Года.</textarea>
+	<br><br>
+	Менеджер по  работе с клиентами,<br>
+	Имя Фамилия<br>
+	<br>
+	Ресторан Времена Года.<br><br></textarea>
  </form>
 </div>
   </body>

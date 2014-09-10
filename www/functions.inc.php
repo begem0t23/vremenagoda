@@ -717,10 +717,10 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'<td  colspan="1">'.$teapay.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Пробковый сбор</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$probka.'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		//$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
+		//$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Пробковый сбор</td>'.chr(10);
+		//$body_out = $body_out.'<td  colspan="1">'.$probka.'</td>'.chr(10);
+		//$body_out = $body_out.'</tr>'.chr(10);
 		
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - 1).'"  class="summary_section">ИТОГО:</th>'.chr(10);

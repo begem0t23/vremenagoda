@@ -1720,7 +1720,7 @@ if($_POST['operation'] == 'sendemail')
 {
         $mess = $_POST['textemail'];
         $mess2 = $_POST['emailhtml'];
-echo $mess;
+
         // подключаем файл класса для отправки почты
        require 'class.phpmailer.php';
        require 'class.smtp.php';
@@ -1731,9 +1731,9 @@ echo $mess;
         $mail->AddAddress('petervolok@yandex.ru', 'Имя'); // кому - адрес, Имя
 
         $mail->IsHTML(true);        // выставляем формат письма HTML
-        $mail->Subject = 'Заявка на документы с сайта';  // тема письма
+        $mail->Subject = 'Заказ Банкета в ресторане Времена Года';  // тема письма
 
-        // если был файл, то прикрепляем его к письму
+         если был файл, то прикрепляем его к письму
         if(isset($_FILES['file'])) {
                  if($_FILES['file']['error'] == 0){
                     $mail->AddAttachment($_FILES['file']['tmp_name'], $_FILES['file']['name']);
