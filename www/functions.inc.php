@@ -237,6 +237,30 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 	}
 }
 
+function print_dishes_for_edit($items, $order)
+{
+$wclass = 'weightfood';
+if ($order) {
+if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
+
+	if ($items['count'] > 0)
+	{
+		$r_dish_in_order = mysql_query("SELECT * FROM  `dishes_in_orders` where orderid=" . $order);
+		
+		for($i=0;$i<$items['count'];$i++)
+		{			
+			echo '<tr>';
+			echo '<td><span id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
+				<td><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
+				<td>'.$items[$i]["price"].'</td>
+				<td><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
+				<td><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
+				<td><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
+			echo '</tr>';					
+		}
+	}
+}	
+}
 
 function print_dishes_for_editor($items,$menuid,$sectionid,$typetree)
 {

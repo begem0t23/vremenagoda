@@ -1,6 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -84,9 +84,9 @@ ini_set("display_errors", 1);
   .bottom-right-corner{right:-16px; bottom:-16px;}
   
  
-	.tabnum{font-size:22px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
+	.tabnum{font-size:18px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
 		
-		#weightcalc {position:fixed; top:420px; left:60px;}
+		#weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
   </style>  
 
   </head>
@@ -112,10 +112,12 @@ fixednavbar();
 		  <li id=pageleft><a href="#">&laquo;</a></li>
 		  <li id=page1><a href="#">1: Клиент</a></li>
 		  <li id=page2><a href="#">2: Блюда</a></li>
-		  <li id=page3><a href="#">3: Услуги</a></li>
-		  <li id=page4><a href="#">4: Сохранение</a></li>
+		  <li id=page3><a href="#">3: Напитки</a></li>
+		  <li id=page4><a href="#">4: Услуги</a></li>
+		  <li id=page5><a href="#">5: Сохранение</a></li>
 		  <li id=pageright><a href="#">&raquo;</a></li>
 		</ul>
+
 
 
 			<div id=createform style="width: 100%;">
@@ -218,31 +220,15 @@ else
 		<div id=spanpage2 style="visibility: hidden">
 		<form id=frm2 role="form" data-toggle="validator">
 
-		<button id="weightcalc" class="btn btn-default">Общий вес: 0г<br>Вес на человека: 0г</button>
-		<?php		
-	$tsql = "select * from menus where isactive ='1';";
-	$r_menutype = mysql_query($tsql);
-	if (mysql_num_rows($r_menutype)>0)
-	{	
-?>
-<div id="tabs" style="min-width: 600px; width: 100%;">
-    <ul>
-<?php
-		$index=0;
-		while ($row_menutype = mysql_fetch_array($r_menutype))
-		{
-			echo '<li><a href="#menu-'.$row_menutype["id"].'" onClick="showST('.$index.')">'.$row_menutype["type_name"].'</a></li>';
-			$index++;
-		}
-?>
-    </ul>
-<?php		
-	}
-?>
-<?php	
+		<span id="weightcalc" class="btn btn-default">
+			<div id="foodweightall">Общий вес: 0г</div>
 
+			<div id="foodweightaver">Средний вес: 0г</div>
+
+		</span>
+<?php
 	//сборка массива секций с блюдами для конкретного меню
-	$tsql = "select * from menus where isactive ='1';";
+	$tsql = "select * from menus where `id` ='1';";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
 	{	
@@ -284,12 +270,12 @@ else
 	
 
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
-		
+
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
-	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] = 0;
 	$sections[$rows0['id']]['items'] = $zzz;
-	
+	$sections[$rows0['id']]['items']['isdrink'] = $rows0['isdrink'];
 	
 		$tsql_1 = "SELECT * 
 		 FROM `menu_sections`  
@@ -306,6 +292,7 @@ else
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
 	$sections[$rows0['id']][$rows_1['id']]['items'] = $zzz;
+	$sections[$rows0['id']][$rows_1['id']]['items']['isdrink'] = $rows_1['isdrink'];
 	
 		
 		$tsql_2 = "SELECT * 
@@ -323,6 +310,188 @@ else
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items']['isdrink'] = $rows_2['isdrink'];
+	
+
+	} //result_2
+			
+	} //result_1
+			
+	} //result0
+// конец сборки	
+	
+	
+	//цикл по массиву секций с блюдами для конкретного меню для вывода на экран
+	foreach ($sections as $num => $val) 
+	{
+	
+		if ($sections[$num]['dishes'] > 0) 
+		{	
+			
+			echo '<tbody><tr><th  colspan="6" class="level_0">'.chr(10);			
+			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
+			echo '</th></tr></tbody>'.chr(10);
+
+			if ($sections[$num]['items']['count'] > 0)
+			{
+				print_dishes_for_edit($sections[$num]['items'], $q[1]);
+			}
+			
+			foreach ($val as $num1 => $val1) 
+			{
+				
+				if ($val[$num1]['dishes'] > 0) 
+				{	
+					echo '<tbody><tr><th  colspan="6" class="level_1">'.chr(10);			
+					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
+					echo '</th></tr></tbody>'.chr(10);
+
+					if ($val[$num1]['items']['count'] > 0)
+					{
+						print_dishes_for_edit($val[$num1]['items'],$q[1]);
+					}
+
+					
+					if (is_array($val1)) 
+					{
+						foreach ($val1 as $num2 => $val2) 
+						{
+	
+							if ($val1[$num2]['dishes'] > 0) 
+							{	
+								echo '<tbody><tr><th  colspan="6" class="level_2">'.chr(10);			
+								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
+								echo '</th></tr></tbody>'.chr(10);
+													
+								if ($val1[$num2]['items']['count'] > 0)
+								{
+									print_dishes_for_edit($val1[$num2]['items'],$q[1]);
+								}
+
+							}
+	
+	
+	
+						}
+					}
+				}
+			}
+	
+		}
+	}
+	
+	//конец цикла
+	
+			echo '</table>';
+			echo '</div>';
+
+}	
+}
+?>			
+	
+	
+		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
+		</form>
+		</div>
+
+		<!-- drink -->		
+		
+		<div id=spanpage3 style="visibility: hidden">
+		<form id=frm3 role="form" data-toggle="validator">
+
+		<span id="weightcalc" class="btn btn-default">
+			<div id="drinkweightall">Общий объём: 0г</div>
+
+			<div id="drinkweightaver">Средний объём: 0г</div>
+
+		</span>
+
+<?php	
+
+	//сборка массива секций с блюдами для конкретного меню
+	$tsql = "select * from menus where `id` ='2';";
+	$r_menutype = mysql_query($tsql);
+	if (mysql_num_rows($r_menutype)>0)
+	{	
+
+	while ($row_menutype = mysql_fetch_array($r_menutype))
+		{ 
+			echo '<div id="menu-'.$row_menutype["id"].'"  style="width: 100%;">';
+
+				echo '<table class = "tablesorter order" style="width: 100%;">';
+				echo 	'<colgroup>
+						<col width="250" />
+						<col width="50" />
+						<col width="50" />
+						<col width="20" />
+						<col width="50" />
+						<col width="150" />
+						</colgroup>';
+
+				echo  '<thead>
+							<tr>
+							<th class="sorter-false">Название</th>
+							<th class="sorter-false">Порции (кг)</th>
+							<th class="sorter-false">Цена</th>
+							<th class="sorter-false">Кол-во</th>
+							<th class="sorter-false">Комментарий</th>
+							<th class="sorter-false">Действие</th>
+							</tr>
+							</thead>';
+
+	$sections = Array();
+		$tsql0 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '0' ORDER BY `sortid` ASC;
+		 ";
+		$rezult0 = mysql_query($tsql0);
+
+	while ($rows0 = mysql_fetch_array($rezult0)) {
+	
+	
+
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
+
+	$sections[$rows0['id']]['name'] = $rows0['section_name'];
+	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['children'] = 0;
+	$sections[$rows0['id']]['items'] = $zzz;
+	$sections[$rows0['id']]['items']['isdrink'] = $rows0['isdrink'];
+	
+		$tsql_1 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
+		 ";
+		$rezult_1 = mysql_query($tsql_1);
+
+	while ($rows_1 = mysql_fetch_array($rezult_1)) {
+
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id']);
+	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['children'] ++;
+	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name'];
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = @$sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
+	$sections[$rows0['id']][$rows_1['id']]['items'] = $zzz;
+	$sections[$rows0['id']][$rows_1['id']]['items']['isdrink'] = $rows_1['isdrink'];
+	
+		
+		$tsql_2 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."' ORDER BY `sortid` ASC
+		 ";
+	$rezult_2 = mysql_query($tsql_2);
+
+	while ($rows_2 = mysql_fetch_array($rezult_2)) {
+
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_2['id']);
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = @$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items']['isdrink'] = $rows_2['isdrink'];
 	
 
 	} //result_2
@@ -352,7 +521,7 @@ else
 			foreach ($val as $num1 => $val1) 
 			{
 				
-				if ($val[$num1]['dishes'] > 0) 
+				if (@$val[$num1]['dishes'] > 0) 
 				{	
 					echo '<tbody><tr><th  colspan="6" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
@@ -369,7 +538,7 @@ else
 						foreach ($val1 as $num2 => $val2) 
 						{
 	
-							if ($val1[$num2]['dishes'] > 0) 
+							if (@$val1[$num2]['dishes'] > 0) 
 							{	
 								echo '<tbody><tr><th  colspan="6" class="level_2">'.chr(10);			
 								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
@@ -399,15 +568,16 @@ else
 
 }	
 }
-?>				
+?>			
 	
-	</div>		
+
 		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
+		
 		<!-- услуги -->
-		<div id=spanpage3 style="visibility: hidden;">
-		<form id=frm3 role="form" data-toggle="validator">
+		<div id=spanpage4 style="visibility: hidden;">
+		<form id=frm4 role="form" data-toggle="validator">
   
   <?php		
 	$tsql = "SELECT * FROM `services` WHERE `isactive` = 1  ORDER BY `tocalculate` DESC,`orderby` ASC;";
@@ -443,21 +613,24 @@ else
 		$btnclass = 'btn-default disabled';
 			$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
 			$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
+			$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
 			$tocalcrowclass = "";
-			$proc = '';
+	
 			$tocalc = 'tocalc=""';
 			if ($row_serv["tocalculate"] == '1') 
 			{
-				$discont = '';
-				$proc='%';
+			$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="hidden" size="5" value="0">';
+			$discont = '';
 				$tocalc = 'tocalc="1"';
-				$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="hidden" size="2" value="0">';
-				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="checkbox" value="" checked="checked">';
+				$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($row_serv["price"],0,'','').'">';
+				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
 				$tocalcrowclass = 'tocalcrow';
 			}
 			if ($row_serv["byguestcount"]==1)
 							{
-								$quant =  '<input bgs="1" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="checkbox" value="">';
+								$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
+								<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
+								$discont ='';
 							}
 									
 			echo '<tr >';
@@ -467,7 +640,9 @@ else
 							
 							<td class = "'.$tocalcrowclass.'"><span id=servicedescr'.$row_serv["id"].'>'.$row_serv["description"].'</span></td>
 
-							<td class = "'.$tocalcrowclass.'"><input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.number_format($row_serv["price"],0,'','').$proc.'"></td>
+							<td class = "'.$tocalcrowclass.'">
+							'.$price.'
+							</td>
 							<td class = "'.$tocalcrowclass.'">
 							 
 							'.$quant.'
@@ -491,29 +666,23 @@ else
 		<br><br><br><div class="input-group"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
-		<div id=spanpage4 style="visibility: hidden">
-		<form id=frm4 role="form" data-toggle="validator">
+		<div id=spanpage5 style="visibility: hidden">
+		<form id=frm5 role="form" data-toggle="validator">
 
 <div id=resultform>
 </div>
 <br>		
-<div class="input-group">
-  <span class="input-group-addon"><span ></span></span>
+<div class="input-group" style="max-width:500px">
+  <span class="input-group-addon"><span class="glyphicon glyphicon-gift"></span></span>
   <input type="text" id="type" placeholder="тип мероприятия" class="form-control">
-  <span class="input-group-addon"></span>
+partytypes
 </div>
 <br>		
-<div class="input-group">
-  <span class="input-group-addon"><span class=rouble></span></span>
+<div class="input-group" style="max-width:500px">
+  <span class="input-group-addon"><span class="glyphicon glyphicon-font"></span></span>
   <textarea id="comment" placeholder="Комментарий по проведению" class="form-control"></textarea>
-  <span class="input-group-addon"></span>
 </div>
 <br>		
-<div class="input-group">
-  <span class="input-group-addon"><span class=rouble>Р</span></span>
-  <input type="text" id=avans placeholder="Задаток" class="form-control">
-  <span class="input-group-addon">.00</span>
-</div>
 	
 		<br><div class="input-group"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</form>
@@ -521,7 +690,6 @@ else
     </div>
 
 <?php
-
 //fixedbotbar();
 
 ?>
@@ -605,6 +773,9 @@ else
 				break;
 				case 4:
 					$("#page4").prop("class","disabled");				
+				break;
+				case 5:
+					$("#page5").prop("class","disabled");				
 					$("#pageright").prop("class","disabled");
 				break;
 				default:
@@ -615,7 +786,7 @@ else
 		function erasedisablefromli()
 		{
 			// Стирание дисэблед статуса для всех кнопок страниц, чтобы потом поставить правильный
-			for (i=1;i<=4;i++)
+			for (i=1;i<=5;i++)
 			{
 				//alert(curpage);
 				//if (i!=curpage) 
@@ -628,12 +799,12 @@ else
 		
 		function shownextstep()
 		{
-			alladd = $("#createform .btn-warning").length;			
-			if(alladd == 1110) 
+		alladd = $("#createform  .btn-danger").length;			
+		if(alladd > 0) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
-			} 
-			else
+				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
+			} else
 			{
 		
 		
@@ -648,12 +819,13 @@ else
 			//$curpage = $("#createform").clone();
 			//$("#spanpage"+curpage).html($curpage);
 			setvaluesincookie();
-			if (curpage<4) curpage = curpage + 1;
+			if (curpage<5) curpage = curpage + 1;
 			//$("#spanpage"+curpage).css("left",x);
 			//$("#spanpage"+curpage).css("top",y);	
 			$("#createform").html($("#spanpage"+curpage).html());			
 			//$("#spanpage"+curpage).css("visibility","visible");
 			$("#page"+curpage).click();
+						count_dish_weight();	
 			return true;
 			}
 		}
@@ -671,6 +843,7 @@ else
 					$.removeCookie("clientname");
 					$.removeCookie("clientid");
 					$.removeCookie("clientfrom");
+					$.removeCookie("clientfrom4");
 					$.removeCookie("clientphone");
 					$.removeCookie("clientemail");
 					$.removeCookie("dateevent");
@@ -680,6 +853,8 @@ else
 					$.removeCookie("dishes");
 					$.removeCookie("service");
 					$.removeCookie("tables");
+					//$.removeCookie("timestart");
+					
 				}
 			}
 		}		
@@ -692,7 +867,11 @@ else
 				//alert($("#clientid").val());
 				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
 				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
-				$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
+				if ($("body #clientfrom").val()!="Укажите откуда пришел")
+				{
+					$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
+				}
+				$.cookie("clientfrom4", $("body #clientfrom4").val(),{ expires: 1, path: '/' });
 				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
 				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
 				$.cookie("dateevent", $("body #dateevent").val(),{ expires: 1, path: '/' });
@@ -718,6 +897,7 @@ else
 					
 					$("body #clientid").val($.cookie("clientid"));
 					$("body #clientfrom").val($.cookie("clientfrom"));
+					$("body #clientfrom4").val($.cookie("clientfrom4"));
 					$("body #clientphone").val($.cookie("clientphone"));
 					$("body #clientemail").val($.cookie("clientemail"));
 					$("body #dateevent").val($.cookie("dateevent"));
@@ -725,17 +905,18 @@ else
 					$("body #guestcount").val($.cookie("guestcount"));
 					$("body #hall").val($.cookie("hall"));
 
-					if($.cookie("hall") > 0)
+	
+				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
 					{	
 						$("body #hall").removeAttr("disabled");
-						get_selected_hall($("#hall").val(),$("#dateevent").val());
+						get_selected_hall($("body #hall").val(),$("body #dateevent").val());
 					}
 				}
 				
 				
 			}
 			
-			if (curpage==2)
+			if (curpage==2 || curpage==3)
 			{
 				/*$( "button[name=adddish]" ).each(function( index ) {
 				  console.log( index + ": " + $( this ).attr("id") );
@@ -760,8 +941,9 @@ else
 						}
 					});					
 				}
+				
 			}
-			if (curpage==3)
+			if (curpage==4)
 			{
 				/*$( "button[name=adddish]" ).each(function( index ) {
 				  console.log( index + ": " + $( this ).attr("id") );
@@ -775,7 +957,7 @@ else
 						if (index)
 						{
 							$("#addserv"+index).removeClass("btn-default");
-							$("#addserv"+index).removeClass("btn-warning");
+							$("#addserv"+index).removeClass("btn-danger");
 							$("#addserv"+index).removeClass("disabled");
 							$("#addserv"+index).addClass("btn-primary");
 							$("#addserv"+index).html("Удалить");
@@ -793,7 +975,7 @@ else
 				}
 				setcountguestfields();				
 			}
-			if (curpage==4) {
+			if (curpage==5) {
 
 				var additional_pars = new Object();
 				additional_pars["cn"] = $.cookie("clientname");
@@ -817,7 +999,7 @@ else
 					$("#resultform").html(data);
 				});
 			}
-		}		
+		}			
 		function setcountguestfields()
 		{
 			//var warnchangeguestcount=0;
@@ -872,7 +1054,7 @@ else
 				
 					$(this).removeClass("btn-default");
 					$(this).removeClass("disabled");
-					$(this).addClass("btn-warning");
+					$(this).addClass("btn-danger");
 				}
 			});
 			
@@ -891,13 +1073,10 @@ else
 			get_selected_hall($("#hall").val(),$("#dateevent").val());
 			//erasevaluesincookie();
 			
-			$('#tabs').smartTab({selected: 1});		
+			$('#tabs').smartTab({selected: 0});		
 
 			setcountguestfields();
-				$( document ).on( "change", "#clientfrom", function() {	
 		
-			});
-			
 			
 				$( document ).on( "change", "#clientfrom2", function() {	
 					$("#clientfrom").hide();
@@ -910,8 +1089,22 @@ else
 						{
 							$("#clientfrom").val($("#clientfrom2 option:selected").text());
 							$("#clientfrom").hide();
+							
+									if ($("#clientfrom2").val() == '1')
+									{
+								
+										$("#clientfrom4").show();
+									} else
+									{
+										$("#clientfrom3").val("");
+										$("#clientfrom4").hide();
+									
+									}
+
+						
 						}
-			
+	
+		
 			});
 			$( document ).on( "change", "#hall", function() {			
 			//$("#hall").on("change", function() {
@@ -924,28 +1117,22 @@ else
 					data = data.split("^");
 					if (data[0]=="OK")
 					{
+						//alert(data[1]);
 						if ((typeof data[1] != 'undefined') && ($("#guestcount").val()>0))
 						{
 							if (parseInt($("#guestcount").val())>parseInt(data[1]))
 							{
-								//console.log($("#guestcount").val());
-								//console.log(data[1]);
-								alert("Выбранный зал не подходит для данного количества гостей");
-								$("#hall option[value=0]").attr('selected','selected');
-							
-								
-							} else 
-							{
-								get_selected_hall($("#hall").val(),$("#dateevent").val());
-							
-							}
+								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
+							} 
+							get_selected_hall($("#hall").val(),$("#dateevent").val());
+							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 						}
 					}
 				});				
 			});
 					
 			// добавление блюд в заказ
-			$( document ).on( "change", "input[name=quant]", function() {
+			$( document ).on( "keyup", "input[name=quant]", function() {
 				id = $(this).attr("id");
 				id = id.substr(5);
 
@@ -953,7 +1140,7 @@ else
 				{
 					$("#adddish"+id).removeClass("btn-default");
 					$("#adddish"+id).removeClass("disabled");
-					$("#adddish"+id).addClass("btn-warning");
+					$("#adddish"+id).addClass("btn-danger");
 				
 				} else
 				{
@@ -961,7 +1148,7 @@ else
 					if($("#note"+id).val() == '') 
 					{
 						$("#adddish"+id).addClass("btn-default");
-						$("#adddish"+id).removeClass("btn-warning");
+						$("#adddish"+id).removeClass("btn-danger");
 					}
 				
 				}
@@ -969,21 +1156,21 @@ else
 			});
 
 			
-			$( document ).on( "change", "input[name=note]", function() {
+			$( document ).on( "keyup", "input[name=note]", function() {
 				id = $(this).attr("id");
 				id = id.substr(4);
 
 				if($(this).val() != "") 
 				{
 					$("#adddish"+id).removeClass("btn-default");
-					$("#adddish"+id).addClass("btn-warning");
+					$("#adddish"+id).addClass("btn-danger");
 				
 				} else
 				{
 					if($("#quant"+id).val() == '') 
 					{
 						$("#adddish"+id).addClass("btn-default");
-						$("#adddish"+id).removeClass("btn-warning");
+						$("#adddish"+id).removeClass("btn-danger");
 						$("#adddish"+id).addClass("disabled");
 					}
 				
@@ -995,11 +1182,12 @@ else
 			
 			
 			$( document ).on( "click", "button[name=adddish]", function() {
+			
 				id = $(this).attr("id");
 				id = id.substr(7);
 				if ($(this).html()=="Удалить")
 				{
-							$(this).addClass("btn-warning");
+							$(this).addClass("btn-danger");
 							$(this).removeClass("btn-primary");
 				
 					$(this).html("Добавить");				
@@ -1017,7 +1205,7 @@ else
 
 				else
 				{
-							$(this).removeClass("btn-warning");
+							$(this).removeClass("btn-danger");
 							$(this).addClass("btn-primary");
 
 					$(this).html("Удалить");
@@ -1043,86 +1231,23 @@ else
 					$.cookie("dishes", dishes,{ expires: 1, path: '/' });
 				}
 				//console.log($.cookie("dishes"));
-			});			
-			
-			
-			
-			
-			// добавление услуг в заказ
-					$( document ).on( "focus", "input[name=priceserv]", function() {
-					tocalc = $(this).attr("tocalc");
-					if (tocalc == 1) 
-						{
 				
-						$(this).val($(this).val().replace("%",""));
-						}
-					});
+					count_dish_weight();
+			});		
 			
-					$( document ).on( "blur", "input[name=priceserv]", function() {
-					tocalc = $(this).attr("tocalc");
-					if (tocalc == 1 & $(this).val()) 
-						{
-					
-						$(this).val($(this).val().replace("%","") + "%");
-						}
-					});
-
-		
-		
-		
-		
-		
-					$( document ).on( "focus", "input[name=discontserv]", function() {
-					
-					tocalc = $(this).attr("tocalc");
-					if (tocalc != 1) 
-						{
-				
-						$(this).val($(this).val().replace("%",""));
-						}
-					});
 			
-					$( document ).on( "blur", "input[name=discontserv]", function() {
-					tocalc = $(this).attr("tocalc");
-					if (tocalc != 1 & $(this).val()) 
-						{
-					
-						$(this).val($(this).val().replace("%","") + "%");
-						}
-					});
-
-
-
-
-					
-					$( document ).on( "change", "input[name=quantserv]", function() {
+					$( document ).on( "keyup", "input[name=quantserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(9);
 				tocalc = $(this).attr("tocalc");
 				bgs = $(this).attr("bgs");
 				
-				if (tocalc == 1) 
-				{
-					if (!$(this).prop('checked'))
-					{
-					$(this).prop('checked',true);
-					alert("Эта позиция обязательна для формирования заказа. Вы можете изменить ее позже.");
-					}
-				}
 				
-				if (bgs == 1) 
-				{
-					$(this).val('');
-					if ($(this).prop('checked'))
-					{
-					$(this).val('1');
-					}
-				}
 
 				if($(this).val() != '') 
 				{
 					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).addClass("btn-warning");
+					$("#addserv"+id).addClass("btn-danger");
 					
 					if($("#discontserv"+id).val() != '') 
 					{
@@ -1130,29 +1255,47 @@ else
 					}
 				
 				} else
+
 				{
 					$("#addserv"+id).addClass("disabled");
 					
 					if($("#commentserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
+
 					{
 						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-warning");
+						$("#addserv"+id).removeClass("btn-danger");
+
+
 					}
 				
 				}
 				
-			});
+			});;
 
 			
 			$( document ).on( "change", "input[name=discontserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(11);
-
+				bgs = $(this).attr("bgs");
+				
+				if (bgs == 1) 
+				{
+					$(this).val('');
+					if ($(this).prop('checked'))
+					{
+					$(this).val('0');
+					}
+				}
+				
 				if($(this).val() != "") 
+
+
 				{
 					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).addClass("btn-warning");
+					$("#addserv"+id).addClass("btn-danger");
 					if($("#quantserv"+id).val() != '') 
+
+
 					{
 						$("#addserv"+id).removeClass("disabled");					
 					}
@@ -1161,15 +1304,17 @@ else
 				{
 					$("#addserv"+id).addClass("disabled");
 					
-					if($("#quantserv"+id).val() == '' & $("#commentserv"+id).val() == '') 
+					if(($("#quantserv"+id).val() == '' || bgs == 1) & $("#commentserv"+id).val() == '') 
+
 					{
 						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-warning");
+						$("#addserv"+id).removeClass("btn-danger");
 					
 					}
 				
 				}
-				
+
+
 			});			
 		
 			
@@ -1194,17 +1339,42 @@ else
 				}
 				
 			});			
-		
-
-	
-		
 			
+			$( document ).on( "keyup", "input[name=discontserv]", function() {
+
+				id = $(this).attr("id");
+				id = id.substr(11);
+				
+
+				if($(this).val() != "") 
+				{
+					$("#addserv"+id).removeClass("btn-default");
+					$("#addserv"+id).addClass("btn-danger");
+					if($("#quantserv"+id).val() != '') 
+					{
+						$("#addserv"+id).removeClass("disabled");					
+					}
+				
+				} else
+				{
+					$("#addserv"+id).addClass("disabled");
+					
+					if($("#quantserv"+id).val() == '' & $("#commentserv"+id).val() == '') 
+					{
+						$("#addserv"+id).addClass("btn-default");
+						$("#addserv"+id).removeClass("btn-danger");
+					
+					}
+				
+				}
+				
+			});				
 			$( document ).on( "click", "button[name=addserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(7);
 				if ($(this).html()=="Удалить")
 				{
-							$(this).addClass("btn-warning");
+							$(this).addClass("btn-danger");
 							$(this).removeClass("btn-primary");
 					$(this).html("Добавить");				
 					$("#servicename"+id).css("color", "");
@@ -1215,6 +1385,7 @@ else
 						$("#quantserv"+id).removeAttr("readonly");
 					}
 					$("#discontserv"+id).removeAttr("readonly");
+					$("#discontserv"+id).removeAttr("disabled");
 					$("#commentserv"+id).removeAttr("readonly");
 
 					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
@@ -1228,18 +1399,22 @@ else
 				else
 				{
 							
-						$(this).removeClass("btn-warning");
+						$(this).removeClass("btn-danger");
 						$(this).addClass("btn-primary");
 					$(this).html("Удалить");
 					$("#servicename"+id).css("color", "green");
-					var priceserv 	= $("#priceserv"+id).val().replace("%","");
+					var priceserv 	= $("#priceserv"+id).val();
 					var quantserv 	= $("#quantserv"+id).val();
-					var discont 	= $("#discontserv"+id).val().replace("%","");
+					var discont 	= $("#discontserv"+id).val();
 					var comment 	= $("#commentserv"+id).val();
 					
 					$("#priceserv"+id).attr("readonly","readonly");
 					$("#quantserv"+id).attr("readonly","readonly");
 					$("#discontserv"+id).attr("readonly","readonly");
+					if (bgs == 1)
+					{
+										$("#discontserv"+id).attr("disabled","disabled");
+					}
 					$("#commentserv"+id).attr("readonly","readonly");
 										
 					var services="";
@@ -1309,6 +1484,7 @@ else
 					}
 				}
 			}
+			checkhallselect();
 	});
 			
 			
@@ -1350,7 +1526,7 @@ else
 				if (curpage>1) {curpage--; dosetrightpaginator();}
 			}
 			else if (id=="pageright") {
-				if (curpage<4) {curpage++; dosetrightpaginator();}
+				if (curpage<5) {curpage++; dosetrightpaginator();}
 			}
 			else {
 				id = id.substr(4);
@@ -1373,7 +1549,7 @@ else
 			// вывод правильного содержания вкладки в зависимости от curpage
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());
-			//readvaluesincookie();
+			readvaluesincookie();
 			$("body").animate({"scrollTop":0},"slow");
 			//$("#spanpage"+curpage).css("visibility","visible");
 		}
@@ -1392,6 +1568,7 @@ else
 						additional_pars["ci"] = $.cookie("clientid");
 						additional_pars["cp"] = $.cookie("clientphone");
 						additional_pars["cf"] = $.cookie("clientfrom");
+						additional_pars["cf4"] = $.cookie("clientfrom4");
 						additional_pars["ce"] = $.cookie("clientemail");
 						additional_pars["de"] = $.cookie("dateevent");
 						additional_pars["te"] = $.cookie("timeevent");
@@ -1400,7 +1577,10 @@ else
 						additional_pars["dd"] = $.cookie("dishes");	
 						additional_pars["ss"] = $.cookie("service");
 						additional_pars["tt"] = $.cookie("tables");
+						additional_pars["ts"] = $("#timestart").val();
 						additional_pars["aa"] = $("#avans").val();
+						additional_pars["tp"] = $("#type").val();
+						additional_pars["cm"] = $("#comment").val();
 						additional_pars["rand"] = "<?php echo rand(); ?>";
 						$.post("_dosaveorder.php", additional_pars,
 						function(){
@@ -1412,10 +1592,11 @@ else
 							data = data.split(":");
 							if (data[0]=="OK")
 							{
-								var nn = noty({text: 'Сохранено, номер заказа ' + data[1], type: 'information', timeout:5000, onClick: function(){delete nn;}});							
+								var nn = noty({text: 'Сохранено, номер заказа ' + data[1], type: 'information', timeout:5000, callback: {afterClose: function() {location.href="?view_zakazid="+data[1];}}, onClick: function(){delete nn;}});							
 								$.removeCookie("clientname");
 								$.removeCookie("clientid");
 								$.removeCookie("clientfrom");
+								$.removeCookie("clientfrom4");
 								$.removeCookie("clientphone");
 								$.removeCookie("clientemail");
 								$.removeCookie("dateevent");
@@ -1425,7 +1606,7 @@ else
 								$.removeCookie("dishes");
 								$.removeCookie("service");							
 								$.removeCookie("tables");	
-								location.href="?view_zakazid="+data[1];
+								//location.href="?view_zakazid="+data[1];
 							}
 							else
 							{
@@ -1458,6 +1639,10 @@ eguest = $("#guestcount").val() == "";
 			{
 				$("#hall").removeAttr("disabled");
 				$("#hall option[value=0]").text("Выберите зал");
+				if($("#hall").val() > 0)
+				{
+					get_selected_hall($("#hall").val(),$("#dateevent").val());
+				}
 			}else
 			{
 				$("#hall option[value=0]").attr('selected','selected');
@@ -1609,6 +1794,45 @@ eguest = $("#guestcount").val() == "";
 				
 				checkhallselect();
 			});
+		}
+		function count_dish_weight()
+		{
+
+		wfood = 0;
+		wdrink = 0;
+		persons = $.cookie("guestcount") * 1;
+		if(persons > 0) 
+		{
+			$("#createform .btn-primary").each(function(){
+				if ($(this ).text() == 'Удалить') 
+				{
+					id = $(this).attr('id');
+					id = id.substr(7);
+					quant = $("#quant"+id).val();
+
+					if ($(this ).hasClass("weightfood"))
+					{
+						wfood+=$("#weightfood"+id).html() * 1 * quant;
+					}
+					if ($(this ).hasClass("weightdrink"))
+					{
+						wdrink+=$("#weightdrink"+id).html() * 1 * quant;
+					}
+				}
+			});
+
+			wfa = Number((wfood/persons).toFixed(2));
+			wfd = Number((wdrink/persons).toFixed(2));
+			
+			$("#foodweightall").html("Общий вес:" + wfood);
+			$("#foodweightaver").html("Средний вес:" + wfa);
+			$("#drinkweightall").html("Общий литраж:" + wdrink);
+			$("#drinkweightaver").html("Средний литраж:" + wfd);
+		}
+		else
+		{
+
+		}
 		}
 		function checkhallselect()
 		{

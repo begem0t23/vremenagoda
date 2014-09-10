@@ -328,6 +328,8 @@ $food_sum = $level0_sum['_59'] + $level0_sum['_60'];
 $drink_sum = $level0_sum['_61'] + $level0_sum['_19'];
 $food_sum = $sum[0] ;
 $drink_sum = $sum[1];
+	if ($_POST["ss"])
+	{
 	$services = json_decode($_POST["ss"],true);
 	$nom=1; $itogo_uslugi=0;
 	$cnt = 0;
@@ -387,6 +389,7 @@ $drink_sum = $sum[1];
 				}
 			}
 		}
+	}
 	}
 	//расчет сумм и скидок
 	

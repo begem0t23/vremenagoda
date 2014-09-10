@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="ru">
   <head>
@@ -103,6 +107,7 @@ fixednavbar();
     <div class="container">
       <div class="page-header">
         <h3>Новый заказ</h3>
+
       </div>
 		<ul class="pagination pagination-lg">
 		  <li id=pageleft><a href="#">&laquo;</a></li>
@@ -116,6 +121,8 @@ fixednavbar();
 
 		<input type=hidden id=timestart value="">
 		
+
+
 			<div id=createform style="width: 100%;">
 		
 			</div>
@@ -123,12 +130,97 @@ fixednavbar();
 
 		<div id=spanpage1 style="visibility: hidden; max-width: 500px;">
 			<div class="input-group"  style="max-width: 500px;">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
+
+
+
+
 			  <span class="input-group-btn">
 				<button class="btn btn-default" onclick="docheckclientname($('#clientsearch').val());" id=clientadd name=clientadd type="button">Создать</button>
 			  </span>			  
 			</div>		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		</div>
 		
 		<!-- тарелки -->		
@@ -312,6 +404,7 @@ fixednavbar();
 		
 		
 		
+
 		<!-- drink -->		
 		
 		<div id=spanpage3 style="visibility: hidden">
@@ -1058,6 +1151,7 @@ partytypes
 				});
 			}
 		}		
+
 		function setcountguestfields()
 		{
 			//var warnchangeguestcount=0;
@@ -1099,6 +1193,7 @@ partytypes
 				}
 
 				
+
 			$( document ).on( "click", ".navbar a", function() 
 			{
 					alladd = $("#createform  .btn-danger").length;			
@@ -1132,14 +1227,22 @@ partytypes
 			});
 	
 	
+
 			dosetrightpaginator();
+
 			doloadcreateform();
+
 			//erasevaluesincookie();
 			
 			$('#tabs').smartTab({selected: 0});		
 
 			setcountguestfields();
 				
+
+
+
+
+
 				$( document ).on( "change", "#clientfrom2", function() {	
 					$("#clientfrom").hide();
 		
@@ -1166,6 +1269,8 @@ partytypes
 						
 						}
 			
+
+
 				});
 			
 			
@@ -1306,6 +1411,7 @@ partytypes
 			});			
 			
 			
+
 			
 			
 			// добавление услуг в заказ
@@ -1334,13 +1440,17 @@ partytypes
 					}
 				
 				} else
+
 				{
 					$("#addserv"+id).addClass("disabled");
 					
 					if($("#commentserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
+
 					{
 						$("#addserv"+id).addClass("btn-default");
 						$("#addserv"+id).removeClass("btn-danger");
+
+
 					}
 				
 				}
@@ -1365,10 +1475,14 @@ partytypes
 				}
 				
 				if($(this).val() != "") 
+
+
 				{
 					$("#addserv"+id).removeClass("btn-default");
 					$("#addserv"+id).addClass("btn-danger");
 					if($("#quantserv"+id).val() != '') 
+
+
 					{
 						$("#addserv"+id).removeClass("disabled");					
 					}
@@ -1378,6 +1492,7 @@ partytypes
 					$("#addserv"+id).addClass("disabled");
 					
 					if(($("#quantserv"+id).val() == '' || bgs == 1) & $("#commentserv"+id).val() == '') 
+
 					{
 						$("#addserv"+id).addClass("btn-default");
 						$("#addserv"+id).removeClass("btn-danger");
@@ -1386,10 +1501,13 @@ partytypes
 				
 				}
 
+
 			});
 			
+
 			
 			$( document ).on( "keyup", "input[name=discontserv]", function() {
+
 				id = $(this).attr("id");
 				id = id.substr(11);
 				
@@ -1424,6 +1542,7 @@ partytypes
 				id = id.substr(11);
 				bgs = $("#discontserv"+id).attr("bgs");
 			
+
 				if($(this).val() != "") 
 				{
 					$("#addserv"+id).removeClass("btn-default");
@@ -1486,6 +1605,7 @@ partytypes
 					var quantserv 	= $("#quantserv"+id).val();
 					var discont 	= $("#discontserv"+id).val();
 					var comment 	= $("#commentserv"+id).val();
+
 
 					$("#priceserv"+id).attr("readonly","readonly");
 					$("#quantserv"+id).attr("readonly","readonly");
@@ -1564,6 +1684,7 @@ partytypes
 					}
 				}
 			}
+
 			
 		checkhallselect();
 			
@@ -1572,7 +1693,12 @@ partytypes
 	});
 			
 	
+
+
 			
+
+
+
 		$(window).bind('beforeunload', function(){
 		  if (typeof $.cookie("clientname") != 'undefined')
 		  {
@@ -1592,6 +1718,7 @@ partytypes
 
 			
 			
+
 			if(alladd > 0) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
@@ -1628,6 +1755,7 @@ partytypes
 		
 		function doloadcreateform()
 		{
+
 			// вывод правильного содержания вкладки в зависимости от curpage
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());
@@ -1689,10 +1817,11 @@ partytypes
 								$.removeCookie("dishes");
 								$.removeCookie("service");							
 								$.removeCookie("tables");	
+
 							}
 							else
 							{
-								var nn = noty({text: 'Ошибка ' + data, type: 'error', timeout:5000, onClick: function(){delete nn;}});														
+								var nn = noty({text: 'Ошибка ' + data[1], type: 'error', timeout:5000, onClick: function(){delete nn;}});														
 							}
 						});
 					}
@@ -1940,6 +2069,7 @@ eguest = $("#guestcount").val() == "";
 		
 		}
 		
+
 
 
 		
