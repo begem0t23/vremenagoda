@@ -331,7 +331,7 @@ $drink_sum = $sum[1];
 	$services = json_decode($_POST["ss"],true);
 	$nom=1; $itogo_uslugi=0;
 	$cnt = 0;
-	foreach($services as $i=>$ss)
+	foreach(@$services as $i=>$ss)
 	{
 
 		$tsql011 = "SELECT * FROM services  WHERE  `id` = ".$i."  ;";

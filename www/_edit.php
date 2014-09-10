@@ -1,3 +1,7 @@
+<?php
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+?>
 <!DOCTYPE html>
 <html lang="ru">
   <head>
@@ -123,8 +127,16 @@ fixednavbar();
 		<?php
 if ($q[1]>0)
 {
-	$tsql = "select * from clients where id = ".mysql_escape_string($q[1]).";";
+	$tsql = "select DATE_FORMAT(eventdate,'%d.%m.%Y') as ed, orders.* from orders where id = ".mysql_escape_string($q[1]).";";
+	$r_order = mysql_query($tsql);
+	if (mysql_num_rows($r_order)==0)
+	{
+		die("cant find order");
+	}
+	$row_order = mysql_fetch_array($r_order);
+	$tsql = "select * from clients where id = ".mysql_escape_string($row_order["clientid"]).";";
 	$r_user = mysql_query($tsql);
+	
 	if (mysql_num_rows($r_user)>0)
 	{
 		$row = mysql_fetch_array($r_user);
@@ -157,10 +169,10 @@ if ($q[1]>0)
 		echo '<input type="text" id="clientfrom" style="display:none;" value="'.htmlspecialchars($row["otkuda"]).'" class="form-control" placeholder="Укажите откуда пришел">';
 		echo '</div><br>';
 		echo '<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
-		echo '<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent"  onchange="activatehall();" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
-		echo '<input data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
+		echo '<input value="'.$row_order["ed"] . '" required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent"  onchange="activatehall();" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
+		echo '<input value="'.$row_order["eventtime"] . '" data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
 		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
-		echo '<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей" onchange="activatehall();">';
+		echo '<input value="'.$row_order["guestcount"] . '" required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей" onchange="activatehall();">';
 		echo '</div>';
 
 		echo '<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
@@ -173,7 +185,14 @@ if ($q[1]>0)
 			echo  '<option value="0" checked>Укажите дату и количество гостей</option>' . "";
 			while ($row_hall = mysql_fetch_array($r_hall))
 			{	
-				echo  '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
+				if ($row_order["hallid"]==$row_hall["id"])
+				{
+					echo  '<option selected value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";				
+				}
+				else
+				{
+					echo  '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
+				}
 			}
 			echo  '</select>' . "";
 		}
@@ -709,7 +728,7 @@ else
 					if($.cookie("hall") > 0)
 					{	
 						$("body #hall").removeAttr("disabled");
-						get_selected_hall($.cookie("hall"));
+						get_selected_hall($("#hall").val(),$("#dateevent").val());
 					}
 				}
 				
@@ -869,6 +888,7 @@ else
 			dosetrightpaginator();
 			//alert(2);
 			doloadcreateform();
+			get_selected_hall($("#hall").val(),$("#dateevent").val());
 			//erasevaluesincookie();
 			
 			$('#tabs').smartTab({selected: 1});		
@@ -916,7 +936,7 @@ else
 								
 							} else 
 							{
-								get_selected_hall($("#hall").val());
+								get_selected_hall($("#hall").val(),$("#dateevent").val());
 							
 							}
 						}
@@ -1448,17 +1468,18 @@ eguest = $("#guestcount").val() == "";
 		}
 		
 		
-		function get_selected_hall(hallid)
+		function get_selected_hall(hallid,dateevent)
 		{
 
 	  		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'gethall', hallid: hallid, fororder:'yes'}
+			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, fororder:'yes'}
 			})
 			.done(function( msg ) {
+				//alert(msg);
 				$("#selectedhall").html(msg);//закачали хтмл
-				
+
 
 
 				//расстановка столов по координатам
@@ -1586,16 +1607,24 @@ eguest = $("#guestcount").val() == "";
 					});
 				}
 				
-	
+				checkhallselect();
 			});
-	
-	
-	
-
-
-				
-	}
+		}
+		function checkhallselect()
+		{
+			
+			if($("#createform .btn-primary").length > 1)
+			{			
+				$("#hall").attr("disabled","disabled");
+			} 
+			
+			
+			if($("#createform .btn-primary").length == 1)
+			{			
+				$("#hall").removeAttr("disabled");
+			} 
 		
+		}		
 		
 	</script>
   </body>

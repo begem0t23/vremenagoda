@@ -1681,7 +1681,7 @@ partytypes
 							data = data.split(":");
 							if (data[0]=="OK")
 							{
-								var nn = noty({text: 'Сохранено, номер заказа ' + data[1], type: 'information', timeout:5000, onClick: function(){delete nn;}});							
+								var nn = noty({text: 'Сохранено, номер заказа ' + data[1], type: 'information', timeout:5000, callback: {afterClose: function() {location.href="?view_zakazid="+data[1];}}, onClick: function(){delete nn;}});							
 								$.removeCookie("clientname");
 								$.removeCookie("clientid");
 								$.removeCookie("clientfrom");
@@ -1695,7 +1695,6 @@ partytypes
 								$.removeCookie("dishes");
 								$.removeCookie("service");							
 								$.removeCookie("tables");	
-								location.href="?view_zakazid="+data[1];
 							}
 							else
 							{
