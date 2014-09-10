@@ -80,9 +80,9 @@
   .bottom-right-corner{right:-16px; bottom:-16px;}
   
  
-	.tabnum{font-size:22px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
+	.tabnum{font-size:18px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
 		
-		#weightcalc {position:fixed; top:420px; left:20px;}
+		#weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
   </style>  
 
   </head>
@@ -108,8 +108,9 @@ fixednavbar();
 		  <li id=pageleft><a href="#">&laquo;</a></li>
 		  <li id=page1><a href="#">1: Клиент</a></li>
 		  <li id=page2><a href="#">2: Блюда</a></li>
-		  <li id=page3><a href="#">3: Услуги</a></li>
-		  <li id=page4><a href="#">4: Сохранение</a></li>
+		  <li id=page3><a href="#">3: Напитки</a></li>
+		  <li id=page4><a href="#">4: Услуги</a></li>
+		  <li id=page5><a href="#">5: Сохранение</a></li>
 		  <li id=pageright><a href="#">&raquo;</a></li>
 		</ul>
 
@@ -139,35 +140,10 @@ fixednavbar();
 
 			<div id="foodweightaver">Средний вес: 0г</div>
 
-			<div id="drinkweightall">Общий объём: 0г</div>
-
-			<div id="drinkweightaver">Средний объём: 0г</div>
-
 		</span>
-		<?php		
-	$tsql = "select * from menus where isactive ='1';";
-	$r_menutype = mysql_query($tsql);
-	if (mysql_num_rows($r_menutype)>0)
-	{	
-?>
-<div id="tabs" style="min-width: 600px; width: 100%;">
-    <ul>
 <?php
-		$index=0;
-		while ($row_menutype = mysql_fetch_array($r_menutype))
-		{
-			echo '<li><a href="#menu-'.$row_menutype["id"].'" onClick="showST('.$index.')">'.$row_menutype["type_name"].'</a></li>';
-			$index++;
-		}
-?>
-    </ul>
-<?php		
-	}
-?>
-<?php	
-
 	//сборка массива секций с блюдами для конкретного меню
-	$tsql = "select * from menus where isactive ='1';";
+	$tsql = "select * from menus where `id` ='1';";
 	$r_menutype = mysql_query($tsql);
 	if (mysql_num_rows($r_menutype)>0)
 	{	
@@ -328,13 +304,203 @@ fixednavbar();
 }
 ?>			
 	
-	</div>		
+	
 		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
-		<!-- услуги -->
-		<div id=spanpage3 style="visibility: hidden;">
+		
+		
+		
+		<!-- drink -->		
+		
+		<div id=spanpage3 style="visibility: hidden">
 		<form id=frm3 role="form" data-toggle="validator">
+
+		<span id="weightcalc" class="btn btn-default">
+			<div id="drinkweightall">Общий объём: 0г</div>
+
+			<div id="drinkweightaver">Средний объём: 0г</div>
+
+		</span>
+
+<?php	
+
+	//сборка массива секций с блюдами для конкретного меню
+	$tsql = "select * from menus where `id` ='2';";
+	$r_menutype = mysql_query($tsql);
+	if (mysql_num_rows($r_menutype)>0)
+	{	
+
+	while ($row_menutype = mysql_fetch_array($r_menutype))
+		{ 
+			echo '<div id="menu-'.$row_menutype["id"].'"  style="width: 100%;">';
+
+				echo '<table class = "tablesorter order" style="width: 100%;">';
+				echo 	'<colgroup>
+						<col width="250" />
+						<col width="50" />
+						<col width="50" />
+						<col width="20" />
+						<col width="50" />
+						<col width="150" />
+						</colgroup>';
+
+				echo  '<thead>
+							<tr>
+							<th class="sorter-false">Название</th>
+							<th class="sorter-false">Порции (кг)</th>
+							<th class="sorter-false">Цена</th>
+							<th class="sorter-false">Кол-во</th>
+							<th class="sorter-false">Комментарий</th>
+							<th class="sorter-false">Действие</th>
+							</tr>
+							</thead>';
+
+	$sections = Array();
+		$tsql0 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '0' ORDER BY `sortid` ASC;
+		 ";
+		$rezult0 = mysql_query($tsql0);
+
+	while ($rows0 = mysql_fetch_array($rezult0)) {
+	
+	
+
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
+
+	$sections[$rows0['id']]['name'] = $rows0['section_name'];
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['children'] = 0;
+	$sections[$rows0['id']]['items'] = $zzz;
+	$sections[$rows0['id']]['items']['isdrink'] = $rows0['isdrink'];
+	
+		$tsql_1 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
+		 ";
+		$rezult_1 = mysql_query($tsql_1);
+
+	while ($rows_1 = mysql_fetch_array($rezult_1)) {
+
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id']);
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['children'] ++;
+	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name'];
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
+	$sections[$rows0['id']][$rows_1['id']]['items'] = $zzz;
+	$sections[$rows0['id']][$rows_1['id']]['items']['isdrink'] = $rows_1['isdrink'];
+	
+		
+		$tsql_2 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."' ORDER BY `sortid` ASC
+		 ";
+	$rezult_2 = mysql_query($tsql_2);
+
+	while ($rows_2 = mysql_fetch_array($rezult_2)) {
+
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_2['id']);
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items']['isdrink'] = $rows_2['isdrink'];
+	
+
+	} //result_2
+			
+	} //result_1
+			
+	} //result0
+// конец сборки	
+	
+	
+	//цикл по массиву секций с блюдами для конкретного меню для вывода на экран
+	foreach ($sections as $num => $val) 
+	{
+	
+		if ($sections[$num]['dishes'] > 0) 
+		{	
+			
+			echo '<tbody><tr><th  colspan="6" class="level_0">'.chr(10);			
+			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
+			echo '</th></tr></tbody>'.chr(10);
+
+			if ($sections[$num]['items']['count'] > 0)
+			{
+				print_dishes($sections[$num]['items']);
+			}
+			
+			foreach ($val as $num1 => $val1) 
+			{
+				
+				if ($val[$num1]['dishes'] > 0) 
+				{	
+					echo '<tbody><tr><th  colspan="6" class="level_1">'.chr(10);			
+					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
+					echo '</th></tr></tbody>'.chr(10);
+
+					if ($val[$num1]['items']['count'] > 0)
+					{
+						print_dishes($val[$num1]['items']);
+					}
+
+					
+					if (is_array($val1)) 
+					{
+						foreach ($val1 as $num2 => $val2) 
+						{
+	
+							if ($val1[$num2]['dishes'] > 0) 
+							{	
+								echo '<tbody><tr><th  colspan="6" class="level_2">'.chr(10);			
+								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
+								echo '</th></tr></tbody>'.chr(10);
+													
+								if ($val1[$num2]['items']['count'] > 0)
+								{
+									print_dishes($val1[$num2]['items']);
+								}
+
+							}
+	
+	
+	
+						}
+					}
+				}
+			}
+	
+		}
+	}
+	
+	//конец цикла
+	
+			echo '</table>';
+			echo '</div>';
+
+}	
+}
+?>			
+	
+
+		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
+		</form>
+		</div>
+		
+		
+
+		
+		
+		
+		
+		<!-- услуги -->
+		<div id=spanpage4 style="visibility: hidden;">
+		<form id=frm4 role="form" data-toggle="validator">
   
   <?php		
 	$tsql = "SELECT * FROM `services` WHERE `isactive` = 1  ORDER BY `tocalculate` DESC,`orderby` ASC;";
@@ -423,8 +589,8 @@ fixednavbar();
 		<br><br><br><div class="input-group"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
-		<div id=spanpage4 style="visibility: hidden">
-		<form id=frm4 role="form" data-toggle="validator">
+		<div id=spanpage5 style="visibility: hidden">
+		<form id=frm5 role="form" data-toggle="validator">
 
 <div id=resultform>
 </div>
@@ -526,14 +692,16 @@ fixednavbar();
 					$("#page1").prop("class","disabled");				
 				break;
 				case 2:
-					$("#page2").prop("class","disabled");
-				
+					$("#page2").prop("class","disabled");				
 				break;
 				case 3:
 					$("#page3").prop("class","disabled");				
 				break;
 				case 4:
 					$("#page4").prop("class","disabled");				
+				break;
+				case 5:
+					$("#page5").prop("class","disabled");				
 					$("#pageright").prop("class","disabled");
 				break;
 				default:
@@ -545,7 +713,7 @@ fixednavbar();
 		function erasedisablefromli()
 		{
 			// Стирание дисэблед статуса для всех кнопок страниц, чтобы потом поставить правильный
-			for (i=1;i<=4;i++)
+			for (i=1;i<=5;i++)
 			{
 				//alert(curpage);
 				//if (i!=curpage) 
@@ -558,7 +726,8 @@ fixednavbar();
 		
 		function shownextstep()
 		{
-		alladd = $("#createform  .btn-danger").length;			if(alladd > 0) 
+		alladd = $("#createform  .btn-danger").length;			
+		if(alladd > 0) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
@@ -577,7 +746,7 @@ fixednavbar();
 			//$curpage = $("#createform").clone();
 			//$("#spanpage"+curpage).html($curpage);
 			setvaluesincookie();
-			if (curpage<4) curpage = curpage + 1;
+			if (curpage<5) curpage = curpage + 1;
 			//$("#spanpage"+curpage).css("left",x);
 			//$("#spanpage"+curpage).css("top",y);	
 			$("#createform").html($("#spanpage"+curpage).html());			
@@ -805,7 +974,7 @@ fixednavbar();
 				
 			}
 			
-			if (curpage==2)
+			if (curpage==2 || curpage==3)
 			{
 				/*$( "button[name=adddish]" ).each(function( index ) {
 				  console.log( index + ": " + $( this ).attr("id") );
@@ -832,7 +1001,7 @@ fixednavbar();
 				}
 				
 			}
-			if (curpage==3)
+			if (curpage==4)
 			{
 				/*$( "button[name=adddish]" ).each(function( index ) {
 				  console.log( index + ": " + $( this ).attr("id") );
@@ -864,7 +1033,7 @@ fixednavbar();
 				}
 				setcountguestfields();				
 			}
-			if (curpage==4) {
+			if (curpage==5) {
 
 				var additional_pars = new Object();
 				additional_pars["cn"] = $.cookie("clientname");
@@ -1441,7 +1610,7 @@ fixednavbar();
 				if (curpage>1) {curpage--; dosetrightpaginator();}
 			}
 			else if (id=="pageright") {
-				if (curpage<4) {curpage++; dosetrightpaginator();}
+				if (curpage<5) {curpage++; dosetrightpaginator();}
 			}
 			else {
 				id = id.substr(4);

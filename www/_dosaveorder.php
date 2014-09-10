@@ -34,7 +34,7 @@ $tt = @$_POST["tt"];
 $tp = @$_POST["tp"];
 $cm = @$_POST["cm"];
 
-//die("ERR:".$ci);
+//die("ERR:".strtotime(@$_POST["de"]));
 
 if (@$ci)
 {
@@ -82,7 +82,7 @@ if (@$ci)
 	if ($_SESSION["curuserrole"]==5) $managerid = $_SESSION["curuserid"]; $status=2;
 	$tsql = "insert into orders (creatorid, createdate, clientid, eventdate, eventtime, guestcount, status,managerid,hallid, type, comment) 
 	values(".mysql_real_escape_string($creatorid).",CURDATE(), ".mysql_real_escape_string($ci)."
-	,'".mysql_real_escape_string(@$_POST["de"])."'
+	,FROM_UNIXTIME('".strtotime(@$_POST["de"])."')
 	,'".mysql_real_escape_string(@$_POST["te"])."'
 	,'".mysql_real_escape_string(@$gc)."'
 	,'".mysql_real_escape_string($status)."'

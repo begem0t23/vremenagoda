@@ -878,7 +878,7 @@ border-spacing:0;
 	font-size:12px;
 	 padding:10px;
 	color: #000;
-  background-color: #99bfe6 !important;
+  background-color: #c1d2e4 !important;
    	border-left: 1px solid #e0e0e0;
 
   }
@@ -887,21 +887,21 @@ border-spacing:0;
 	font-size:14px;
 	 padding:10px;
 	color: #fff;
-  background-color: #0761BD !important;
+  background-color: #66a6e7 !important;
   }
 
 	.summary_section{
 	font-size:14px;
 	 padding:10px;
 	color: #fff;
-  background-color: #189407 !important;
+  background-color: #6bcf5d !important;
  
   }
  	.lite_summary_section{
 	font-size:12px;
 	 padding:1px;
 	color: #fff;
-  background-color: #189407 !important;
+  background-color: #6bcf5d !important;
  
   }
    
@@ -910,19 +910,19 @@ border-spacing:0;
 	}
     
 .contacts{
-width:700px;
+width:750px;
 	font-family:Arial, Helvetica, sans-serif;
 	color:#666;
-	font-size:12px;
+	font-size:10px;
 	_text-shadow: 1px 1px 0px #fff;
 	background:#fff;
 	border-bottom:#ccc 1px solid;
 	border-collapse:separate;
 border-collapse:collapse;
-border-spacing:10;
+border-spacing:1px;
 }
 .contacts tr td{
-	padding:5px;
+	padding:0px;
 
 }
 .contacts tr td table{
@@ -940,12 +940,36 @@ $html1 = '<html>
 	    * {
 		  font-family: "DejaVu Serif Condensed", monospace;
 		}
-	  </style><javascript></head><body onload="ALERT("SSS");">';
+	  </style><javascript></head><body>';
 	  
 $html2 = '</body></html>';	  
 
-$header = '<table class="contacts"><tr><td width="200"><img src="images/logo.png" width="200"></td><td><table><tr><td width="70"><strong>Адрес:</strong></td><td>Москва, ЦПКиО им. Горького, Титовский проезд</td></tr><tr><td> <strong>Телефон:</strong></td><td> +7 (499) 237-1096</td></tr><tr><td><strong>Email:</strong></td><td> <a href="mailto:vremena-goda@mail.ru">vremena-goda@mail.ru</a></td></tr></table></p>
-</td></tr></table>';
+$header = '<table class="contacts">
+<tr>
+<td width="140"><img src="images/logo.png" width="200"></td>
+<td>
+<table>
+<tr>
+<td width="50"><strong>Адрес:</strong></td>
+<td width="190">Москва, ЦПКиО им. Горького, Титовский проезд</td>
+</tr>
+<tr>
+<td> <strong>Телефон:</strong></td>
+<td> +7 (499) 237-1096</td>
+</tr>
+<tr>
+<td><strong>Email:</strong></td>
+<td> <a href="mailto:vremena-goda@mail.ru">vremena-goda@mail.ru</a></td>
+</tr>
+<tr>
+<td><strong>Сайт:</strong></td>
+<td> <a href="http://www.vremena-goda.ru">www.vremena-goda.ru</a></td>
+</tr>
+
+</table>
+</td>
+</tr>
+</table>';
 
 $footer ='<p><strong>Исполнительный директор ___________________________________________</strong></p><p><strong>Заказчик___________________________________________________________</strong></p>';
 
