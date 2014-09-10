@@ -182,6 +182,10 @@ if ($oi>0) {
 			$r_order = mysql_query($tsql);			
 			if (mysql_error()) die("ERR:8=" .$tsql);			
 
+		$tsql = "UPDATE  `tables_on_date` SET `orderid` = '".$oi."' WHERE `id` = '".$i."';";		
+
+			$r_order = mysql_query($tsql);			
+			if (mysql_error()) die("ERR:8=" .$tsql);			
 
 	}
 

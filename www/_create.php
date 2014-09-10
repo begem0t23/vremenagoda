@@ -719,7 +719,8 @@ fixednavbar();
 	
 					//alert($("#spanpage1").html());
 					readvaluesincookie();	
-					count_dish_weight();					
+					count_dish_weight();
+						
 				});
 			}
 		}
@@ -793,10 +794,11 @@ fixednavbar();
 					$("body #guestcount").val($.cookie("guestcount"));
 					$("body #hall").val($.cookie("hall"));
 
-					if($.cookie("hall") > 0)
+	
+				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
 					{	
 						$("body #hall").removeAttr("disabled");
-						get_selected_hall($.cookie("hall"));
+						get_selected_hall($("body #hall").val(),$("body #dateevent").val());
 					}
 				}
 				
@@ -1022,7 +1024,7 @@ fixednavbar();
 								
 							} else 
 							{
-								get_selected_hall($("#hall").val());
+								get_selected_hall($("#hall").val(),$("#dateevent").val());
 							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 							
 							}
@@ -1551,6 +1553,11 @@ eguest = $("#guestcount").val() == "";
 			{
 				$("#hall").removeAttr("disabled");
 				$("#hall option[value=0]").text("Выберите зал");
+				
+				if($("#hall").val() > 0)
+				{
+					get_selected_hall($("#hall").val(),$("#dateevent").val());
+				}
 			}else
 			{
 				$("#hall option[value=0]").attr('selected','selected');
@@ -1561,17 +1568,17 @@ eguest = $("#guestcount").val() == "";
 		}
 		
 		
-		function get_selected_hall(hallid)
+		function get_selected_hall(hallid,dateevent)
 		{
 
 	  		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'gethall', hallid: hallid, fororder:'yes'}
+			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, fororder:'yes'}
 			})
 			.done(function( msg ) {
 				$("#selectedhall").html(msg);//закачали хтмл
-				
+
 
 
 				//расстановка столов по координатам
@@ -1753,17 +1760,22 @@ eguest = $("#guestcount").val() == "";
 			
 			if($("#createform .btn-primary").length > 1)
 			{			
-			$("#hall").attr("disabled","disabled");
+				$("#hall").attr("disabled","disabled");
 			} 
 			
 			
 			if($("#createform .btn-primary").length == 1)
 			{			
-			$("#hall").removeAttr("disabled");
+				$("#hall").removeAttr("disabled");
 			} 
 		
 		}
 		
+
+
+		
+	
+
 	</script>
   </body>
 </html>

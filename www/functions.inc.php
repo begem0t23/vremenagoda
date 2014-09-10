@@ -4,6 +4,41 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
+
+function checktablesondate($checkdate,$hallid) 
+{
+
+				$insert = "INSERT INTO  `tables_on_date` 
+				SELECT NULL, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle` , `group`, '0', FROM_UNIXTIME('".strtotime($checkdate)."') , '".$_SESSION["curuserid"]."'
+				FROM  `tables` WHERE `hallid` = '".$hallid."'" ;
+
+//echo $insert;
+
+		$tsql2 = "SELECT * FROM `tables_on_date` WHERE `hallid` = '".$hallid."' AND `date` = FROM_UNIXTIME('".strtotime($checkdate)."');";
+			$rez_tab = mysql_query($tsql2);
+			if (mysql_num_rows($rez_tab)==0)
+			{
+			
+				mysql_query($insert);
+
+				$tsql3 = "SELECT * FROM `tables_on_date` WHERE `id` = '".$hallid."' AND `date` = FROM_UNIXTIME('".strtotime($checkdate)."');";
+				$rez_tab3 = mysql_query($tsql3);
+				if (mysql_num_rows($rez_tab3) > 0)
+				{
+					return 'yes';
+				}
+
+			}
+			else
+			{
+				return 'yes';
+			}
+
+
+}
+
+
+
 function print_dishes_for_client_report($items,$sectionid)
 {
 $output = Array();
