@@ -34,7 +34,11 @@ $fororder = $_POST['fororder'];
 			
 			if($fororder == 'yes')
 			{
-			$tsql2 = "SELECT td.*, tt.* FROM `tables_on_date` AS td, `table_types` AS tt WHERE td.hallid = '".$hallid."'  AND tt.typeid = td.typeid AND td.date = FROM_UNIXTIME('".strtotime($dateevent)."') ORDER BY `num` ASC;";
+			$tsql2 = "SELECT td.*, tt.* FROM `tables_on_date` AS td, `table_types` AS tt WHERE td.hallid = '".$hallid."'  AND tt.typeid = td.typeid AND td.date = '".convert_date($dateevent)."' ORDER BY `num` ASC;";
+			
+			
+			
+			
 			}
 			
 			$rez_tab = mysql_query($tsql2);
@@ -1712,7 +1716,7 @@ if($_POST['operation'] == 'sendemail')
 {
         $mess = $_POST['textemail'];
         $mess2 = $_POST['emailhtml'];
-
+echo $mess;
         // подключаем файл класса для отправки почты
        require 'class.phpmailer.php';
        require 'class.smtp.php';
@@ -1732,7 +1736,7 @@ if($_POST['operation'] == 'sendemail')
                  }
         }
 
-		$mess = $mess.'</table><br /><br />';
+	
 
         $mail->Body = $mess;
 

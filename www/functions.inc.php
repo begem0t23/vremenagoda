@@ -1277,5 +1277,17 @@ function checklogin()
 	}
 }
 
+
+function convert_date($datetoconv)
+{
+$cd = substr($datetoconv,0,2);
+$cm = substr($datetoconv,3,2);
+$cy = substr($datetoconv,6);
+
+$conv = $cy.'-'.$cm.'-'.$cd;
+
+return $conv;
+}
+
 // Alexey Bogachev aabogachev@gmail.com +74955084448
 ?>

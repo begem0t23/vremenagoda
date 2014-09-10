@@ -264,7 +264,6 @@ function sendemail()
 
 //alert($('#textemail').text());
 		
-	function remove_table(hallid,tabid){
 	 		$.ajax({
 			type: "POST",
 			url: "functions.php",
@@ -279,9 +278,12 @@ function sendemail()
 				}
 			});
 
-	}
+	
 	
 }
+
+
+
 function openemail()
 {
 dialog.dialog('open');
