@@ -774,7 +774,7 @@ partytypes
 					erasevaluesincookie();
 					data = data.split("^");
 					$("#spanpage1").html("");
-					$("#timestart").val($.now());
+					$("#timestart").val($.now()/1000);
 					//alert(data[0]);
 					spanpage1 = '<div style="max-width: 500px"><form id=frm1 role="form" data-toggle="validator">';
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
@@ -1100,7 +1100,8 @@ partytypes
 			
 				if (typeof $.cookie("clientname") != 'undefined')
 				{
-					docheckclientname($.cookie("clientname"));
+					// Богачев :: убрал. заебало.
+					//docheckclientname($.cookie("clientname"));
 				}
 
 				
