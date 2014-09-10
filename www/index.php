@@ -4,7 +4,7 @@
 if (!session_id()) session_start();
 require_once("config.inc.php");
 require_once("functions.inc.php");
-		header('Content-Type: text/html; charset=utf-8');
+header('Content-Type: text/html; charset=utf-8');
 
 $qq = @$_SERVER['QUERY_STRING'];
 

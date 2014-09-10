@@ -1750,6 +1750,7 @@ eguest = $("#guestcount").val() == "";
 			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, fororder:'yes'}
 			})
 			.done(function( msg ) {
+				//alert(msg);
 				$("#selectedhall").html(msg);//закачали хтмл
 
 
