@@ -1698,7 +1698,7 @@ partytypes
 							}
 							else
 							{
-								var nn = noty({text: 'Ошибка ' + data[1], type: 'error', timeout:5000, onClick: function(){delete nn;}});														
+								var nn = noty({text: 'Ошибка ' + data, type: 'error', timeout:5000, onClick: function(){delete nn;}});														
 							}
 						});
 					}

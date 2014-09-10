@@ -105,6 +105,7 @@ if (@$ci)
 	}
 }
 if ($oi>0) {
+	if (@$_POST["dd"]) {
 	$dishes = json_decode($_POST["dd"],true);
 	foreach($dishes as $i=>$dd)
 	{
@@ -131,7 +132,8 @@ if ($oi>0) {
 			die("ERR:4=не найден идентификатор блюда");
 		}
 	}
-
+	}
+	if (@$_POST["ss"]) {
 	$services = json_decode($_POST["ss"],true);
 	foreach($services as $i=>$ss)
 	{
@@ -171,7 +173,7 @@ if ($oi>0) {
 			die("ERR:6=не найден идентификатор услуги");
 		}
 	}
-	
+	}
 
 
 	$tables = json_decode($tt,true);
