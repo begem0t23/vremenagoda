@@ -579,15 +579,9 @@ $probka = 0;
 $teapay = 0;
 $service_sum =0;
 $service_discont = 0;
-<<<<<<< HEAD
 $eat_sum = $level0_sum['_59'] + $level0_sum['_60'];
 $drink_sum = @$level0_sum['_61'] + @$level0_sum['_19'];
 $eat_sum = $sum[0] ;
-=======
-$food_sum = $level0_sum['_59'] + $level0_sum['_60'];
-$drink_sum = $level0_sum['_61'] + $level0_sum['_19'];
-$food_sum = $sum[0] ;
->>>>>>> 612b69ca7bf3862b2a703006a2c0f7b7a6c0900d
 $drink_sum = $sum[1];
 
 		$tsql011 = "SELECT s.id, s.name,    so.price ,  so.discont , so.num, so.comment FROM services s,  services_in_orders so  WHERE  so.orderid=".$zid." AND so.serviceid = s.id   ;";
@@ -617,12 +611,16 @@ $drink_sum = $sum[1];
 			}
 			if($rows011["id"] == 12)
 			{
-<<<<<<< HEAD
-				if ($rows011["discont"]>0) {$teapay = ($eat_sum + $drink_sum)/$rows011["discont"];} else {$teapay = ($eat_sum + $drink_sum);}
-=======
-				$teapay = ($food_sum + $drink_sum)/$rows011["discont"];
-				$teapayproc = ' ('.round($rows011["discont"],0).'%)';
->>>>>>> 612b69ca7bf3862b2a703006a2c0f7b7a6c0900d
+				if ($rows011["discont"]>0) 
+				{
+					$teapay = ($eat_sum + $drink_sum)/$rows011["discont"];
+					$teapayproc = ' ('.round($rows011["discont"],0).'%)';					
+				} 
+				else 
+				{
+					$teapay = ($eat_sum + $drink_sum);
+					$teapayproc = ' (0%)';
+				}
 				$show =0;		
 			}
 			
