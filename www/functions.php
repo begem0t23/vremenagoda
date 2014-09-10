@@ -1719,7 +1719,7 @@ echo '<br><br>
 if($_POST['operation'] == 'sendemail')
 {
         $mess = $_POST['textemail'];
-        $mess2 = $_POST['emailhtml'];
+        //$mess2 = $_POST['emailhtml'];
 
         // подключаем файл класса для отправки почты
        require 'class.phpmailer.php';
@@ -1733,7 +1733,7 @@ if($_POST['operation'] == 'sendemail')
         $mail->IsHTML(true);        // выставляем формат письма HTML
         $mail->Subject = 'Заказ Банкета в ресторане Времена Года';  // тема письма
 
-         если был файл, то прикрепляем его к письму
+         //если был файл, то прикрепляем его к письму
         if(isset($_FILES['file'])) {
                  if($_FILES['file']['error'] == 0){
                     $mail->AddAttachment($_FILES['file']['tmp_name'], $_FILES['file']['name']);

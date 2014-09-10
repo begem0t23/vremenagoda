@@ -154,7 +154,7 @@ fixedbotbar();
 	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
-	
+	<script src="http://malsup.github.com/jquery.form.js"></script>
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 <!-- TableSorter core JavaScript ================================================== -->
 		<!-- choose a theme file -->
@@ -211,6 +211,10 @@ function newpay()
 	
 $(function(){
 
+
+ 
+
+   
 $('#newpaydate').datepicker();
 
  $(".report_client2")
@@ -247,7 +251,7 @@ $('#newpaydate').datepicker();
      dialog = $( "#sendemail-form" ).dialog({
       autoOpen: false,
       height: 350,
-      width: 400,
+      width: 700,
       modal: true,
       buttons: {
         "Отправить": sendemail,
@@ -257,28 +261,59 @@ $('#newpaydate').datepicker();
       }
     });
  
-  
+
+
+
+
+    var options = { 
+    beforeSend: function() 
+    {
+        $("#progress").show();
+        //clear everything
+        $("#bar").width('0%');
+        $("#message").html("xxx");
+        $("#percent").html("0%");
+    },
+    uploadProgress: function(event, position, total, percentComplete) 
+    {
+        $("#bar").width(percentComplete+'%');
+        $("#percent").html(percentComplete+'%');
+ 
+    },
+    success: function() 
+    {
+        $("#bar").width('100%');
+        $("#percent").html('100%');
+ 
+    },
+    complete: function(response) 
+    {
+		if(response.responseText == "yes")
+		{
+        	$("#message").html("<font color='green'>"+response.responseText+"</font>");
+			dialog.dialog("close");
+ 			alert("Сообщение отправлено");
+		}
+   },
+    error: function()
+    {
+        $("#message").html("<font color='red'> ERROR: unable to upload files</font>");
+ 
+    }
+ 
+}; 
+ 
+   $("#myForm").ajaxForm(options); 
 });
+
+
+
+
+
 function sendemail()
 {
 
-//alert($('#textemail').text());
-		
-	 		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'sendemail', textemail:$('#textemail').text()}
-			})
-			.done(function( msg ) {
-				if(msg == 'yes'){
-				alert("Сообщение отправлено");
-				dialog.dialog('close');
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-			});
-
-	
+ $("#myForm").submit();
 	
 }
 
@@ -292,10 +327,12 @@ dialog.dialog('open');
     <!-- Placed at the end of the document so the pages load faster -->
 	<div id="sendemail-form" title="Заполните информацию по пользователю.">
   <p class="validateTips">Отправить отчет по E-mail.</p>
-  <form>
+  <form id="myForm" action="functions.php" method="POST" enctype="multipart/form-data">
 	<input type="text" id="email" placeholder="Email Клиента" class="form-control" value="">
 	<input type="text" id="name" placeholder="Копия" class="form-control" value="">
-	<textarea rows = "20" id="textemail" placeholder="Текст Сообщения" class="form-control">Здравствуйте Уважаемый(ая) Имя! 
+	<input name="file" id="file" value="" type="file"  size="50">
+	<input type="hidden" value="sendemail" id="operation" name="operation">
+	<textarea rows = "8" name="textemail" placeholder="Текст Сообщения" class="form-control">Здравствуйте Уважаемый(ая) Имя! 
 	<br><br>
 	Высылаем Вам копию Вашего заказа для ознакомления и ждем Ваших комментарием.
 	<br><br>
@@ -306,6 +343,14 @@ dialog.dialog('open');
 	<br>
 	Ресторан Времена Года.<br><br></textarea>
  </form>
+ <div id="progress">
+        <div id="bar"></div>
+        <div id="percent">0%</div >
+</div>
+<br/>
+ 
+<div id="message"></div>
+ 
 </div>
   </body>
 </html>
