@@ -493,12 +493,6 @@ fixednavbar();
 		</form>
 		</div>
 		
-		
-
-		
-		
-		
-		
 		<!-- услуги -->
 		<div id=spanpage4 style="visibility: hidden;">
 		<form id=frm4 role="form" data-toggle="validator">
@@ -554,7 +548,7 @@ fixednavbar();
 							{
 								$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
 								<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
-				$discont ='';
+								$discont ='';
 							}
 									
 			echo '<tr >';
@@ -1492,7 +1486,7 @@ partytypes
 					var quantserv 	= $("#quantserv"+id).val();
 					var discont 	= $("#discontserv"+id).val();
 					var comment 	= $("#commentserv"+id).val();
-		
+
 					$("#priceserv"+id).attr("readonly","readonly");
 					$("#quantserv"+id).attr("readonly","readonly");
 					$("#discontserv"+id).attr("readonly","readonly");

@@ -344,25 +344,25 @@ $drink_sum = $sum[1];
 			{	
 			$show = 1;
 			
-			if($rows011["id"] == 8)
-			{
-				$probka = $rows['guestcount'] * $rows011["price"];
-				$show =0;		
-			}
+			//if($rows011["id"] == 8)
+			//{
+			//	$probka = $rows['guestcount'] * $rows011["price"];
+			//	$show =0;		
+			//}
 			if($rows011["id"] == 9)
 			{
-				$food_discont = ($food_sum * $rows011["price"])/100;
+				$food_discont = ($food_sum * $ss["discont"])/100;
 				$show =0;		
 			}
 			if($rows011["id"] == 10)
 			{
-				$drink_discont = ($drink_sum * $rows011["price"])/100;
+				$drink_discont = ($drink_sum * $ss["discont"])/100;
 				$show =0;		
 			}
 			if($rows011["id"] == 12)
 			{
-				$teapay = ($food_sum + $drink_sum)/$rows011["price"];
-				$teapayproc = ' ('.round($rows011["price"],0).'%)';
+				$teapay = ($food_sum + $drink_sum)/$ss["discont"];
+				$teapayproc = ' ('.round($ss["discont"],0).'%)';
 				$show =0;		
 			}
 			
@@ -470,10 +470,10 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'<td  colspan="1">'.$teapay.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Пробковый сбор</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$probka.'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		//$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
+		//$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Пробковый сбор</td>'.chr(10);
+		//$body_out = $body_out.'<td  colspan="1">'.$probka.'</td>'.chr(10);
+		//$body_out = $body_out.'</tr>'.chr(10);
 		
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - 1).'"  class="summary_section">ИТОГО:</th>'.chr(10);
