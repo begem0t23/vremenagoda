@@ -24,7 +24,7 @@ if ($_POST['operation'] == 'getsummallpayments')
 	$select = "SELECT sum(summa * ((ispayout * -2) +1)) AS total FROM `payments_in_orders` WHERE `orderid` = '".$orderid.";";
 	$rezult = mysql_query($select);
 	$rows = mysql_fetch_array($rezult);
-	echo $rows['total'] ;
+	echo $rows['total'] + 0;
 }
 
 if ($_POST['operation'] == 'addpayment') 
@@ -128,12 +128,11 @@ $fororder = $_POST['fororder'];
 			if($fororder == 'yes')
 			{
 			$tsql2 = "SELECT td.*, tt.* FROM `tables_on_date` AS td, `table_types` AS tt WHERE td.hallid = '".$hallid."'  AND tt.typeid = td.typeid AND td.date = '".convert_date($dateevent)."' ORDER BY `num` ASC;";
+
 			
-			
-			
-			
+	
 			}
-			
+		
 			$rez_tab = mysql_query($tsql2);
 			//$ech .= mysql_error(); 
 			if (mysql_num_rows($rez_tab)>0)
@@ -160,7 +159,7 @@ $fororder = $_POST['fororder'];
 					
 					for($i=0;$i<$row_tab["persons"];$i++)
 					{
-					$ech = $ech.'<div class="chiar" ischiar="1" tabid="'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"></div>';
+					//$ech = $ech.'<div class="chiar" ischiar="1" tabid="'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"></div>';
 					}
 					
 					$ech = $ech.'<div class="tabnum">'.$row_tab["num"].'</div>
@@ -169,7 +168,7 @@ $fororder = $_POST['fororder'];
 			}
 						$ech = $ech.'</div>';
 
-	echo '<div class="title"><h4>Количество столов: '.$tabquant.'. Количество персон: '.$sumpersons.'.</h4></div>';
+	echo '<div class="title"><h4>Количество столов: '.$tabquant.'.</h4></div>';
 	echo $ech;
 }
 
@@ -255,8 +254,8 @@ $totabid = $_POST['totabid'];
 			}
 			if($sumpersons)
 			{
-				$update = "UPDATE `hall` SET    `countofperson` = '".$sumpersons."' WHERE  `id` = ".$hallid." ;";
-				mysql_query($update);
+				//$update = "UPDATE `hall` SET    `countofperson` = '".$sumpersons."' WHERE  `id` = ".$hallid." ;";
+				//mysql_query($update);
 			}
 		}
 			echo 'yes';

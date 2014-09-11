@@ -624,7 +624,7 @@ fixednavbar();
 		{
 		$btnclass = 'btn-default disabled';
 			$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
-			$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
+			$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="0" name="discontserv">';
 			$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
 			$tocalcrowclass = "";
 	
@@ -642,7 +642,7 @@ fixednavbar();
 							{
 								$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
 								<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
-								$discont ='';
+							
 							}
 									
 			echo '<tr >';
@@ -687,7 +687,7 @@ fixednavbar();
 <div class="input-group" style="max-width:500px">
   <span class="input-group-addon"><span class="glyphicon glyphicon-gift"></span></span>
   <input type="text" id="type" placeholder="тип мероприятия" class="form-control">
-partytypes
+
 </div>
 <br>		
 <div class="input-group" style="max-width:500px">
@@ -1846,6 +1846,8 @@ edate1 = $("#dateevent").val() == "__.__.____";
 edate2 = $("#dateevent").val() == "";
 eguest = $("#guestcount").val() == "";
 
+$("input .byguestcount").val($("#guestcount").val()) ;
+
 			if( !edate1  & !edate2 & !eguest  )
 			{
 				$("#hall").removeAttr("disabled");
@@ -1877,117 +1879,18 @@ eguest = $("#guestcount").val() == "";
 				//alert(msg);
 				$("#selectedhall").html(msg);//закачали хтмл
 
-
-
 				//расстановка столов по координатам
 				$("#selectedhall .table").each(function()
-					{
+				{
 					ntop = parseInt($(this).attr('top'));
 					nleft = parseInt($(this).attr('left'));
 					ptop = $(this).parent().offset().top;
 					pleft = $(this).parent().offset().left;
 					
-				$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
-						
-					});
-					
-					
-					
-				// расстановка стульев вокруг столов
-				
-					$("#selectedhall .table .chiar").each(function()
-					{
-						
-							if(!$(this).parent().hasClass("left-top-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("left-top-ok");
-								$(this).addClass("left-top");
-								$(this).addClass("placed");
-							}
-							
-							if(!$(this).parent().hasClass("left-bottom-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("left-bottom-ok");
-								$(this).addClass("left-bottom");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("right-top-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("right-top-ok");
-								$(this).addClass("right-top");
-								$(this).addClass("placed");
-							}
-							
-							if(!$(this).parent().hasClass("right-bottom-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("right-bottom-ok");
-								$(this).addClass("right-bottom");
-								$(this).addClass("placed");
-							}
-						
+					$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
+				});
 
-							if(!$(this).parent().hasClass("bottom-left-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-left-ok");
-								$(this).addClass("bottom-left");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("bottom-right-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-right-ok");
-								$(this).addClass("bottom-right");
-								$(this).addClass("placed");
-							}
-
-							if(!$(this).parent().hasClass("top-left-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-left-ok");
-								$(this).addClass("top-left");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("top-right-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-right-ok");
-								$(this).addClass("top-right");
-								$(this).addClass("placed");
-							}
-
-
-							if(!$(this).parent().hasClass("top-left-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-left-corner-ok");
-								$(this).addClass("top-left-corner");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("bottom-left-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-left-corner-ok");
-								$(this).addClass("bottom-left-corner");
-								$(this).addClass("placed");
-							}
-
-							if(!$(this).parent().hasClass("top-right-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-right-corner-ok");
-								$(this).addClass("top-right-corner");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("bottom-right-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-right-corner-ok");
-								$(this).addClass("bottom-right-corner");
-								$(this).addClass("placed");
-							}
-
-
-					});
-
-									tables = "";
+				tables = "";
 				if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
 				if (tables) {
 					var taball = $.parseJSON(tables);
@@ -2006,13 +1909,10 @@ eguest = $("#guestcount").val() == "";
 				
 				checkhallselect();
 			});
-	
-	
-	
-
-
 				
-	}
+		}
+		
+		
 		function count_dish_weight()
 		{
 

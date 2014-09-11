@@ -140,7 +140,7 @@ $bgs[1] = 'Да';
  			echo '<div class="trash" >Корзина</div>';
  			echo '<div class="newtable newtable2" tabid="0" typeid="2">Стол</div>';
  			echo '<div class="newtable newtable1" tabid="0" typeid="1">Стол</div>';
-			echo '<div class="newchiar" tabid="0" >стул</div>';
+			//echo '<div class="newchiar" tabid="0" >стул</div>';
 
 			echo '<div id="hallcontent-'.$row_hall['id'].'" class="hallcontent"></div>';
 			echo '</div>';

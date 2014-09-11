@@ -780,7 +780,7 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Сделано платежей на сумму</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Внесенная предоплата</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.($rows['total'] + 0).'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
