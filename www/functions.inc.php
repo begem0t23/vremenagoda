@@ -317,7 +317,7 @@ $menuid = substr($menuid,1);
 }
 
 
-function report_client($tname,$zid,$format)
+function report_client($forwho,$zid)
 {
 $cs1 = 2;
 $cs2 = 4;
@@ -772,6 +772,23 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'<th  colspan="1" class="summary_section">'.$summary.'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
+	
+	$select = "SELECT sum(summa * ((ispayout * -2) +1)) AS total FROM `payments_in_orders` WHERE `orderid` = '".$zid."';";
+	
+	$rezult = mysql_query($select);
+	$rows = mysql_fetch_assoc($rezult);
+
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Сделано платежей на сумму</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.($rows['total'] + 0).'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - 1).'" class="report_section">ЗАДОЛЖЕННОСТЬ:</th>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1"  class="report_section">'.($summary - $rows['total']).'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
 		$style = '<style>
 
 
@@ -968,7 +985,7 @@ border-spacing:1px;
 }
 
 .payments{
-width:450px;
+width:350px;
 	font-family:Arial, Helvetica, sans-serif;
 	color:#666;
 	font-size:10px;
@@ -1031,7 +1048,7 @@ $header = '<table class="contacts">
 
 $footer ='<p><strong>Исполнительный директор ___________________________________________</strong></p><p><strong>Заказчик___________________________________________________________</strong></p>';
 
-$title = '<h3>'.$tname.'</h3>'.chr(10);		
+//$title = '<h3>'.$tname.'</h3>'.chr(10);		
 
 $table = '<table id="report_client_param" class="simple-little-table">'.chr(10).
 			$cols_out.$head_out.$body_out.

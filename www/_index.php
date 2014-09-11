@@ -39,17 +39,7 @@ fixednavbar();
 <?php	
 	$q ='"';
 	if(!@$_GET['view_zakazid']){
-		table(
-		"Новые заказы", //заголовок
-		"50,100,200,200",	//ширина колонок
-		"Номер Заказа,Дата Банкета,Клиент,Статус Заказа",	//заголовки
-		"id,eventdate,name,orderstatus",	//поля
-		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name
-		 FROM orders o, users u, clients c 
-		 WHERE o.status = 1 AND  o.creatorid = u.id AND o.clientid = c.id ", //sql кроме даты
-		"", //период (поле,начало,конец)
-		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>" //кнопки
-		);
+	
 		
 		table(
 		"Заказы ".$_SESSION["curusername"], //заголовок
@@ -76,11 +66,12 @@ fixednavbar();
 		);
 	} else {
 	
-	
+	echo '<h3>Заказ №'.$_GET['view_zakazid'].'</h3>'.chr(10)
 	?>
+	
 		<table class="payments"><tr>
 	<td> 
-<button class="btn btn-default" oncklick="allpaymentsview();">Просмотр платежей</button>
+<button class="btn btn-default" id="apv" onclick="allpaymentsview();">Показать платежи</button>
 <div id="allpayments" style="display:none;"></div>
 </td>
 </tr><tr>
@@ -89,7 +80,6 @@ fixednavbar();
 <div class="input-group">
   <span class="input-group-addon"><span >Новый платеж</span></span>
   <input type="text" id="newpayment" placeholder="введите сумму" class="form-control" orderid="<?php echo $_GET['view_zakazid']; ?>" onkeyup="newpay();">
-  <span class="input-group-addon">Р</span>
 </div>	
 <div class="input-group" style="display:none;">
   <span class="input-group-addon"><span >Способ оплаты</span></span>
@@ -99,38 +89,42 @@ fixednavbar();
  <option value="2">Безнал</option>
  <option value="3">Банковская карта</option>
   </select>
-  <span class="input-group-addon"></span>
 </div>	
 
 <div class="input-group" style="display:none;">
  <span class="input-group-addon"><span >Дата оплаты</span></span>
  <input name="newpaydate" data-mask="99.99.9999" maxlength="10" type="text" id="newpaydate" onchange="newpay();" onclick="$('#newpaydate' ).datepicker( 'show' );" class="form-control" placeholder="Дата платежа">
-  <span class="input-group-addon"></span>
   </div>	
-  
-<div class="input-group" style="display:none;">
- <button class="btn btn-default" onclick="add_payment();" id="newpayadd">Добавить</button>
-</div>	
+ 
+ 
+ <div class="input-group" style="display:none;">
+ <span class="input-group-addon"><span >Возврат средств</span></span>
+ <input  type="checkbox" id="ispayout" class="form-control" >
+ </div>	
+
+ <div class="input-group" style="display:none;">
+  <span class="input-group-addon"><span >Комментарий</span></span>
+ <input type="text" id="newpaycomm" placeholder="Добавьте комментарий" class="form-control" > 
+  </div>	
+ 
+  <div class="input-group" style="display:none;">
+  <button class="btn btn-default" onclick="add_payment();" id="newpayadd">Добавить</button>
+  <button class="btn btn-default" onclick="cancel_payment();" id="newpaycancel">Отмена</button>
+ </div>	
+
 
 </td></tr>
 </table>
 	
-	
-	
-	<?php
-	
-	
-	$format = 'screen';
-	if(@$_GET['f'] == 'pdf') {$format = 'pdf';}
-		report_client(
-		"Заказ №".$_GET['view_zakazid'], //заголовок
-		$_GET['view_zakazid'],
-		$format
-		);
-	
+	<br>
+	<div id="report">      </div>
+
+<?php
+
 	}		
 	
 ?>		
+
       </div>
     </div>
 
@@ -147,7 +141,7 @@ fixedbotbar();
 	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
-	<script src="http://malsup.github.com/jquery.form.js"></script>
+	<script src="/jquery/jquery.form.js"></script>
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 <!-- TableSorter core JavaScript ================================================== -->
 		<!-- choose a theme file -->
@@ -174,6 +168,9 @@ function newpay()
 		$("#newpaymethod").parent().hide();	
 		$("#newpaydate").parent().hide();	
 		$("#newpayadd").parent().hide();	
+		$("#newpaycancel").parent().hide();	
+		$("#newpaycomm").parent().hide();	
+		$("#ispayout").parent().hide();	
 	}
 	
 		val2 = $("#newpaymethod").val();
@@ -186,6 +183,9 @@ function newpay()
 	{
 		$("#newpaydate").parent().hide();	
 		$("#newpayadd").parent().hide();	
+		$("#newpaycancel").parent().hide();	
+		$("#newpaycomm").parent().hide();	
+		$("#ispayout").parent().hide();	
 	}
 	
 	val3 = $("#newpaydate").val();
@@ -193,10 +193,16 @@ function newpay()
 	if(val3)
 	{
 		$("#newpayadd").parent().show();
+		$("#newpaycancel").parent().show();	
+		$("#newpaycomm").parent().show();	
+		$("#ispayout").parent().show();	
 	}
 	else
 	{
 		$("#newpayadd").parent().hide();	
+		$("#newpaycancel").parent().hide();	
+		$("#newpaycomm").parent().hide();	
+		$("#ispayout").parent().hide();	
 	}
 
 }	
@@ -205,12 +211,19 @@ function newpay()
 $(function(){
 
 
- 
+ get_report();
 
    
-$('#newpaydate').datepicker();
+$('#newpaydate').datepicker({ maxDate: "+0D" });
 
- $(".report_client2")
+ $("#allpaytab")
+  .tablesorter(
+  {
+      theme: 'blue',
+       widgets: ['zebra']
+    });
+	
+$(".report_client2")
   .tablesorter(
   {
       theme: 'blue',
@@ -255,7 +268,8 @@ $('#newpaydate').datepicker();
     });
  
 
-
+	var orderid = $("#newpayment").attr('orderid');
+	get_all_payments(orderid);
 
 
     var options = { 
@@ -320,45 +334,105 @@ dialog.dialog('open');
 
 
 
-
-
+	function cancel_payment(){
+		$("#newpayment").val("");
+		$("#newpaymethod").val(0);
+		$("#newpaydate").val("");	
+		$("#newpayadd").val("");	
+		$("#newpaycancel").val("");
+		$("#newpaycomm").val("");
+		$("#ispayout").removeAttr("checked");
+		newpay();
+	}
 
 	function add_payment(){
 	orderid = $("#newpayment").attr('orderid');
+	
 			$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'addpayment', orderid:orderid, paysum: $("#newpayment").val(), paymeth:$("#newpaymethod").val(), paydate:$("#newpaydate").val()}
+			data: { operation: 'addpayment', ispayout:$("#ispayout")[0].checked, paycomm:$("#newpaycomm").val(),  orderid:orderid, paysum: $("#newpayment").val(), paymeth:$("#newpaymethod").val(), paydate:$("#newpaydate").val()}
 		})
 		.done(function( msg ) {
 				if(msg == 'yes'){
-					get_all_payments(orderid);
+
+				cancel_payment();
+					get_all_payments();
+					get_report();
 					} else {
 				alert ('Что-то пошло не так. '+msg);
+				
 				}
 		});
 	}
 
-	function get_all_payments(orderid)
+	function get_all_payments()
 	{
-	orderid = $("#newpayment").attr('orderid');
+		orderid = $("#newpayment").attr('orderid');
 				$.ajax({
 			type: "POST",
 			url: "functions.php",
 			data: { operation: 'getallpayments', orderid:orderid}
 		})
 		.done(function( msg ) {
-				if(msg == 'yes'){
+			
 					$("#allpayments").html(msg);
-					} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
+					check_pay_view();
+				
 		});
+		
+		$("#allpaytab")
+			.tablesorter(
+			{
+				theme: 'blue',
+				widgets: ['zebra']
+			});
 	}
 
 	
+	function get_report()
+	{
+		orderid = $("#newpayment").attr('orderid');
+				$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'getreport', orderid:orderid, forwho:'client'}
+		})
+		.done(function( msg ) {
+			
+					$("#report").html(msg);
+				
+		});
+		
+	
+	}	
 	
 	
+	
+	function allpaymentsview()
+	{
+		if($("#apv").html()=='Показать платежи')
+		{
+			$("#apv").html('Скрыть платежи');
+		
+		}else
+		{
+			$("#apv").html('Показать платежи');
+		}
+	
+	check_pay_view();
+	}
+	
+	function check_pay_view()
+	{
+		if($("#apv").html()=='Показать платежи')
+		{
+			$("#allpayments").hide();
+		}else
+		{
+			$("#allpayments").show();
+		}
+	}
 	
 
 </script>	

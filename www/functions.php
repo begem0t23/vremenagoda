@@ -7,6 +7,25 @@ if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 
 
+if ($_POST['operation'] == 'getreport') 
+{
+header('Content-Type: text/html; charset=utf-8');
+	$orderid = $_POST['orderid'];
+	$forwho = $_POST['forwho'];
+		report_client(
+		$forwho,
+		$orderid
+		);
+}
+
+if ($_POST['operation'] == 'getsummallpayments') 
+{
+	$orderid = $_POST['orderid'];
+	$select = "SELECT sum(summa * ((ispayout * -2) +1)) AS total FROM `payments_in_orders` WHERE `orderid` = '".$orderid.";";
+	$rezult = mysql_query($select);
+	$rows = mysql_fetch_array($rezult);
+	echo $rows['total'] ;
+}
 
 if ($_POST['operation'] == 'addpayment') 
 {
@@ -14,9 +33,13 @@ $orderid = $_POST['orderid'];
 $paysum = $_POST['paysum'];
 $paymeth = $_POST['paymeth'];
 $paydate = $_POST['paydate'];
+$payout = $_POST['ispayout'];
+$paycomm = $_POST['paycomm'];
+$ispayout = 0;
+if($payout == 'true') $ispayout = 1;
 
-
-			$insert = "INSERT INTO `payments_in_orders` (`id`,`orderid`, `summa`, `method`, `createdby`,`paymentdate`,`createdate`) VALUES (NULL, '".$orderid."', '".$paysum."', '".$paymeth."', '".$_SESSION["curuserid"]."', '".convert_date($paydate)."', NOW());";
+			$insert = "INSERT INTO `payments_in_orders` (`id`,`orderid`, `summa`, `method`, `ispayout`, `comment`, `createdby`,`paymentdate`,`createdate`) VALUES (NULL, '".$orderid."', '".$paysum."', '".$paymeth."', '".$ispayout."', '".$paycomm."', '".$_SESSION["curuserid"]."', '".convert_date($paydate)."', NOW());";
+			
 			
 			mysql_query($insert);
 
@@ -31,21 +54,42 @@ $orderid = $_POST['orderid'];
 $paysum = $_POST['paysum'];
 $paymeth = $_POST['paymeth'];
 $paydate = $_POST['paydate'];
+	header('Content-Type: text/html; charset=utf-8');	
+				$ech = $ech.'<table id="allpaytab" class="simple-little-table"><tr>
+				<th class="report_columns_head">№</th>
+				<th class="report_columns_head">Дата</th>
+				<th class="report_columns_head">Метод</th>
+				<th class="report_columns_head">Комментарий</th>
+				<th class="report_columns_head">Сумма</th>
+				</tr>';
 
-
-		$tsql2 = "SELECT * FROM `payments_in_orders` WHERE `orderid` = '".$orderid."';";
+		$tsql2 = "SELECT po.*, pm.name AS methodname FROM `payments_in_orders` AS po, `paymentmethods` AS pm WHERE `orderid` = '".$orderid."' AND po.method = pm.id ORDER BY `paymentdate` ASC;";
 			$rez_tab = mysql_query($tsql2);
+			$total = 0;
 			//$ech .= mysql_error(); 
 			if (mysql_num_rows($rez_tab)>0)
 			{
 				while ($row_tab = mysql_fetch_array($rez_tab))
 				{
-				
-				
+				$summa = $row_tab['summa'];
+				if($row_tab['ispayout'] == 1) $summa = 0 - $summa;
+				$total+=$summa;
+				$ech = $ech.'<tr>
+				<td>'.$row_tab['id'].'</td>
+				<td>'.$row_tab['paymentdate'].'</td>
+				<td>'.$row_tab['methodname'].'</td>
+				<td>'.$row_tab['comment'].'</td>
+				<td>'.$summa.'</td>
+				</tr>';
 				}
 			}
+							$ech = $ech.'<tr>
+				<td colspan = "4"  class="summary_section">ВСЕГО:</td>
+				<td  class="summary_section">'.$total.'</td>
+				</tr>';
+				$ech = $ech.'</table>';
 
-
+echo $ech;
 }
 
 

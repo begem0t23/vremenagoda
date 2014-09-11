@@ -87,6 +87,7 @@
 	.tabnum{font-size:18px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
 		
 		#weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
+		.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
   </style>  
 
   </head>
@@ -398,7 +399,7 @@ fixednavbar();
 ?>			
 	
 	
-		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
+		<br><div class="input-group topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		
@@ -582,7 +583,7 @@ fixednavbar();
 ?>			
 	
 
-		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
+		<br><div class="input-group topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		
@@ -674,7 +675,7 @@ fixednavbar();
 <?php		
 	}
 ?>	
-		<br><br><br><div class="input-group"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
+		<br><br><br><div class="input-group topbutton"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		<div id=spanpage5 style="visibility: hidden">
@@ -695,7 +696,7 @@ partytypes
 </div>
 <br>		
 	
-		<br><div class="input-group"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
+		<br><div class="input-group"><button class="btn btn-primary topbutton" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</form>
 		</div>
     </div>
@@ -816,12 +817,12 @@ partytypes
 		alladd = $("#createform  .btn-danger").length;			
 		if(alladd > 0) 
 			{
-				alert("Остались недобавленные позиции: " + alladd);
+				//alert("Остались недобавленные позиции: " + alladd);
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
 			} else
 			{
 		
-		
+
 			//alert(1);
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			//alert(x);
@@ -836,7 +837,6 @@ partytypes
 			if (curpage<5) curpage = curpage + 1;
 			//$("#spanpage"+curpage).css("left",x);
 			//$("#spanpage"+curpage).css("top",y);	
-			$("#createform").html($("#spanpage"+curpage).html());			
 			//$("#spanpage"+curpage).css("visibility","visible");
 			$("#page"+curpage).click();
 						count_dish_weight();	
@@ -968,7 +968,7 @@ partytypes
 					spanpage1+='</div><br>';
 					spanpage1+='<br><div  id="selectedhall"></div>';
 					
-					spanpage1+='<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
+					spanpage1+='<br><div class="input-group"><button  class="btn btn-primary topbutton"  onClick="shownextstep()" type="button">Далее</button></div>';
 					spanpage1+='</form></div>';
 					//alert(spanpage1);
 					$("#spanpage1").html(spanpage1);
