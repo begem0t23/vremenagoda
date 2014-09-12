@@ -121,7 +121,7 @@ $place = $_POST['place'];
 				$hallheight = $row_tab['height'];
 			}
 
-			$ech = $ech.'<div  id="hallplace-'.$hallid.'" class="hallplace" hallid="'.$hallid.'" style="width:'.$hallwidth.'px; height:'.$hallheight.'px; ">';
+			$ech = $ech.'<div id="hallplace-'.$hallid.'" class="hallplace" hallid="'.$hallid.'" style="width:'.$hallwidth.'px; height:'.$hallheight.'px; ">';
 
 			$tsql2 = "SELECT t.*, tt.* FROM `tables` AS t, `table_types` AS tt WHERE t.hallid = '".$hallid."'  AND tt.typeid = t.typeid ORDER BY `num` ASC;";
 			
@@ -141,7 +141,7 @@ $place = $_POST['place'];
 			$tabquant = mysql_num_rows($rez_tab);
 				while ($row_tab = mysql_fetch_array($rez_tab))
 				{
-			$inorder='btn-success';	
+			$inorder='success';	
 			
 			if($place == 'order')
 			{
@@ -150,12 +150,12 @@ $place = $_POST['place'];
 				//$ech .= mysql_error(); 
 				if (mysql_num_rows($rez_tab0)>0)
 				{
-					$inorder = 'btn-warning';
+					$inorder = 'warning';
 				}
 			}
 			
 				//$sumpersons = $sumpersons + $row_tab["persons"];
-					$ech = $ech.'<div class="context-menu-one table btn '.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; " place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
+					$ech = $ech.'<div class="context-menu-one table'.$row_tab["iscircle"].' table '.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; " place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
 					
 					//for($i=0;$i<$row_tab["persons"];$i++)
 					//{
@@ -168,9 +168,8 @@ $place = $_POST['place'];
 			}
 						$ech = $ech.'</div>';
 
-		 	echo '<div class="trash" >Корзина</div>';
- 			echo '<div class="newtable newtable2" tabid="0" typeid="2"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
- 			echo '<div class="newtable newtable1" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
+ 			echo '<div class="newtable table1" tabid="0" typeid="2"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
+ 			echo '<div class="newtable table0" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
 			//$ech+='<div class="newchiar" tabid="0" >стул</div>';
 echo '<br><div class="title"><h4>Количество столов: '.$tabquant.'.</h4></div>';
 	echo $ech;
@@ -385,8 +384,8 @@ $id = $_POST['tabid'];
 $persons = $_POST['tabpersons'];
 $ntop = $_POST['tabtop'];
 $nleft = $_POST['tableft'];
-$ntop = substr($ntop, 0, strlen($ntop)-1).'0';
-$nleft = substr($nleft, 0, strlen($nleft)-1).'0';
+//$ntop = substr($ntop, 0, strlen($ntop)-1).'0';
+//$nleft = substr($nleft, 0, strlen($nleft)-1).'0';
 $dateevent = $_POST['dateevent'];
 $place = $_POST['place'];
 	if($place == 'halleditor')

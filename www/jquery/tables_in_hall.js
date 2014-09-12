@@ -171,13 +171,12 @@
 				  stop: addtable
 				});
 				
-				$(".trash").droppable({  tolerance : 'touch', accept : '.table,.chiar', drop: totrash});
 
 				$("#hallcontent-"+hallid+" .hallplace").droppable({  tolerance : 'fit',accept : '.newtable, .table'}).resizable({grid:10, resize: normal_height, stop: hallresize});
 				$("#hallcontent-"+hallid+" .table").draggable({ 
 					grid:[ 10, 10 ],
 					scroll:false, 
-					snap:"#hallplace-"+hallid,
+					snap: true,
 					revert:"invalid",
 					snapTolerance: 5,
 					stop: tabstop
@@ -351,14 +350,20 @@
 							change_tabangle(hallid,tabid,angle,place,dateevent);
 						}
 						
-						//window.console && console.log(key) || alert(key); 
+						if( key == 'delete') 
+						{
+							remove_table(hallid,tabid,place,dateevent);
+						}
+					//window.console && console.log(key) || alert(key); 
 					},
 					items: {
 						"editname": {name: "Изменить название", icon: "edit"},
 						"rotate+90": {name: "Повернуть на 90%", icon: "cut"},
 						"rotate+45": {name: "На 45 по часовой", icon: "copy"},
-						"rotate-45": {name: "На 45 против часовой", icon: "paste"}
-
+						"rotate-45": {name: "На 45 против часовой", icon: "paste"},
+						"sep1": "---------",
+						"delete": {name: "Удалить стол", icon: "delete"}
+ 
 					}
 				});
 			
@@ -491,8 +496,8 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 						//console.log(index + " "+ value['tabnum']);
 						if (index)
 						{
-							$("#table"+index).removeClass("btn-success");
-							$("#table"+index).addClass("btn-primary");
+							$("#table"+index).removeClass("success");
+							$("#table"+index).addClass("primary");
 						}					
 					});
 				}
@@ -507,15 +512,14 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 				  stop: addtable
 				});
 				
-				$(".trash").droppable({  tolerance : 'touch', accept : '.table.btn-success,.chiar', drop: totrash});
 
-				$(".hallplace").droppable({  tolerance : 'fit',accept : '.newtable, .table.btn-primary,.table.btn-success'});
+				$(".hallplace").droppable({  tolerance : 'fit',accept : '.newtable, .table.primary,.table.success'});
 				
 				
 				$("#hallplace-"+hallid+" .table").draggable({ 
 					grid:[ 10, 10 ],
 					scroll:false, 
-					snap:"#hallplace-"+hallid,
+					snap:true,
 					revert:"invalid",
 					snapTolerance: 5,
 					stop: tabstop
@@ -524,22 +528,68 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 				checkhallselect();
 				
 				
-				  $.contextMenu({
-        selector: '.context-menu-one', 
-        callback: function(key, options) {
-            var m = "clicked: " + key;
-            window.console && console.log(m) || alert(m); 
-        },
-        items: {
-            "edit": {name: "Edit", icon: "edit"},
-            "cut": {name: "Cut", icon: "cut"},
-            "copy": {name: "Copy", icon: "copy"},
-            "paste": {name: "Paste", icon: "paste"},
-            "delete": {name: "Delete", icon: "delete"},
-            "sep1": "---------",
-            "quit": {name: "Quit", icon: "quit"}
-        }
-    });
+			 $.contextMenu({
+					selector: '.context-menu-one', 
+					callback: function(key, options) {
+						hallid = $(this).attr('hallid');
+						place = $(this).attr('place');
+						angle = parseInt($(this).attr('angle'));
+						dateevent = $(this).attr('dateevent');
+						tabid = $(this).attr('tabid');
+						tabnum = $(this).html();
+	
+						
+						if( key == 'editname') 
+						{
+
+							newtabnum = prompt('Новое значение',tabnum);
+							if(newtabnum) change_tabnum(hallid,tabid,newtabnum,place,dateevent);
+						}
+						
+						if( key == 'rotate+90') 
+						{
+							angle=angle+90;
+							if (angle >= 360) angle = 0;
+							if (angle < 0) angle = angle +360;
+							//newtabnum = prompt('Новое значение',tabnum);
+							change_tabangle(hallid,tabid,angle,place,dateevent);
+						}
+						
+						if( key == 'rotate+45') 
+						{
+							angle=angle+45;
+							if (angle >= 360) angle = 0;
+							if (angle < 0) angle = angle +360;
+							//newtabnum = prompt('Новое значение',tabnum);
+							change_tabangle(hallid,tabid,angle,place,dateevent);
+						}
+						
+						if( key == 'rotate-45') 
+						{
+							angle=angle-45;
+							if (angle >= 360) angle = 0;
+							if (angle < 0) angle = angle +360;
+							//newtabnum = prompt('Новое значение',tabnum);
+							change_tabangle(hallid,tabid,angle,place,dateevent);
+						}
+						
+						if( key == 'delete') 
+						{
+							remove_table(hallid,tabid,place,dateevent);
+						}
+					//window.console && console.log(key) || alert(key); 
+					},
+					items: {
+						"editname": {name: "Изменить название", icon: "edit"},
+						"rotate+90": {name: "Повернуть на 90%", icon: "cut"},
+						"rotate+45": {name: "На 45 по часовой", icon: "copy"},
+						"rotate-45": {name: "На 45 против часовой", icon: "paste"},
+						"sep1": "---------",
+						"delete": {name: "Удалить стол", icon: "delete"}
+ 
+					}
+				});
+
 			});
 				
 		}
