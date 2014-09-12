@@ -35,7 +35,7 @@
   position: absolute;
   top: 0.15em; }
   
-.level_0{
+	.level_0{
 	color: #000;
   background-color: #FFD141 !important;
   }
@@ -48,6 +48,9 @@
   background-color: #FFFFC0 !important;
   }
   
+  .newtable1{width:35px; height:25px;}
+  .newtable2{width:50px; height:50px;}
+  
   .tocalcrow{
      background-color: #DDFFC0 !important;
   }
@@ -58,7 +61,7 @@
    .right{float:right;}
   .trash{margin: 5px; display:block; width:70px; height: 25px; border:1px; background-color: red; position:relative; float:right;}
 
-  .newtable{margin: 5px; display:block;width:44px; height:40px;  border:1px solid #ddd; background-color:#eee; position:relative; float:right;}
+  .newtable{margin: 5px; display:block; border:1px solid #ddd; background-color:#eee; position:relative; float:right;}
    .newchiar {margin: 5px; display:block; width:30px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
 
    .hallplace {display:block;  border:1px; background-color: #FFFFC0;margin:15px; }
@@ -121,107 +124,21 @@ fixednavbar();
 		</ul>
 
 		<input type=hidden id=timestart value="">
-		
-
-
+	
 			<div id=createform style="width: 100%;">
 		
 			</div>
 		
-
 		<div id=spanpage1 style="visibility: hidden; max-width: 500px;">
 			<div class="input-group"  style="max-width: 500px;">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
 			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
-
-
-
 
 			  <span class="input-group-btn">
 				<button class="btn btn-default" onclick="docheckclientname($('#clientsearch').val());" id=clientadd name=clientadd type="button">Создать</button>
 			  </span>			  
 			</div>		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		</div>
 		
 		<!-- тарелки -->		
@@ -718,7 +635,8 @@ fixednavbar();
 	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
-	
+		<script src="/jquery/tables_in_hall.js"></script>
+
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 	
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
@@ -1185,6 +1103,12 @@ fixednavbar();
 		}
 		$(document).ready(function(){
 			// когда страница загружена
+			
+			
+			
+  
+			
+			
 			
 				if (typeof $.cookie("clientname") != 'undefined')
 				{
@@ -1692,10 +1616,6 @@ fixednavbar();
 				
 	});
 			
-	
-
-
-			
 
 
 
@@ -1841,12 +1761,13 @@ fixednavbar();
 			}
 		}
 		
-		function activatehall(){
-edate1 = $("#dateevent").val() == "__.__.____";
-edate2 = $("#dateevent").val() == "";
-eguest = $("#guestcount").val() == "";
+		function activatehall()
+		{
+			edate1 = $("#dateevent").val() == "__.__.____";
+			edate2 = $("#dateevent").val() == "";
+			eguest = $("#guestcount").val() == "";
 
-$("input .byguestcount").val($("#guestcount").val()) ;
+			$("input .byguestcount").val($("#guestcount").val()) ;
 
 			if( !edate1  & !edate2 & !eguest  )
 			{
@@ -1867,51 +1788,7 @@ $("input .byguestcount").val($("#guestcount").val()) ;
 		}
 		
 		
-		function get_selected_hall(hallid,dateevent)
-		{
 
-	  		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, fororder:'yes'}
-			})
-			.done(function( msg ) {
-				//alert(msg);
-				$("#selectedhall").html(msg);//закачали хтмл
-
-				//расстановка столов по координатам
-				$("#selectedhall .table").each(function()
-				{
-					ntop = parseInt($(this).attr('top'));
-					nleft = parseInt($(this).attr('left'));
-					ptop = $(this).parent().offset().top;
-					pleft = $(this).parent().offset().left;
-					
-					$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
-				});
-
-				tables = "";
-				if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
-				if (tables) {
-					var taball = $.parseJSON(tables);
-					$.each(taball, function(index, value) 
-					{
-						console.log(index + " "+ value['tabnum']);
-						if (index)
-						{
-
-							$("#table"+index).removeClass("btn-success");
-							$("#table"+index).addClass("btn-primary");
-
-						}					
-					});
-				}
-				
-				checkhallselect();
-			});
-				
-		}
-		
 		
 		function count_dish_weight()
 		{
@@ -1959,11 +1836,13 @@ $("input .byguestcount").val($("#guestcount").val()) ;
 			if($("#createform .btn-primary").length > 1)
 			{			
 				$("#hall").attr("disabled","disabled");
+				$("#dateevent").attr("disabled","disabled");
 			} 
 			
 			
 			if($("#createform .btn-primary").length == 1)
 			{			
+				$("#hall").removeAttr("disabled");
 				$("#hall").removeAttr("disabled");
 			} 
 		
@@ -1971,8 +1850,7 @@ $("input .byguestcount").val($("#guestcount").val()) ;
 		
 
 
-
-		
+	
 	
 
 	</script>

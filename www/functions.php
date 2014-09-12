@@ -95,16 +95,16 @@ echo $ech;
 
 
 
-
 if ($_POST['operation'] == 'gethall') 
 {
 $ech = "";
 $hallid = $_POST['hallid'];
 $dateevent = $_POST['dateevent'];
-$fororder = $_POST['fororder'];
+$place = $_POST['place'];
 
-	if($fororder == 'yes')
+	if($place == 'order')
 	{
+		
 		checktablesondate($dateevent,$hallid);
 	}
 	
@@ -125,7 +125,7 @@ $fororder = $_POST['fororder'];
 
 			$tsql2 = "SELECT t.*, tt.* FROM `tables` AS t, `table_types` AS tt WHERE t.hallid = '".$hallid."'  AND tt.typeid = t.typeid ORDER BY `num` ASC;";
 			
-			if($fororder == 'yes')
+			if($place == 'order')
 			{
 			$tsql2 = "SELECT td.*, tt.* FROM `tables_on_date` AS td, `table_types` AS tt WHERE td.hallid = '".$hallid."'  AND tt.typeid = td.typeid AND td.date = '".convert_date($dateevent)."' ORDER BY `num` ASC;";
 
@@ -143,7 +143,7 @@ $fororder = $_POST['fororder'];
 				{
 			$inorder='btn-success';	
 			
-			if($fororder == 'yes')
+			if($place == 'order')
 			{
 				$tsql02 = "SELECT * FROM `tables_in_orders` WHERE `tableid` = '".$row_tab["id"]."';";
 				$rez_tab0 = mysql_query($tsql02);
@@ -154,21 +154,25 @@ $fororder = $_POST['fororder'];
 				}
 			}
 			
-				$sumpersons = $sumpersons + $row_tab["persons"];
-					$ech = $ech.'<div class="table btn '.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; ">';
+				//$sumpersons = $sumpersons + $row_tab["persons"];
+					$ech = $ech.'<div class="context-menu-one table btn '.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; " place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
 					
-					for($i=0;$i<$row_tab["persons"];$i++)
-					{
+					//for($i=0;$i<$row_tab["persons"];$i++)
+					//{
 					//$ech = $ech.'<div class="chiar" ischiar="1" tabid="'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"></div>';
-					}
+					//}
 					
-					$ech = $ech.'<div class="tabnum">'.$row_tab["num"].'</div>
-					</div>';
+					//$ech = $ech.'<div class="tabnum">'.$row_tab["num"].'</div>
+					
 				}
 			}
 						$ech = $ech.'</div>';
 
-	echo '<div class="title"><h4>Количество столов: '.$tabquant.'.</h4></div>';
+		 	echo '<div class="trash" >Корзина</div>';
+ 			echo '<div class="newtable newtable2" tabid="0" typeid="2"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
+ 			echo '<div class="newtable newtable1" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
+			//$ech+='<div class="newchiar" tabid="0" >стул</div>';
+echo '<br><div class="title"><h4>Количество столов: '.$tabquant.'.</h4></div>';
 	echo $ech;
 }
 
@@ -180,17 +184,20 @@ $ntop = $_POST['ntop'];
 $nleft = $_POST['nleft'];
 $ntop = substr($ntop, 0, strlen($ntop)-1).'0';
 $nleft = substr($nleft, 0, strlen($nleft)-1).'0';
+$dateevent = $_POST['dateevent'];
+$place = $_POST['place'];
 
-			$tsql2 = "SELECT t.*, tt.* FROM `tables` AS t, `table_types` AS tt WHERE t.hallid = '".$hallid."' AND t.typeid = tt.typeid ORDER BY t.num desc;";
-			$rez_tab = mysql_query($tsql2);
-			$num=1;
-			if (mysql_num_rows($rez_tab)>0){
+	if($place == 'halleditor')
+	{
+		$insert = "INSERT INTO `tables` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle`, `group`) VALUES (NULL, 'new', '0', '".$hallid."', '".$ntop."', '".$nleft."', '".$typeid."', '0','0');";
+	}
+	if($place == 'order')
+	{
+		$insert = "INSERT INTO `tables_on_date` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle` , `group`, `orderid`, `date`, `updatedby`) VALUES (NULL, 'new', '4', '".$hallid."', '".$ntop."', '".$nleft."', '".$typeid."', '0','0','0', '".convert_date($dateevent)."' , '".$_SESSION["curuserid"]."');";
+	}
 
-			$num = mysql_num_rows($rez_tab);
-			}
 			
-			$insert = "INSERT INTO `tables` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle`, `group`) VALUES (NULL, 'n".$num."', '0', '".$hallid."', '".$ntop."', '".$nleft."', '".$typeid."', '0','0');";
-			mysql_query($insert);
+				mysql_query($insert);
 
 			echo 'yes';
 }
@@ -203,11 +210,21 @@ if ($_POST['operation'] == 'removetable')
 {
 $tabid = $_POST['tabid'];
 $hallid = $_POST['hallid'];
-			
-			$delete = "DELETE FROM `tables`  WHERE `id`  = '".$tabid."';";
-			mysql_query($delete);
+$dateevent = $_POST['dateevent'];
+$place = $_POST['place'];
 
+	if($place == 'halleditor')
+	{
+		$table = 'tables';
+	}
+	if($place == 'order')
+	{
+		$table = 'tables_on_date';
+	}		
+			$delete = "DELETE FROM `".$table."`  WHERE `id`  = '".$tabid."';";
+			mysql_query($delete);
 			echo 'yes';
+
 }
 
 
@@ -320,12 +337,19 @@ if ($_POST['operation'] == 'changetabnum')
 {
 $tabnum = $_POST['tabnum'];
 $tabid = $_POST['tabid'];
+$dateevent = $_POST['dateevent'];
+$place = $_POST['place'];
+	if($place == 'halleditor')
+	{
+		$table = 'tables';
+	}
+	if($place == 'order')
+	{
+		$table = 'tables_on_date';
+	}
 			
-			
-			$update = "UPDATE `tables` SET  `num`  = '".$tabnum."' WHERE `id`  = '".$tabid."';";
+			$update = "UPDATE `".$table."` SET  `num`  = '".$tabnum."' WHERE `id`  = '".$tabid."';";
 			mysql_query($update);
-
-			
 			echo 'yes';
 			
 }
@@ -340,13 +364,23 @@ $ntop = $_POST['tabtop'];
 $nleft = $_POST['tableft'];
 $ntop = substr($ntop, 0, strlen($ntop)-1).'0';
 $nleft = substr($nleft, 0, strlen($nleft)-1).'0';
-
-
+$dateevent = $_POST['dateevent'];
+$place = $_POST['place'];
+	if($place == 'halleditor')
+	{
+		$table = 'tables';
+	}
+	if($place == 'order')
+	{
+		$table = 'tables_on_date';
+	}
 			
-			$update = "UPDATE `tables` SET  `persons`  = '".$persons."',  `top` = '".$ntop."' , `left` = '".$nleft."' WHERE `id`  = '".$id."';";
-			mysql_query($update);
 
+			$update = "UPDATE `".$table."` SET  `persons`  = '".$persons."',  `top` = '".$ntop."' , `left` = '".$nleft."' WHERE `id`  = '".$id."';";
+			mysql_query($update);
 			echo 'yes';
+			
+		
 }
 
 
