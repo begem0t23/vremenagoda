@@ -74,7 +74,7 @@
   .bottom-right-corner{right:-16px; bottom:-16px;}
   
  
-	.tabnum{font-size:18px; margin: -9px 0px 0 -8px; width:100%;height:100%;}
+	.table{font-size:14px;padding:0px !important}
 		
 	</style>  
 

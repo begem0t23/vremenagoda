@@ -87,7 +87,7 @@
   .bottom-right-corner{right:-16px; bottom:-16px;}
   
  
-	.tabnum{font-size:18px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
+	.table{font-size:14px;padding:0px !important}
 		
 		#weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
 		.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}

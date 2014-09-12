@@ -14,15 +14,37 @@
 	
 	}
 	
-	function change_tabnum(tabid,tabnum){
+	
+		function change_tabangle(hallid,tabid,tabangle,place,dateevent){
+
 	 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'changetabnum', tabid:tabid, tabnum: tabnum}
+			data: { operation: 'changetabangle', tabid:tabid, tabangle: tabangle, place:place, dateevent:dateevent}
 			})
 			.done(function( msg ) {
 				if(msg == 'yes'){
-				get_hall(curmenu());
+				if(place=='halleditor') get_hall(hallid);
+				if(place=='order') get_selected_hall(hallid,dateevent);
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+	
+	}
+	
+	
+	function change_tabnum(hallid,tabid,tabnum,place,dateevent){
+
+	 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'changetabnum', tabid:tabid, tabnum: tabnum, place:place, dateevent:dateevent}
+			})
+			.done(function( msg ) {
+				if(msg == 'yes'){
+				if(place=='halleditor') get_hall(hallid);
+				if(place=='order') get_selected_hall(hallid,dateevent);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -177,13 +199,14 @@
 					nleft = parseInt($(this).attr('left'));
 					ptop = $(this).parent().offset().top;
 					pleft = $(this).parent().offset().left;
+					angle = parseInt($(this).attr('angle'));
+					$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
 					
-				$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
-									
-					});
+					rotate($(this).attr('id'),angle);
+				//поворот столов
+
 					
-					
-					
+					});		
 				// расстановка стульев вокруг столов
 				
 					$("#hallcontent-"+hallid+" .table .chiar").each(function()
@@ -286,14 +309,55 @@
 				 $.contextMenu({
 					selector: '.context-menu-one', 
 					callback: function(key, options) {
-						var m = "clicked: " + key;
-						window.console && console.log(m) || alert(m); 
+						hallid = $(this).attr('hallid');
+						place = $(this).attr('place');
+						angle = parseInt($(this).attr('angle'));
+						dateevent = $(this).attr('dateevent');
+						tabid = $(this).attr('tabid');
+						tabnum = $(this).html();
+	
+						
+						if( key == 'editname') 
+						{
+
+							newtabnum = prompt('Новое значение',tabnum);
+							if(newtabnum) change_tabnum(hallid,tabid,newtabnum,place,dateevent);
+						}
+						
+						if( key == 'rotate+90') 
+						{
+							angle=angle+90;
+							if (angle >= 360) angle = 0;
+							if (angle < 0) angle = angle +360;
+							//newtabnum = prompt('Новое значение',tabnum);
+							change_tabangle(hallid,tabid,angle,place,dateevent);
+						}
+						
+						if( key == 'rotate+45') 
+						{
+							angle=angle+45;
+							if (angle >= 360) angle = 0;
+							if (angle < 0) angle = angle +360;
+							//newtabnum = prompt('Новое значение',tabnum);
+							change_tabangle(hallid,tabid,angle,place,dateevent);
+						}
+						
+						if( key == 'rotate-45') 
+						{
+							angle=angle-45;
+							if (angle >= 360) angle = 0;
+							if (angle < 0) angle = angle +360;
+							//newtabnum = prompt('Новое значение',tabnum);
+							change_tabangle(hallid,tabid,angle,place,dateevent);
+						}
+						
+						//window.console && console.log(key) || alert(key); 
 					},
 					items: {
-						"edit": {name: "Изменить название", icon: "edit"},
-						"rot90": {name: "Повернуть на 90%", icon: "cut"},
-						"rot+45": {name: "На 45 по часовой", icon: "copy"},
-						"rot-45": {name: "На 45 против часовой", icon: "paste"}
+						"editname": {name: "Изменить название", icon: "edit"},
+						"rotate+90": {name: "Повернуть на 90%", icon: "cut"},
+						"rotate+45": {name: "На 45 по часовой", icon: "copy"},
+						"rotate-45": {name: "На 45 против часовой", icon: "paste"}
 
 					}
 				});
@@ -481,4 +545,15 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 		}
 		
 
+        function rotate(id,degree) {
+	
+            $("#"+id).css({
+                        '-webkit-transform': 'rotate(' + degree + 'deg)',
+                        '-moz-transform': 'rotate(' + degree + 'deg)',
+                        '-ms-transform': 'rotate(' + degree + 'deg)',
+                        '-o-transform': 'rotate(' + degree + 'deg)',
+                        'transform': 'rotate(' + degree + 'deg)',
+                        'zoom': 1
+            }, 500);
 
+        }

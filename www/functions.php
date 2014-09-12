@@ -155,7 +155,7 @@ $place = $_POST['place'];
 			}
 			
 				//$sumpersons = $sumpersons + $row_tab["persons"];
-					$ech = $ech.'<div class="context-menu-one table btn '.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; " place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
+					$ech = $ech.'<div class="context-menu-one table btn '.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; " place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
 					
 					//for($i=0;$i<$row_tab["persons"];$i++)
 					//{
@@ -349,6 +349,29 @@ $place = $_POST['place'];
 	}
 			
 			$update = "UPDATE `".$table."` SET  `num`  = '".$tabnum."' WHERE `id`  = '".$tabid."';";
+			mysql_query($update);
+			echo 'yes';
+			
+}
+
+
+
+if ($_POST['operation'] == 'changetabangle') 
+{
+$tabangle = $_POST['tabangle'];
+$tabid = $_POST['tabid'];
+$dateevent = $_POST['dateevent'];
+$place = $_POST['place'];
+	if($place == 'halleditor')
+	{
+		$table = 'tables';
+	}
+	if($place == 'order')
+	{
+		$table = 'tables_on_date';
+	}
+			
+			$update = "UPDATE `".$table."` SET  `angle`  = '".$tabangle."' WHERE `id`  = '".$tabid."';";
 			mysql_query($update);
 			echo 'yes';
 			
