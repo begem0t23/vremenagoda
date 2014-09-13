@@ -24,7 +24,7 @@
 			})
 			.done(function( msg ) {
 				if(msg == 'yes'){
-				alert(tabangle);
+	
 				if(place=='halleditor') get_hall(hallid);
 				if(place=='order') get_selected_hall(hallid,dateevent);
 				} else {

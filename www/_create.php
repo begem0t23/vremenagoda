@@ -1553,7 +1553,7 @@ fixednavbar();
 	$( document ).on( "click", ".table.success,.table.primary", function() {
 		tabid = $(this).attr("tabid");
 	
-alert('start');
+
 	tabnum = $(this).html();
 
 			if($(this).hasClass("success"))
