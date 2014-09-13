@@ -6,7 +6,7 @@
 			})
 			.done(function( msg ) {
 				if(msg == 'yes'){
-				get_hall(curmenu());
+				get_hall(hallid);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -24,6 +24,7 @@
 			})
 			.done(function( msg ) {
 				if(msg == 'yes'){
+				alert(tabangle);
 				if(place=='halleditor') get_hall(hallid);
 				if(place=='order') get_selected_hall(hallid,dateevent);
 				} else {
@@ -98,7 +99,8 @@
 			})
 			.done(function( msg ) {
 				if(msg == 'yes'){
-				get_hall(curmenu());
+				if(place=='halleditor') get_hall(hallid);
+				if(place=='order') get_selected_hall(hallid,dateevent);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -201,8 +203,8 @@
 					angle = parseInt($(this).attr('angle'));
 					$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
 					
-					rotate($(this).attr('id'),angle);
 				//поворот столов
+					rotate($(this).attr('id'),angle);
 
 					
 					});		
@@ -481,8 +483,11 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 					nleft = parseInt($(this).attr('left'));
 					ptop = $(this).parent().offset().top;
 					pleft = $(this).parent().offset().left;
+					angle = parseInt($(this).attr('angle'));
 					
 					$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
+					
+					rotate($(this).attr('id'),angle);
 				});
 
 				//раскраска выбранных столов
@@ -529,7 +534,7 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 				
 				
 			 $.contextMenu({
-					selector: '.context-menu-one', 
+					selector: '.context-menu-one.success,.context-menu-one.primary', 
 					callback: function(key, options) {
 						hallid = $(this).attr('hallid');
 						place = $(this).attr('place');
@@ -537,7 +542,7 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 						dateevent = $(this).attr('dateevent');
 						tabid = $(this).attr('tabid');
 						tabnum = $(this).html();
-	
+						check = $(this).hasClass("primary");
 						
 						if( key == 'editname') 
 						{
@@ -575,7 +580,14 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 						
 						if( key == 'delete') 
 						{
-							remove_table(hallid,tabid,place,dateevent);
+							if(check) 
+							{
+								alert("Этот стол выбран для банкета. Чтобы удалить его из зала сначала удалите из заказа");
+							}
+							else
+							{
+								remove_table(hallid,tabid,place,dateevent);
+							}
 						}
 					//window.console && console.log(key) || alert(key); 
 					},

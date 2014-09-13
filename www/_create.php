@@ -23,6 +23,7 @@
     <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
 	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
+	<link href="/css/jquery.contextMenu.css" rel="stylesheet" type="text/css">	
 	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
 
 <style>
@@ -49,11 +50,11 @@
   }
   
   .tocalcrow{
-     background-color: #DDFFC0 !important;
+     background-color: #ACFF7E !important;
   }
   
  tr.odd  td.tocalcrow{
-     background-color: #ACFF7E	 !important;
+     background-color:  #DDFFC0 !important;
   }
     
   .left-top{left:-16px; top:1px;}
@@ -76,7 +77,7 @@
   
  	.table{font-size:14px; border:2px solid #333; }
 	.success {background-color:#7af668;}
-	.warning {background-color:##A7FDBE ;}
+	.warning {background-color:#FFD141 ;}
 	.primary {background-color:#66a6e7;}
 	.danger {background-color:#fd3d1f;}
 	
@@ -640,6 +641,7 @@ fixednavbar();
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
 		<script src="/jquery/tables_in_hall.js"></script>
+	<script src="/jquery/jquery.contextMenu.js"></script>
 
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 	
@@ -1565,16 +1567,16 @@ fixednavbar();
 			});			
 			
 			
-	$( document ).on( "click", ".tabnum", function() {
-		tabid = $(this).parent().attr("tabid");
+	$( document ).on( "click", ".table.success,.table.primary", function() {
+		tabid = $(this).attr("tabid");
 	
-
+alert('start');
 	tabnum = $(this).html();
 
-			if($(this).parent().hasClass("btn-success"))
+			if($(this).hasClass("success"))
 			{
-					$(this).parent().removeClass("btn-success");
-					$(this).parent().addClass("btn-primary");
+					$(this).removeClass("success");
+					$(this).addClass("primary");
 
 					var tables="";
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
@@ -1596,10 +1598,10 @@ fixednavbar();
 			} else 
 			{
 				
-				if($(this).parent().hasClass("btn-primary"))
+				if($(this).hasClass("primary"))
 				{
-					$(this).parent().addClass("btn-success");
-					$(this).parent().removeClass("btn-primary");
+					$(this).addClass("success");
+					$(this).removeClass("primary");
 
 					var tables="";
 					

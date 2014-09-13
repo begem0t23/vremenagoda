@@ -647,11 +647,11 @@ $drink_sum = $sum[1];
 				if ($rows011["discont"]>0) 
 				{
 					$teapay = round(($food_sum + $drink_sum)/$rows011["discont"],2);
-					$teapayproc = ' ('.round($rows011["discont"],0).'%)';					
+					$teapayproc = round($rows011["discont"],0).'%';					
 				} 
 				else 
 				{
-					$teapay = ($food_sum + $drink_sum);
+					$teapay = 0;
 					$teapayproc = ' (0%)';
 				}
 				$show =0;		
@@ -703,6 +703,7 @@ $drink_sum = $sum[1];
 					}
 
 
+$allsumm = $food_sum + $drink_sum;
 
 $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $service_sum - $service_discont + $probka;
 
@@ -758,7 +759,7 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Наценка за обслуживание</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Наценка за обслуживание ('.$teapayproc.' От общей суммы заказа без скидок: '.$allsumm.')</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$teapay.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 

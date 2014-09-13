@@ -33,14 +33,25 @@
   position: absolute;
   top: 0.15em; }
   
-  .level_0{
-  background-color: #A7FDBE !important;
+ 	.level_0{
+	color: #000;
+  background-color: #FFD141 !important;
   }
     .level_1{
-  background-color: #FFB8BE !important;
+	color: #000;
+  background-color: #FFF368 !important;
   }
     .level_2{
-  background-color: #F5F5A3 !important;
+	color: #000;
+  background-color: #FFFFC0 !important;
+  }
+  
+  .tocalcrow{
+     background-color: #DDFFC0 !important;
+  }
+  
+ tr.odd  td.tocalcrow{
+     background-color:  #FFD141 !important;
   }
   
    
@@ -65,7 +76,7 @@
  
 	.table{font-size:14px; border:2px solid #333; }
 	.success {background-color:#7af668;}
-	.warning {background-color:##A7FDBE ;}
+	.warning {background-color:#FFD141;}
 	.primary {background-color:#66a6e7;}
 	.danger {background-color:#fd3d1f;}
 	

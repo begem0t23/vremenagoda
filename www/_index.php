@@ -24,7 +24,8 @@
  </head>
 
 <style>
-
+.nav_title{width:100px;}
+.nav_element{width:100px;}
 	
 </style>  
   <body>
@@ -69,10 +70,23 @@ fixednavbar();
 	echo '<h3>Заказ №'.$_GET['view_zakazid'].'</h3>'.chr(10)
 	?>
 	
+<div class="input-group">
+  <span class="input-group-addon"><span >Отчет</span></span><select id="show_report" onchange="get_report();"  class="form-control nav_element" >
+<option  value="client" selected="selected">Для Клиента</option>
+
+<option value="full">Полный</option>
+
+<option  value="food">Для Кухни</option>
+
+<option  value="drink">Для Бара</option>
+</select>
+
+<button class="btn btn-default  nav_element" id="apv" onclick="allpaymentsview();">Показать платежи</button>
+
+<div id="payments_section"  style="display:none;">
 		<table class="payments"><tr>
 	<td> 
-<button class="btn btn-default" id="apv" onclick="allpaymentsview();">Показать платежи</button>
-<div id="allpayments" style="display:none;"></div>
+<div id="allpayments" ></div>
 </td>
 </tr><tr>
 <td>	
@@ -115,9 +129,9 @@ fixednavbar();
 
 </td></tr>
 </table>
-	
+</div>
 	<br>
-	<div id="report">      </div>
+	<div id="report_section">      </div>
 
 <?php
 
@@ -390,17 +404,20 @@ dialog.dialog('open');
 	}
 
 	
+	
 	function get_report()
 	{
+	
+		forwho = $("#report_show :selected").val();
 		orderid = $("#newpayment").attr('orderid');
 				$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'getreport', orderid:orderid, forwho:'client'}
+			data: { operation: 'getreport', orderid:orderid, forwho:forwho}
 		})
 		.done(function( msg ) {
 			
-					$("#report").html(msg);
+					$("#report_section").html(msg);
 				
 		});
 		
@@ -414,10 +431,13 @@ dialog.dialog('open');
 		if($("#apv").html()=='Показать платежи')
 		{
 			$("#apv").html('Скрыть платежи');
-		
+			$("#apv").removeClass("btn-default");
+			$("#apv").addClass("btn-success");
 		}else
 		{
 			$("#apv").html('Показать платежи');
+			$("#apv").addClass("btn-default");
+			$("#apv").removeClass("btn-success");
 		}
 	
 	check_pay_view();
@@ -427,10 +447,10 @@ dialog.dialog('open');
 	{
 		if($("#apv").html()=='Показать платежи')
 		{
-			$("#allpayments").hide();
+			$("#payments_section").hide();
 		}else
 		{
-			$("#allpayments").show();
+			$("#payments_section").show();
 		}
 	}
 	
