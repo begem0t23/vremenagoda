@@ -19,6 +19,7 @@
     <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
 	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
+	<link href="/css/jquery.contextMenu.css" rel="stylesheet" type="text/css">	
 	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
 
  </head>
@@ -27,6 +28,28 @@
 .nav-title{width:100px !important;}
 .nav-element{width:150px !important;}
 	
+	
+	 	.table{font-size:14px; border:2px solid #333; }
+	.success {background-color:#7af668;}
+	.warning {background-color:#FFD141 ;}
+	.primary {background-color:#66a6e7;}
+	.danger {background-color:#fd3d1f;}
+	
+  .table0{width:35px; height:25px;padding:2px;}
+  .table1{width:50px; height:50px; border-radius:50px;padding:8px;}
+
+  .right{float:right;}
+  .trash{margin: 5px; display:block; width:70px; height: 25px; border:1px; background-color: red; position:relative; float:right;}
+  .newtable{margin: 5px; display:block; border:2px solid #333;  position:relative; float:right;}
+   
+   .newchiar {margin: 5px; display:block; width:25px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
+
+    .hallplace {display:block;  border:1px; background-color: #FFFFC0;margin:15px; }
+   .chiar {display:block; width:11px; height: 11px; border:1px; background-color: #AADDC0; position:absolute;}\
+
+   #weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
+		.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
+  
 </style>  
   <body>
 <?php
@@ -67,7 +90,15 @@ fixednavbar();
 		);
 	} else {
 	
-	echo '<h3>Заказ №'.$_GET['view_zakazid'].'</h3>'.chr(10)
+	$select = "SELECT * FROM `orders` WHERE `id` = '".$_GET['view_zakazid']."';";
+	
+	$rezult = mysql_query($select);
+	$rows = mysql_fetch_assoc($rezult);
+	
+	
+	echo '<h3>Заказ №'.$_GET['view_zakazid'].'</h3>'.chr(10);
+	echo '<input type="hidden" id="hall" value="'.$rows['hallid'].'">'.chr(10);
+	echo '<input type="hidden" id="dateevent" value="'.convert_date2($rows['eventdate']).'">'.chr(10);
 	?>
 	
 
@@ -133,15 +164,15 @@ fixednavbar();
 <button class="btn btn-default  nav-element" id="hv" onclick="hallview();">Показать</button>
 </div>
 <br>
-	<div id="hall_section" style="display:none;" class="btn btn-default">      </div>
-	<br>
+	<div id="selectedhall" style="display:none;" class="btn btn-default">      </div>
+
 	<div class="input-group">
 <span class="input-group-addon  nav-title"><span >Отчет</span></span>
 <select id="show_report" onchange="get_report();"  class="form-control nav-element" >
 <option  value="client" selected="selected">Для Клиента</option>
-<option value="full">Полный</option>
-<option  value="food">Для Кухни</option>
-<option  value="drink">Для Бара</option>
+<option value="full">Полный (скоро будет)</option>
+<option  value="food">Для Кухни (скоро будет)</option>
+<option  value="drink">Для Бара (скоро будет)</option>
 </select>
 </div>
 <br>
@@ -171,6 +202,10 @@ fixedbotbar();
 	<script src="/jquery/jquery.json-2.4.js"></script>
 	<script src="/jquery/jquery.form.js"></script>
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
+	
+			<script src="/jquery/tables_in_hall.js"></script>
+	<script src="/jquery/jquery.contextMenu.js"></script>
+
 <!-- TableSorter core JavaScript ================================================== -->
 		<!-- choose a theme file -->
 <link rel="stylesheet" href="/css/theme.blue.css">
@@ -394,6 +429,12 @@ dialog.dialog('open');
 		});
 	}
 
+	function get_hall()
+	{
+	
+	get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
+	}
+	
 	function get_all_payments()
 	{
 		orderid = $("#newpayment").attr('orderid');
@@ -459,6 +500,7 @@ dialog.dialog('open');
 	
 	function check_pay_view()
 	{
+	get_all_payments();
 		if($("#apv").html()=='Показать')
 		{
 			$("#payments_section").hide();
@@ -487,14 +529,23 @@ dialog.dialog('open');
 	
 	function check_hall_view()
 	{
+	get_hall();
 		if($("#hv").html()=='Показать')
 		{
-			$("#hall_section").hide();
+			$("#selectedhall").hide();
 		}else
 		{
-			$("#hall_section").show();
+			$("#selectedhall").show();
 		}
 	}
+	
+			function checkhallselect()
+		{
+			
+
+		
+		}
+		
 </script>	
     <!-- Placed at the end of the document so the pages load faster -->
 	<div id="sendemail-form" title="Заполните информацию по пользователю.">

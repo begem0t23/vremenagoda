@@ -464,7 +464,7 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 
  	}
 
-		function get_selected_hall(hallid,dateevent)
+		function get_selected_hall(hallid,dateevent,place)
 		{
 
 	  		$.ajax({

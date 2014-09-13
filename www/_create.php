@@ -57,24 +57,7 @@
      background-color:  #DDFFC0 !important;
   }
     
-  .left-top{left:-16px; top:1px;}
-  .left-bottom{left:-16px; bottom:1px;}
 
-  .right-top{right:-16px; top:1px;}
-  .right-bottom{right:-16px; bottom:1px;}
-
-  .top-left{left:1px; top:-16px;}
-  .top-right{right:1px; top:-16px;}
-
-  .bottom-left{left:1px; bottom:-16px;}
-  .bottom-right{right:1px; bottom:-16px;}
-
-  .top-left-corner{left:-16px; top:-16px;}
-  .top-right-corner{right:-16px; top:-16px;}
-
-  .bottom-left-corner{left:-16px; bottom:-16px;}
-  .bottom-right-corner{right:-16px; bottom:-16px;}
-  
  	.table{font-size:14px; border:2px solid #333; }
 	.success {background-color:#7af668;}
 	.warning {background-color:#FFD141 ;}
@@ -984,7 +967,7 @@ fixednavbar();
 				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
 					{	
 						$("body #hall").removeAttr("disabled");
-						get_selected_hall($("body #hall").val(),$("body #dateevent").val());
+						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order');
 					}
 				}
 				
@@ -1224,7 +1207,7 @@ fixednavbar();
 							{
 								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
 							} 
-							get_selected_hall($("#hall").val(),$("#dateevent").val());
+							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
 							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 						}
 					}
@@ -1782,7 +1765,7 @@ alert('start');
 				
 				if($("#hall").val() > 0)
 				{
-					get_selected_hall($("#hall").val(),$("#dateevent").val());
+					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
 				}
 			}else
 			{

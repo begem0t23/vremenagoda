@@ -1353,5 +1353,17 @@ $conv = $cy.'-'.$cm.'-'.$cd;
 return $conv;
 }
 
+
+
+function convert_date2($datetoconv)
+{
+$cd = substr($datetoconv,8);
+$cm = substr($datetoconv,5,2);
+$cy = substr($datetoconv,0,4);
+
+$conv = $cd.'.'.$cm.'.'.$cy;
+
+return $conv;
+}
 // Alexey Bogachev aabogachev@gmail.com +74955084448
 ?>
