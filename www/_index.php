@@ -24,8 +24,8 @@
  </head>
 
 <style>
-.nav_title{width:100px;}
-.nav_element{width:100px;}
+.nav-title{width:100px !important;}
+.nav-element{width:150px !important;}
 	
 </style>  
   <body>
@@ -70,20 +70,14 @@ fixednavbar();
 	echo '<h3>Заказ №'.$_GET['view_zakazid'].'</h3>'.chr(10)
 	?>
 	
+
+
 <div class="input-group">
-  <span class="input-group-addon"><span >Отчет</span></span><select id="show_report" onchange="get_report();"  class="form-control nav_element" >
-<option  value="client" selected="selected">Для Клиента</option>
+<span class="input-group-addon nav-title"><span >Платежи</span></span>
+<button class="btn btn-default  nav-element" id="apv" onclick="allpaymentsview();">Показать</button>
+</div>
 
-<option value="full">Полный</option>
-
-<option  value="food">Для Кухни</option>
-
-<option  value="drink">Для Бара</option>
-</select>
-
-<button class="btn btn-default  nav_element" id="apv" onclick="allpaymentsview();">Показать платежи</button>
-
-<div id="payments_section"  style="display:none;">
+<div id="payments_section"  style="display:none;" class="btn btn-default">
 		<table class="payments"><tr>
 	<td> 
 <div id="allpayments" ></div>
@@ -130,7 +124,27 @@ fixednavbar();
 </td></tr>
 </table>
 </div>
+
+<br>
+
+
+<div class="input-group">
+<span class="input-group-addon nav-title"><span >Посадка</span></span>
+<button class="btn btn-default  nav-element" id="hv" onclick="hallview();">Показать</button>
+</div>
+<br>
+	<div id="hall_section" style="display:none;" class="btn btn-default">      </div>
 	<br>
+	<div class="input-group">
+<span class="input-group-addon  nav-title"><span >Отчет</span></span>
+<select id="show_report" onchange="get_report();"  class="form-control nav-element" >
+<option  value="client" selected="selected">Для Клиента</option>
+<option value="full">Полный</option>
+<option  value="food">Для Кухни</option>
+<option  value="drink">Для Бара</option>
+</select>
+</div>
+<br>
 	<div id="report_section">      </div>
 
 <?php
@@ -428,16 +442,16 @@ dialog.dialog('open');
 	
 	function allpaymentsview()
 	{
-		if($("#apv").html()=='Показать платежи')
+		if($("#apv").html()=='Показать')
 		{
-			$("#apv").html('Скрыть платежи');
+			$("#apv").html('Скрыть');
 			$("#apv").removeClass("btn-default");
-			$("#apv").addClass("btn-success");
+			$("#apv").addClass("btn-primary");
 		}else
 		{
-			$("#apv").html('Показать платежи');
+			$("#apv").html('Показать');
 			$("#apv").addClass("btn-default");
-			$("#apv").removeClass("btn-success");
+			$("#apv").removeClass("btn-primary");
 		}
 	
 	check_pay_view();
@@ -445,7 +459,7 @@ dialog.dialog('open');
 	
 	function check_pay_view()
 	{
-		if($("#apv").html()=='Показать платежи')
+		if($("#apv").html()=='Показать')
 		{
 			$("#payments_section").hide();
 		}else
@@ -454,7 +468,33 @@ dialog.dialog('open');
 		}
 	}
 	
-
+	function hallview()
+	{
+		if($("#hv").html()=='Показать')
+		{
+			$("#hv").html('Скрыть');
+			$("#hv").removeClass("btn-default");
+			$("#hv").addClass("btn-primary");
+		}else
+		{
+			$("#hv").html('Показать');
+			$("#hv").addClass("btn-default");
+			$("#hv").removeClass("btn-primary");
+		}
+	
+	check_hall_view();
+	}
+	
+	function check_hall_view()
+	{
+		if($("#hv").html()=='Показать')
+		{
+			$("#hall_section").hide();
+		}else
+		{
+			$("#hall_section").show();
+		}
+	}
 </script>	
     <!-- Placed at the end of the document so the pages load faster -->
 	<div id="sendemail-form" title="Заполните информацию по пользователю.">
