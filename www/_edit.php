@@ -720,6 +720,8 @@ partytypes
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
+
+	<script src="/jquery/common.js"></script>	
 	
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/bottom.js"></script>
@@ -922,12 +924,7 @@ partytypes
 				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
 					{	
 						$("body #hall").removeAttr("disabled");
-<<<<<<< HEAD
 						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order','selectedhall');
-
-=======
-						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order');
->>>>>>> origin/master
 					}
 				}
 				
@@ -1089,11 +1086,7 @@ partytypes
 			dosetrightpaginator();
 			//alert(2);
 			doloadcreateform();
-<<<<<<< HEAD
 			get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
-=======
-			get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
->>>>>>> origin/master
 			//erasevaluesincookie();
 			
 			$('#tabs').smartTab({selected: 0});		
@@ -1147,11 +1140,7 @@ partytypes
 							{
 								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
 							} 
-<<<<<<< HEAD
 							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
-=======
-							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
->>>>>>> origin/master
 							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 						}
 					}
@@ -1695,13 +1684,7 @@ partytypes
 			{
 				var nn = noty({text: 'Название клиента не может быть пустым', type: 'error', timeout:5000, onClick: function(){delete nn;}});
 			}
-		}
-		
 
-<<<<<<< HEAD
-		
-
-=======
 			if( !edate1  & !edate2 & !eguest  )
 			{
 				$("#hall").removeAttr("disabled");
@@ -1718,49 +1701,6 @@ partytypes
 
 			}
 		}
-		
-		
->>>>>>> origin/master
-		function count_dish_weight()
-		{
-
-		wfood = 0;
-		wdrink = 0;
-		persons = $.cookie("guestcount") * 1;
-		if(persons > 0) 
-		{
-			$("#createform .btn-primary").each(function(){
-				if ($(this ).text() == 'Удалить') 
-				{
-					id = $(this).attr('id');
-					id = id.substr(7);
-					quant = $("#quant"+id).val();
-
-					if ($(this ).hasClass("weightfood"))
-					{
-						wfood+=$("#weightfood"+id).html() * 1 * quant;
-					}
-					if ($(this ).hasClass("weightdrink"))
-					{
-						wdrink+=$("#weightdrink"+id).html() * 1 * quant;
-					}
-				}
-			});
-
-			wfa = Number((wfood/persons).toFixed(2));
-			wfd = Number((wdrink/persons).toFixed(2));
-			
-			$("#foodweightall").html("Общий вес:" + wfood);
-			$("#foodweightaver").html("Средний вес:" + wfa);
-			$("#drinkweightall").html("Общий литраж:" + wdrink);
-			$("#drinkweightaver").html("Средний литраж:" + wfd);
-		}
-		else
-		{
-
-		}
-		}
-
 		
 	</script>
   </body>
