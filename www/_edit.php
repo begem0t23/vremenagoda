@@ -680,21 +680,35 @@ else
 		</div>
 		<div id=spanpage5 style="visibility: hidden">
 		<form id=frm5 role="form" data-toggle="validator">
-
-<div id=resultform>
-</div>
-<br>		
 <div class="input-group" style="max-width:500px">
   <span class="input-group-addon"><span class="glyphicon glyphicon-gift"></span></span>
-  <input type="text" id="type" placeholder="тип мероприятия" class="form-control">
-partytypes
+  <?php
+  					$tsql2 = "select * from `partytypes` ;";
+					$r_from = mysql_query($tsql2);
+					if (mysql_num_rows($r_from)>0)
+					{	
+						echo '<select id="type2" class="form-control">';
+						echo '<option value="0">Укажите тип мероприятия</option>';
+
+						while ($row_from = mysql_fetch_array($r_from))
+						{	
+						echo '<option value="'.$row_from["id"].'">'.$row_from["name"].'</option>';
+						}
+						echo '<option value="999">Другое</option>';
+						echo '</select>';
+					}
+					?>
 </div>
 <br>		
 <div class="input-group" style="max-width:500px">
   <span class="input-group-addon"><span class="glyphicon glyphicon-font"></span></span>
   <textarea id="comment" placeholder="Комментарий по проведению" class="form-control"></textarea>
 </div>
+<br>	
+<div id=resultform>
+</div>
 <br>		
+	
 	
 		<br><div class="input-group  topbutton"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</form>
@@ -1195,6 +1209,20 @@ partytypes
 				
 			});			
 			
+			
+				$( document ).on( "change", "#type2", function() {	
+					$("#type").hide();
+		
+					if ($("#type2").val() == '999')
+						{
+							$("#type").show();
+							$("#type").val("");
+						} else
+						{
+							$("#type").val($("#type2 option:selected").text());
+							$("#type").hide();
+						}
+				});
 			
 			
 			
