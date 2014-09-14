@@ -21,8 +21,6 @@
 	<link href="/css/jquery.contextMenu.css" rel="stylesheet" type="text/css">	
 	<link href="/css/tables_in_hall.css" rel="stylesheet" type="text/css">	
 
-	<script src="/jquery/tables_in_hall.js"></script>
-
     <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
@@ -722,6 +720,9 @@ partytypes
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 
 	<script src="/jquery/common.js"></script>	
+	<script src="/jquery/jquery.contextMenu.js"></script>
+
+	<script src="/jquery/tables_in_hall.js"></script>
 	
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/layouts/bottom.js"></script>
