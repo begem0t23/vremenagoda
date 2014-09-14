@@ -19,6 +19,8 @@
     <!-- Custom styles for this template -->
     <link href="/css/sticky-footer-navbar.css" rel="stylesheet">
 
+	<script src="/jquery/tables_in_hall.js"></script>
+
     <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
@@ -742,7 +744,9 @@ partytypes
 	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
-	
+		<script src="/jquery/tables_in_hall.js"></script>
+	<script src="/jquery/jquery.contextMenu.js"></script>
+
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 	
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
@@ -862,7 +866,7 @@ partytypes
 			$("#createform").html($("#spanpage"+curpage).html());			
 			//$("#spanpage"+curpage).css("visibility","visible");
 			$("#page"+curpage).click();
-						count_dish_weight();	
+			count_dish_weight();	
 			return true;
 			}
 		}
@@ -946,7 +950,7 @@ partytypes
 				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
 					{	
 						$("body #hall").removeAttr("disabled");
-						get_selected_hall($("body #hall").val(),$("body #dateevent").val());
+						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order');
 					}
 				}
 				
@@ -1107,7 +1111,7 @@ partytypes
 			dosetrightpaginator();
 			//alert(2);
 			doloadcreateform();
-			get_selected_hall($("#hall").val(),$("#dateevent").val());
+			get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
 			//erasevaluesincookie();
 			
 			$('#tabs').smartTab({selected: 0});		
@@ -1161,7 +1165,7 @@ partytypes
 							{
 								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
 							} 
-							get_selected_hall($("#hall").val(),$("#dateevent").val());
+							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
 							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 						}
 					}
@@ -1527,7 +1531,7 @@ partytypes
 			
 			
 			
-			
+		count_dish_weight();	
 			
 			
 			
@@ -1588,6 +1592,7 @@ partytypes
 			$("#createform").html($("#spanpage"+curpage).html());
 			readvaluesincookie();
 			$("body").animate({"scrollTop":0},"slow");
+			count_dish_weight();
 			//$("#spanpage"+curpage).css("visibility","visible");
 		}
 		function dosaveorder()
@@ -1678,7 +1683,7 @@ eguest = $("#guestcount").val() == "";
 				$("#hall option[value=0]").text("Выберите зал");
 				if($("#hall").val() > 0)
 				{
-					get_selected_hall($("#hall").val(),$("#dateevent").val());
+					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
 				}
 			}else
 			{
@@ -1690,148 +1695,6 @@ eguest = $("#guestcount").val() == "";
 		}
 		
 		
-		function get_selected_hall(hallid,dateevent)
-		{
-
-	  		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, fororder:'yes'}
-			})
-			.done(function( msg ) {
-				//alert(msg);
-				$("#selectedhall").html(msg);//закачали хтмл
-
-
-
-				//расстановка столов по координатам
-				$("#selectedhall .table").each(function()
-					{
-					ntop = parseInt($(this).attr('top'));
-					nleft = parseInt($(this).attr('left'));
-					ptop = $(this).parent().offset().top;
-					pleft = $(this).parent().offset().left;
-					
-				$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
-						
-					});
-					
-					
-					
-				// расстановка стульев вокруг столов
-				
-					$("#selectedhall .table .chiar").each(function()
-					{
-						
-							if(!$(this).parent().hasClass("left-top-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("left-top-ok");
-								$(this).addClass("left-top");
-								$(this).addClass("placed");
-							}
-							
-							if(!$(this).parent().hasClass("left-bottom-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("left-bottom-ok");
-								$(this).addClass("left-bottom");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("right-top-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("right-top-ok");
-								$(this).addClass("right-top");
-								$(this).addClass("placed");
-							}
-							
-							if(!$(this).parent().hasClass("right-bottom-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("right-bottom-ok");
-								$(this).addClass("right-bottom");
-								$(this).addClass("placed");
-							}
-						
-
-							if(!$(this).parent().hasClass("bottom-left-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-left-ok");
-								$(this).addClass("bottom-left");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("bottom-right-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-right-ok");
-								$(this).addClass("bottom-right");
-								$(this).addClass("placed");
-							}
-
-							if(!$(this).parent().hasClass("top-left-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-left-ok");
-								$(this).addClass("top-left");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("top-right-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-right-ok");
-								$(this).addClass("top-right");
-								$(this).addClass("placed");
-							}
-
-
-							if(!$(this).parent().hasClass("top-left-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-left-corner-ok");
-								$(this).addClass("top-left-corner");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("bottom-left-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-left-corner-ok");
-								$(this).addClass("bottom-left-corner");
-								$(this).addClass("placed");
-							}
-
-							if(!$(this).parent().hasClass("top-right-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-right-corner-ok");
-								$(this).addClass("top-right-corner");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("bottom-right-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-right-corner-ok");
-								$(this).addClass("bottom-right-corner");
-								$(this).addClass("placed");
-							}
-
-
-					});
-
-									tables = "";
-				if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
-				if (tables) {
-					var taball = $.parseJSON(tables);
-					$.each(taball, function(index, value) 
-					{
-						console.log(index + " "+ value['tabnum']);
-						if (index)
-						{
-
-							$("#table"+index).removeClass("btn-success");
-							$("#table"+index).addClass("btn-primary");
-
-						}					
-					});
-				}
-				
-				checkhallselect();
-			});
-		}
 		function count_dish_weight()
 		{
 
