@@ -59,7 +59,8 @@
   }
    .right{float:right;}
  
-		
+			.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
+	
 		#weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
   </style>  
 
@@ -175,7 +176,7 @@ if ($q[1]>0)
 		echo '</div><br>';
 		echo '<br><div  id="selectedhall"></div>';
 		
-		echo '<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
+		echo '<br><div class="input-group  topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
 	}
 	else
 	{
@@ -364,7 +365,7 @@ else
 ?>			
 	
 	
-		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
+		<br><div class="input-group  topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 
@@ -545,7 +546,7 @@ else
 ?>			
 	
 
-		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
+		<br><div class="input-group  topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		
@@ -674,7 +675,7 @@ else
 <?php		
 	}
 ?>	
-		<br><br><br><div class="input-group"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
+		<br><br><br><div class="input-group  topbutton"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		<div id=spanpage5 style="visibility: hidden">
@@ -695,7 +696,7 @@ partytypes
 </div>
 <br>		
 	
-		<br><div class="input-group"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
+		<br><div class="input-group  topbutton"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</form>
 		</div>
     </div>
@@ -814,7 +815,7 @@ partytypes
 		function shownextstep()
 		{
 		alladd = $("#createform  .btn-danger").length;			
-		if(alladd > 0) 
+		if(alladd > 23120) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
@@ -836,7 +837,7 @@ partytypes
 			if (curpage<5) curpage = curpage + 1;
 			//$("#spanpage"+curpage).css("left",x);
 			//$("#spanpage"+curpage).css("top",y);	
-			$("#createform").html($("#spanpage"+curpage).html());			
+			//$("#createform").html($("#spanpage"+curpage).html());			
 			//$("#spanpage"+curpage).css("visibility","visible");
 			$("#page"+curpage).click();
 						count_dish_weight();	
@@ -923,7 +924,8 @@ partytypes
 				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
 					{	
 						$("body #hall").removeAttr("disabled");
-						get_selected_hall($("body #hall").val(),$("body #dateevent").val());
+						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order','selectedhall');
+
 					}
 				}
 				
@@ -1055,6 +1057,7 @@ partytypes
 					if(alladd == 23120) 
 					{
 						alert("Остались недобавленные позиции: " + alladd);
+				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 						return false;
 					} 
 			});
@@ -1084,7 +1087,7 @@ partytypes
 			dosetrightpaginator();
 			//alert(2);
 			doloadcreateform();
-			get_selected_hall($("#hall").val(),$("#dateevent").val());
+			get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
 			//erasevaluesincookie();
 			
 			$('#tabs').smartTab({selected: 0});		
@@ -1138,7 +1141,7 @@ partytypes
 							{
 								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
 							} 
-							get_selected_hall($("#hall").val(),$("#dateevent").val());
+							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
 							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 						}
 					}
@@ -1451,17 +1454,24 @@ partytypes
 			});			
 			
 			
-	$( document ).on( "click", ".tabnum", function() {
-		tabid = $(this).parent().attr("tabid");
-	
-
+	$( document ).on( "click", ".table.success,.table.primary", function() {
+		tabid = $(this).attr("tabid");
+		hallid = $(this).attr("hallid");
+		isfull = $(this).attr("isfull");
 	tabnum = $(this).html();
-
-			if($(this).parent().hasClass("btn-success"))
+			if($(this).hasClass("success"))
 			{
-					$(this).parent().removeClass("btn-success");
-					$(this).parent().addClass("btn-primary");
-
+					
+					
+				if(isfull==0) 
+				{
+					$(this).removeClass("success");
+					$(this).addClass("primary");
+				} else
+				{
+					$("#hallplace-" +hallid +" .table").removeClass("success");
+					$("#hallplace-" +hallid +" .table").addClass("primary");
+				}
 					var tables="";
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
 					if (tables)
@@ -1473,8 +1483,21 @@ partytypes
 						var taball = {};
 					}
 					var element = {};
-					element = ({tabid:tabid, tabnum:tabnum});
-					taball[tabid] = element ;
+					
+					if(isfull==0) 
+					{
+						element = ({tabid:tabid, tabnum:tabnum});
+						taball[tabid] = element ;
+					} else
+					{
+						$("#hallplace-" +hallid +" .table").each(function(){
+							tabid1 = $(this).attr("tabid");
+							tabnum1 = $(this).html();
+							element = ({tabid:tabid1, tabnum:tabnum1});
+							taball[tabid1] = element ;
+						});
+					}
+					
 					tables = $.toJSON(taball);
 					$.cookie("tables", tables,{ expires: 1, path: '/' });
 
@@ -1482,25 +1505,48 @@ partytypes
 			} else 
 			{
 				
-				if($(this).parent().hasClass("btn-primary"))
+				if($(this).hasClass("primary"))
 				{
-					$(this).parent().addClass("btn-success");
-					$(this).parent().removeClass("btn-primary");
-
+				
+				if(isfull==0) 
+				{
+					$(this).addClass("success");
+					$(this).removeClass("primary");
+				} else
+				{
+					$("#hallplace-" +hallid +" .table").addClass("success");
+					$("#hallplace-" +hallid +" .table").removeClass("primary");
+				}
+					
 					var tables="";
 					
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
 					if (tables) {
 						var taball = $.parseJSON(tables);
-						delete taball[tabid];
+					if(isfull==0) 
+					{
+							delete taball[tabid];
+					} else
+					{
+						$("#hallplace-" +hallid +" .table").each(function(){
+							tabid1 = $(this).attr("tabid");
+							delete taball[tabid1];
+						});
+					}
+						
+						
 						tables = $.toJSON(taball);
 						$.cookie("tables", tables,{ expires: 1, path: '/' });				
 					}
 				}
 			}
-			checkhallselect();
-	});
+
 			
+		checkhallselect(hallid);
+			
+
+				
+	});
 			
 			
 			
@@ -1644,171 +1690,9 @@ partytypes
 			}
 		}
 		
-		function activatehall(){
-edate1 = $("#dateevent").val() == "__.__.____";
-edate2 = $("#dateevent").val() == "";
-eguest = $("#guestcount").val() == "";
 
-			if( !edate1  & !edate2 & !eguest  )
-			{
-				$("#hall").removeAttr("disabled");
-				$("#hall option[value=0]").text("Выберите зал");
-				if($("#hall").val() > 0)
-				{
-					get_selected_hall($("#hall").val(),$("#dateevent").val());
-				}
-			}else
-			{
-				$("#hall option[value=0]").attr('selected','selected');
-				$("#hall").attr("disabled","disabled");
-				$("#hall option[value=0]").text("Укажите дату и количество гостей");
-
-			}
-		}
 		
-		
-		function get_selected_hall(hallid,dateevent)
-		{
 
-	  		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, fororder:'yes'}
-			})
-			.done(function( msg ) {
-				//alert(msg);
-				$("#selectedhall").html(msg);//закачали хтмл
-
-
-
-				//расстановка столов по координатам
-				$("#selectedhall .table").each(function()
-					{
-					ntop = parseInt($(this).attr('top'));
-					nleft = parseInt($(this).attr('left'));
-					ptop = $(this).parent().offset().top;
-					pleft = $(this).parent().offset().left;
-					
-				$(this).offset({top:(ptop + ntop),left: (pleft + nleft)});
-						
-					});
-					
-					
-					
-				// расстановка стульев вокруг столов
-				
-					$("#selectedhall .table .chiar").each(function()
-					{
-						
-							if(!$(this).parent().hasClass("left-top-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("left-top-ok");
-								$(this).addClass("left-top");
-								$(this).addClass("placed");
-							}
-							
-							if(!$(this).parent().hasClass("left-bottom-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("left-bottom-ok");
-								$(this).addClass("left-bottom");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("right-top-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("right-top-ok");
-								$(this).addClass("right-top");
-								$(this).addClass("placed");
-							}
-							
-							if(!$(this).parent().hasClass("right-bottom-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("right-bottom-ok");
-								$(this).addClass("right-bottom");
-								$(this).addClass("placed");
-							}
-						
-
-							if(!$(this).parent().hasClass("bottom-left-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-left-ok");
-								$(this).addClass("bottom-left");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("bottom-right-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-right-ok");
-								$(this).addClass("bottom-right");
-								$(this).addClass("placed");
-							}
-
-							if(!$(this).parent().hasClass("top-left-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-left-ok");
-								$(this).addClass("top-left");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("top-right-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-right-ok");
-								$(this).addClass("top-right");
-								$(this).addClass("placed");
-							}
-
-
-							if(!$(this).parent().hasClass("top-left-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-left-corner-ok");
-								$(this).addClass("top-left-corner");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("bottom-left-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-left-corner-ok");
-								$(this).addClass("bottom-left-corner");
-								$(this).addClass("placed");
-							}
-
-							if(!$(this).parent().hasClass("top-right-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("top-right-corner-ok");
-								$(this).addClass("top-right-corner");
-								$(this).addClass("placed");
-							}
-						
-							if(!$(this).parent().hasClass("bottom-right-corner-ok") & !$(this).hasClass("placed"))
-							{
-								$(this).parent().addClass("bottom-right-corner-ok");
-								$(this).addClass("bottom-right-corner");
-								$(this).addClass("placed");
-							}
-
-
-					});
-
-									tables = "";
-				if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
-				if (tables) {
-					var taball = $.parseJSON(tables);
-					$.each(taball, function(index, value) 
-					{
-						console.log(index + " "+ value['tabnum']);
-						if (index)
-						{
-
-							$("#table"+index).removeClass("btn-success");
-							$("#table"+index).addClass("btn-primary");
-
-						}					
-					});
-				}
-				
-				checkhallselect();
-			});
-		}
 		function count_dish_weight()
 		{
 
@@ -1848,21 +1732,7 @@ eguest = $("#guestcount").val() == "";
 
 		}
 		}
-		function checkhallselect()
-		{
-			
-			if($("#createform .btn-primary").length > 1)
-			{			
-				$("#hall").attr("disabled","disabled");
-			} 
-			
-			
-			if($("#createform .btn-primary").length == 1)
-			{			
-				$("#hall").removeAttr("disabled");
-			} 
-		
-		}		
+
 		
 	</script>
   </body>

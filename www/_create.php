@@ -564,7 +564,7 @@ fixednavbar();
 <?php		
 	}
 ?>	
-		<br><br><br><div class="input-group topbutton"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
+		<br><br><br><div class="input-group topbutton"><button class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		<div id=spanpage5 style="visibility: hidden">
@@ -859,7 +859,7 @@ fixednavbar();
 					spanpage1+='</div><br>';
 					spanpage1+='<br><div  id="selectedhall"></div>';
 					
-					spanpage1+='<br><div class="input-group"><button  class="btn btn-primary topbutton"  onClick="shownextstep()" type="button">Далее</button></div>';
+					spanpage1+='<br><div class="input-group  topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
 					spanpage1+='</form></div>';
 					//aler(spanpage1);
 					$("#spanpage1").html(spanpage1);
@@ -1773,32 +1773,7 @@ fixednavbar();
 			}
 		}
 		
-		function activatehall()
-		{
-			edate1 = $("#dateevent").val() == "__.__.____";
-			edate2 = $("#dateevent").val() == "";
-			eguest = $("#guestcount").val() == "";
 
-			$("input .byguestcount").val($("#guestcount").val()) ;
-
-			if( !edate1  & !edate2 & !eguest  )
-			{
-				$("#hall").removeAttr("disabled");
-				$("#hall option[value=0]").text("Выберите зал");
-				
-				if($("#hall").val() > 0)
-				{
-					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
-				}
-			}else
-			{
-				$("#hall option[value=0]").attr('selected','selected');
-				$("#hall").attr("disabled","disabled");
-				$("#hall option[value=0]").text("Укажите дату и количество гостей");
-
-			}
-		}
-		
 		
 
 		

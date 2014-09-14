@@ -161,8 +161,17 @@ $orderid = $_POST['orderid'];
  			$ech2.=  '<div class="newtable table0" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
 			//$ech+='<div class="newchiar" tabid="0" >стул</div>';
 	}
-	$ech2.= '<br><div class="title"><h4>Всего столов: '.$pr['tabquant'].'. В заказе столов: '.$pr['tabsinorder'].'.</h4></div>';
+	$tabsinorder='';
+	if(place=='report') $tabsinorder=' В заказе столов: '.$pr['tabsinorder'];
+	$ech2.= '<br><div class="title"><h4>Всего столов: '.$pr['tabquant'].$tabsinorder.'.</h4></div>';
+	if ($pr['tabsinorder'] == 0  & $place=='report') 
+	{
+		echo '<h4>Столы не забронированы</h4>';
+	}
+	else 
+	{
 	echo $ech2.$ech1.$ech4.$ech3;
+	}
 }
 
 
