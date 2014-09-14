@@ -61,8 +61,7 @@
   }
    .right{float:right;}
  
-			.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
-	
+		
 		#weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
   </style>  
 
@@ -178,7 +177,7 @@ if ($q[1]>0)
 		echo '</div><br>';
 		echo '<br><div  id="selectedhall"></div>';
 		
-		echo '<br><div class="input-group  topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
+		echo '<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
 	}
 	else
 	{
@@ -367,7 +366,7 @@ else
 ?>			
 	
 	
-		<br><div class="input-group  topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
+		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 
@@ -548,7 +547,7 @@ else
 ?>			
 	
 
-		<br><div class="input-group  topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
+		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		
@@ -677,7 +676,7 @@ else
 <?php		
 	}
 ?>	
-		<br><br><br><div class="input-group  topbutton"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
+		<br><br><br><div class="input-group"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		<div id=spanpage5 style="visibility: hidden">
@@ -698,7 +697,7 @@ partytypes
 </div>
 <br>		
 	
-		<br><div class="input-group  topbutton"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
+		<br><div class="input-group"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</form>
 		</div>
     </div>
@@ -719,6 +718,16 @@ partytypes
 	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
+<<<<<<< HEAD
+		<script src="/jquery/tables_in_hall.js"></script>
+	<script src="/jquery/jquery.contextMenu.js"></script>
+
+=======
+	<script src="/jquery/tables_in_hall.js"></script>
+	<script src="/jquery/jquery.ui.position.js"></script>
+	<script src="/jquery/jquery.contextMenu.js"></script>
+	
+>>>>>>> origin/master
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 	
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
@@ -813,7 +822,7 @@ partytypes
 		function shownextstep()
 		{
 		alladd = $("#createform  .btn-danger").length;			
-		if(alladd > 23120) 
+		if(alladd > 0) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
@@ -835,7 +844,7 @@ partytypes
 			if (curpage<5) curpage = curpage + 1;
 			//$("#spanpage"+curpage).css("left",x);
 			//$("#spanpage"+curpage).css("top",y);	
-			//$("#createform").html($("#spanpage"+curpage).html());			
+			$("#createform").html($("#spanpage"+curpage).html());			
 			//$("#spanpage"+curpage).css("visibility","visible");
 			$("#page"+curpage).click();
 			count_dish_weight();	
@@ -922,12 +931,7 @@ partytypes
 				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
 					{	
 						$("body #hall").removeAttr("disabled");
-<<<<<<< HEAD
-						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order','selectedhall');
-
-=======
 						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order');
->>>>>>> origin/master
 					}
 				}
 				
@@ -1059,7 +1063,6 @@ partytypes
 					if(alladd == 23120) 
 					{
 						alert("Остались недобавленные позиции: " + alladd);
-				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 						return false;
 					} 
 			});
@@ -1089,11 +1092,7 @@ partytypes
 			dosetrightpaginator();
 			//alert(2);
 			doloadcreateform();
-<<<<<<< HEAD
-			get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
-=======
 			get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
->>>>>>> origin/master
 			//erasevaluesincookie();
 			
 			$('#tabs').smartTab({selected: 0});		
@@ -1147,11 +1146,7 @@ partytypes
 							{
 								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
 							} 
-<<<<<<< HEAD
-							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
-=======
 							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
->>>>>>> origin/master
 							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 						}
 					}
@@ -1464,24 +1459,17 @@ partytypes
 			});			
 			
 			
-	$( document ).on( "click", ".table.success,.table.primary", function() {
-		tabid = $(this).attr("tabid");
-		hallid = $(this).attr("hallid");
-		isfull = $(this).attr("isfull");
+	$( document ).on( "click", ".tabnum", function() {
+		tabid = $(this).parent().attr("tabid");
+	
+
 	tabnum = $(this).html();
-			if($(this).hasClass("success"))
+
+			if($(this).parent().hasClass("btn-success"))
 			{
-					
-					
-				if(isfull==0) 
-				{
-					$(this).removeClass("success");
-					$(this).addClass("primary");
-				} else
-				{
-					$("#hallplace-" +hallid +" .table").removeClass("success");
-					$("#hallplace-" +hallid +" .table").addClass("primary");
-				}
+					$(this).parent().removeClass("btn-success");
+					$(this).parent().addClass("btn-primary");
+
 					var tables="";
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
 					if (tables)
@@ -1493,21 +1481,8 @@ partytypes
 						var taball = {};
 					}
 					var element = {};
-					
-					if(isfull==0) 
-					{
-						element = ({tabid:tabid, tabnum:tabnum});
-						taball[tabid] = element ;
-					} else
-					{
-						$("#hallplace-" +hallid +" .table").each(function(){
-							tabid1 = $(this).attr("tabid");
-							tabnum1 = $(this).html();
-							element = ({tabid:tabid1, tabnum:tabnum1});
-							taball[tabid1] = element ;
-						});
-					}
-					
+					element = ({tabid:tabid, tabnum:tabnum});
+					taball[tabid] = element ;
 					tables = $.toJSON(taball);
 					$.cookie("tables", tables,{ expires: 1, path: '/' });
 
@@ -1515,52 +1490,33 @@ partytypes
 			} else 
 			{
 				
-				if($(this).hasClass("primary"))
+				if($(this).parent().hasClass("btn-primary"))
 				{
-				
-				if(isfull==0) 
-				{
-					$(this).addClass("success");
-					$(this).removeClass("primary");
-				} else
-				{
-					$("#hallplace-" +hallid +" .table").addClass("success");
-					$("#hallplace-" +hallid +" .table").removeClass("primary");
-				}
-					
+					$(this).parent().addClass("btn-success");
+					$(this).parent().removeClass("btn-primary");
+
 					var tables="";
 					
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
 					if (tables) {
 						var taball = $.parseJSON(tables);
-					if(isfull==0) 
-					{
-							delete taball[tabid];
-					} else
-					{
-						$("#hallplace-" +hallid +" .table").each(function(){
-							tabid1 = $(this).attr("tabid");
-							delete taball[tabid1];
-						});
-					}
-						
-						
+						delete taball[tabid];
 						tables = $.toJSON(taball);
 						$.cookie("tables", tables,{ expires: 1, path: '/' });				
 					}
 				}
 			}
-
-			
-		checkhallselect(hallid);
-			
-
-				
+			checkhallselect();
 	});
 			
 			
 			
+			
 		count_dish_weight();	
+			
+			
+			
+			
 		$(window).bind('beforeunload', function(){
 		  if (typeof $.cookie("clientname") != 'undefined')
 		  {
@@ -1697,11 +1653,11 @@ partytypes
 			}
 		}
 		
+		function activatehall(){
+edate1 = $("#dateevent").val() == "__.__.____";
+edate2 = $("#dateevent").val() == "";
+eguest = $("#guestcount").val() == "";
 
-<<<<<<< HEAD
-		
-
-=======
 			if( !edate1  & !edate2 & !eguest  )
 			{
 				$("#hall").removeAttr("disabled");
@@ -1720,7 +1676,6 @@ partytypes
 		}
 		
 		
->>>>>>> origin/master
 		function count_dish_weight()
 		{
 
@@ -1760,7 +1715,21 @@ partytypes
 
 		}
 		}
-
+		function checkhallselect()
+		{
+			
+			if($("#createform .btn-primary").length > 1)
+			{			
+				$("#hall").attr("disabled","disabled");
+			} 
+			
+			
+			if($("#createform .btn-primary").length == 1)
+			{			
+				$("#hall").removeAttr("disabled");
+			} 
+		
+		}		
 		
 	</script>
   </body>
