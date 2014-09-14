@@ -4,8 +4,9 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
-function gettablesondate($hallid,$dateevent,$place)
+function gettablesondate($hallid,$dateevent,$place,$orderid)
 {
+$tabsinorder = 0;
 				$tsql0 = "SELECT * FROM `hall`   WHERE `id` = '".$hallid."';";
 				$rez_tab0 = mysql_query($tsql0);
 				//$ech .= mysql_error(); 
@@ -28,6 +29,11 @@ function gettablesondate($hallid,$dateevent,$place)
 			$tsql2 = "SELECT td.*, tt.* FROM `tables_on_date` AS td, `table_types` AS tt WHERE td.hallid = '".$hallid."'  AND tt.typeid = td.typeid AND td.date = '".convert_date($dateevent)."' ORDER BY `num` ASC;";
 			}
 
+			if($place == 'report')
+			{
+			$tsql2 = "SELECT td.*, tt.* FROM `tables_on_date` AS td, `table_types` AS tt WHERE td.hallid = '".$hallid."'  AND tt.typeid = td.typeid AND td.date = '".convert_date($dateevent)."' ORDER BY `num` ASC;";
+			}
+
 			$rez_tab = mysql_query($tsql2);
 			//$ech .= mysql_error(); 
 			if (mysql_num_rows($rez_tab)>0)
@@ -38,7 +44,7 @@ function gettablesondate($hallid,$dateevent,$place)
 				{
 			$inorder='success';	
 			
-			if($place == 'order')
+			if($place == 'order' || $place == 'report')
 			{
 				$tsql02 = "SELECT * FROM `tables_in_orders` WHERE `tableid` = '".$row_tab["id"]."';";
 				$rez_tab0 = mysql_query($tsql02);
@@ -49,6 +55,15 @@ function gettablesondate($hallid,$dateevent,$place)
 				}
 			}
 			
+			if($place == 'report')
+			{
+
+				if ($row_tab["orderid"] == $orderid)
+				{	
+					$tabsinorder++;
+					$inorder = 'primary';
+				}
+			}
 				//$sumpersons = $sumpersons + $row_tab["persons"];
 					$ech = $ech.'<div class="context-menu-one table'.$row_tab["iscircle"].' table '.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'"  isfull="'.$isfull.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; " place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
 					
@@ -62,6 +77,7 @@ function gettablesondate($hallid,$dateevent,$place)
 				}
 			}
 						$ech = $ech.'</div>';
+						$out['tabsinorder'] = $tabsinorder;
 						$out['tabquant'] = $tabquant;
 						$out['tables'] = $ech;
 						return $out;

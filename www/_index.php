@@ -411,8 +411,8 @@ dialog.dialog('open');
 
 	function get_hall()
 	{
-	
-	get_selected_hall($("#hall").val(),$("#dateevent").val(),'report','selectedhall');
+	orderid = $("#newpayment").attr('orderid');
+	get_selected_hall($("#hall").val(),$("#dateevent").val(),'report','selectedhall',orderid);
 	}
 	
 	function get_all_payments()

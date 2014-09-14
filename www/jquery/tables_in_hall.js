@@ -379,7 +379,7 @@
  hallid = curmenu();
 			
  newh = $( "#hallplace-"+hallid ).height() + 100;
- //alert(newh);
+ //aler(newh);
 $( ".stContainer" ).css("height", newh + "px");
 
  }
@@ -464,18 +464,18 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 
  	}
 
-		function get_selected_hall(hallid,dateevent,place,destination)
+		function get_selected_hall(hallid,dateevent,place,destination,orderid)
 		{
 
 	  		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, place:'order'}
+			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, place:place, orderid:orderid}
 			})
 			.done(function( msg ) {
-				//alert(msg);
+		
 				$("#"+destination+" ").html(msg);//закачали хтмл
-
+				
 				//расстановка столов по координатам
 				$("#"+destination+" .table").each(function()
 				{
@@ -508,7 +508,8 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 				}
 				
 				
-				
+				if(place != 'report')
+				{
 				
 								//присвоение дрэг и дроп
 				$(".newtable").draggable({
@@ -602,9 +603,24 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
  
 					}
 				});
+				
+				}
+				
+			if(destination == 'selectedhall')
+			{
+				childhallid = $("#childhall").attr('hallid');
+					
+				if(childhallid > 0)
+				{
+					get_selected_hall(childhallid,dateevent,place,'childhall',orderid);
+				}
+			
+			}	
+
 
 			});
-				
+			
+
 		}
 		
 

@@ -649,12 +649,12 @@ fixednavbar();
 			$.get("_dosearchclientautocomplete.php", {s:s, Rand: "<?php echo rand(); ?>"},
 			   function(data){})
 			   .done(function(data) {
-				//alert(data);
+				//aler(data);
 				data = $.trim(data);
 				data = data.split("\n");
 				$(t).autocomplete({source: data, select: function (a, b) {
 					//$(this).val(b.item.value);
-					//alert(b.item.value);
+					//aler(b.item.value);
 					$("#clientadd").html("Выбрать");
 				}});
 			});
@@ -663,7 +663,7 @@ fixednavbar();
 		{
 			// Активация правильной кнопки выбора страницы в зависимости от curpage
 			erasedisablefromli();
-			//alert(curpage);
+			//aler(curpage);
 			switch(curpage)
 			{
 				case 1:
@@ -694,7 +694,7 @@ fixednavbar();
 			// Стирание дисэблед статуса для всех кнопок страниц, чтобы потом поставить правильный
 			for (i=1;i<=5;i++)
 			{
-				//alert(curpage);
+				//aler(curpage);
 				//if (i!=curpage) 
 				$("#page"+i).prop("class","enabled");							
 			}
@@ -708,16 +708,16 @@ fixednavbar();
 		alladd = $("#createform  .btn-danger").length;			
 		if(alladd > 0) 
 			{
-				//alert("Остались недобавленные позиции: " + alladd);
+				//aler("Остались недобавленные позиции: " + alladd);
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
 			} else
 			{
 		
 
-			//alert(1);
+			//aler(1);
 			//$("div[id*=spanpage]").css("visibility","hidden");
-			//alert(x);
-			//alert(y);
+			//aler(x);
+			//aler(y);
 
 			//$("#spanpage"+curpage).html("");
 			//$("#createform").clone().appendTo( $("#spanpage"+curpage) );
@@ -737,23 +737,23 @@ fixednavbar();
 		
 		function docheckclientname(clientname)
 		{
-			//alert(1);
+			//aler(1);
 			// проверка имени клиента на существование, в зависимости от этого вывод правильной формы
 			// создания нового клиента или поля с заполненными значениями существующего
 			//clientname = $("#clientsearch").val();
 			if (clientname!="") {
-				//alert(1);
+				//aler(1);
 				$.get("_checkexistclient.php", {s:clientname, Rand: "<?php echo rand(); ?>"},
 				   function(){
 					console.log(clientname);
 				   })
 				   .done(function(data) {
-					//alert(data);
+					//aler(data);
 					erasevaluesincookie();
 					data = data.split("^");
 					$("#spanpage1").html("");
 					$("#timestart").val($.now()/1000);
-					//alert(data[0]);
+					//aler(data[0]);
 					spanpage1 = '<div style="max-width: 500px"><form id=frm1 role="form" data-toggle="validator">';
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 					if (typeof data[1] == 'undefined') data[1]='';
@@ -769,7 +769,7 @@ fixednavbar();
 						spanpage1+='<input type="text" readonly id=clientname value="'+clientname+'" class="form-control">';						
 						spanpage1+='<input type="hidden" id=clientid value="0">';
 					}
-					//alert(data[2]);
+					//aler(data[2]);
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-phone-alt"></span></span>';
 					spanpage1+='<input type="text" id=clientphone value="'+data[2]+'" class="form-control" placeholder="Телефон">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>';
@@ -861,11 +861,11 @@ fixednavbar();
 					
 					spanpage1+='<br><div class="input-group"><button  class="btn btn-primary topbutton"  onClick="shownextstep()" type="button">Далее</button></div>';
 					spanpage1+='</form></div>';
-					//alert(spanpage1);
+					//aler(spanpage1);
 					$("#spanpage1").html(spanpage1);
 					$("#createform").html($("#spanpage"+curpage).html());
 	
-					//alert($("#spanpage1").html());
+					//aler($("#spanpage1").html());
 					readvaluesincookie();	
 					count_dish_weight();
 						
@@ -876,11 +876,11 @@ fixednavbar();
 		{
 			if ($("#clientsearch").val())
 			{			
-				//alert($("#clientsearch").val());
+				//aler($("#clientsearch").val());
 				if ($.cookie("clientname")!==$("#clientsearch").val())
 				{
-					//alert($.cookie("clientname"));
-					//alert($("#clientsearch").val());
+					//aler($.cookie("clientname"));
+					//aler($("#clientsearch").val());
 					
 					$.removeCookie("clientname");
 					$.removeCookie("clientid");
@@ -902,11 +902,11 @@ fixednavbar();
 		}		
 		function setvaluesincookie()
 		{
-			//alert($("body #clientfrom").val());
-			//alert(curpage);
+			//aler($("body #clientfrom").val());
+			//aler(curpage);
 			if ((curpage==1) && (typeof $("body #clientname").val() != 'undefined'))
 			{
-				//alert($("#clientid").val());
+				//aler($("#clientid").val());
 				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
 				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
 				if ($("body #clientfrom").val()!="Укажите откуда пришел")
@@ -930,8 +930,8 @@ fixednavbar();
 		}
 		function readvaluesincookie()
 		{
-			//alert($("body #clientfrom").val());
-			//alert(curpage);
+			//aler($("body #clientfrom").val());
+			//aler(curpage);
 			if (curpage==1)
 			{
 				if (typeof $.cookie("clientname") != 'undefined')
@@ -1021,7 +1021,7 @@ fixednavbar();
 
 				var additional_pars = new Object();
 				additional_pars["cn"] = $.cookie("clientname");
-				//alert($("#clientid").val());
+				//aler($("#clientid").val());
 				additional_pars["ci"] = $.cookie("clientid");
 				additional_pars["cp"] = $.cookie("clientphone");
 				additional_pars["ce"] = $.cookie("clientemail");
@@ -1046,15 +1046,15 @@ fixednavbar();
 		function setcountguestfields()
 		{
 			//var warnchangeguestcount=0;
-			//alert(1);
+			//aler(1);
 			if (typeof $.cookie("guestcount") != 'undefined')
 			{
-				//alert(2);
+				//aler(2);
 				if ($.isNumeric($.cookie("guestcount")))
 				{
-					//alert($.cookie("guestcount"));
+					//aler($.cookie("guestcount"));
 					$("input[class*='byguestcount']").each(function() {
-						//alert($(this).val());
+						//aler($(this).val());
 						//if ($(this).attr("readonly")!=="readonly") 
 						//{
 							$(this).val($.cookie("guestcount"));
@@ -1071,7 +1071,7 @@ fixednavbar();
 			}
 			//if (warnchangeguestcount)
 			//{
-				//alert("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
+				//aler("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
 			//}
 		}
 		$(document).ready(function(){
@@ -1175,16 +1175,16 @@ fixednavbar();
 			
 			$( document ).on( "change", "#hall", function() {			
 			//$("#hall").on("change", function() {
-				//alert($("#hall").val());
+				//aler($("#hall").val());
 				$.get("_checkhall.php", {id:$("#hall").val(), Rand: "<?php echo rand(); ?>"},
 				   function(data){})
 				   .done(function(data) {
-					//alert(data);
+					//aler(data);
 					data = $.trim(data);
 					data = data.split("^");
 					if (data[0]=="OK")
 					{
-						//alert(data[1]);
+						//aler(data[1]);
 						if ((typeof data[1] != 'undefined') && ($("#guestcount").val()>0))
 						{
 							if (parseInt($("#guestcount").val())>parseInt(data[1]))
@@ -1549,7 +1549,8 @@ fixednavbar();
 					$(this).addClass("primary");
 				} else
 				{
-					alert(isfull);
+					$("#hallplace-" +hallid +" .table").removeClass("success");
+					$("#hallplace-" +hallid +" .table").addClass("primary");
 				}
 					var tables="";
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
@@ -1566,11 +1567,17 @@ fixednavbar();
 					if(isfull==0) 
 					{
 						element = ({tabid:tabid, tabnum:tabnum});
+						taball[tabid] = element ;
 					} else
 					{
-						alert(isfull);	
+						$("#hallplace-" +hallid +" .table").each(function(){
+							tabid1 = $(this).attr("tabid");
+							tabnum1 = $(this).html();
+							element = ({tabid:tabid1, tabnum:tabnum1});
+							taball[tabid1] = element ;
+						});
 					}
-					taball[tabid] = element ;
+					
 					tables = $.toJSON(taball);
 					$.cookie("tables", tables,{ expires: 1, path: '/' });
 
@@ -1580,15 +1587,34 @@ fixednavbar();
 				
 				if($(this).hasClass("primary"))
 				{
+				
+				if(isfull==0) 
+				{
 					$(this).addClass("success");
 					$(this).removeClass("primary");
-
+				} else
+				{
+					$("#hallplace-" +hallid +" .table").addClass("success");
+					$("#hallplace-" +hallid +" .table").removeClass("primary");
+				}
+					
 					var tables="";
 					
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
 					if (tables) {
 						var taball = $.parseJSON(tables);
-						delete taball[tabid];
+					if(isfull==0) 
+					{
+							delete taball[tabid];
+					} else
+					{
+						$("#hallplace-" +hallid +" .table").each(function(){
+							tabid1 = $(this).attr("tabid");
+							delete taball[tabid1];
+						});
+					}
+						
+						
 						tables = $.toJSON(taball);
 						$.cookie("tables", tables,{ expires: 1, path: '/' });				
 					}
@@ -1650,7 +1676,7 @@ fixednavbar();
 				curpage = parseInt(curpage);
 				if ($.isNumeric(curpage))
 				{
-					//alert(id);
+					//aler(id);
 					dosetrightpaginator();
 				}
 			}	
@@ -1704,7 +1730,7 @@ fixednavbar();
 						// нет
 						})
 						.done(function(data) {
-							//alert(data);
+							//aler(data);
 							//var nn = noty({text:data});
 							data = data.split(":");
 							if (data[0]=="OK")
