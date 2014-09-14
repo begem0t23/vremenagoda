@@ -24,12 +24,12 @@
 				}
 			});
 
-			wfa = Number((wfood/persons).toFixed(2));
-			wfd = Number((wdrink/persons).toFixed(2));
+			wfa = Number(wfood/persons).toFixed(2);
+			wfd = Number(wdrink/persons).toFixed(2);
 			
-			$("#foodweightall").html("Общий вес:" + wfood);
+			$("#foodweightall").html("Общий вес:" + Number(wfood).toFixed(2));
 			$("#foodweightaver").html("Средний вес:" + wfa);
-			$("#drinkweightall").html("Общий литраж:" + wdrink);
+			$("#drinkweightall").html("Общий литраж:" + Number(wdrink).toFixed(2));
 			$("#drinkweightaver").html("Средний литраж:" + wfd);
 		}
 		else
