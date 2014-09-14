@@ -20,6 +20,7 @@
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
 	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
 	<link href="/css/jquery.contextMenu.css" rel="stylesheet" type="text/css">	
+	<link href="/css/tables_in_hall.css" rel="stylesheet" type="text/css">	
 	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
 
  </head>
@@ -28,24 +29,6 @@
 .nav-title{width:100px !important;}
 .nav-element{width:150px !important;}
 	
-	
-	 	.table{font-size:14px; border:2px solid #333; }
-	.success {background-color:#7af668;}
-	.warning {background-color:#FFD141 ;}
-	.primary {background-color:#66a6e7;}
-	.danger {background-color:#fd3d1f;}
-	
-  .table0{width:35px; height:25px;padding:2px;}
-  .table1{width:50px; height:50px; border-radius:50px;padding:8px;}
-
-  .right{float:right;}
-  .trash{margin: 5px; display:block; width:70px; height: 25px; border:1px; background-color: red; position:relative; float:right;}
-  .newtable{margin: 5px; display:block; border:2px solid #333;  position:relative; float:right;}
-   
-   .newchiar {margin: 5px; display:block; width:25px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
-
-    .hallplace {display:block;  border:1px; background-color: #FFFFC0;margin:15px; }
-   .chiar {display:block; width:11px; height: 11px; border:1px; background-color: #AADDC0; position:absolute;}\
 
    #weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
 		.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
@@ -394,9 +377,6 @@ function openemail()
 dialog.dialog('open');
 }
 
-
-
-
 	function cancel_payment(){
 		$("#newpayment").val("");
 		$("#newpaymethod").val(0);
@@ -432,7 +412,7 @@ dialog.dialog('open');
 	function get_hall()
 	{
 	
-	get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
+	get_selected_hall($("#hall").val(),$("#dateevent").val(),'report','selectedhall');
 	}
 	
 	function get_all_payments()

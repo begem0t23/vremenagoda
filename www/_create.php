@@ -24,6 +24,7 @@
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
 	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
 	<link href="/css/jquery.contextMenu.css" rel="stylesheet" type="text/css">	
+	<link href="/css/tables_in_hall.css" rel="stylesheet" type="text/css">	
 	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
 
 <style>
@@ -50,34 +51,17 @@
   }
   
   .tocalcrow{
-     background-color: #ACFF7E !important;
+     background-color: #DDFFC0 !important;
   }
   
  tr.odd  td.tocalcrow{
-     background-color:  #DDFFC0 !important;
+     background-color:  #ACFF7E !important;
   }
     
-
- 	.table{font-size:14px; border:2px solid #333; }
-	.success {background-color:#7af668;}
-	.warning {background-color:#FFD141 ;}
-	.primary {background-color:#66a6e7;}
-	.danger {background-color:#fd3d1f;}
-	
-  .table0{width:35px; height:25px;padding:2px;}
-  .table1{width:50px; height:50px; border-radius:50px;padding:8px;}
-
-  .right{float:right;}
-  .trash{margin: 5px; display:block; width:70px; height: 25px; border:1px; background-color: red; position:relative; float:right;}
-  .newtable{margin: 5px; display:block; border:2px solid #333;  position:relative; float:right;}
-   
-   .newchiar {margin: 5px; display:block; width:25px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
-
-    .hallplace {display:block;  border:1px; background-color: #FFFFC0;margin:15px; }
-   .chiar {display:block; width:11px; height: 11px; border:1px; background-color: #AADDC0; position:absolute;}\
-
    #weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
 		.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
+
+ 
   
   </style>  
 
@@ -967,7 +951,7 @@ fixednavbar();
 				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
 					{	
 						$("body #hall").removeAttr("disabled");
-						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order');
+						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order','selectedhall');
 					}
 				}
 				
@@ -1207,7 +1191,7 @@ fixednavbar();
 							{
 								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
 							} 
-							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
+							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
 							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 						}
 					}
@@ -1552,15 +1536,21 @@ fixednavbar();
 			
 	$( document ).on( "click", ".table.success,.table.primary", function() {
 		tabid = $(this).attr("tabid");
-	
-
+		hallid = $(this).attr("hallid");
+		isfull = $(this).attr("isfull");
 	tabnum = $(this).html();
-
 			if($(this).hasClass("success"))
 			{
+					
+					
+				if(isfull==0) 
+				{
 					$(this).removeClass("success");
 					$(this).addClass("primary");
-
+				} else
+				{
+					alert(isfull);
+				}
 					var tables="";
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
 					if (tables)
@@ -1572,7 +1562,14 @@ fixednavbar();
 						var taball = {};
 					}
 					var element = {};
-					element = ({tabid:tabid, tabnum:tabnum});
+					
+					if(isfull==0) 
+					{
+						element = ({tabid:tabid, tabnum:tabnum});
+					} else
+					{
+						alert(isfull);	
+					}
 					taball[tabid] = element ;
 					tables = $.toJSON(taball);
 					$.cookie("tables", tables,{ expires: 1, path: '/' });
@@ -1599,7 +1596,7 @@ fixednavbar();
 			}
 
 			
-		checkhallselect();
+		checkhallselect(hallid);
 			
 
 				
@@ -1765,7 +1762,7 @@ fixednavbar();
 				
 				if($("#hall").val() > 0)
 				{
-					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
+					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
 				}
 			}else
 			{
@@ -1819,23 +1816,7 @@ fixednavbar();
 		}
 		}
 		
-		function checkhallselect()
-		{
-			
-			if($("#createform .btn-primary").length > 1)
-			{			
-				$("#hall").attr("disabled","disabled");
-				$("#dateevent").attr("disabled","disabled");
-			} 
-			
-			
-			if($("#createform .btn-primary").length == 1)
-			{			
-				$("#hall").removeAttr("disabled");
-				$("#hall").removeAttr("disabled");
-			} 
-		
-		}
+
 		
 
 
