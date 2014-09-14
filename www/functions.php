@@ -101,79 +101,74 @@ $ech = "";
 $hallid = $_POST['hallid'];
 $dateevent = $_POST['dateevent'];
 $place = $_POST['place'];
+$orderid = $_POST['orderid'];
 
 	if($place == 'order')
 	{
-		
 		checktablesondate($dateevent,$hallid);
 	}
 	
 		header('Content-Type: text/html; charset=utf-8');
 
-		$tsql2 = "SELECT * FROM `hall` WHERE `id` = '".$hallid."';";
+		$tsql2 = "SELECT h.*, hx.childhall FROM `hall` AS h LEFT JOIN `halls_expansion` AS hx ON h.id = hx.parenthall  WHERE `id` = '".$hallid."';";
 			$rez_tab = mysql_query($tsql2);
 			//$ech .= mysql_error(); 
 			if (mysql_num_rows($rez_tab)>0)
 			{
 				$row_tab = mysql_fetch_array($rez_tab);
 		
-				$hallwidth = $row_tab['width'];
-				$hallheight = $row_tab['height'];
-			}
-
-			$ech = $ech.'<div id="hallplace-'.$hallid.'" class="hallplace" hallid="'.$hallid.'" style="width:'.$hallwidth.'px; height:'.$hallheight.'px; ">';
-
-			$tsql2 = "SELECT t.*, tt.* FROM `tables` AS t, `table_types` AS tt WHERE t.hallid = '".$hallid."'  AND tt.typeid = t.typeid ORDER BY `num` ASC;";
-			
-			if($place == 'order')
-			{
-			$tsql2 = "SELECT td.*, tt.* FROM `tables_on_date` AS td, `table_types` AS tt WHERE td.hallid = '".$hallid."'  AND tt.typeid = td.typeid AND td.date = '".convert_date($dateevent)."' ORDER BY `num` ASC;";
-
-			
-	
-			}
 		
-			$rez_tab = mysql_query($tsql2);
-			//$ech .= mysql_error(); 
-			if (mysql_num_rows($rez_tab)>0)
-			{
-			
-			$tabquant = mysql_num_rows($rez_tab);
-				while ($row_tab = mysql_fetch_array($rez_tab))
-				{
-			$inorder='success';	
+		if($place == 'order' || $place == 'report')
+		{
+	
+			if ($row_tab['childhall']){
 			
 			if($place == 'order')
-			{
-				$tsql02 = "SELECT * FROM `tables_in_orders` WHERE `tableid` = '".$row_tab["id"]."';";
-				$rez_tab0 = mysql_query($tsql02);
+			{				
+				checktablesondate($dateevent,$row_tab['childhall']);
+			}
+				$tsql3 = "SELECT * FROM `hall`   WHERE `id` = '".$row_tab['childhall']."';";
+				$rez_tab3 = mysql_query($tsql3);
 				//$ech .= mysql_error(); 
-				if (mysql_num_rows($rez_tab0)>0)
+				if (mysql_num_rows($rez_tab3)>0)
 				{
-					$inorder = 'warning';
+					$row_tab3 = mysql_fetch_array($rez_tab3);
+					
+					//$pr = gettablesondate($row_tab['childhall'],$dateevent,$place);
+					
+					$ech3 = $ech3.'<h4>Дополнительно: '.$row_tab3['name'].'</h4>';
+					$ech3 = $ech3.'<div  id="childhall" hallid="'.$row_tab['childhall'].'" dateevent="'.$dateevent.'" place="'.$place.'">';
+					
+					//$ech3.= '<div class="newtable table1" tabid="0" typeid="2"  place="'.$place.'"  hallid="'.$row_tab['childhall'].'"  dateevent="'.$dateevent.'">Стол</div>';
+					//$ech3.=  '<div class="newtable table0" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$row_tab['childhall'].'"  dateevent="'.$dateevent.'">Стол</div>';
+					//$ech+='<div class="newchiar" tabid="0" >стул</div>';
+					//$ech3.= '<br><div class="title"><h4>Количество столов: '.$pr['tabquant'].'.</h4></div>';
+					
+					//$ech3 = $ech3.$pr['tables'];
+					$ech3 = $ech3.'</div>';
 				}
+			}	
 			}
-			
-				//$sumpersons = $sumpersons + $row_tab["persons"];
-					$ech = $ech.'<div class="context-menu-one table'.$row_tab["iscircle"].' table '.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; " place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
-					
-					//for($i=0;$i<$row_tab["persons"];$i++)
-					//{
-					//$ech = $ech.'<div class="chiar" ischiar="1" tabid="'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'" hallid="'.$hallid.'" tabpersons="'.$row_tab["persons"].'"></div>';
-					//}
-					
-					//$ech = $ech.'<div class="tabnum">'.$row_tab["num"].'</div>
-					
-				}
-			}
-						$ech = $ech.'</div>';
+		}	
 
- 			echo '<div class="newtable table1" tabid="0" typeid="2"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
- 			echo '<div class="newtable table0" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
+
+		$pr = gettablesondate($hallid,$dateevent,$place,$orderid);
+		$ech1 = $ech1.$pr['tables'];
+
+	if($place == 'order')
+	{
+ 			$ech2.= '<div class="newtable table1" tabid="0" typeid="2"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
+ 			$ech2.=  '<div class="newtable table0" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
 			//$ech+='<div class="newchiar" tabid="0" >стул</div>';
-echo '<br><div class="title"><h4>Количество столов: '.$tabquant.'.</h4></div>';
-	echo $ech;
+	}
+	$ech2.= '<br><div class="title"><h4>Всего столов: '.$pr['tabquant'].'. В заказе столов: '.$pr['tabsinorder'].'.</h4></div>';
+	echo $ech2.$ech1.$ech4.$ech3;
 }
+
+
+
+
+
 
 if ($_POST['operation'] == 'addtable') 
 {
@@ -194,10 +189,8 @@ $place = $_POST['place'];
 	{
 		$insert = "INSERT INTO `tables_on_date` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle` , `group`, `orderid`, `date`, `updatedby`) VALUES (NULL, 'new', '4', '".$hallid."', '".$ntop."', '".$nleft."', '".$typeid."', '0','0','0', '".convert_date($dateevent)."' , '".$_SESSION["curuserid"]."');";
 	}
-
-			
-				mysql_query($insert);
-
+		
+			mysql_query($insert);
 			echo 'yes';
 }
 

@@ -15,7 +15,7 @@
 	}
 	
 	
-		function change_tabangle(hallid,tabid,tabangle,place,dateevent){
+		function change_tabangle(hallid,tabid,tabangle,place,dateevent,destination){
 
 	 		$.ajax({
 			type: "POST",
@@ -26,7 +26,7 @@
 				if(msg == 'yes'){
 	
 				if(place=='halleditor') get_hall(hallid);
-				if(place=='order') get_selected_hall(hallid,dateevent);
+				if(place=='order') get_selected_hall(hallid,dateevent,place,destination);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -35,7 +35,7 @@
 	}
 	
 	
-	function change_tabnum(hallid,tabid,tabnum,place,dateevent){
+	function change_tabnum(hallid,tabid,tabnum,place,dateevent,destination){
 
 	 		$.ajax({
 			type: "POST",
@@ -45,7 +45,7 @@
 			.done(function( msg ) {
 				if(msg == 'yes'){
 				if(place=='halleditor') get_hall(hallid);
-				if(place=='order') get_selected_hall(hallid,dateevent);
+				if(place=='order') get_selected_hall(hallid,dateevent,place,destination);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -53,7 +53,7 @@
 	
 	}
 	
-	function add_table(hallid,ntop,nleft,typeid,place,dateevent){
+	function add_table(hallid,ntop,nleft,typeid,place,dateevent,destination){
 	 		$.ajax({
 			type: "POST",
 			url: "functions.php",
@@ -62,7 +62,7 @@
 			.done(function( msg ) {
 				if(msg == 'yes'){
 				if(place=='halleditor') get_hall(hallid);
-				if(place=='order') get_selected_hall(hallid,dateevent);
+				if(place=='order') get_selected_hall(hallid,dateevent,place,destination);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -90,7 +90,7 @@
 
 	
 		
-	function remove_table(hallid,tabid,place,dateevent){
+	function remove_table(hallid,tabid,place,dateevent,destination){
 
 	 		$.ajax({
 			type: "POST",
@@ -100,7 +100,7 @@
 			.done(function( msg ) {
 				if(msg == 'yes'){
 				if(place=='halleditor') get_hall(hallid);
-				if(place=='order') get_selected_hall(hallid,dateevent);
+				if(place=='order') get_selected_hall(hallid,dateevent,place,destination);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -130,7 +130,7 @@
 	
 	
 	
-	function change_table(hallid,tabid,persons,ntop,nleft,place,dateevent){
+	function change_table(hallid,tabid,persons,ntop,nleft,place,dateevent,destination){
 
 	 		$.ajax({
 			type: "POST",
@@ -140,7 +140,7 @@
 			.done(function( msg ) {
 				if(msg == 'yes'){
 				if(place=='halleditor') get_hall(hallid);
-				if(place=='order') get_selected_hall(hallid,dateevent);
+				if(place=='order') get_selected_hall(hallid,dateevent,place,destination);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -316,7 +316,6 @@
 						dateevent = $(this).attr('dateevent');
 						tabid = $(this).attr('tabid');
 						tabnum = $(this).html();
-	
 						
 						if( key == 'editname') 
 						{
@@ -380,7 +379,7 @@
  hallid = curmenu();
 			
  newh = $( "#hallplace-"+hallid ).height() + 100;
- //alert(newh);
+ //aler(newh);
 $( ".stContainer" ).css("height", newh + "px");
 
  }
@@ -412,9 +411,9 @@ $( ".stContainer" ).css("height", newh + "px");
 
 	ntop = ttop - ptop;
 	nleft = tleft - pleft;
-
+	destination=$("#hallplace-"+hallid).parent().attr('id');
 	
-	if(tabid == 0) add_table(hallid,ntop,nleft,typeid, place, dateevent);
+	if(tabid == 0) add_table(hallid,ntop,nleft,typeid, place, dateevent,destination);
 
 		
  	}
@@ -452,8 +451,9 @@ $( ".stContainer" ).css("height", newh + "px");
 	nleft = tleft - pleft;
 	place = $(this).attr('place');
 	dateevent = $(this).attr('dateevent');
-
-	change_table(hallid, tabid, persons, ntop, nleft, place, dateevent);
+	destination = $(this).parent().parent().attr('id');
+	
+	change_table(hallid, tabid, persons, ntop, nleft, place, dateevent, destination);
  	}
 
 
@@ -464,20 +464,20 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 
  	}
 
-		function get_selected_hall(hallid,dateevent,place)
+		function get_selected_hall(hallid,dateevent,place,destination,orderid)
 		{
 
 	  		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, place:'order'}
+			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, place:place, orderid:orderid}
 			})
 			.done(function( msg ) {
-				//alert(msg);
-				$("#selectedhall").html(msg);//закачали хтмл
-
+		
+				$("#"+destination+" ").html(msg);//закачали хтмл
+				
 				//расстановка столов по координатам
-				$("#selectedhall .table").each(function()
+				$("#"+destination+" .table").each(function()
 				{
 					ntop = parseInt($(this).attr('top'));
 					nleft = parseInt($(this).attr('left'));
@@ -508,7 +508,8 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 				}
 				
 				
-				
+				if(place != 'report')
+				{
 				
 								//присвоение дрэг и дроп
 				$(".newtable").draggable({
@@ -530,7 +531,7 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 					stop: tabstop
 				});
 				
-				checkhallselect();
+				checkhallselect(hallid);
 				
 				
 			 $.contextMenu({
@@ -543,12 +544,13 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 						tabid = $(this).attr('tabid');
 						tabnum = $(this).html();
 						check = $(this).hasClass("primary");
+						destination = $(this).parent().parent().attr('id');
 						
 						if( key == 'editname') 
 						{
 
 							newtabnum = prompt('Новое значение',tabnum);
-							if(newtabnum) change_tabnum(hallid,tabid,newtabnum,place,dateevent);
+							if(newtabnum) change_tabnum(hallid,tabid,newtabnum,place,dateevent,destination);
 						}
 						
 						if( key == 'rotate+90') 
@@ -557,7 +559,7 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 							if (angle >= 360) angle = 0;
 							if (angle < 0) angle = angle +360;
 							//newtabnum = prompt('Новое значение',tabnum);
-							change_tabangle(hallid,tabid,angle,place,dateevent);
+							change_tabangle(hallid,tabid,angle,place,dateevent,destination);
 						}
 						
 						if( key == 'rotate+45') 
@@ -566,7 +568,7 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 							if (angle >= 360) angle = 0;
 							if (angle < 0) angle = angle +360;
 							//newtabnum = prompt('Новое значение',tabnum);
-							change_tabangle(hallid,tabid,angle,place,dateevent);
+							change_tabangle(hallid,tabid,angle,place,dateevent,destination);
 						}
 						
 						if( key == 'rotate-45') 
@@ -575,7 +577,7 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 							if (angle >= 360) angle = 0;
 							if (angle < 0) angle = angle +360;
 							//newtabnum = prompt('Новое значение',tabnum);
-							change_tabangle(hallid,tabid,angle,place,dateevent);
+							change_tabangle(hallid,tabid,angle,place,dateevent,destination);
 						}
 						
 						if( key == 'delete') 
@@ -586,7 +588,7 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 							}
 							else
 							{
-								remove_table(hallid,tabid,place,dateevent);
+								remove_table(hallid,tabid,place,dateevent,destination);
 							}
 						}
 					//window.console && console.log(key) || alert(key); 
@@ -601,9 +603,24 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
  
 					}
 				});
+				
+				}
+				
+			if(destination == 'selectedhall')
+			{
+				childhallid = $("#childhall").attr('hallid');
+					
+				if(childhallid > 0)
+				{
+					get_selected_hall(childhallid,dateevent,place,'childhall',orderid);
+				}
+			
+			}	
+
 
 			});
-				
+			
+
 		}
 		
 
@@ -619,3 +636,33 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
             }, 500);
 
         }
+
+		function childhallselect()
+		{
+		hallid = $("#childhall").attr('hallid');
+		dateevent = $("#childhall").attr('dateevent');
+		place = $("#childhall").attr('place');
+		get_selected_hall(hallid,dateevent,place,'childhall')
+		}
+
+
+		function checkhallselect(hallid)
+		{
+			
+			selectedtables = $("#selectedhall .primary").length + $("#childhall .primary").length;
+		
+			if(selectedtables > 0)
+			{			
+				$("#hall").attr("disabled","disabled");
+				$("#dateevent").attr("disabled","disabled");
+			} 
+			
+			
+			if(selectedtables == 0)
+			{			
+				$("#hall").removeAttr("disabled");
+				$("#dateevent").removeAttr("disabled");
+			} 
+
+			
+		}	

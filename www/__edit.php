@@ -1,7 +1,7 @@
-
-
-
-
+<?php
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
+?>
 <!DOCTYPE html>
 <html lang="ru">
   <head>
@@ -13,18 +13,20 @@
     
     <title><?php
 	echo PRODUCTNAME;
-	?> :: Create</title>
+	?> :: Edit</title>
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="/css/sticky-footer-navbar.css" rel="stylesheet">
+	<link href="/css/jquery.contextMenu.css" rel="stylesheet" type="text/css">	
+	<link href="/css/tables_in_hall.css" rel="stylesheet" type="text/css">	
+
+	<script src="/jquery/tables_in_hall.js"></script>
 
     <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
 	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
-	<link href="/css/jquery.contextMenu.css" rel="stylesheet" type="text/css">	
-	<link href="/css/tables_in_hall.css" rel="stylesheet" type="text/css">	
 	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
 
 <style>
@@ -37,7 +39,7 @@
   position: absolute;
   top: 0.15em; }
   
-	.level_0{
+.level_0{
 	color: #000;
   background-color: #FFD141 !important;
   }
@@ -55,14 +57,12 @@
   }
   
  tr.odd  td.tocalcrow{
-     background-color:  #ACFF7E !important;
+     background-color: #ACFF7E	 !important;
   }
-    
-   #weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
-		.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
-
+   .right{float:right;}
  
-  
+		
+		#weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
   </style>  
 
   </head>
@@ -82,8 +82,7 @@ fixednavbar();
 	<a id="toTop" href="#"></a>
     <div class="container">
       <div class="page-header">
-        <h3>Новый заказ</h3>
-
+        <h3>Редактирование заказа</h3>
       </div>
 		<ul class="pagination pagination-lg">
 		  <li id=pageleft><a href="#">&laquo;</a></li>
@@ -95,22 +94,101 @@ fixednavbar();
 		  <li id=pageright><a href="#">&raquo;</a></li>
 		</ul>
 
-		<input type=hidden id=timestart value="">
-	
+
+
 			<div id=createform style="width: 100%;">
 		
 			</div>
 		
-		<div id=spanpage1 style="visibility: hidden; max-width: 500px;">
-			<div class="input-group"  style="max-width: 500px;">
 
-			  <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-			  <input type="text" id=clientsearch onkeyup="dosearchclient(this)" class="form-control" placeholder="Поиск клиента">
+		<div id=spanpage1 style="visibility: hidden; max-width: 400px;">
+		<?php
+if ($q[1]>0)
+{
+	$tsql = "select DATE_FORMAT(eventdate,'%d.%m.%Y') as ed, orders.* from orders where id = ".mysql_escape_string($q[1]).";";
+	$r_order = mysql_query($tsql);
+	if (mysql_num_rows($r_order)==0)
+	{
+		die("cant find order");
+	}
+	$row_order = mysql_fetch_array($r_order);
+	$tsql = "select * from clients where id = ".mysql_escape_string($row_order["clientid"]).";";
+	$r_user = mysql_query($tsql);
+	
+	if (mysql_num_rows($r_user)>0)
+	{
+		$row = mysql_fetch_array($r_user);
+		//echo "OK^" . $row["id"]."^" . $row["phone"]."^" . $row["email"]."^" . $row["otkuda"];
+		echo '<div style="max-width: 400px"><form id=frm1 role="form" data-toggle="validator">';
+		echo '<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
+		echo '<input type="text" readonly id=clientname value="'.htmlspecialchars($row["name"]).'" class="form-control">';						
+		echo '<input type="hidden" id=clientid value="'.$row["id"].'">';						
+		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-phone-alt"></span></span>';
+		echo '<input type="text" id=clientphone value="'.htmlspecialchars($row["phone"]).'" class="form-control" placeholder="Телефон">';
+		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>';
+		echo '<input type="email" id=clientemail value="'.htmlspecialchars($row["email"]).'" class="form-control" placeholder="E-mail">';
 
-			  <span class="input-group-btn">
-				<button class="btn btn-default" onclick="docheckclientname($('#clientsearch').val());" id=clientadd name=clientadd type="button">Создать</button>
-			  </span>			  
-			</div>		
+		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
+		$tsql2 = "select * from `client_from` ;";
+		$r_from = mysql_query($tsql2);
+		if (mysql_num_rows($r_from)>0)
+		{	
+			echo  '<select id="clientfrom2" class="form-control">' . "";
+			echo  '<option value="0">Укажите откуда пришел</option>' . "";
+			while ($row_from = mysql_fetch_array($r_from))
+			{	
+				$sel = '';
+				if($row["otkuda"] == $row_from["name"]) $sel = ' selected="selected"';
+				echo '<option'. $sel .' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
+			}
+			echo '<option value="999">Другое</option>' . "";
+			echo '</select>' . "";
+		}
+		echo '<input type="text" id="clientfrom" style="display:none;" value="'.htmlspecialchars($row["otkuda"]).'" class="form-control" placeholder="Укажите откуда пришел">';
+		echo '</div><br>';
+		echo '<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
+		echo '<input value="'.$row_order["ed"] . '" required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent"  onchange="activatehall();" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
+		echo '<input value="'.$row_order["eventtime"] . '" data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
+		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
+		echo '<input value="'.$row_order["guestcount"] . '" required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей" onchange="activatehall();">';
+		echo '</div>';
+
+		echo '<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
+		
+		$tsql = "select * from hall where `isactive` = '1';";
+		$r_hall = mysql_query($tsql);
+		if (mysql_num_rows($r_hall)>0)
+		{	
+			echo  '<select id="hall" class="form-control" disabled>' . "";
+			echo  '<option value="0" checked>Укажите дату и количество гостей</option>' . "";
+			while ($row_hall = mysql_fetch_array($r_hall))
+			{	
+				if ($row_order["hallid"]==$row_hall["id"])
+				{
+					echo  '<option selected value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";				
+				}
+				else
+				{
+					echo  '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
+				}
+			}
+			echo  '</select>' . "";
+		}
+		echo '</div><br>';
+		echo '<br><div  id="selectedhall"></div>';
+		
+		echo '<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
+	}
+	else
+	{
+		echo "ID not found";
+	}
+}
+else
+{
+	echo "ID not correct";
+}
+		?>
 		</div>
 		
 		<!-- тарелки -->		
@@ -170,7 +248,7 @@ fixednavbar();
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
 
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
-	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] = 0;
 	$sections[$rows0['id']]['items'] = $zzz;
 	$sections[$rows0['id']]['items']['isdrink'] = $rows0['isdrink'];
@@ -232,7 +310,7 @@ fixednavbar();
 
 			if ($sections[$num]['items']['count'] > 0)
 			{
-				print_dishes($sections[$num]['items']);
+				print_dishes_for_edit($sections[$num]['items'], $q[1]);
 			}
 			
 			foreach ($val as $num1 => $val1) 
@@ -246,7 +324,7 @@ fixednavbar();
 
 					if ($val[$num1]['items']['count'] > 0)
 					{
-						print_dishes($val[$num1]['items']);
+						print_dishes_for_edit($val[$num1]['items'],$q[1]);
 					}
 
 					
@@ -263,7 +341,7 @@ fixednavbar();
 													
 								if ($val1[$num2]['items']['count'] > 0)
 								{
-									print_dishes($val1[$num2]['items']);
+									print_dishes_for_edit($val1[$num2]['items'],$q[1]);
 								}
 
 							}
@@ -288,12 +366,9 @@ fixednavbar();
 ?>			
 	
 	
-		<br><div class="input-group topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
+		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
-		
-		
-		
 
 		<!-- drink -->		
 		
@@ -416,7 +491,7 @@ fixednavbar();
 
 			if ($sections[$num]['items']['count'] > 0)
 			{
-				print_dishes($sections[$num]['items']);
+				print_dishes_for_edit($sections[$num]['items'],$q[1]);
 			}
 			
 			foreach ($val as $num1 => $val1) 
@@ -430,7 +505,7 @@ fixednavbar();
 
 					if ($val[$num1]['items']['count'] > 0)
 					{
-						print_dishes($val[$num1]['items']);
+						print_dishes_for_edit($val[$num1]['items'],$q[1]);
 					}
 
 					
@@ -447,7 +522,7 @@ fixednavbar();
 													
 								if ($val1[$num2]['items']['count'] > 0)
 								{
-									print_dishes($val1[$num2]['items']);
+									print_dishes_for_edit($val1[$num2]['items'],$q[1]);
 								}
 
 							}
@@ -472,7 +547,7 @@ fixednavbar();
 ?>			
 	
 
-		<br><div class="input-group topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
+		<br><div class="input-group"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		
@@ -509,62 +584,99 @@ fixednavbar();
 							</thead>';
 	?>
 <?php
-			while ($row_serv = mysql_fetch_array($r_serv))
+
+		$service_in_order = array();
+		$r_service_in_order = mysql_query("SELECT * FROM `services_in_orders` so where so.orderid=" . $q[1]);
+		while ($row_service_in_order = mysql_fetch_array($r_service_in_order))
 		{
-		$btnclass = 'btn-default disabled';
-			$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
-			$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="0" name="discontserv">';
-			$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
-			$tocalcrowclass = "";
-	
-			$tocalc = 'tocalc=""';
-			if ($row_serv["tocalculate"] == '1') 
+			$service_in_order[$row_service_in_order["id"]] = array("serviceid"=>$row_service_in_order["serviceid"],
+			"price"=>$row_service_in_order["price"], 
+			"discont"=>$row_dish_in_order["discont"],
+			"num"=>$row_service_in_order["num"],"comment"=>$row_service_in_order["comment"]);
+		}
+
+		while ($row_serv = mysql_fetch_array($r_serv))
+		{
+			if ($service_in_order[$row_serv["id"]])
 			{
-			$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="hidden" size="5" value="0">';
-			$discont = '';
-				$tocalc = 'tocalc="1"';
-				$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($row_serv["price"],0,'','').'">';
-				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
-				$tocalcrowclass = 'tocalcrow';
+				$item = $service_in_order[$row_serv["id"]];
+				$butname = "Удалить";
+				$btnclass = 'btn-primary';
+				$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["num"].'">';
+				$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["discont"].'" name="discontserv">';
+				$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$item["price"].'">';
+				$tocalcrowclass = "";
+		
+				$tocalc = 'tocalc=""';
+				if ($row_serv["tocalculate"] == '1') 
+				{
+					$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="hidden" size="5" value="0">';
+					$discont = '';
+					$tocalc = 'tocalc="1"';
+					$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($item["price"],0,'','').'">';
+					$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
+					$tocalcrowclass = 'tocalcrow';
+				}
+				if ($row_serv["byguestcount"]==1)
+				{
+					$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" value="'.$item["num"].'" type="text" disabled>
+					<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="'.$item["discont"].'">';
+					$discont ='';
+				}
+										
 			}
-			if ($row_serv["byguestcount"]==1)
-							{
-								$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
-								<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
-							
-							}
-									
+			else
+			{
+				$butname = "Добавить";
+				$btnclass = 'btn-default disabled';
+				$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
+				$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
+				$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
+				$tocalcrowclass = "";
+		
+				$tocalc = 'tocalc=""';
+				if ($row_serv["tocalculate"] == '1') 
+				{
+				$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="hidden" size="5" value="0">';
+				$discont = '';
+					$tocalc = 'tocalc="1"';
+					$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($row_serv["price"],0,'','').'">';
+					$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
+					$tocalcrowclass = 'tocalcrow';
+				}
+				if ($row_serv["byguestcount"]==1)
+				{
+					$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
+					<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
+					$discont ='';
+				}
+										
+			}			
 			echo '<tr >';
+			echo '<td class = "'.$tocalcrowclass.'"><span id=servicename'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
+			
+			<td class = "'.$tocalcrowclass.'"><span id=servicedescr'.$row_serv["id"].'>'.$row_serv["description"].'</span></td>
 
-
-							echo '<td class = "'.$tocalcrowclass.'"><span id=servicename'.$row_serv["id"].'>'.$row_serv["name"].'</span></td>
-							
-							<td class = "'.$tocalcrowclass.'"><span id=servicedescr'.$row_serv["id"].'>'.$row_serv["description"].'</span></td>
-
-							<td class = "'.$tocalcrowclass.'">
-							'.$price.'
-							</td>
-							<td class = "'.$tocalcrowclass.'">
-							 
-							'.$quant.'
-							</td>
-							<td class = "'.$tocalcrowclass.'">
-							'.$discont.'
-							</td>
-							<td class = "'.$tocalcrowclass.'"><input name="commentserv" id="commentserv'.$row_serv["id"].'" type="text" size="20"></td>
-							<td class = "'.$tocalcrowclass.'"><button '.$tocalc.' class = "btn '.$btnclass.' " type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">Добавить</button></td>';
-							
-								
-					
-				echo '</tr>';
-					
+			<td class = "'.$tocalcrowclass.'">
+			'.$price.'
+			</td>
+			<td class = "'.$tocalcrowclass.'">
+			 
+			'.$quant.'
+			</td>
+			<td class = "'.$tocalcrowclass.'">
+			'.$discont.'
+			</td>
+			<td class = "'.$tocalcrowclass.'"><input name="commentserv" id="commentserv'.$row_serv["id"].'" type="text" size="20"></td>
+			<td class = "'.$tocalcrowclass.'"><button '.$tocalc.' class = "btn '.$btnclass.' " type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">'.$butname.'</button></td>';		
+			echo '</tr>';
 		}
 				echo '</table>';		
 ?>
 <?php		
 	}
 ?>	
-		<br><br><br><div class="input-group topbutton"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
+		<br><br><br><div class="input-group"><button class="btn btn-primary"  class="btn btn-default" onClick="shownextstep()" type="button">Далее</button></div>
 		</form>
 		</div>
 		<div id=spanpage5 style="visibility: hidden">
@@ -576,7 +688,7 @@ fixednavbar();
 <div class="input-group" style="max-width:500px">
   <span class="input-group-addon"><span class="glyphicon glyphicon-gift"></span></span>
   <input type="text" id="type" placeholder="тип мероприятия" class="form-control">
-
+partytypes
 </div>
 <br>		
 <div class="input-group" style="max-width:500px">
@@ -585,13 +697,12 @@ fixednavbar();
 </div>
 <br>		
 	
-		<br><div class="input-group"><button class="btn btn-primary topbutton" onClick="dosaveorder()" type="button">Сохранить</button></div>
+		<br><div class="input-group"><button class="btn btn-primary" onClick="dosaveorder()" type="button">Сохранить</button></div>
 		</form>
 		</div>
     </div>
 
 <?php
-
 //fixedbotbar();
 
 ?>
@@ -607,9 +718,16 @@ fixednavbar();
 	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
+<<<<<<< HEAD
 		<script src="/jquery/tables_in_hall.js"></script>
 	<script src="/jquery/jquery.contextMenu.js"></script>
 
+=======
+	<script src="/jquery/tables_in_hall.js"></script>
+	<script src="/jquery/jquery.ui.position.js"></script>
+	<script src="/jquery/jquery.contextMenu.js"></script>
+	
+>>>>>>> origin/master
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 	
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
@@ -631,13 +749,12 @@ fixednavbar();
 
 
 	<script>
-		//x = $("#spanpage1").offset().left;
-		//y = $("#spanpage1").offset().top;
+		//x = $("#$spanpage1").offset().left;
+		//y = $("#$spanpage1").offset().top;
 		
 		function showST(tab_index){
 			event.preventDefault();
 			$('#tabs').smartTab('showTab',tab_index);
-
 		}
 		
 		function dosearchclient(t)
@@ -649,12 +766,12 @@ fixednavbar();
 			$.get("_dosearchclientautocomplete.php", {s:s, Rand: "<?php echo rand(); ?>"},
 			   function(data){})
 			   .done(function(data) {
-				//aler(data);
+				//alert(data);
 				data = $.trim(data);
 				data = data.split("\n");
 				$(t).autocomplete({source: data, select: function (a, b) {
 					//$(this).val(b.item.value);
-					//aler(b.item.value);
+					//alert(b.item.value);
 					$("#clientadd").html("Выбрать");
 				}});
 			});
@@ -663,7 +780,7 @@ fixednavbar();
 		{
 			// Активация правильной кнопки выбора страницы в зависимости от curpage
 			erasedisablefromli();
-			//aler(curpage);
+			//alert(curpage);
 			switch(curpage)
 			{
 				case 1:
@@ -688,13 +805,12 @@ fixednavbar();
 				break;
 			}
 		}
-
 		function erasedisablefromli()
 		{
 			// Стирание дисэблед статуса для всех кнопок страниц, чтобы потом поставить правильный
 			for (i=1;i<=5;i++)
 			{
-				//aler(curpage);
+				//alert(curpage);
 				//if (i!=curpage) 
 				$("#page"+i).prop("class","enabled");							
 			}
@@ -708,16 +824,16 @@ fixednavbar();
 		alladd = $("#createform  .btn-danger").length;			
 		if(alladd > 0) 
 			{
-				//aler("Остались недобавленные позиции: " + alladd);
+				alert("Остались недобавленные позиции: " + alladd);
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
 			} else
 			{
 		
-
-			//aler(1);
+		
+			//alert(1);
 			//$("div[id*=spanpage]").css("visibility","hidden");
-			//aler(x);
-			//aler(y);
+			//alert(x);
+			//alert(y);
 
 			//$("#spanpage"+curpage).html("");
 			//$("#createform").clone().appendTo( $("#spanpage"+curpage) );
@@ -728,159 +844,23 @@ fixednavbar();
 			if (curpage<5) curpage = curpage + 1;
 			//$("#spanpage"+curpage).css("left",x);
 			//$("#spanpage"+curpage).css("top",y);	
+			$("#createform").html($("#spanpage"+curpage).html());			
 			//$("#spanpage"+curpage).css("visibility","visible");
 			$("#page"+curpage).click();
-						count_dish_weight();	
+			count_dish_weight();	
 			return true;
 			}
 		}
 		
-		function docheckclientname(clientname)
-		{
-			//aler(1);
-			// проверка имени клиента на существование, в зависимости от этого вывод правильной формы
-			// создания нового клиента или поля с заполненными значениями существующего
-			//clientname = $("#clientsearch").val();
-			if (clientname!="") {
-				//aler(1);
-				$.get("_checkexistclient.php", {s:clientname, Rand: "<?php echo rand(); ?>"},
-				   function(){
-					console.log(clientname);
-				   })
-				   .done(function(data) {
-					//aler(data);
-					erasevaluesincookie();
-					data = data.split("^");
-					$("#spanpage1").html("");
-					$("#timestart").val($.now()/1000);
-					//aler(data[0]);
-					spanpage1 = '<div style="max-width: 500px"><form id=frm1 role="form" data-toggle="validator">';
-					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
-					if (typeof data[1] == 'undefined') data[1]='';
-					if (typeof data[2] == 'undefined') data[2]='';
-					if (typeof data[3] == 'undefined') data[3]='';
-					if (typeof data[4] == 'undefined') data[4]='';
-					if (typeof data[5] == 'undefined') data[5]='';
-					if (data[0]=="OK"){
-						spanpage1+='<input type="text" readonly id=clientname value="'+clientname+'" class="form-control">';						
-						spanpage1+='<input type="hidden" id=clientid value="'+data[1]+'">';						
-					}
-					else {
-						spanpage1+='<input type="text" readonly id=clientname value="'+clientname+'" class="form-control">';						
-						spanpage1+='<input type="hidden" id=clientid value="0">';
-					}
-					//aler(data[2]);
-					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-phone-alt"></span></span>';
-					spanpage1+='<input type="text" id=clientphone value="'+data[2]+'" class="form-control" placeholder="Телефон">';
-					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>';
-					spanpage1+='<input type="email" id=clientemail value="'+data[3]+'" class="form-control" placeholder="E-mail">';
-
-					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
-					spanpage1+='<?php
-					$tsql2 = "select * from `client_from` ;";
-					$r_from = mysql_query($tsql2);
-					if (mysql_num_rows($r_from)>0)
-					{	
-						echo '<select id="clientfrom2" class="form-control">' . "";
-						echo '<option value="0">Укажите откуда пришел</option>' . "";
-						?>';
-						<?php
-						while ($row_from = mysql_fetch_array($r_from))
-						{	
-						?>
-						sel = '';
-						if(data[4] == '<?php  echo $row_from["name"]; ?>') sel = ' selected="selected"';
-						spanpage1+='<option'+ sel +'<?php	
-						echo ' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
-						?>';
-						<?php
-						}
-						?>
-						spanpage1+='<?php
-						echo '<option value="999">Другое</option>' . "";
-						echo '</select>' . "";
-					}
-					?>';
-
-					spanpage1+='<input type="text" id="clientfrom" style="display:none;" value="'+data[4]+'" class="form-control" placeholder="Укажите откуда пришел">';
-
-					spanpage1+='<?php
-					$tsql2 = "select * from `agenсies` ;";
-					$r_from = mysql_query($tsql2);
-					if (mysql_num_rows($r_from)>0)
-					{	
-						echo '<select id="clientfrom4" class="form-control" style="display:none;" >' . "";
-						echo '<option value="0">Укажите название агенства</option>' . "";
-						?>';
-						<?php
-						while ($row_from = mysql_fetch_array($r_from))
-						{	
-						?>
-						sel = '';
-						if(data[5] == '<?php  echo $row_from["name"]; ?>') sel = ' selected="selected"';
-						spanpage1+='<option'+ sel +'<?php	
-						echo ' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
-						?>';
-						<?php
-						}
-						?>
-						spanpage1+='<?php
-						echo '<option value="999">Другое</option>' . "";
-						echo '</select>' . "";
-					}
-					?>';
-
-					spanpage1+='<input type="text" id="clientfrom3" style="display:none;" value="'+data[5]+'" class="form-control" placeholder="Укажите откуда пришел">';
-
-					spanpage1+='</div><br>';
-					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
-					//spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
-					spanpage1+='<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent"  onchange="activatehall();" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
-					spanpage1+='<input data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
-					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
-					spanpage1+='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей" onkeyup="activatehall();">';
-					spanpage1+='</div>';
-
-					spanpage1+='<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
-					spanpage1+='<?php
-					$tsql = "select * from hall where `isactive` = '1';";
-					$r_hall = mysql_query($tsql);
-					if (mysql_num_rows($r_hall)>0)
-					{	
-						echo '<select name="hall" id="hall" class="form-control" disabled>' . "";
-						echo '<option value="0" checked>Укажите дату и количество гостей</option>' . "";
-						while ($row_hall = mysql_fetch_array($r_hall))
-						{	
-							echo '<option value="'.$row_hall["id"].'">'.$row_hall["name"].' ('.$row_hall["countofperson"].' мест)</option>' . "";
-						}
-						echo '</select>' . "";
-					}
-					?>';
-					spanpage1+='</div><br>';
-					spanpage1+='<br><div  id="selectedhall"></div>';
-					
-					spanpage1+='<br><div class="input-group"><button  class="btn btn-primary topbutton"  onClick="shownextstep()" type="button">Далее</button></div>';
-					spanpage1+='</form></div>';
-					//aler(spanpage1);
-					$("#spanpage1").html(spanpage1);
-					$("#createform").html($("#spanpage"+curpage).html());
-	
-					//aler($("#spanpage1").html());
-					readvaluesincookie();	
-					count_dish_weight();
-						
-				});
-			}
-		}
 		function erasevaluesincookie()
 		{
 			if ($("#clientsearch").val())
 			{			
-				//aler($("#clientsearch").val());
+				//alert($("#clientsearch").val());
 				if ($.cookie("clientname")!==$("#clientsearch").val())
 				{
-					//aler($.cookie("clientname"));
-					//aler($("#clientsearch").val());
+					//alert($.cookie("clientname"));
+					//alert($("#clientsearch").val());
 					
 					$.removeCookie("clientname");
 					$.removeCookie("clientid");
@@ -902,11 +882,11 @@ fixednavbar();
 		}		
 		function setvaluesincookie()
 		{
-			//aler($("body #clientfrom").val());
-			//aler(curpage);
+			//alert($("body #clientfrom").val());
+			//alert(curpage);
 			if ((curpage==1) && (typeof $("body #clientname").val() != 'undefined'))
 			{
-				//aler($("#clientid").val());
+				//alert($("#clientid").val());
 				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
 				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
 				if ($("body #clientfrom").val()!="Укажите откуда пришел")
@@ -930,8 +910,8 @@ fixednavbar();
 		}
 		function readvaluesincookie()
 		{
-			//aler($("body #clientfrom").val());
-			//aler(curpage);
+			//alert($("body #clientfrom").val());
+			//alert(curpage);
 			if (curpage==1)
 			{
 				if (typeof $.cookie("clientname") != 'undefined')
@@ -951,7 +931,7 @@ fixednavbar();
 				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
 					{	
 						$("body #hall").removeAttr("disabled");
-						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order','selectedhall');
+						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order');
 					}
 				}
 				
@@ -1021,7 +1001,7 @@ fixednavbar();
 
 				var additional_pars = new Object();
 				additional_pars["cn"] = $.cookie("clientname");
-				//aler($("#clientid").val());
+				//alert($("#clientid").val());
 				additional_pars["ci"] = $.cookie("clientid");
 				additional_pars["cp"] = $.cookie("clientphone");
 				additional_pars["ce"] = $.cookie("clientemail");
@@ -1041,20 +1021,19 @@ fixednavbar();
 					$("#resultform").html(data);
 				});
 			}
-		}		
-
+		}			
 		function setcountguestfields()
 		{
 			//var warnchangeguestcount=0;
-			//aler(1);
+			//alert(1);
 			if (typeof $.cookie("guestcount") != 'undefined')
 			{
-				//aler(2);
+				//alert(2);
 				if ($.isNumeric($.cookie("guestcount")))
 				{
-					//aler($.cookie("guestcount"));
+					//alert($.cookie("guestcount"));
 					$("input[class*='byguestcount']").each(function() {
-						//aler($(this).val());
+						//alert($(this).val());
 						//if ($(this).attr("readonly")!=="readonly") 
 						//{
 							$(this).val($.cookie("guestcount"));
@@ -1071,33 +1050,19 @@ fixednavbar();
 			}
 			//if (warnchangeguestcount)
 			//{
-				//aler("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
+				//alert("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
 			//}
 		}
 		$(document).ready(function(){
 			// когда страница загружена
 			
 			
-			
-  
-			
-			
-			
-				if (typeof $.cookie("clientname") != 'undefined')
-				{
-					// Богачев :: убрал. заебало.
-					//docheckclientname($.cookie("clientname"));
-				}
-
-				
-
 			$( document ).on( "click", ".navbar a", function() 
 			{
-					alladd = $("#createform  .btn-danger").length;			
-					if(alladd > 0) 
+					alladd = $("#createform  .btn-warning").length;			
+					if(alladd == 23120) 
 					{
 						alert("Остались недобавленные позиции: " + alladd);
-				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 						return false;
 					} 
 			});
@@ -1123,23 +1088,18 @@ fixednavbar();
 				widgets: ['zebra']
 			});
 	
-	
-
+			//alert(1);
 			dosetrightpaginator();
-
+			//alert(2);
 			doloadcreateform();
-
+			get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
 			//erasevaluesincookie();
 			
 			$('#tabs').smartTab({selected: 0});		
 
 			setcountguestfields();
-				
-
-
-
-
-
+		
+			
 				$( document ).on( "change", "#clientfrom2", function() {	
 					$("#clientfrom").hide();
 		
@@ -1165,33 +1125,28 @@ fixednavbar();
 
 						
 						}
-			
-
-
-				});
-			
-			
-			
-			
+	
+		
+			});
 			$( document ).on( "change", "#hall", function() {			
 			//$("#hall").on("change", function() {
-				//aler($("#hall").val());
+				//alert($("#hall").val());
 				$.get("_checkhall.php", {id:$("#hall").val(), Rand: "<?php echo rand(); ?>"},
 				   function(data){})
 				   .done(function(data) {
-					//aler(data);
+					//alert(data);
 					data = $.trim(data);
 					data = data.split("^");
 					if (data[0]=="OK")
 					{
-						//aler(data[1]);
+						//alert(data[1]);
 						if ((typeof data[1] != 'undefined') && ($("#guestcount").val()>0))
 						{
 							if (parseInt($("#guestcount").val())>parseInt(data[1]))
 							{
 								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
 							} 
-							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
+							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
 							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 						}
 					}
@@ -1199,11 +1154,6 @@ fixednavbar();
 			});
 					
 			// добавление блюд в заказ
-			//$( document ).on("change", "select[name=hall]", function ()
-			//{
-			//	get_selected_hall($("#hall").val());
-			//});
-			
 			$( document ).on( "keyup", "input[name=quant]", function() {
 				id = $(this).attr("id");
 				id = id.substr(5);
@@ -1305,19 +1255,9 @@ fixednavbar();
 				//console.log($.cookie("dishes"));
 				
 					count_dish_weight();
-			});			
+			});		
 			
 			
-
-			
-			
-			// добавление услуг в заказ
-		
-		
-
-
-
-					
 					$( document ).on( "keyup", "input[name=quantserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(9);
@@ -1352,11 +1292,9 @@ fixednavbar();
 				
 				}
 				
-			});
+			});;
 
-		
-
-
+			
 			$( document ).on( "change", "input[name=discontserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(11);
@@ -1399,9 +1337,30 @@ fixednavbar();
 				}
 
 
-			});
+			});			
+		
 			
+				$( document ).on( "change", "input[name=commentserv]", function() {
+				id = $(this).attr("id");
+				id = id.substr(11);
 
+				if($(this).val() != "") 
+				{
+					$("#addserv"+id).removeClass("btn-default");
+					$("#addserv"+id).addClass("btn-warning");
+				
+				} else
+				{
+					if($("#quantserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
+					{
+						$("#addserv"+id).addClass("btn-default");
+						$("#addserv"+id).removeClass("btn-warning");
+						$("#addserv"+id).addClass("disabled");
+					}
+				
+				}
+				
+			});			
 			
 			$( document ).on( "keyup", "input[name=discontserv]", function() {
 
@@ -1431,42 +1390,10 @@ fixednavbar();
 				
 				}
 				
-			});			
-		
-			
-				$( document ).on( "keyup", "input[name=commentserv]", function() {
-				id = $(this).attr("id");
-				id = id.substr(11);
-				bgs = $("#discontserv"+id).attr("bgs");
-			
-
-				if($(this).val() != "") 
-				{
-					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).addClass("btn-danger");
-				
-				} else
-				{
-					if(($("#quantserv"+id).val() == '' || bgs == 1) & $("#discontserv"+id).val() == '') 
-					{
-						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-danger");
-						$("#addserv"+id).addClass("disabled");
-					}
-				
-				}
-				
-			});			
-		
-
-	
-		
-			
+			});				
 			$( document ).on( "click", "button[name=addserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(7);
-				bgs = $("#discontserv"+id).attr("bgs");
-				
 				if ($(this).html()=="Удалить")
 				{
 							$(this).addClass("btn-danger");
@@ -1502,8 +1429,7 @@ fixednavbar();
 					var quantserv 	= $("#quantserv"+id).val();
 					var discont 	= $("#discontserv"+id).val();
 					var comment 	= $("#commentserv"+id).val();
-
-
+					
 					$("#priceserv"+id).attr("readonly","readonly");
 					$("#quantserv"+id).attr("readonly","readonly");
 					$("#discontserv"+id).attr("readonly","readonly");
@@ -1524,7 +1450,6 @@ fixednavbar();
 						var serviceall = {};
 					}
 					var element = {};
-					
 					element = ({priceserv:priceserv, quantserv:quantserv, discont:discont, comment:comment});
 					serviceall[id] = element ;
 					services = $.toJSON(serviceall);
@@ -1534,24 +1459,17 @@ fixednavbar();
 			});			
 			
 			
-	$( document ).on( "click", ".table.success,.table.primary", function() {
-		tabid = $(this).attr("tabid");
-		hallid = $(this).attr("hallid");
-		isfull = $(this).attr("isfull");
+	$( document ).on( "click", ".tabnum", function() {
+		tabid = $(this).parent().attr("tabid");
+	
+
 	tabnum = $(this).html();
-			if($(this).hasClass("success"))
+
+			if($(this).parent().hasClass("btn-success"))
 			{
-					
-					
-				if(isfull==0) 
-				{
-					$(this).removeClass("success");
-					$(this).addClass("primary");
-				} else
-				{
-					$("#hallplace-" +hallid +" .table").removeClass("success");
-					$("#hallplace-" +hallid +" .table").addClass("primary");
-				}
+					$(this).parent().removeClass("btn-success");
+					$(this).parent().addClass("btn-primary");
+
 					var tables="";
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
 					if (tables)
@@ -1563,21 +1481,8 @@ fixednavbar();
 						var taball = {};
 					}
 					var element = {};
-					
-					if(isfull==0) 
-					{
-						element = ({tabid:tabid, tabnum:tabnum});
-						taball[tabid] = element ;
-					} else
-					{
-						$("#hallplace-" +hallid +" .table").each(function(){
-							tabid1 = $(this).attr("tabid");
-							tabnum1 = $(this).html();
-							element = ({tabid:tabid1, tabnum:tabnum1});
-							taball[tabid1] = element ;
-						});
-					}
-					
+					element = ({tabid:tabid, tabnum:tabnum});
+					taball[tabid] = element ;
 					tables = $.toJSON(taball);
 					$.cookie("tables", tables,{ expires: 1, path: '/' });
 
@@ -1585,52 +1490,33 @@ fixednavbar();
 			} else 
 			{
 				
-				if($(this).hasClass("primary"))
+				if($(this).parent().hasClass("btn-primary"))
 				{
-				
-				if(isfull==0) 
-				{
-					$(this).addClass("success");
-					$(this).removeClass("primary");
-				} else
-				{
-					$("#hallplace-" +hallid +" .table").addClass("success");
-					$("#hallplace-" +hallid +" .table").removeClass("primary");
-				}
-					
+					$(this).parent().addClass("btn-success");
+					$(this).parent().removeClass("btn-primary");
+
 					var tables="";
 					
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
 					if (tables) {
 						var taball = $.parseJSON(tables);
-					if(isfull==0) 
-					{
-							delete taball[tabid];
-					} else
-					{
-						$("#hallplace-" +hallid +" .table").each(function(){
-							tabid1 = $(this).attr("tabid");
-							delete taball[tabid1];
-						});
-					}
-						
-						
+						delete taball[tabid];
 						tables = $.toJSON(taball);
 						$.cookie("tables", tables,{ expires: 1, path: '/' });				
 					}
 				}
 			}
-
-			
-		checkhallselect(hallid);
-			
-
-				
+			checkhallselect();
 	});
 			
-
-
-
+			
+			
+			
+		count_dish_weight();	
+			
+			
+			
+			
 		$(window).bind('beforeunload', function(){
 		  if (typeof $.cookie("clientname") != 'undefined')
 		  {
@@ -1645,16 +1531,10 @@ fixednavbar();
 			// слушаем клики на элементы выбора страниц
 			id = $(this).prop("id");
 
-			alladd = $("#createform  .btn-danger").length;
-
-
-			
-			
-
-			if(alladd > 0) 
+			alladd = $("#createform  .btn-warning").length;			
+			if(alladd == 23120) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
-				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 			} else
 			{
 			
@@ -1676,7 +1556,7 @@ fixednavbar();
 				curpage = parseInt(curpage);
 				if ($.isNumeric(curpage))
 				{
-					//aler(id);
+					//alert(id);
 					dosetrightpaginator();
 				}
 			}	
@@ -1687,13 +1567,13 @@ fixednavbar();
 		
 		function doloadcreateform()
 		{
-
+			//alert(curpage);
 			// вывод правильного содержания вкладки в зависимости от curpage
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());
 			readvaluesincookie();
 			$("body").animate({"scrollTop":0},"slow");
-						count_dish_weight();	
+			count_dish_weight();
 			//$("#spanpage"+curpage).css("visibility","visible");
 		}
 		function dosaveorder()
@@ -1730,7 +1610,7 @@ fixednavbar();
 						// нет
 						})
 						.done(function(data) {
-							//aler(data);
+							//alert(data);
 							//var nn = noty({text:data});
 							data = data.split(":");
 							if (data[0]=="OK")
@@ -1749,7 +1629,7 @@ fixednavbar();
 								$.removeCookie("dishes");
 								$.removeCookie("service");							
 								$.removeCookie("tables");	
-
+								//location.href="?view_zakazid="+data[1];
 							}
 							else
 							{
@@ -1773,22 +1653,18 @@ fixednavbar();
 			}
 		}
 		
-		function activatehall()
-		{
-			edate1 = $("#dateevent").val() == "__.__.____";
-			edate2 = $("#dateevent").val() == "";
-			eguest = $("#guestcount").val() == "";
-
-			$("input .byguestcount").val($("#guestcount").val()) ;
+		function activatehall(){
+edate1 = $("#dateevent").val() == "__.__.____";
+edate2 = $("#dateevent").val() == "";
+eguest = $("#guestcount").val() == "";
 
 			if( !edate1  & !edate2 & !eguest  )
 			{
 				$("#hall").removeAttr("disabled");
 				$("#hall option[value=0]").text("Выберите зал");
-				
 				if($("#hall").val() > 0)
 				{
-					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
+					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
 				}
 			}else
 			{
@@ -1799,8 +1675,6 @@ fixednavbar();
 			}
 		}
 		
-		
-
 		
 		function count_dish_weight()
 		{
@@ -1841,14 +1715,22 @@ fixednavbar();
 
 		}
 		}
+		function checkhallselect()
+		{
+			
+			if($("#createform .btn-primary").length > 1)
+			{			
+				$("#hall").attr("disabled","disabled");
+			} 
+			
+			
+			if($("#createform .btn-primary").length == 1)
+			{			
+				$("#hall").removeAttr("disabled");
+			} 
 		
-
+		}		
 		
-
-
-	
-	
-
 	</script>
   </body>
 </html>

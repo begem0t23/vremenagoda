@@ -18,6 +18,8 @@
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="/css/sticky-footer-navbar.css" rel="stylesheet">
+	<link href="/css/jquery.contextMenu.css" rel="stylesheet" type="text/css">	
+	<link href="/css/tables_in_hall.css" rel="stylesheet" type="text/css">	
 
 	<script src="/jquery/tables_in_hall.js"></script>
 
@@ -58,35 +60,7 @@
      background-color: #ACFF7E	 !important;
   }
    .right{float:right;}
-  .trash{margin: 5px; display:block; width:70px; height: 25px; border:1px; background-color: red; position:relative; float:right;}
-
-  .newtable{margin: 5px; display:block;width:44px; height:40px;  border:1px solid #ddd; background-color:#eee; position:relative; float:right;}
-   .newchiar {margin: 5px; display:block; width:30px; height: 25px; border:1px; background-color: #AADDC0; position:relative; float:right; }
-
-   .hallplace {display:block;  border:1px; background-color: #FFFFC0;margin:15px; }
-  
-   .chiar {display:block; width:11px; height: 11px; border:1px; background-color: #AADDC0; position:absolute;}
-  
-  .left-top{left:-16px; top:1px;}
-  .left-bottom{left:-16px; bottom:1px;}
-
-  .right-top{right:-16px; top:1px;}
-  .right-bottom{right:-16px; bottom:1px;}
-
-  .top-left{left:1px; top:-16px;}
-  .top-right{right:1px; top:-16px;}
-
-  .bottom-left{left:1px; bottom:-16px;}
-  .bottom-right{right:1px; bottom:-16px;}
-
-  .top-left-corner{left:-16px; top:-16px;}
-  .top-right-corner{right:-16px; top:-16px;}
-
-  .bottom-left-corner{left:-16px; bottom:-16px;}
-  .bottom-right-corner{right:-16px; bottom:-16px;}
-  
  
-	.tabnum{font-size:18px; margin: -7px 0px 0 -10px; width:100%;height:100%;}
 		
 		#weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
   </style>  
@@ -744,9 +718,6 @@ partytypes
 	<script src="/jquery/jquery.cookie.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
-		<script src="/jquery/tables_in_hall.js"></script>
-	<script src="/jquery/jquery.contextMenu.js"></script>
-
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 	
 	<script type="text/javascript" src="/jquery/noty-2.2.0/js/noty/jquery.noty.js"></script>
@@ -1532,10 +1503,6 @@ partytypes
 			
 			
 		count_dish_weight();	
-			
-			
-			
-			
 		$(window).bind('beforeunload', function(){
 		  if (typeof $.cookie("clientname") != 'undefined')
 		  {
