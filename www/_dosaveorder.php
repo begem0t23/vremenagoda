@@ -84,6 +84,12 @@ else
 				$r_order = mysql_query($tsql);
 				if (mysql_error()) die("ERR:1=" . mysql_error());
 				if (@$_POST["dd"]) {
+				$tsql = 'insert into `dishes_in_orders_history` (orderid,dishid,price,num,note)  
+						 SELECT orderid,dishid,price,num,note FROM `dishes_in_orders` WHERE orderid='.$oi;
+				$r_history = mysql_query($tsql);
+				if (mysql_error()) die("ERR:1=" . mysql_error());
+				$tsql = 'delete from dishes_in_orders WHERE orderid='.$oi;
+				$r_orders = mysql_query($tsql);				
 				$dishes = json_decode($_POST["dd"],true);
 				foreach($dishes as $i=>$dd)
 				{
@@ -113,9 +119,19 @@ else
 				}
 				else
 				{
+					$tsql = 'insert into `dishes_in_orders_history` (orderid,dishid,price,num,note)  
+							 SELECT orderid,dishid,price,num,note FROM `dishes_in_orders` WHERE orderid='.$oi;
+					$r_history = mysql_query($tsql);
+					if (mysql_error()) die("ERR:1=" . mysql_error());					
 					mysql_query("delete from dishes_in_orders where orderid=".$oi);
 				}
 				if (@$_POST["ss"]) {
+				$tsql = 'insert into `services_in_orders_history` (orderid,serviceid,price,discont,num,comment)  
+						 SELECT orderid,serviceid,price,discont,num,comment FROM `services_in_orders` WHERE orderid='.$oi;
+				$r_history = mysql_query($tsql);
+				if (mysql_error()) die("ERR:1=" . mysql_error());
+				$tsql = 'delete from services_in_orders WHERE orderid='.$oi;
+				$r_orders = mysql_query($tsql);								
 				$services = json_decode($_POST["ss"],true);
 				foreach($services as $i=>$ss)
 				{
@@ -158,6 +174,9 @@ else
 				}
 				else
 				{
+					$tsql = 'insert into `services_in_orders_history` (orderid,serviceid,price,discont,num,comment)  
+							 SELECT orderid,serviceid,price,discont,num,comment FROM `services_in_orders` WHERE orderid='.$oi;
+					$r_history = mysql_query($tsql);				
 					mysql_query("delete from services_in_orders where orderid=".$oi);
 				}
 
