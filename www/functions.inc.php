@@ -119,7 +119,7 @@ function checktablesondate($checkdate,$hallid)
 }
 
 
-function print_dishes_for_client_report($items,$sectionid)
+function print_dishes_for_client_report($items,$sectionid,$forwho)
 {
 $output = Array();
 $output['sum'] = 0;
@@ -139,11 +139,22 @@ $class =  '';
 					$output['print'] = @$output['print'].'<tr'.$class.'>
 							<td>'.$items[$i]["cnt"].'</td>
 							<td><span id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
-							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
-							<td>'.$items[$i]["price"].'</td>
-							<td><span id="dish_num'.$items[$i]["id"].'">'.$items[$i]["num"].'</span></td>
-							<td><span id="dish_cost'.$items[$i]["id"].'">'.($items[$i]["num"] * $items[$i]["price"]).'</span></td>
-							</tr>';
+							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>';
+							if($forwho <> "food" && $forwho <> "drink") 
+							{
+								$output['print'] = @$output['print'].'<td>'.$items[$i]["price"].'</td>';
+							}
+							$output['print'] = @$output['print'].'<td><span id="dish_num'.$items[$i]["id"].'">'.$items[$i]["num"].'</span></td>';
+							if($forwho <> "client") 
+							{
+								$output['print'] = @$output['print'].'<td>'.$items[$i]["note	"].'</td>';
+							}
+							if($forwho <> "food" && $forwho <> "drink") 
+							{
+								$output['print'] = @$output['print'].'<td><span id="dish_cost'.$items[$i]["id"].'">'.($items[$i]["num"] * $items[$i]["price"]).'</span></td>';
+							}
+							
+							$output['print'] = @$output['print'].'</tr>';
 				}							
 		}
 	}
@@ -399,12 +410,18 @@ $menuid = substr($menuid,1);
 }
 
 
-function report_client($forwho,$zid)
+function report_client($forwho,$orderid)
 {
 $cs1 = 2;
+$cs2 = 5;
+if($forwho == "client") 
+{
 $cs2 = 4;
-
-
+}
+if($forwho == "food" || $forwho == "drink") 
+{
+$cs2 = 3;
+}
 $cols_out = '';
 
 $head_out = '';
@@ -412,11 +429,11 @@ $head_out = '';
 
 $tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, o.hallid, o.guestcount, h.name hallname
 		 FROM orders o, users u, clients c, hall h
-		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id AND o.hallid = h.id";
+		 WHERE o.id = ".$orderid." AND  o.creatorid = u.id AND o.clientid = c.id AND o.hallid = h.id";
 		 
 $tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, o.hallid, o.guestcount, o.type, o.comment
 		 FROM orders o, users u, clients c
-		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id";
+		 WHERE o.id = ".$orderid." AND  o.creatorid = u.id AND o.clientid = c.id";
 		 
 
 $rezult = mysql_query($tsql);
@@ -452,7 +469,6 @@ $rows = mysql_fetch_array($rezult);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['email'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по мероприятию</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -482,15 +498,24 @@ $rows = mysql_fetch_array($rezult);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['type'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
+if($forwho <> "client") 
+{
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">Комментарий по размещению</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['comment'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr ">'.chr(10);			
+		$body_out = $body_out.'<tr >'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по меню</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
-
+		
+		
+} else
+{
+		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по меню</th>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+}
 
 
 
@@ -501,11 +526,24 @@ $body_out = $body_out.'
 <tr>
 <th  width="5" class="report_columns_head">№</th>
 <th  width="230" class="report_columns_head">Наименование блюда</th>
-<th  width="40" class="report_columns_head">Вес</th>
-<th  width="40" class="report_columns_head">Цена</th>
-<th  width="40" class="report_columns_head">Количество</th>
-<th  width="40" class="report_columns_head">Стоимость</th>
-</tr>
+<th  width="40" class="report_columns_head">Вес</th>';
+if($forwho <> "food" && $forwho <> "drink") 
+{
+$body_out = $body_out.'<th  width="40" class="report_columns_head">Цена</th>';
+}
+
+$body_out = $body_out.'<th  width="40" class="report_columns_head">Количество</th>';
+
+if($forwho <> "client") 
+{
+$body_out = $body_out.'<th  width="40" class="report_columns_head">Комментарий</th>';
+}
+
+if($forwho <> "food" && $forwho <> "drink") 
+{
+$body_out = $body_out.'<th  width="40" class="report_columns_head">Стоимость</th>';
+}
+$body_out = $body_out.'</tr>
 </tbody>';
 
 
@@ -520,9 +558,7 @@ $body_out = $body_out.'
 
 	while ($rows0 = mysql_fetch_array($rezult0)) {
 	
-	
-
-	$zzz = dishes_in_section_by_order($zid,$rows0['id'],@$cntdish);
+	$zzz = dishes_in_section_by_order($orderid,$rows0['id'],@$cntdish);
 	$sections[$rows0['id']]['id'] = '_'.$rows0['id']; //непонял почему но без _ не работает
 	
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
@@ -544,7 +580,7 @@ $body_out = $body_out.'
 		while ($rows_1 = mysql_fetch_array($rezult_1)) {
 
 
-	$zzz = dishes_in_section_by_order($zid,$rows_1['id'],$cntdish);
+	$zzz = dishes_in_section_by_order($orderid,$rows_1['id'],$cntdish);
 	$sections[$rows0['id']]['sum'] = @$sections[$rows0['id']]['sum'] + @$zzz['sum'];
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] ++;
@@ -569,7 +605,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']]['dishes'];
 	while ($rows_2 = mysql_fetch_array($rezult_2)) {
 	
 
-	$zzz = dishes_in_section_by_order($zid,$rows_2['id'],$cntdish);
+	$zzz = dishes_in_section_by_order($orderid,$rows_2['id'],$cntdish);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['sum'] = @$sections[$rows0['id']]['sum'] + @$zzz['sum'];
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
@@ -609,7 +645,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 
 			if ($sections[$num]['items']['count'] > 0)
 			{
-				$out = print_dishes_for_client_report($sections[$num]['items'], $sections[$num]['id'] );
+				$out = print_dishes_for_client_report($sections[$num]['items'], $sections[$num]['id'], $forwho);
 				$body_out = $body_out.$out['print'];
 			}
 			
@@ -635,7 +671,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 					
 					
 					
-						$out = print_dishes_for_client_report($val[$num1]['items'],$val[$num1]['id']);
+						$out = print_dishes_for_client_report($val[$num1]['items'],$val[$num1]['id'],$forwho);
 						$body_out = $body_out.$out['print'];
 }
 
@@ -655,7 +691,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 													
 								if ($val1[$num2]['items']['count'] > 0)
 								{
-									$out = print_dishes_for_client_report($val1[$num2]['items'],$val1[$num2]['id']);
+									$out = print_dishes_for_client_report($val1[$num2]['items'],$val1[$num2]['id'],$forwho);
 									$body_out = $body_out.$out['print'];
 								}
 
@@ -672,6 +708,11 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 	}
 	
 	//конец цикла
+	
+	
+if($forwho <> "food" && $forwho <> "drink") 
+{
+
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по услугам</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -683,7 +724,14 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 <th class="report_columns_head">Наименование Услуги</th>
 <th class="report_columns_head">Скидка</th>
 <th class="report_columns_head">Цена</th>
-<th class="report_columns_head">Количество</th>
+<th class="report_columns_head">Количество</th>';
+
+if($forwho <> "client") 
+{
+$body_out = $body_out.'<th  width="40" class="report_columns_head">Комментарий</th>';
+}
+
+$body_out = $body_out.'
 <th class="report_columns_head">Стоимость</th>
 </tr>
 </tbody>';
@@ -699,7 +747,7 @@ $service_discont = 0;
 $food_sum = $sum[0] ;
 $drink_sum = $sum[1];
 
-		$tsql011 = "SELECT s.id, s.name,    so.price ,  so.discont , so.num, so.comment FROM services s,  services_in_orders so  WHERE  so.orderid=".$zid." AND so.serviceid = s.id   ;";
+		$tsql011 = "SELECT s.id, s.name,    so.price ,  so.discont , so.num, so.comment FROM services s,  services_in_orders so  WHERE  so.orderid=".$orderid." AND so.serviceid = s.id   ;";
 		$rezult011 = mysql_query($tsql011);
 
 		if (mysql_num_rows($rezult011) > 0) 
@@ -754,8 +802,14 @@ $drink_sum = $sum[1];
 							<td>'.$rows011["name"].'</td>
 							<td>'.$rows011["discont"].'%</td>
 							<td>'.$rows011["price"].'</td>
-							<td>'.$rows011["num"].'</td>
-							<td>'.($rows011["num"] * $rows011["price"] * (1-$rows011["discont"]/100)).'</td></tr>';					
+							<td>'.$rows011["num"].'</td>';
+							
+							if($forwho <> "client") 
+							{
+								$body_out = $body_out.'<td>'.$rows011["comment"].'</td>';
+							}
+							
+							$body_out = $body_out.'<td>'.($rows011["num"] * $rows011["price"] * (1-$rows011["discont"]/100)).'</td></tr>';					
 
 				}
 			}
@@ -856,7 +910,7 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'</tr>'.chr(10);
 
 	
-	$select = "SELECT sum(summa * ((ispayout * -2) +1)) AS total FROM `payments_in_orders` WHERE `orderid` = '".$zid."';";
+	$select = "SELECT sum(summa * ((ispayout * -2) +1)) AS total FROM `payments_in_orders` WHERE `orderid` = '".$orderid."';";
 	
 	$rezult = mysql_query($select);
 	$rows = mysql_fetch_assoc($rezult);
@@ -871,7 +925,7 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - 1).'" class="report_section">ЗАДОЛЖЕННОСТЬ:</th>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1"  class="report_section">'.($summary - $rows['total']).'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
-
+}
 		$style = '<style>
 
 
@@ -1139,22 +1193,22 @@ $table = '<table id="report_client_param" class="simple-little-table">'.chr(10).
 
 $button1 = '<form action="_pdf.php" method="POST">
 			<button class = "btn btn-primary" type="submit"  title="Скачать отчет по заказу в pdf">.pdf</button>
-			<input type="hidden" name="number" value="'.$zid.'">
-			<textarea name="pdf" id="'.$zid.'"  cols="0" rows="0" style="display:none;">
+			<input type="hidden" name="number" value="'.$orderid.'">
+			<textarea name="pdf" id="'.$orderid.'"  cols="0" rows="0" style="display:none;">
 			'.$html1.$header.$title.$style.$table.$html2.'
 			</textarea>
 			</form>';
 
 $button2 = '<form action="_print.php" method="POST" target="_blank">
 			<button class = "btn btn-primary" type="submit"  title="Вывести отчет по заказу на принтер"><span class="glyphicon glyphicon-print"></span></button>
-			<textarea name="print" id="'.$zid.'"  cols="0" rows="0" style="display:none;">
+			<textarea name="print" id="'.$orderid.'"  cols="0" rows="0" style="display:none;">
 			'.$header.$title.$style.$table.$footer.'
 			</textarea>
 			</form>';
 		
 $button3 = '<form action="#" method="POST" >
 			<button name="sendemail" onclick="openemail();" class = "btn btn-primary" type="button"  title="Отправить отчет по заказу клиенту"><span class="glyphicon glyphicon-envelope"></span></button>
-			<textarea name="emailhtml" id="emailhtml" orderid="'.$zid.'"  cols="0" rows="0" style="display:none;">
+			<textarea name="emailhtml" id="emailhtml" orderid="'.$orderid.'"  cols="0" rows="0" style="display:none;">
 			'.$html1.$header.$title.$style.$table.$html2.'
 			</textarea>
 			</form>';

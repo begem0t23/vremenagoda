@@ -257,7 +257,7 @@ function newpay()
 $(function(){
 
 
- get_report();
+
 
    
 $('#newpaydate').datepicker({ maxDate: "+0D" });
@@ -357,6 +357,9 @@ $(".report_client2")
 }; 
  
    $("#myForm").ajaxForm(options); 
+
+
+ get_report();
 });
 
 
@@ -443,7 +446,8 @@ dialog.dialog('open');
 	function get_report()
 	{
 	
-		forwho = $("#report_show :selected").val();
+		forwho = $("#show_report :selected").val();
+
 		orderid = $("#newpayment").attr('orderid');
 				$.ajax({
 			type: "POST",
