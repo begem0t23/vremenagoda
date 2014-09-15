@@ -75,6 +75,8 @@
 
 fixednavbar();
 
+if ($_SESSION["curuserrole"]>=5) {
+
 ?>
 
     <!-- Begin page content -->
@@ -121,7 +123,7 @@ if ($q[1]>0)
 		echo '<div style="max-width: 400px"><form id=frm1 role="form" data-toggle="validator">';
 		echo '<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
 		echo '<input type="text" readonly id=clientname value="'.htmlspecialchars($row["name"]).'" class="form-control">';						
-		echo '<input type="hidden" id=clientid value="'.$row["id"].'">';						
+		echo '<input type="hidden" id=editclientid value="'.$row["id"].'">';						
 		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-phone-alt"></span></span>';
 		echo '<input type="text" id=clientphone value="'.htmlspecialchars($row["phone"]).'" class="form-control" placeholder="Телефон">';
 		echo '</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>';
@@ -588,17 +590,20 @@ else
 		$r_service_in_order = mysql_query("SELECT * FROM `services_in_orders` so where so.orderid=" . $q[1]);
 		while ($row_service_in_order = mysql_fetch_array($r_service_in_order))
 		{
-			$service_in_order[$row_service_in_order["id"]] = array("serviceid"=>$row_service_in_order["serviceid"],
+			$service_in_order[$row_service_in_order["serviceid"]] = array("serviceid"=>$row_service_in_order["serviceid"],
+			"id"=>$row_service_in_order["id"],
 			"price"=>$row_service_in_order["price"], 
-			"discont"=>$row_dish_in_order["discont"],
+			"discont"=>$row_service_in_order["discont"],
 			"num"=>$row_service_in_order["num"],"comment"=>$row_service_in_order["comment"]);
 		}
-
+		//var_dump($service_in_order);
 		while ($row_serv = mysql_fetch_array($r_serv))
 		{
 			if ($service_in_order[$row_serv["id"]])
 			{
+				//echo $row_serv["id"].",";
 				$item = $service_in_order[$row_serv["id"]];
+				//var_dump($item);
 				$butname = "Удалить";
 				$btnclass = 'btn-primary';
 				$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["num"].'">';
@@ -612,7 +617,7 @@ else
 					$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="hidden" size="5" value="0">';
 					$discont = '';
 					$tocalc = 'tocalc="1"';
-					$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($item["price"],0,'','').'">';
+					$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["discont"].'">';
 					$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
 					$tocalcrowclass = 'tocalcrow';
 				}
@@ -639,7 +644,7 @@ else
 				$price='<input  '.$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="hidden" size="5" value="0">';
 				$discont = '';
 					$tocalc = 'tocalc="1"';
-					$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($row_serv["price"],0,'','').'">';
+					$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["discont"].'">';
 					$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
 					$tocalcrowclass = 'tocalcrow';
 				}
@@ -871,7 +876,7 @@ else
 					//alert($("#clientsearch").val());
 					
 					$.removeCookie("clientname");
-					$.removeCookie("clientid");
+					$.removeCookie("editclientid");
 					$.removeCookie("clientfrom");
 					$.removeCookie("clientfrom4");
 					$.removeCookie("clientphone");
@@ -896,7 +901,7 @@ else
 			{
 				//alert($("#clientid").val());
 				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
-				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
+				$.cookie("editclientid", $("body #editclientid").val(),{ expires: 1, path: '/' });
 				if ($("body #clientfrom").val()!="Укажите откуда пришел")
 				{
 					$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
@@ -925,7 +930,7 @@ else
 				if (typeof $.cookie("clientname") != 'undefined')
 				{
 					
-					$("body #clientid").val($.cookie("clientid"));
+					$("body #editclientid").val($.cookie("editclientid"));
 					$("body #clientfrom").val($.cookie("clientfrom"));
 					$("body #clientfrom4").val($.cookie("clientfrom4"));
 					$("body #clientphone").val($.cookie("clientphone"));
@@ -1010,7 +1015,7 @@ else
 				var additional_pars = new Object();
 				additional_pars["cn"] = $.cookie("clientname");
 				//alert($("#clientid").val());
-				additional_pars["ci"] = $.cookie("clientid");
+				additional_pars["ec"] = $.cookie("editclientid");
 				additional_pars["cp"] = $.cookie("clientphone");
 				additional_pars["ce"] = $.cookie("clientemail");
 				additional_pars["de"] = $.cookie("dateevent");
@@ -1650,7 +1655,7 @@ else
 				
 						var additional_pars = new Object();
 						additional_pars["cn"] = $.cookie("clientname");
-						additional_pars["ci"] = $.cookie("clientid");
+						additional_pars["ec"] = $.cookie("editclientid");
 						additional_pars["cp"] = $.cookie("clientphone");
 						additional_pars["cf"] = $.cookie("clientfrom");
 						additional_pars["cf4"] = $.cookie("clientfrom4");
@@ -1666,6 +1671,7 @@ else
 						additional_pars["aa"] = $("#avans").val();
 						additional_pars["tp"] = $("#type").val();
 						additional_pars["cm"] = $("#comment").val();
+						additional_pars["oi"] = $q[1];
 						additional_pars["rand"] = "<?php echo rand(); ?>";
 						$.post("_dosaveorder.php", additional_pars,
 						function(){
@@ -1679,7 +1685,7 @@ else
 							{
 								var nn = noty({text: 'Сохранено, номер заказа ' + data[1], type: 'information', timeout:5000, callback: {afterClose: function() {location.href="?view_zakazid="+data[1];}}, onClick: function(){delete nn;}});							
 								$.removeCookie("clientname");
-								$.removeCookie("clientid");
+								$.removeCookie("editclientid");
 								$.removeCookie("clientfrom");
 								$.removeCookie("clientfrom4");
 								$.removeCookie("clientphone");
@@ -1732,5 +1738,17 @@ else
 		}
 		
 	</script>
+<?php
+	}else
+	{
+?>
+    <div class="container">
+      <div class="page-header">
+        <h3>Для редактирования заказа необходимо мимнимум права менеджера</h3>
+      </div>
+	</div>
+<?php	
+	}
+?>
   </body>
 </html>
