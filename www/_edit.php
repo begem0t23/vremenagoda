@@ -1,6 +1,22 @@
 <?php
 //error_reporting(E_ALL);
 //ini_set("display_errors", 1);
+
+	setCookie("clientname", null, -1);
+	setCookie("clientid", null, -1);
+	setCookie("clientphone", null, -1);
+	setCookie("clientfrom", null, -1);
+	setCookie("clientfrom4", null, -1);
+	setCookie("clientemail", null, -1);
+	setCookie("dateevent", null, -1);
+	setCookie("timeevent", null, -1);
+	setCookie("guestcount", null, -1);
+	setCookie("hall", null, -1);
+	setCookie("dishes", null, -1);
+	setCookie("service", null, -1);
+	setCookie("tables", null, -1);
+	setCookie("editclientid", null, -1);
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -95,7 +111,7 @@ if ($_SESSION["curuserrole"]>=5) {
 		  <li id=pageright><a href="#">&raquo;</a></li>
 		</ul>
 
-
+			<input type=hidden id=timestart value="">
 
 			<div id=createform style="width: 100%;">
 		
@@ -606,6 +622,7 @@ else
 				//var_dump($item);
 				$butname = "Удалить";
 				$btnclass = 'btn-primary';
+				$comment = $item["comment"];
 				$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["num"].'">';
 				$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["discont"].'" name="discontserv">';
 				$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$item["price"].'">';
@@ -637,7 +654,7 @@ else
 				$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
 				$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
 				$tocalcrowclass = "";
-		
+				$comment = "";
 				$tocalc = 'tocalc=""';
 				if ($row_serv["tocalculate"] == '1') 
 				{
@@ -671,7 +688,7 @@ else
 			<td class = "'.$tocalcrowclass.'">
 			'.$discont.'
 			</td>
-			<td class = "'.$tocalcrowclass.'"><input name="commentserv" id="commentserv'.$row_serv["id"].'" type="text" size="20"></td>
+			<td class = "'.$tocalcrowclass.'"><input name="commentserv" id="commentserv'.$row_serv["id"].'" value="'.htmlspecialchars($comment).'" type="text" size="20"></td>
 			<td class = "'.$tocalcrowclass.'"><button '.$tocalc.' class = "btn '.$btnclass.' " type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">'.$butname.'</button></td>';		
 			echo '</tr>';
 		}
@@ -1108,7 +1125,7 @@ else
 			doloadcreateform();
 			get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
 			//erasevaluesincookie();
-			
+			$("#timestart").val($.now()/1000);			
 			$('#tabs').smartTab({selected: 0});		
 
 			setcountguestfields();
