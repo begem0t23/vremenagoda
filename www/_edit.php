@@ -694,7 +694,7 @@ else
 			<td class = "'.$tocalcrowclass.'">
 			'.$discont.'
 			</td>
-			<td class = "'.$tocalcrowclass.'"><input name="commentserv" id="commentserv'.$row_serv["id"].'" value="'.htmlspecialchars($comment).'" type="text" size="20"></td>
+			<td class = "'.$tocalcrowclass.'"><input name="commentserv" id="commentserv'.$row_serv["id"].'" value="'.$comment.'" type="text" size="20"></td>
 			<td class = "'.$tocalcrowclass.'"><button '.$tocalc.' class = "btn '.$btnclass.' " type="button" name="addserv" id="addserv'.$row_serv["id"].'" title="Добавть услугу к заказу">'.$butname.'</button></td>';		
 			echo '</tr>';
 		}
@@ -1078,8 +1078,8 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					if(alladd > 0) 
 					{
 						alert("Остались недобавленные позиции: " + alladd);
-				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
-						return false;
+						$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
+						//return false;
 					} 
 			});
 			
@@ -1463,9 +1463,12 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					$("#priceserv"+id).attr("readonly","readonly");
 					$("#quantserv"+id).attr("readonly","readonly");
 					$("#discontserv"+id).attr("readonly","readonly");
-					if (bgs == 1)
+					if (typeof bgs != 'undefined')
 					{
-										$("#discontserv"+id).attr("disabled","disabled");
+						if (bgs == 1)
+						{
+							$("#discontserv"+id).attr("disabled","disabled");
+						}
 					}
 					$("#commentserv"+id).attr("readonly","readonly");
 										
@@ -1603,8 +1606,9 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 			if(alladd > 0) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
-			} else
-			{
+			} 
+			//else
+			//{
 		
 			
 			setvaluesincookie();
@@ -1627,7 +1631,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 				}
 			}	
 			doloadcreateform();
-			}
+			//}
 		});
 		
 		
