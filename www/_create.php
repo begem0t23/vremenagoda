@@ -1597,7 +1597,7 @@ fixednavbar();
 					
 					tables = $.toJSON(taball);
 					$.cookie("tables", tables,{ expires: 1, path: '/' });
-alert($.cookie("tables"));
+
 				
 			} else 
 			{
