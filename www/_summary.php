@@ -346,26 +346,24 @@ $drink_sum = $sum[1];
 			{	
 			$show = 1;
 			
-			//if($rows011["id"] == 8)
-			//{
-			//	$probka = $rows['guestcount'] * $rows011["price"];
-			//	$show =0;		
-			//}
 			if($rows011["id"] == 9)
 			{
 				$food_discont = ($food_sum * $ss["discont"])/100;
 				$show =0;		
+				$food_discont_comment = $ss["comment"];
 			}
 			if($rows011["id"] == 10)
 			{
 				$drink_discont = ($drink_sum * $ss["discont"])/100;
 				$show =0;		
+				$drink_discont_comment = $ss["comment"];
 			}
 			if($rows011["id"] == 12)
 			{
 				$teapay = ($food_sum + $drink_sum)/$ss["discont"];
 				$teapayproc = ' ('.round($ss["discont"],0).'%)';
 				$show =0;		
+				$teapay_comment = $ss["comment"];
 			}
 			
 			if ($show == 1)
@@ -415,7 +413,7 @@ $drink_sum = $sum[1];
 					}
 
 
-$summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $service_sum - $service_discont + $probka;
+$summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $service_sum - $service_discont ;
 
 //////////////////////////////////
 		$body_out = $body_out.'<tr>'.chr(10);			
@@ -429,6 +427,7 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая Скидка по блюдам</td>'.chr(10);
+			$body_out = $body_out.'<td  colspan="1">'.$food_discont_comment.'</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$food_discont.$fooddiscproc.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
@@ -443,7 +442,8 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'</tr>'.chr(10);
 		
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая Скидка по напиткам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Общая Скидка по напиткам</td>'.chr(10);
+			$body_out = $body_out.'<td  colspan="1">'.$drink_discont_comment.'</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$drink_discont.$drinkdiscproc.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 		
@@ -470,6 +470,7 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Наценка за обслуживание</td>'.chr(10);
+			$body_out = $body_out.'<td  colspan="1">'.$teapay_comment.'</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$teapay.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 

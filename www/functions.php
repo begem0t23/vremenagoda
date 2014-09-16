@@ -97,81 +97,13 @@ echo $ech;
 
 if ($_POST['operation'] == 'gethall') 
 {
-$ech = "";
+header('Content-Type: text/html; charset=utf-8');
 $hallid = $_POST['hallid'];
 $dateevent = $_POST['dateevent'];
 $place = $_POST['place'];
 $orderid = $_POST['orderid'];
 
-	if($place == 'order')
-	{
-		checktablesondate($dateevent,$hallid);
-	}
-	
-		header('Content-Type: text/html; charset=utf-8');
-
-		$tsql2 = "SELECT h.*, hx.childhall FROM `hall` AS h LEFT JOIN `halls_expansion` AS hx ON h.id = hx.parenthall  WHERE `id` = '".$hallid."';";
-			$rez_tab = mysql_query($tsql2);
-			//$ech .= mysql_error(); 
-			if (mysql_num_rows($rez_tab)>0)
-			{
-				$row_tab = mysql_fetch_array($rez_tab);
-		
-		
-		if($place == 'order' || $place == 'report' || $place == 'editor')
-		{
-	
-			if ($row_tab['childhall']){
-			
-			if($place == 'order')
-			{				
-				checktablesondate($dateevent,$row_tab['childhall']);
-			}
-				$tsql3 = "SELECT * FROM `hall`   WHERE `id` = '".$row_tab['childhall']."';";
-				$rez_tab3 = mysql_query($tsql3);
-				//$ech .= mysql_error(); 
-				if (mysql_num_rows($rez_tab3)>0)
-				{
-					$row_tab3 = mysql_fetch_array($rez_tab3);
-					
-					//$pr = gettablesondate($row_tab['childhall'],$dateevent,$place);
-					
-					$ech3 = $ech3.'<h4>Дополнительно: '.$row_tab3['name'].'</h4>';
-					$ech3 = $ech3.'<div  id="childhall" hallid="'.$row_tab['childhall'].'" dateevent="'.$dateevent.'" place="'.$place.'">';
-					
-					//$ech3.= '<div class="newtable table1" tabid="0" typeid="2"  place="'.$place.'"  hallid="'.$row_tab['childhall'].'"  dateevent="'.$dateevent.'">Стол</div>';
-					//$ech3.=  '<div class="newtable table0" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$row_tab['childhall'].'"  dateevent="'.$dateevent.'">Стол</div>';
-					//$ech+='<div class="newchiar" tabid="0" >стул</div>';
-					//$ech3.= '<br><div class="title"><h4>Количество столов: '.$pr['tabquant'].'.</h4></div>';
-					
-					//$ech3 = $ech3.$pr['tables'];
-					$ech3 = $ech3.'</div>';
-				}
-			}	
-			}
-		}	
-
-
-		$pr = gettablesondate($hallid,$dateevent,$place,$orderid);
-		$ech1 = $ech1.$pr['tables'];
-
-	if($place == 'order')
-	{
- 			$ech2.= '<div class="newtable table1" tabid="0" typeid="2"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
- 			$ech2.=  '<div class="newtable table0" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
-			//$ech+='<div class="newchiar" tabid="0" >стул</div>';
-	}
-	$tabsinorder='';
-	if(place=='report') $tabsinorder=' В заказе столов: '.$pr['tabsinorder'];
-	$ech2.= '<br><div class="title"><h4>Всего столов: '.$pr['tabquant'].$tabsinorder.'.</h4></div>';
-	if ($pr['tabsinorder'] == 0  & $place=='report') 
-	{
-		echo '<h4>Столы не забронированы</h4>';
-	}
-	else 
-	{
-	echo $ech2.$ech1.$ech4.$ech3;
-	}
+get_hall($hallid,$dateevent,$place,$orderid);
 }
 
 
@@ -194,7 +126,7 @@ $place = $_POST['place'];
 	{
 		$insert = "INSERT INTO `tables` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle`, `group`) VALUES (NULL, 'new', '0', '".$hallid."', '".$ntop."', '".$nleft."', '".$typeid."', '0','0');";
 	}
-	if($place == 'order')
+	if($place=='order' || $place=='editor')
 	{
 		$insert = "INSERT INTO `tables_on_date` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle` , `group`, `orderid`, `date`, `updatedby`) VALUES (NULL, 'new', '4', '".$hallid."', '".$ntop."', '".$nleft."', '".$typeid."', '0','0','0', '".convert_date($dateevent)."' , '".$_SESSION["curuserid"]."');";
 	}
@@ -218,7 +150,7 @@ $place = $_POST['place'];
 	{
 		$table = 'tables';
 	}
-	if($place == 'order')
+	if($place=='order' || $place=='editor')
 	{
 		$table = 'tables_on_date';
 	}		
@@ -344,7 +276,7 @@ $place = $_POST['place'];
 	{
 		$table = 'tables';
 	}
-	if($place == 'order')
+	if($place=='order' || $place=='editor')
 	{
 		$table = 'tables_on_date';
 	}
@@ -367,7 +299,7 @@ $place = $_POST['place'];
 	{
 		$table = 'tables';
 	}
-	if($place == 'order')
+	if($place=='order' || $place=='editor')
 	{
 		$table = 'tables_on_date';
 	}
@@ -394,7 +326,7 @@ $place = $_POST['place'];
 	{
 		$table = 'tables';
 	}
-	if($place == 'order')
+	if($place=='order' || $place=='editor')
 	{
 		$table = 'tables_on_date';
 	}

@@ -26,7 +26,7 @@
 				if(msg == 'yes'){
 	
 				if(place=='halleditor') get_hall(hallid);
-				if(place=='order') get_selected_hall(hallid,dateevent,place,destination);
+				if(place=='order' || place=='editor') get_selected_hall(hallid,dateevent,place,destination);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -45,7 +45,7 @@
 			.done(function( msg ) {
 				if(msg == 'yes'){
 				if(place=='halleditor') get_hall(hallid);
-				if(place=='order') get_selected_hall(hallid,dateevent,place,destination);
+				if(place=='order' || place=='editor') get_selected_hall(hallid,dateevent,place,destination);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -62,7 +62,7 @@
 			.done(function( msg ) {
 				if(msg == 'yes'){
 				if(place=='halleditor') get_hall(hallid);
-				if(place=='order') get_selected_hall(hallid,dateevent,place,destination);
+				if(place=='order' || place=='editor') get_selected_hall(hallid,dateevent,place,destination);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -100,7 +100,7 @@
 			.done(function( msg ) {
 				if(msg == 'yes'){
 				if(place=='halleditor') get_hall(hallid);
-				if(place=='order') get_selected_hall(hallid,dateevent,place,destination);
+				if(place=='order' || place=='editor') get_selected_hall(hallid,dateevent,place,destination);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -140,7 +140,7 @@
 			.done(function( msg ) {
 				if(msg == 'yes'){
 				if(place=='halleditor') get_hall(hallid);
-				if(place=='order') get_selected_hall(hallid,dateevent,place,destination);
+				if(place=='order' || place=='editor') get_selected_hall(hallid,dateevent,place,destination);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -476,7 +476,101 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 		
 				$("#"+destination+" ").html(msg);//закачали хтмл
 				
-				//расстановка столов по координатам
+			tables_func(hallid,place,dateevent,destination);
+				
+			if(destination == 'selectedhall')
+			{
+				childhallid = $("#childhall").attr('hallid');
+					
+				if(childhallid > 0)
+				{
+					get_selected_hall(childhallid,dateevent,place,'childhall',orderid);
+				}
+			
+			}	
+
+
+			});
+			
+
+		}
+		
+
+        function rotate(id,degree) {
+	
+            $("#"+id).css({
+                        '-webkit-transform': 'rotate(' + degree + 'deg)',
+                        '-moz-transform': 'rotate(' + degree + 'deg)',
+                        '-ms-transform': 'rotate(' + degree + 'deg)',
+                        '-o-transform': 'rotate(' + degree + 'deg)',
+                        'transform': 'rotate(' + degree + 'deg)',
+                        'zoom': 1
+            }, 500);
+
+        }
+
+		function childhallselect()
+		{
+		hallid = $("#childhall").attr('hallid');
+		dateevent = $("#childhall").attr('dateevent');
+		place = $("#childhall").attr('place');
+		get_selected_hall(hallid,dateevent,place,'childhall')
+		}
+
+
+		function checkhallselect(hallid)
+		{
+			
+			selectedtables = $("#selectedhall .primary").length + $("#childhall .primary").length;
+		
+			if(selectedtables > 0)
+			{			
+				$("#hall").attr("disabled","disabled");
+				$("#dateevent").attr("disabled","disabled");
+			} 
+			
+			
+			if(selectedtables == 0)
+			{			
+				$("#hall").removeAttr("disabled");
+				$("#dateevent").removeAttr("disabled");
+			} 
+
+			
+		}
+
+
+		function activatehall()
+		{
+			edate1 = $("#dateevent").val() == "__.__.____";
+			edate2 = $("#dateevent").val() == "";
+			eguest = $("#guestcount").val() == "";
+
+			$("input .byguestcount").val($("#guestcount").val()) ;
+
+			if( !edate1  & !edate2 & !eguest  )
+			{
+				$("#hall").removeAttr("disabled");
+				$("#hall option[value=0]").text("Выберите зал");
+				
+				if($("#hall").val() > 0)
+				{
+					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
+				}
+			}else
+			{
+				$("#hall option[value=0]").attr('selected','selected');
+				$("#hall").attr("disabled","disabled");
+				$("#hall option[value=0]").text("Укажите дату и количество гостей");
+
+			}
+		}
+				
+				
+				
+				function tables_func(hallid,place,dateevent,destination)
+				{
+								//расстановка столов по координатам
 				$("#"+destination+" .table").each(function()
 				{
 					ntop = parseInt($(this).attr('top'));
@@ -605,92 +699,4 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 				});
 				
 				}
-				
-			if(destination == 'selectedhall')
-			{
-				childhallid = $("#childhall").attr('hallid');
-					
-				if(childhallid > 0)
-				{
-					get_selected_hall(childhallid,dateevent,place,'childhall',orderid);
 				}
-			
-			}	
-
-
-			});
-			
-
-		}
-		
-
-        function rotate(id,degree) {
-	
-            $("#"+id).css({
-                        '-webkit-transform': 'rotate(' + degree + 'deg)',
-                        '-moz-transform': 'rotate(' + degree + 'deg)',
-                        '-ms-transform': 'rotate(' + degree + 'deg)',
-                        '-o-transform': 'rotate(' + degree + 'deg)',
-                        'transform': 'rotate(' + degree + 'deg)',
-                        'zoom': 1
-            }, 500);
-
-        }
-
-		function childhallselect()
-		{
-		hallid = $("#childhall").attr('hallid');
-		dateevent = $("#childhall").attr('dateevent');
-		place = $("#childhall").attr('place');
-		get_selected_hall(hallid,dateevent,place,'childhall')
-		}
-
-
-		function checkhallselect(hallid)
-		{
-			
-			selectedtables = $("#selectedhall .primary").length + $("#childhall .primary").length;
-		
-			if(selectedtables > 0)
-			{			
-				$("#hall").attr("disabled","disabled");
-				$("#dateevent").attr("disabled","disabled");
-			} 
-			
-			
-			if(selectedtables == 0)
-			{			
-				$("#hall").removeAttr("disabled");
-				$("#dateevent").removeAttr("disabled");
-			} 
-
-			
-		}
-
-
-		function activatehall()
-		{
-			edate1 = $("#dateevent").val() == "__.__.____";
-			edate2 = $("#dateevent").val() == "";
-			eguest = $("#guestcount").val() == "";
-
-			$("input .byguestcount").val($("#guestcount").val()) ;
-
-			if( !edate1  & !edate2 & !eguest  )
-			{
-				$("#hall").removeAttr("disabled");
-				$("#hall option[value=0]").text("Выберите зал");
-				
-				if($("#hall").val() > 0)
-				{
-					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
-				}
-			}else
-			{
-				$("#hall option[value=0]").attr('selected','selected');
-				$("#hall").attr("disabled","disabled");
-				$("#hall option[value=0]").text("Укажите дату и количество гостей");
-
-			}
-		}
-				

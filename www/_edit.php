@@ -194,7 +194,11 @@ if ($q[1]>0)
 			echo  '</select>' . "";
 		}
 		echo '</div><br>';
-		echo '<br><div  id="selectedhall"></div>';
+		echo '<br><div  id="selectedhall">';
+
+		//get_hall($row_order["hallid"],$row_order["ed"],'editor',$q[1]);
+		
+		echo '</div>';
 		
 		echo '<br><div class="input-group  topbutton"><button  class="btn btn-primary"  onClick="shownextstep()" type="button">Далее</button></div>';
 	}
@@ -909,12 +913,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					$("body #hall").val($.cookie("hall"));
 
 	
-				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
-					{	
-						$("body #hall").removeAttr("disabled");
-						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'editor','selectedhall','<?php echo $q[1];?>');
 					}
-				}
 				
 				
 			}
@@ -1109,7 +1108,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 			dosetrightpaginator();
 			//aler(2);
 			doloadcreateform();
-			get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
+			get_selected_hall($("#hall").val(),$("#dateevent").val(),'editor','selectedhall','<?php echo $q[1];?>');
 			//erasevaluesincookie();
 			$("#timestart").val($.now()/1000);			
 			$('#tabs').smartTab({selected: 0});		
@@ -1163,7 +1162,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 							{
 								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
 							} 
-							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
+							get_selected_hall($("#hall").val(),$("#dateevent").val(),'editor','selectedhall','<?php echo $q[1];?>');
 							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
 						}
 					}
@@ -1639,6 +1638,13 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());
 			readvaluesincookie();
+			
+						if($("body #hall").val() > 0 & $("body #dateevent").val() != '' )
+					{	
+					$("body #hall").removeAttr("disabled");
+						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'editor','selectedhall','<?php echo $q[1];?>');
+					}
+
 			$("body").animate({"scrollTop":0},"slow");
 			count_dish_weight();
 			//$("#spanpage"+curpage).css("visibility","visible");
@@ -1727,7 +1733,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 				$("#hall option[value=0]").text("Выберите зал");
 				if($("#hall").val() > 0)
 				{
-					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order');
+					get_selected_hall($("#hall").val(),$("#dateevent").val(),'editor','selectedhall','<?php echo $q[1];?>');
 				}
 			}else
 			{

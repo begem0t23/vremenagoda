@@ -48,7 +48,7 @@
 			if ((curpage==1) && (typeof $("body #clientname").val() != 'undefined'))
 			{
 
-		alert(curpage+'_'+$("body #guestcount").val());
+		
 				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
 				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
 				if ($("body #clientfrom").val()!="Укажите откуда пришел")
@@ -95,7 +95,9 @@
 				$.removeCookie("guestcount");
 				$.removeCookie("hall");
 				$.removeCookie("tables");
-		
+					$.removeCookie("editclientid");
+			
+				$.cookie("editclientid", $("body #editclientid").val(),{ expires: 1, path: '/' });
 				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
 				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
 				if ($("body #clientfrom").val()!="Укажите откуда пришел")
@@ -112,14 +114,17 @@
 					var tables = "";
 					var taball = {};
 					var element = {};
-					$("body  .table.primary").each(function(){
-							tabid1 = $(this).attr("tabid");
-							tabnum1 = $(this).html();
-							element = ({tabid:tabid1, tabnum:tabnum1});
-							taball[tabid1] = element ;
-						});
-					tables = $.toJSON(taball);
-					$.cookie("tables", tables,{ expires: 1, path: '/' });
+					
+								//tables_func($("body #hall").val(),'editor',$("body #dateevent").val(),'selectedhall')
+				//	$("body  .table.primary2").each(function(){
+		//alert('dd');
+							//tabid1 = $(this).attr("tabid");
+							//tabnum1 = $(this).html();
+							//element = ({tabid:tabid1, tabnum:tabnum1});
+							//taball[tabid1] = element ;
+						//});
+					//tables = $.toJSON(taball);
+					//$.cookie("tables", tables,{ expires: 1, path: '/' });
 			
 	$.removeCookie("dishes");
 			
@@ -176,11 +181,11 @@
 	
 		if(alladd > 0) 
 			{
-				alert("Остались недобавленные позиции: " + alladd);
+				//alert("Остались недобавленные позиции: " + alladd);
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
 			} else
 			{
-			//setvaluesincookie();
+			setvaluesincookie();
 			if (curpage<5) curpage = curpage + 1;
 			$("#page"+curpage).click();
 

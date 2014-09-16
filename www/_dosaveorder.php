@@ -35,9 +35,11 @@ $tt = @$_POST["tt"];
 $ts = @$_POST["ts"];
 $tp = @$_POST["tp"];
 $cm = @$_POST["cm"];
+	$oi = @$_POST["oi"];
+	$ts = @$_POST["ts"];
+		//die("ERR:".(@$tt));
 
-//die("ERR:".strtotime(@$_POST["de"]));
-
+$status=2;
 if (@$ci)
 {
 	$tsql = "select * from clients where id=".mysql_escape_string($ci).";";
@@ -73,8 +75,9 @@ else
 			$r_client = mysql_query($tsql);
 			if (mysql_error()) die("ERR:1=" . mysql_error());
 			if ($_SESSION["curuserrole"]>=5) {
-				$oi = @$_POST["oi"];
+
 				if ($oi) {
+
 				$tsql = "update orders set eventdate=FROM_UNIXTIME('".strtotime(@$_POST["de"])."'), eventtime='".mysql_real_escape_string(@$_POST["te"])."',
 				guestcount='".mysql_real_escape_string(@$gc)."', 
 				status='".mysql_real_escape_string($status)."', 
@@ -181,15 +184,20 @@ else
 				}
 
 				$tables = json_decode($tt,true);
+
 				if($tables){
 					mysql_query("delete from tables_in_orders where orderid=".$oi);
-					foreach($tables as $i=>$tt)
+					$tsql = "UPDATE  `tables_on_date` SET `orderid` = '0' WHERE `orderid` = '".$oi."';";		
+					mysql_query($tsql);
+					foreach($tables as $i=>$tt1)
 					{
-					
-							$tsql = "insert tables_in_orders (orderid,tableid) values ('".$oi."','".$i."');";		
+
+							$tsql = "insert tables_in_orders (orderid,tableid) values ('".$oi."','".$i."');";	
+							
 							$r_order = mysql_query($tsql);			
 							if (mysql_error()) die("ERR:8=" .$tsql);			
 							$tsql = "UPDATE  `tables_on_date` SET `orderid` = '".$oi."' WHERE `id` = '".$i."';";		
+
 							$r_order = mysql_query($tsql);			
 							if (mysql_error()) die("ERR:8=" .$tsql);			
 
@@ -200,15 +208,15 @@ else
 					mysql_query("delete from tables_in_orders where orderid=".$oi);
 				}		
 				}
-			}
-		}
+	}
+		}			
 		else
 		{
 			echo "ERR:2=client not found";
 		}
 	}
 	else
-	{
+	{					
 		$tsql = "insert into clients (name,phone,email,otkuda, agencyname) 
 		values(
 		'".mysql_escape_string(@$cn)."',
@@ -256,9 +264,11 @@ if (@$ci)
 		echo "ERR:3=" . mysql_error();
 	}
 }
+
 if ($oi>0) {
 	if (@$_POST["dd"]) {
 	$dishes = json_decode($_POST["dd"],true);
+
 	foreach($dishes as $i=>$dd)
 	{
 		$tsql = "select * from dishes where id = ".mysql_escape_string($i).";";
@@ -287,6 +297,7 @@ if ($oi>0) {
 	}
 	if (@$_POST["ss"]) {
 	$services = json_decode($_POST["ss"],true);
+	
 	foreach($services as $i=>$ss)
 	{
 
@@ -329,8 +340,10 @@ if ($oi>0) {
 
 
 	$tables = json_decode($tt,true);
+			
+
 		if($tables){
-	foreach($tables as $i=>$tt)
+	foreach($tables as $i=>$tt1)
 	{
 	
 			$tsql = "insert into tables_in_orders (orderid,tableid) values ('".$oi."','".$i."');";		
