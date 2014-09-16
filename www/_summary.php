@@ -421,57 +421,57 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая стоимость по блюдам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$food_sum.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Общая стоимость по блюдам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="2">'.$food_sum.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 		
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая Скидка по блюдам</td>'.chr(10);
-			$body_out = $body_out.'<td  colspan="1">'.$food_discont_comment.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Общая Скидка по блюдам</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$food_discont.$fooddiscproc.'</td>'.chr(10);
+			$body_out = $body_out.'<td  colspan="1">'.$food_discont_comment.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -1 ).'" class="lite_summary_section">Итого по Блюдам:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="1" class="lite_summary_section">'.($food_sum - $food_discont).'</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -2 ).'" class="lite_summary_section">Итого по Блюдам:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="2" class="lite_summary_section">'.($food_sum - $food_discont).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая стоимость по напиткам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$drink_sum.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Общая стоимость по напиткам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="2">'.$drink_sum.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 		
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Общая Скидка по напиткам</td>'.chr(10);
-			$body_out = $body_out.'<td  colspan="1">'.$drink_discont_comment.'</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$drink_discont.$drinkdiscproc.'</td>'.chr(10);
+			$body_out = $body_out.'<td  colspan="1">'.$drink_discont_comment.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 		
 		
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -1 ).'" class="lite_summary_section">Итого по Напиткам:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="1" class="lite_summary_section">'.($drink_sum - $drink_discont).'</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -2 ).'" class="lite_summary_section">Итого по Напиткам:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="2" class="lite_summary_section">'.($drink_sum - $drink_discont).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая стоимость по услугам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$service_sum.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Общая стоимость по услугам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="2">'.$service_sum.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Общая скидка по услугам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$service_discont.$servdiscproc.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Общая скидка по услугам</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="2">'.$service_discont.$servdiscproc.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -1 ).'" class="lite_summary_section">Итого по Услугам:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="1" class="lite_summary_section">'.($service_sum - $service_discont).'</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -2 ).'" class="lite_summary_section">Итого по Услугам:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="2" class="lite_summary_section">'.($service_sum - $service_discont).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Наценка за обслуживание</td>'.chr(10);
-			$body_out = $body_out.'<td  colspan="1">'.$teapay_comment.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Наценка за обслуживание</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$teapay.'</td>'.chr(10);
+			$body_out = $body_out.'<td  colspan="1">'.$teapay_comment.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		//$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
@@ -480,8 +480,8 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		//$body_out = $body_out.'</tr>'.chr(10);
 		
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - 1).'"  class="summary_section">ИТОГО:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="1" class="summary_section">'.$summary.'</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - 2).'"  class="summary_section">ИТОГО:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="2" class="summary_section">'.$summary.'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$style = '<style>
