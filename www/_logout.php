@@ -20,5 +20,7 @@
 	setCookie("service", null, -1);
 	setCookie("tables", null, -1);
 	setCookie("editclientid", null, -1);
+	setCookie("eventtype", null, -1);
+	setCookie("eventcomment", null, -1);
 
 ?>

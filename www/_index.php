@@ -152,10 +152,9 @@ fixednavbar();
 	<div class="input-group">
 <span class="input-group-addon  nav-title"><span >Отчет</span></span>
 <select id="show_report" onchange="get_report();"  class="form-control nav-element" >
-<option  value="client" selected="selected">Для Клиента</option>
-<option value="full">Полный (скоро будет)</option>
-<option  value="food">Для Кухни (скоро будет)</option>
-<option  value="drink">Для Бара (скоро будет)</option>
+<option value="full"  selected="selected">Полный</option>
+<option  value="client">Для Клиента</option>
+<option  value="food">Для Кухни и Бара</option>
 </select>
 </div>
 <br>

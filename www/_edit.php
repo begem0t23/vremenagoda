@@ -16,6 +16,8 @@
 	setCookie("service", null, -1);
 	setCookie("tables", null, -1);
 	setCookie("editclientid", null, -1);
+	setCookie("eventtype", null, -1);
+	setCookie("eventcomment", null, -1);
 
 ?>
 <!DOCTYPE html>
@@ -99,7 +101,7 @@ if ($_SESSION["curuserrole"]>=5) {
 	<a id="toTop" href="#"></a>
     <div class="container">
       <div class="page-header">
-        <h3>Редактирование заказа</h3>
+        <h3>Редактирование заказа №<?php echo $q[1];?></h3>
       </div>
 		<ul class="pagination pagination-lg">
 		  <li id=pageleft><a href="#">&laquo;</a></li>
@@ -710,7 +712,7 @@ else
 					if (mysql_num_rows($r_from)>0)
 					{	
 						echo '<select id="type2" class="form-control">';
-						echo '<option value="0">Укажите тип мероприятия</option>';
+						echo '<option value="0" disabled>Укажите тип мероприятия</option>';
 
 						while ($row_from = mysql_fetch_array($r_from))
 						{	
@@ -719,12 +721,17 @@ else
 						echo '<option value="999">Другое</option>';
 						echo '</select>';
 					}
+echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-control" placeholder="Укажите тип мероприятия">';
 					?>
 </div>
 <br>		
 <div class="input-group" style="max-width:500px">
   <span class="input-group-addon"><span class="glyphicon glyphicon-font"></span></span>
-  <textarea id="comment" placeholder="Комментарий по проведению" class="form-control"></textarea>
+  <textarea id="comment" placeholder="Комментарий по проведению" class="form-control">
+  <?php
+  echo $row_order["comment"];
+  ?>
+  </textarea>
 </div>
 <br>	
 <div id=resultform>
@@ -796,12 +803,12 @@ else
 			$.get("_dosearchclientautocomplete.php", {s:s, Rand: "<?php echo rand(); ?>"},
 			   function(data){})
 			   .done(function(data) {
-				//alert(data);
+				//aler(data);
 				data = $.trim(data);
 				data = data.split("\n");
 				$(t).autocomplete({source: data, select: function (a, b) {
 					//$(this).val(b.item.value);
-					//alert(b.item.value);
+					//aler(b.item.value);
 					$("#clientadd").html("Выбрать");
 				}});
 			});
@@ -810,7 +817,7 @@ else
 		{
 			// Активация правильной кнопки выбора страницы в зависимости от curpage
 			erasedisablefromli();
-			//alert(curpage);
+			//aler(curpage);
 			switch(curpage)
 			{
 				case 1:
@@ -840,7 +847,7 @@ else
 			// Стирание дисэблед статуса для всех кнопок страниц, чтобы потом поставить правильный
 			for (i=1;i<=5;i++)
 			{
-				//alert(curpage);
+				//aler(curpage);
 				//if (i!=curpage) 
 				$("#page"+i).prop("class","enabled");							
 			}
@@ -849,48 +856,17 @@ else
 		}
 		
 		
-		function shownextstep()
-		{
-		alladd = $("#createform  .btn-danger").length;			
-		if(alladd > 23120) 
-			{
-				alert("Остались недобавленные позиции: " + alladd);
-				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
-			} else
-			{
-		
-		
-			//alert(1);
-			//$("div[id*=spanpage]").css("visibility","hidden");
-			//alert(x);
-			//alert(y);
 
-			//$("#spanpage"+curpage).html("");
-			//$("#createform").clone().appendTo( $("#spanpage"+curpage) );
-			
-			//$curpage = $("#createform").clone();
-			//$("#spanpage"+curpage).html($curpage);
-			setvaluesincookie();
-			if (curpage<5) curpage = curpage + 1;
-			//$("#spanpage"+curpage).css("left",x);
-			//$("#spanpage"+curpage).css("top",y);	
-			//$("#createform").html($("#spanpage"+curpage).html());			
-			//$("#spanpage"+curpage).css("visibility","visible");
-			$("#page"+curpage).click();
-			count_dish_weight();	
-			return true;
-			}
-		}
 		
 		function erasevaluesincookie()
 		{
 			if ($("#clientsearch").val())
 			{			
-				//alert($("#clientsearch").val());
+				//aler($("#clientsearch").val());
 				if ($.cookie("clientname")!==$("#clientsearch").val())
 				{
-					//alert($.cookie("clientname"));
-					//alert($("#clientsearch").val());
+					//aler($.cookie("clientname"));
+					//aler($("#clientsearch").val());
 					
 					$.removeCookie("clientname");
 					$.removeCookie("editclientid");
@@ -906,42 +882,17 @@ else
 					$.removeCookie("service");
 					$.removeCookie("tables");
 					//$.removeCookie("timestart");
+				$.removeCookie("eventtype");
+				$.removeCookie("eventcomment");
 					
 				}
 			}
 		}		
-		function setvaluesincookie()
-		{
-			//alert($("body #clientfrom").val());
-			//alert(curpage);
-			if ((curpage==1) && (typeof $("body #clientname").val() != 'undefined'))
-			{
-				//alert($("#clientid").val());
-				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
-				$.cookie("editclientid", $("body #editclientid").val(),{ expires: 1, path: '/' });
-				if ($("body #clientfrom").val()!="Укажите откуда пришел")
-				{
-					$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
-				}
-				$.cookie("clientfrom4", $("body #clientfrom4").val(),{ expires: 1, path: '/' });
-				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
-				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
-				$.cookie("dateevent", $("body #dateevent").val(),{ expires: 1, path: '/' });
-				$.cookie("timeevent", $("body #timeevent").val(),{ expires: 1, path: '/' });
-				$.cookie("guestcount", $("body #guestcount").val(),{ expires: 1, path: '/' });
-				$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
-			}
-			if (curpage==2)	{
-				// сохраняется в момент нажатия кнопок на вкладке
-			}
-			if (curpage==3)	{
-				// сохраняется в момент нажатия кнопок на вкладке
-			}
-		}
+
 		function readvaluesincookie()
 		{
-			//alert($("body #clientfrom").val());
-			//alert(curpage);
+			//aler($("body #clientfrom").val());
+			//aler(curpage);
 			if (curpage==1)
 			{
 				if (typeof $.cookie("clientname") != 'undefined')
@@ -961,7 +912,7 @@ else
 				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
 					{	
 						$("body #hall").removeAttr("disabled");
-						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'order','selectedhall');
+						get_selected_hall($("body #hall").val(),$("body #dateevent").val(),'editor','selectedhall','<?php echo $q[1];?>');
 					}
 				}
 				
@@ -1028,13 +979,45 @@ else
 				setcountguestfields();				
 			}
 			if (curpage==5) {
+			$("#type").hide();
+			$("#type2 option[value=0]").attr('selected','selected');
+
+			if ($.cookie("eventtype"))
+				{
+					$("#type2 [option=0]").attr('selected','selected');
+					ok = 0;
+					$("#type2 option").each(function(){
+					
+					if($(this).text() == $.cookie("eventtype")) 
+						{
+							$(this).attr('selected','selected');
+
+							ok = 1;
+						}
+					});
+		
+					if (ok == 0) 
+					{
+						$("#type2 option[value=999]").attr('selected','selected');
+						$("#type").show();
+					}
+					$("#type").val($.cookie("eventtype"));
+				}
+				
+					if (typeof $.cookie("eventcomment") != 'undefined')
+				{
+
+					$("#comment").val($.cookie("eventcomment"));
+				}
 
 				var additional_pars = new Object();
 				additional_pars["cn"] = $.cookie("clientname");
-				//alert($("#clientid").val());
+				//aler($("#clientid").val());
 				additional_pars["ec"] = $.cookie("editclientid");
 				additional_pars["cp"] = $.cookie("clientphone");
 				additional_pars["ce"] = $.cookie("clientemail");
+				additional_pars["cf"] = $.cookie("clientfrom");
+				additional_pars["cf4"] = $.cookie("clientefrom4");
 				additional_pars["de"] = $.cookie("dateevent");
 				additional_pars["te"] = $.cookie("timeevent");
 				additional_pars["gc"] = $.cookie("guestcount");
@@ -1042,6 +1025,8 @@ else
 				additional_pars["dd"] = $.cookie("dishes");	
 				additional_pars["ss"] = $.cookie("service");
 				additional_pars["tt"] = $.cookie("tables");
+						additional_pars["tp"] = $("#type").val();
+						additional_pars["cm"] = $("#comment").val();
 				
 				$.post("_summary.php", additional_pars,
 				function(){
@@ -1055,15 +1040,15 @@ else
 		function setcountguestfields()
 		{
 			//var warnchangeguestcount=0;
-			//alert(1);
+			//aler(1);
 			if (typeof $.cookie("guestcount") != 'undefined')
 			{
-				//alert(2);
+				//aler(2);
 				if ($.isNumeric($.cookie("guestcount")))
 				{
-					//alert($.cookie("guestcount"));
+					//aler($.cookie("guestcount"));
 					$("input[class*='byguestcount']").each(function() {
-						//alert($(this).val());
+						//aler($(this).val());
 						//if ($(this).attr("readonly")!=="readonly") 
 						//{
 							$(this).val($.cookie("guestcount"));
@@ -1080,17 +1065,18 @@ else
 			}
 			//if (warnchangeguestcount)
 			//{
-				//alert("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
+				//aler("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
 			//}
 		}
 		$(document).ready(function(){
 			// когда страница загружена
 			
-			
+		setvaluesincookie2();
+		
 			$( document ).on( "click", ".navbar a", function() 
 			{
-					alladd = $("#createform  .btn-warning").length;			
-					if(alladd == 23120) 
+					alladd = $("#createform  .btn-danger").length;			
+					if(alladd > 0) 
 					{
 						alert("Остались недобавленные позиции: " + alladd);
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
@@ -1119,9 +1105,9 @@ else
 				widgets: ['zebra']
 			});
 	
-			//alert(1);
+			//aler(1);
 			dosetrightpaginator();
-			//alert(2);
+			//aler(2);
 			doloadcreateform();
 			get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
 			//erasevaluesincookie();
@@ -1161,16 +1147,16 @@ else
 			});
 			$( document ).on( "change", "#hall", function() {			
 			//$("#hall").on("change", function() {
-				//alert($("#hall").val());
+				//aler($("#hall").val());
 				$.get("_checkhall.php", {id:$("#hall").val(), Rand: "<?php echo rand(); ?>"},
 				   function(data){})
 				   .done(function(data) {
-					//alert(data);
+					//aler(data);
 					data = $.trim(data);
 					data = data.split("^");
 					if (data[0]=="OK")
 					{
-						//alert(data[1]);
+						//aler(data[1]);
 						if ((typeof data[1] != 'undefined') && ($("#guestcount").val()>0))
 						{
 							if (parseInt($("#guestcount").val())>parseInt(data[1]))
@@ -1392,14 +1378,14 @@ else
 				if($(this).val() != "") 
 				{
 					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).addClass("btn-warning");
+					$("#addserv"+id).addClass("btn-danger");
 				
 				} else
 				{
 					if($("#quantserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
 					{
 						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-warning");
+						$("#addserv"+id).removeClass("btn-danger");
 						$("#addserv"+id).addClass("disabled");
 					}
 				
@@ -1613,21 +1599,18 @@ else
 	
 		$("li[id*='page']").bind("click", function(){
 			// слушаем клики на элементы выбора страниц
-			id = $(this).prop("id");
 
-			alladd = $("#createform  .btn-warning").length;			
-			if(alladd == 23120) 
+			alladd = $("#createform  .btn-danger").length;			
+			if(alladd > 0) 
 			{
 				alert("Остались недобавленные позиции: " + alladd);
 			} else
 			{
-			
-			
-			//$("#spanpage"+curpage).html("");
-			//$("#createform").clone().appendTo( $("#spanpage"+curpage) );
+		
 			
 			setvaluesincookie();
-			
+			id = $(this).prop("id");
+		
 			if (id=="pageleft") {
 				if (curpage>1) {curpage--; dosetrightpaginator();}
 			}
@@ -1640,7 +1623,7 @@ else
 				curpage = parseInt(curpage);
 				if ($.isNumeric(curpage))
 				{
-					//alert(id);
+					//aler(id);
 					dosetrightpaginator();
 				}
 			}	
@@ -1651,7 +1634,7 @@ else
 		
 		function doloadcreateform()
 		{
-			//alert(curpage);
+			//aler(curpage);
 			// вывод правильного содержания вкладки в зависимости от curpage
 			//$("div[id*=spanpage]").css("visibility","hidden");
 			$("#createform").html($("#spanpage"+curpage).html());
@@ -1685,17 +1668,16 @@ else
 						additional_pars["ss"] = $.cookie("service");
 						additional_pars["tt"] = $.cookie("tables");
 						additional_pars["ts"] = $("#timestart").val();
-						additional_pars["aa"] = $("#avans").val();
 						additional_pars["tp"] = $("#type").val();
 						additional_pars["cm"] = $("#comment").val();
-						additional_pars["oi"] = $q[1];
+						additional_pars["oi"] = "<?php echo $q[1];?>";
 						additional_pars["rand"] = "<?php echo rand(); ?>";
 						$.post("_dosaveorder.php", additional_pars,
 						function(){
 						// нет
 						})
 						.done(function(data) {
-							//alert(data);
+							//aler(data);
 							//var nn = noty({text:data});
 							data = data.split(":");
 							if (data[0]=="OK")
@@ -1714,6 +1696,8 @@ else
 								$.removeCookie("dishes");
 								$.removeCookie("service");							
 								$.removeCookie("tables");	
+								$.removeCookie("eventtype");
+								$.removeCookie("eventcomment");
 								//location.href="?view_zakazid="+data[1];
 							}
 							else

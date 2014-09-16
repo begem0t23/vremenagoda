@@ -1,7 +1,22 @@
-
-
-
-
+<?php
+setCookie("clientname", null, -1);
+	setCookie("clientid", null, -1);
+	setCookie("clientphone", null, -1);
+	setCookie("clientfrom", null, -1);
+	setCookie("clientfrom4", null, -1);
+	setCookie("clientemail", null, -1);
+	setCookie("dateevent", null, -1);
+	setCookie("timeevent", null, -1);
+	setCookie("guestcount", null, -1);
+	setCookie("hall", null, -1);
+	setCookie("dishes", null, -1);
+	setCookie("service", null, -1);
+	setCookie("tables", null, -1);
+	setCookie("editclientid", null, -1);
+	setCookie("eventtype", null, -1);
+	setCookie("eventcomment", null, -1);
+	
+	?>
 <!DOCTYPE html>
 <html lang="ru">
   <head>
@@ -578,7 +593,7 @@ fixednavbar();
 					if (mysql_num_rows($r_from)>0)
 					{	
 						echo '<select id="type2" class="form-control">';
-						echo '<option value="0">Укажите тип мероприятия</option>';
+						echo '<option value="0" disabled>Укажите тип мероприятия</option>';
 
 						while ($row_from = mysql_fetch_array($r_from))
 						{	
@@ -721,37 +736,7 @@ fixednavbar();
 		}
 		
 		
-		function shownextstep()
-		{
-		alladd = $("#createform  .btn-danger").length;			
-		if(alladd > 0) 
-			{
-				//aler("Остались недобавленные позиции: " + alladd);
-				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
-			} else
-			{
-		
 
-			//aler(1);
-			//$("div[id*=spanpage]").css("visibility","hidden");
-			//aler(x);
-			//aler(y);
-
-			//$("#spanpage"+curpage).html("");
-			//$("#createform").clone().appendTo( $("#spanpage"+curpage) );
-			
-			//$curpage = $("#createform").clone();
-			//$("#spanpage"+curpage).html($curpage);
-			setvaluesincookie();
-			if (curpage<5) curpage = curpage + 1;
-			//$("#spanpage"+curpage).css("left",x);
-			//$("#spanpage"+curpage).css("top",y);	
-			//$("#spanpage"+curpage).css("visibility","visible");
-			$("#page"+curpage).click();
-						count_dish_weight();	
-			return true;
-			}
-		}
 		
 		function docheckclientname(clientname)
 		{
@@ -918,34 +903,8 @@ fixednavbar();
 				}
 			}
 		}		
-		function setvaluesincookie()
-		{
-			//aler($("body #clientfrom").val());
-			//aler(curpage);
-			if ((curpage==1) && (typeof $("body #clientname").val() != 'undefined'))
-			{
-				//aler($("#clientid").val());
-				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
-				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
-				if ($("body #clientfrom").val()!="Укажите откуда пришел")
-				{
-					$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
-				}
-				$.cookie("clientfrom4", $("body #clientfrom4").val(),{ expires: 1, path: '/' });
-				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
-				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
-				$.cookie("dateevent", $("body #dateevent").val(),{ expires: 1, path: '/' });
-				$.cookie("timeevent", $("body #timeevent").val(),{ expires: 1, path: '/' });
-				$.cookie("guestcount", $("body #guestcount").val(),{ expires: 1, path: '/' });
-				$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
-			}
-			if (curpage==2)	{
-				// сохраняется в момент нажатия кнопок на вкладке
-			}
-			if (curpage==3)	{
-				// сохраняется в момент нажатия кнопок на вкладке
-			}
-		}
+
+		
 		function readvaluesincookie()
 		{
 			//aler($("body #clientfrom").val());
@@ -1003,6 +962,7 @@ fixednavbar();
 				}
 				
 			}
+
 			if (curpage==4)
 			{
 				/*$( "button[name=adddish]" ).each(function( index ) {
@@ -1036,6 +996,35 @@ fixednavbar();
 				setcountguestfields();				
 			}
 			if (curpage==5) {
+				$("#type").hide();
+				$("#type2 option[value=0]").attr('selected','selected');
+				if ($.cookie("eventtype"))
+				{
+					$("#type2 [option=0]").attr('selected','selected');
+					ok = 0;
+					$("#type2 option").each(function(){
+					
+					if($(this).text() == $.cookie("eventtype")) 
+						{
+							$(this).attr('selected','selected');
+							ok = 1;
+						}
+					});
+		
+					if (ok == 0) 
+					{
+
+						$("#type2 option[value=999]").attr('selected','selected');
+						$("#type").show();
+					}
+					$("#type").val($.cookie("eventtype"));
+				}
+				
+					if (typeof $.cookie("eventcomment") != 'undefined')
+				{
+
+					$("#comment").val($.cookie("eventcomment"));
+				}
 
 				var additional_pars = new Object();
 				additional_pars["cn"] = $.cookie("clientname");
@@ -1043,6 +1032,8 @@ fixednavbar();
 				additional_pars["ci"] = $.cookie("clientid");
 				additional_pars["cp"] = $.cookie("clientphone");
 				additional_pars["ce"] = $.cookie("clientemail");
+				additional_pars["cf"] = $.cookie("clientfrom");
+				additional_pars["cf4"] = $.cookie("clientefrom4");
 				additional_pars["de"] = $.cookie("dateevent");
 				additional_pars["te"] = $.cookie("timeevent");
 				additional_pars["gc"] = $.cookie("guestcount");
@@ -1669,13 +1660,8 @@ fixednavbar();
 	
 		$("li[id*='page']").bind("click", function(){
 			// слушаем клики на элементы выбора страниц
-			id = $(this).prop("id");
 
 			alladd = $("#createform  .btn-danger").length;
-
-
-			
-			
 
 			if(alladd > 0) 
 			{
@@ -1684,11 +1670,9 @@ fixednavbar();
 			} else
 			{
 			
-			
-			//$("#spanpage"+curpage).html("");
-			//$("#createform").clone().appendTo( $("#spanpage"+curpage) );
-			
+				
 			setvaluesincookie();
+			id = $(this).prop("id");
 			
 			if (id=="pageleft") {
 				if (curpage>1) {curpage--; dosetrightpaginator();}
@@ -1747,7 +1731,6 @@ fixednavbar();
 						additional_pars["ss"] = $.cookie("service");
 						additional_pars["tt"] = $.cookie("tables");
 						additional_pars["ts"] = $("#timestart").val();
-						additional_pars["aa"] = $("#avans").val();
 						additional_pars["tp"] = $("#type").val();
 						additional_pars["cm"] = $("#comment").val();
 						additional_pars["rand"] = "<?php echo rand(); ?>";
@@ -1775,6 +1758,8 @@ fixednavbar();
 								$.removeCookie("dishes");
 								$.removeCookie("service");							
 								$.removeCookie("tables");	
+								$.removeCookie("eventtype");
+								$.removeCookie("eventcomment");
 
 							}
 							else

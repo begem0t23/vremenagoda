@@ -37,3 +37,156 @@
 
 		}
 		}
+
+		
+
+
+	function setvaluesincookie()
+		{
+			//aler($("body #clientfrom").val());
+			
+			if ((curpage==1) && (typeof $("body #clientname").val() != 'undefined'))
+			{
+
+		alert(curpage+'_'+$("body #guestcount").val());
+				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
+				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
+				if ($("body #clientfrom").val()!="Укажите откуда пришел")
+				{
+					$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
+				}
+				$.cookie("clientfrom4", $("body #clientfrom4").val(),{ expires: 1, path: '/' });
+				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
+				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
+				$.cookie("dateevent", $("body #dateevent").val(),{ expires: 1, path: '/' });
+				$.cookie("timeevent", $("body #timeevent").val(),{ expires: 1, path: '/' });
+				$.cookie("guestcount", $("body #guestcount").val(),{ expires: 1, path: '/' });
+				$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
+				
+			}
+			if (curpage==2)	{
+	
+			}
+			if (curpage==3)	{
+	
+			}
+			if (curpage==4)	{
+	
+			}
+			if (curpage==5)	{
+				$.removeCookie("eventtype");
+				$.removeCookie("eventcomment");
+				
+				$.cookie("eventtype", $("#type").val(),{ expires: 1, path: '/' });
+				$.cookie("eventcomment", $("#comment").val(),{ expires: 1, path: '/' });
+			}
+		}
+		
+	function setvaluesincookie2()
+		{
+					$.removeCookie("clientname");
+				$.removeCookie("clientid");
+				$.removeCookie("clientphone");
+				$.removeCookie("clientfrom");
+				$.removeCookie("clientfrom4");
+				$.removeCookie("clientemail");
+				$.removeCookie("dateevent");
+				$.removeCookie("timeevent");
+				$.removeCookie("guestcount");
+				$.removeCookie("hall");
+				$.removeCookie("tables");
+		
+				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
+				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
+				if ($("body #clientfrom").val()!="Укажите откуда пришел")
+				{
+					$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
+				}
+				$.cookie("clientfrom4", $("body #clientfrom4").val(),{ expires: 1, path: '/' });
+				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
+				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
+				$.cookie("dateevent", $("body #dateevent").val(),{ expires: 1, path: '/' });
+				$.cookie("timeevent", $("body #timeevent").val(),{ expires: 1, path: '/' });
+				$.cookie("guestcount", $("body #guestcount").val(),{ expires: 1, path: '/' });
+				$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
+					var tables = "";
+					var taball = {};
+					var element = {};
+					$("body  .table.primary").each(function(){
+							tabid1 = $(this).attr("tabid");
+							tabnum1 = $(this).html();
+							element = ({tabid:tabid1, tabnum:tabnum1});
+							taball[tabid1] = element ;
+						});
+					tables = $.toJSON(taball);
+					$.cookie("tables", tables,{ expires: 1, path: '/' });
+			
+	$.removeCookie("dishes");
+			
+					var dishes="";
+					var dishall = {};
+					var element = {};
+					$("body  button[name=adddish]").each(function(){
+							id = $(this).attr("id");
+							id = id.substr(7);
+							if ($(this).html()=="Удалить")
+							{
+								quant = $("#quant"+id).val();
+								note = $("#note"+id).val();
+								element = ({quant:quant, note:note});
+								dishall[id] = element ;
+							}
+						});
+						dishes = $.toJSON(dishall);
+						$.cookie("dishes", dishes,{ expires: 1, path: '/' });
+	
+	$.removeCookie("service");
+					var services="";
+					var serviceall = {};
+					var element = {};
+						$("body  button[name=addserv]").each(function(){
+							id = $(this).attr("id");
+							id = id.substr(7);
+							if ($(this).html()=="Удалить")
+							{
+								priceserv 	= $("#priceserv"+id).val();
+								quantserv 	= $("#quantserv"+id).val();
+								discont 	= $("#discontserv"+id).val();
+								comment 	= $("#commentserv"+id).val();
+								element = ({priceserv:priceserv, quantserv:quantserv, discont:discont, comment:comment});
+								serviceall[id] = element ;
+							}
+						});
+						services = $.toJSON(serviceall);
+						$.cookie("service", services,{ expires: 1, path: '/' });
+
+				$.removeCookie("eventtype");
+				$.removeCookie("eventcomment");
+				
+				$.cookie("eventtype", $("body #type").val(),{ expires: 1, path: '/' });
+				$.cookie("eventcomment", $("body #comment").val(),{ expires: 1, path: '/' });
+			
+		}
+
+		
+			function shownextstep()
+		{
+		alladd = $("#createform  .btn-danger").length;			
+		
+	
+		if(alladd > 0) 
+			{
+				alert("Остались недобавленные позиции: " + alladd);
+				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
+			} else
+			{
+			//setvaluesincookie();
+			if (curpage<5) curpage = curpage + 1;
+			$("#page"+curpage).click();
+
+			count_dish_weight();
+						
+			
+			}
+		}	
+		

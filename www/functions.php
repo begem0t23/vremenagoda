@@ -118,7 +118,7 @@ $orderid = $_POST['orderid'];
 				$row_tab = mysql_fetch_array($rez_tab);
 		
 		
-		if($place == 'order' || $place == 'report')
+		if($place == 'order' || $place == 'report' || $place == 'editor')
 		{
 	
 			if ($row_tab['childhall']){
