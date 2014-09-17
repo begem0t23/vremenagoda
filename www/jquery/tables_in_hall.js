@@ -545,17 +545,18 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 			edate1 = $("#dateevent").val() == "__.__.____";
 			edate2 = $("#dateevent").val() == "";
 			eguest = $("#guestcount").val() == "";
-
+			eguest2 = $("#guestcount").val() == "___";
+			orderid = $("#orderid").val();
 			$("input .byguestcount").val($("#guestcount").val()) ;
 
-			if( !edate1  & !edate2 & !eguest  )
+			if( !edate1  & !edate2 & !eguest  & !eguest2  )
 			{
 				$("#hall").removeAttr("disabled");
 				$("#hall option[value=0]").text("Выберите зал");
 				
 				if($("#hall").val() > 0)
 				{
-					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
+					get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall',orderid);
 				}
 			}else
 			{

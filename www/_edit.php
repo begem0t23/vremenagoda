@@ -102,6 +102,7 @@ if ($_SESSION["curuserrole"]>=5) {
     <div class="container">
       <div class="page-header">
         <h3>Редактирование заказа №<?php echo $q[1];?></h3>
+		<input type="hidden" value="<?php echo $q[1];?>" id = "orderid">
       </div>
 		<ul class="pagination pagination-lg">
 		  <li id=pageleft><a href="#">&laquo;</a></li>

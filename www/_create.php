@@ -539,13 +539,13 @@ fixednavbar();
 			$discont = '';
 				$tocalc = 'tocalc="1"';
 				$discont ='<input '.$tocalc.' name="discontserv" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.number_format($row_serv["price"],0,'','').'">';
-				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" checked="checked" disabled>';
+				$quant =  '<input '.$tocalc.' name="quantserv" id="quantserv'.$row_serv["id"].'" type="hidden" size="2"  value="1" >';
 				$tocalcrowclass = 'tocalcrow';
 			}
 			if ($row_serv["byguestcount"]==1)
 							{
 								$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
-								<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
+								<input '.$tocalc.'  bgs="1" name="discontservchb" id="discontservchb'.$row_serv["id"].'" type="checkbox"  value="">';
 							
 							}
 									
@@ -678,7 +678,7 @@ fixednavbar();
 			// Поиск клиента по имени, телефону, мылу в поле поиска на первой вкладке
 			//$("#clientadd").html("Создать");
 			var s=$(t).val();
-			if (s.length<2) return false;
+			if (s.length < 2) return false;
 			$.get("_dosearchclientautocomplete.php", {s:s, Rand: "<?php echo rand(); ?>"},
 			   function(data){})
 			   .done(function(data) {
@@ -841,7 +841,7 @@ fixednavbar();
 					spanpage1+='<input required="required" data-mask="99.99.9999" maxlength="10" type="text" id="dateevent"  onchange="activatehall();" onfocus="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" onClick="$(\'#dateevent\').datepicker();$(\'#dateevent\' ).datepicker( \'show\' );" class="form-control required" placeholder="Дата проведения">';
 					spanpage1+='<input data-mask="99:99" maxlength="5" type="text" id="timeevent" class="form-control" placeholder="Время проведения">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
-					spanpage1+='<input required="required" type="number" id="guestcount" class="form-control required" placeholder="Количество гостей" onkeyup="activatehall();">';
+					spanpage1+='<input required="required"  type="text" id="guestcount" class="form-control required" placeholder="Количество гостей" onkeyup="activatehall();">';
 					spanpage1+='</div>';
 
 					spanpage1+='<br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-cutlery"></span></span>';
@@ -1208,8 +1208,11 @@ fixednavbar();
 							{
 								var nn = noty({text: 'Выбранный зал не подходит для данного количества гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});							
 							} 
-							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
-							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
+							else
+							{
+								get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
+								$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
+							}
 						}
 					}
 				});				
@@ -1372,47 +1375,33 @@ fixednavbar();
 			});
 
 		
+ 			$( document ).on( "click", "input[name=discontserv]", function() {
+        $(this).select();
+    });
 
+	$( document ).on( "change", "input[name=discontserv]", function() {
+  		id = $(this).attr("id");
+		id = id.substr(11);
+		if ($(this).val() == "") $(this).val(0);
+		if ($(this).val() == "0") 	$("#addserv"+id).removeClass("disabled");					
 
-			$( document ).on( "change", "input[name=discontserv]", function() {
+    });
+
+	$( document ).on( "change", "input[name=discontservchb]", function() {
 				id = $(this).attr("id");
-				id = id.substr(11);
-				bgs = $(this).attr("bgs");
-				
-				if (bgs == 1) 
-				{
-					$(this).val('');
-					if ($(this).prop('checked'))
-					{
-					$(this).val('0');
-					}
-				}
-				
-				if($(this).val() != "") 
+				id = id.substr(14);
 
-
+				if ($(this).prop("checked") )
 				{
 					$("#addserv"+id).removeClass("btn-default");
 					$("#addserv"+id).addClass("btn-danger");
-					if($("#quantserv"+id).val() != '') 
-
-
-					{
-						$("#addserv"+id).removeClass("disabled");					
-					}
+					$("#addserv"+id).removeClass("disabled");					
 				
 				} else
 				{
 					$("#addserv"+id).addClass("disabled");
-					
-					if(($("#quantserv"+id).val() == '' || bgs == 1) & $("#commentserv"+id).val() == '') 
-
-					{
-						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-danger");
-					
-					}
-				
+					$("#addserv"+id).addClass("btn-default");
+					$("#addserv"+id).removeClass("btn-danger");
 				}
 
 
@@ -1425,6 +1414,8 @@ fixednavbar();
 				id = $(this).attr("id");
 				id = id.substr(11);
 				
+		if ($(this).val() == "") $(this).val(0);
+		if ($(this).val() == "0") 	$("#addserv"+id).removeClass("disabled");					
 
 				if($(this).val() != "") 
 				{
