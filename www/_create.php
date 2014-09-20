@@ -777,64 +777,89 @@ fixednavbar();
 					spanpage1+='<input type="text" id=clientphone value="'+data[2]+'" class="form-control" placeholder="Телефон">';
 					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>';
 					spanpage1+='<input type="email" id=clientemail value="'+data[3]+'" class="form-control" placeholder="E-mail">';
-
-					spanpage1+='</div><br><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
-					spanpage1+='<?php
-					$tsql2 = "select * from `client_from` ;";
-					$r_from = mysql_query($tsql2);
-					if (mysql_num_rows($r_from)>0)
-					{	
-						echo '<select id="clientfrom2" class="form-control">' . "";
-						echo '<option value="0">Укажите откуда пришел</option>' . "";
-						?>';
-						<?php
-						while ($row_from = mysql_fetch_array($r_from))
-						{	
-						?>
-						sel = '';
-						if(data[4] == '<?php  echo $row_from["name"]; ?>') sel = ' selected="selected"';
-						spanpage1+='<option'+ sel +'<?php	
-						echo ' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
-						?>';
-						<?php
+					spanpage1+='</div><br>';
+					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-random"></span></span>';
+					$countoforders = 0;
+					request = jQuery.ajax({
+					 url:    '/_getcountofexistclientorders.php' ,
+					 data: {s:clientname, Rand: "<?php echo rand(); ?>"},
+					 async:   false });
+					 request.done(function(data) {
+						//alert(data);
+						$countoforders = data;
+						//alert($countoforders);
+						if (($.isNumeric($countoforders)==true) && ($countoforders>0))
+						{
+							//alert(1);
+							if ($countoforders==1)
+							{
+								//alert(2);
+								spanpage1+='<input type="text" id="clientfrom2" value="повторно" class="form-control" readonly="readonly">';
+							}
+							else
+							{
+								spanpage1+='<input type="text" id="clientfrom2" value="постоянный" class="form-control" readonly="readonly">';
+							}
 						}
-						?>
+						else
+						{
 						spanpage1+='<?php
-						echo '<option value="999">Другое</option>' . "";
-						echo '</select>' . "";
-					}
-					?>';
-
-					spanpage1+='<input type="text" id="clientfrom" style="display:none;" value="'+data[4]+'" class="form-control" placeholder="Укажите откуда пришел">';
-
-					spanpage1+='<?php
-					$tsql2 = "select * from `agenсies` WHERE isactive = 1;";
-					$r_from = mysql_query($tsql2);
-					if (mysql_num_rows($r_from)>0)
-					{	
-						echo '<select id="clientfrom4" class="form-control" style="display:none;" >' . "";
-						echo '<option value="0">Укажите название агенства</option>' . "";
-						?>';
-						<?php
-						while ($row_from = mysql_fetch_array($r_from))
+						$tsql2 = "select * from `client_from` ;";
+						$r_from = mysql_query($tsql2);
+						if (mysql_num_rows($r_from)>0)
 						{	
-						?>
-						sel = '';
-						if(data[5] == '<?php  echo $row_from["name"]; ?>') sel = ' selected="selected"';
-						spanpage1+='<option'+ sel +'<?php	
-						echo ' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
-						?>';
-						<?php
+							echo '<select id="clientfrom2" class="form-control">' . "";
+							echo '<option value="0">Укажите откуда пришел</option>' . "";
+							?>';
+							<?php
+							while ($row_from = mysql_fetch_array($r_from))
+							{	
+							?>
+							sel = '';
+							if(data[4] == '<?php  echo $row_from["name"]; ?>') sel = ' selected="selected"';
+							spanpage1+='<option'+ sel +'<?php	
+							echo ' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
+							?>';
+							<?php
+							}
+							?>
+							spanpage1+='<?php
+							echo '<option value="999">Другое</option>' . "";
+							echo '</select>' . "";
 						}
-						?>
+						?>';
+
+						spanpage1+='<input type="text" id="clientfrom" style="display:none;" value="'+data[4]+'" class="form-control" placeholder="Укажите откуда пришел">';
+
 						spanpage1+='<?php
-						//echo '<option value="999">Другое</option>' . "";
-						echo '</select>' . "";
-					}
-					?>';
+						$tsql2 = "select * from `agenсies` WHERE isactive = 1;";
+						$r_from = mysql_query($tsql2);
+						if (mysql_num_rows($r_from)>0)
+						{	
+							echo '<select id="clientfrom4" class="form-control" style="display:none;" >' . "";
+							echo '<option value="0">Укажите название агенства</option>' . "";
+							?>';
+							<?php
+							while ($row_from = mysql_fetch_array($r_from))
+							{	
+							?>
+							sel = '';
+							if(data[5] == '<?php  echo $row_from["name"]; ?>') sel = ' selected="selected"';
+							spanpage1+='<option'+ sel +'<?php	
+							echo ' value="'.$row_from["id"].'">'.$row_from["name"].'</option>' . "";
+							?>';
+							<?php
+							}
+							?>
+							spanpage1+='<?php
+							//echo '<option value="999">Другое</option>' . "";
+							echo '</select>' . "";
+						}
+						?>';
 
-					spanpage1+='<input type="text" id="clientfrom3" style="display:none;" value="'+data[5]+'" class="form-control" placeholder="Укажите откуда пришел">';
-
+						spanpage1+='<input type="text" id="clientfrom3" style="display:none;" value="'+data[5]+'" class="form-control" placeholder="Укажите откуда пришел">';
+						}
+					});
 					spanpage1+='</div><br>';
 					spanpage1+='<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
 					//spanpage1+='<input pattern="^([0-9]){2}\.([0-9]){2}\.([0-9]){4}$" maxlength="10" type="text" id="dateevent" onClick="$(\'#dateevent\').datepicker();" class="form-control" placeholder="Дата проведения">';
