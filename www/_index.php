@@ -237,8 +237,20 @@ echo '<option value="0">Выберите менеджера</option>';
 <option  value="food">Для Кухни и Бара</option>
 </select>
 </div>
-<br>
-	<div id="report_section">      </div>
+
+
+<div class="input-group"  style="display:none;" id="emailbutton">
+<span class="input-group-addon nav-title"><span >Почта</span></span>
+<button class="btn btn-default  nav-element" id="eml" onclick="allemailsview();" >Показать</button>
+</div>
+
+<div id="emails_section"  style="display:none;" class="btn btn-default">
+
+<div id="allemails" ></div>
+
+</div>
+
+		<div id="report_section">      </div>
 
 <?php
 
@@ -527,12 +539,46 @@ dialog.dialog('open');
 	}
 
 	
+		function get_all_emails()
+	{
+		orderid = $("#newpayment").attr('orderid');
+				$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'getallemails', orderid:orderid}
+		})
+		.done(function( msg ) {
+			
+					$("#allemails").html(msg);
+					check_eml_view();
+				
+		});
+		
+		$("#allemltab")
+			.tablesorter(
+			{
+				theme: 'blue',
+				widgets: ['zebra']
+			});
+	}
+	
+	
+	
 	
 	function get_report()
 	{
 	
 		forwho = $("#show_report :selected").val();
 
+		if(forwho == 'client')
+		{
+		$("#emailbutton").show();
+		}
+		else
+		{
+		$("#emailbutton").hide();
+		}
+		
 		orderid = $("#newpayment").attr('orderid');
 				$.ajax({
 			type: "POST",
@@ -596,6 +642,23 @@ dialog.dialog('open');
 	
 	check_pay_view();
 	}
+
+	function allemailsview()
+	{
+		if($("#eml").html()=='Показать')
+		{
+			$("#eml").html('Скрыть');
+			$("#eml").removeClass("btn-default");
+			$("#eml").addClass("btn-primary");
+		}else
+		{
+			$("#eml").html('Показать');
+			$("#eml").addClass("btn-default");
+			$("#eml").removeClass("btn-primary");
+		}
+	
+	check_eml_view();
+	}
 	
 	function check_pay_view()
 	{
@@ -608,9 +671,23 @@ dialog.dialog('open');
 			$("#payments_section").show();
 		}
 	}
+	
+		function check_eml_view()
+	{
+	get_all_emails();
+		if($("#eml").html()=='Показать')
+		{
+			$("#emails_section").hide();
+		}else
+		{
+			$("#emails_section").show();
+		}
+	}
+	
+	
 	function check_dlg_view()
 	{
-	get_all_payments();
+
 		if($("#dlg").html()=='Показать')
 		{
 			$("#delegate_section").hide();
@@ -619,9 +696,11 @@ dialog.dialog('open');
 			$("#delegate_section").show();
 		}
 	}
-		function check_cnl_view()
+	
+
+	function check_cnl_view()
 	{
-	get_all_payments();
+	
 		if($("#cnl").html()=='Показать')
 		{
 			$("#otkaz_section").hide();
@@ -677,7 +756,7 @@ dialog.dialog('open');
 	<input type="text" id="copy" name="copy" placeholder="Копия" class="form-control" value="" >
 	<br>
 	Название файла: <br>
-	<input name="filename" id="filename" value="<?php echo "VremenaGoda_Order_".$_GET['view_zakazid']."_.pdf"; ?>" type="text"  size="50">
+	<input name="filename" id="filename" value="<?php echo "VremenaGoda_Order_".$_GET['view_zakazid'].".pdf"; ?>" type="text"  size="50">
 	<input type="hidden" value="sendemail" id="operation" name="operation">
 	<input type="hidden" value="<?php echo $_GET['view_zakazid']; ?>" id="orderid" name="orderid">
 	<textarea  style = "display:none;" name = "pdffile" id="pdffile"></textarea>

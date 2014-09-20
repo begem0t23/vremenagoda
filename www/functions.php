@@ -137,7 +137,7 @@ $paydate = $_POST['paydate'];
 				<th class="report_columns_head">Сумма</th>
 				</tr>';
 
-		$tsql2 = "SELECT po.*, pm.name AS methodname FROM `payments_in_orders` AS po, `paymentmethods` AS pm WHERE `orderid` = '".$orderid."' AND po.method = pm.id ORDER BY `paymentdate` ASC;";
+		$tsql2 = "SELECT po.*, pm.name AS methodname FROM `payments_in_orders` AS po, `paymentmethods` AS pm WHERE po.orderid = '".$orderid."' AND po.method = pm.id ORDER BY po.paymentdate ASC;";
 			$rez_tab = mysql_query($tsql2);
 			$total = 0;
 			//$ech .= mysql_error(); 
@@ -165,6 +165,53 @@ $paydate = $_POST['paydate'];
 
 echo $ech;
 }
+
+
+
+
+if ($_POST['operation'] == 'getallemails') 
+{
+$orderid = $_POST['orderid'];
+$paysum = $_POST['paysum'];
+$paymeth = $_POST['paymeth'];
+$paydate = $_POST['paydate'];
+	header('Content-Type: text/html; charset=utf-8');	
+				$ech = $ech.'<table id="allemltab" class="simple-little-table"><tr>
+				<th class="report_columns_head">№</th>
+				<th class="report_columns_head">Кто Отправил</th>
+				<th class="report_columns_head">Кому Адрес</th>
+				<th class="report_columns_head">Копия Адрес</th>
+				<th class="report_columns_head">Тема письма</th>
+				<th class="report_columns_head">Когда</th>
+				</tr>';
+
+		$tsql2 = "SELECT em.*, us.realname  FROM `emails` AS em, `users` AS us WHERE em.orderid = '".$orderid."' AND em.userid = us.id ORDER BY em.date ASC;";
+			$rez_tab = mysql_query($tsql2);
+			$total = 0;
+			//$ech .= mysql_error(); 
+			if (mysql_num_rows($rez_tab)>0)
+			{
+				while ($row_tab = mysql_fetch_array($rez_tab))
+				{
+				$ech = $ech.'<tr>
+				<td>'.$row_tab['id'].'</td>
+				<td>'.$row_tab['realname'].'</td>
+				<td>'.$row_tab['email'].'</td>
+				<td>'.$row_tab['copy'].'</td>
+				<td>'.$row_tab['subject'].'</td>
+				<td>'.$row_tab['subject'].'</td>
+				<td>'.$row_tab['filename'].'</td>
+				<td>'.$row_tab['date'].'</td>
+				</tr>';
+				}
+			}
+				$ech = $ech.'</table>';
+
+echo $ech;
+}
+
+
+
 
 
 
@@ -1930,7 +1977,7 @@ $subject = 'Заказ Банкета в ресторане Времена Го�
 		
 		
 		
-		$insert="INSERT INTO `emails` (`id`, `orderid`, `userid`, `email`, `copy`, `subject`, `body`, `date`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$email."', '".$copy."', '".$subject."', '".$mess."', NOW()) ;";
+		$insert="INSERT INTO `emails` (`id`, `orderid`, `userid`, `email`, `copy`, `subject`, `body`, `date`,`filename`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$email."', '".$copy."', '".$subject."', '".$mess."', NOW(), '".$filename."') ;";
 		mysql_query($insert);
 
 		echo 'yes';
