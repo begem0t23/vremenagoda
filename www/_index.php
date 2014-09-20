@@ -59,7 +59,7 @@ global $orderstatus;
 		"id,realname,eventdate,name,orderstatus",	//поля
 		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name 
 		 FROM orders o, users u, clients c 
-		 WHERE o.status > 1 AND o.status !=8 AND o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
+		 WHERE o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
 		"", //период (поле,начало,конец)
 		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
 		);
@@ -71,7 +71,7 @@ global $orderstatus;
 		"id,realname,eventdate,name,orderstatus",	//поля
 		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name
 		 FROM orders o, users u, clients c 
-		 WHERE o.status > 1 AND o.status !=8 AND o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
+		 WHERE  o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
 		"", //период (поле,начало,конец)
 		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
 		);
@@ -127,13 +127,13 @@ $bdisabled = "";
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Редактирование заказа</span></span>
-<button class="btn  <?php echo $bclass; ?>  nav-element"  onclick = "gotoeditor(<?php echo $_GET['view_zakazid']; ?>)"  <?php echo $bisabled; ?>> <?php echo $bname1; ?></button>
+<button class="btn  <?php echo $bclass; ?>  nav-element"  onclick = "gotoeditor(<?php echo $_GET['view_zakazid']; ?>)"  <?php echo $bdisabled; ?>> <?php echo $bname1; ?></button>
 </div>
 
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Передача заказа</span></span>
-<button class="btn  <?php echo $bclass; ?>  nav-element" id="dlg" onclick="delegateview();"><?php echo $bname2; ?></button>
+<button class="btn  <?php echo $bclass; ?>  nav-element" id="dlg" onclick="delegateview();"  <?php echo $bdisabled; ?>><?php echo $bname2; ?></button>
 </div>
 
 <div id="delegate_section"   style="display:none;"  class="btn btn-default small">
@@ -168,18 +168,18 @@ echo '<option value="0">Выберите менеджера</option>';
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Отказ клиента</span></span>
-<button class="btn  <?php echo $bclass; ?>   nav-element" id="cnl" onclick="otkazview();"><?php echo $bname2; ?></button>
+<button class="btn  <?php echo $bclass; ?>   nav-element" id="cnl" onclick="otkazview();"  <?php echo $bdisabled; ?>><?php echo $bname2; ?></button>
 </div>
 
 <div id="otkaz_section"  style="display:none;" class="btn btn-default small">
 <div class="input-group" >
  <span class="input-group-addon"><span >Дата отказа</span></span>
- <input name="otkaz_date" data-mask="99.99.9999" maxlength="10" type="text" id="otkazdate" onchange="newotkaz();" onclick="$('#newtkaz' ).datepicker( 'show' );" class="form-control" placeholder="Дата платежа">
+ <input  data-mask="99.99.9999" maxlength="10" type="text" id="otkazdate" onchange="newotkaz();" onclick="$('#otkazdate' ).datepicker( 'show' );" class="form-control" placeholder="Дата отказа">
   </div>	
  
 <div class="input-group">
   <span class="input-group-addon"><span >Причина отказа</span></span>
-  <input type="text" id="otkaz_reason" placeholder="Укажите причину отказа" class="form-control" orderid="<?php echo $_GET['view_zakazid']; ?>" onkeyup="newotkaz();">
+  <input type="text" id="otkazreason" placeholder="Укажите причину отказа" class="form-control" orderid="<?php echo $_GET['view_zakazid']; ?>" onkeyup="newotkaz();">
 </div>	
 
  <div class="input-group" >
@@ -323,6 +323,15 @@ function gotoeditor(orderid)
 }
 
 
+function newotkaz()
+{
+
+
+}
+
+
+
+
 function newpay()
 {
 	val1 = $("#newpayment").val();
@@ -387,6 +396,7 @@ $(function(){
 
    
 $('#newpaydate').datepicker({ maxDate: "+0D" });
+$('#otkazdate').datepicker({ maxDate: "+0D" });
 
  $("#allpaytab")
   .tablesorter(
@@ -538,6 +548,28 @@ dialog.dialog('open');
 				}
 		});
 	}
+
+	
+	
+	
+	function add_otkaz(){
+	orderid = $("#newpayment").attr('orderid');
+			$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'addotkaz',   orderid:orderid, otkazreason: $("#otkazreason").val(), otkazdate:$("#otkazdate").val()}
+		})
+		.done(function( msg ) {
+				if(msg == 'yes'){
+
+				location.href="?view_zakazid="+orderid;	
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				
+				}
+		});
+	}
+
 
 	function get_hall()
 	{
