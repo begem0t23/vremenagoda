@@ -1320,7 +1320,6 @@ $button2 = '<form action="_print.php" method="POST" target="_blank">
 			</form>';
 		
 $button3 = '<form action="#" method="POST" >
-			<button name="sendemail" onclick="openemail();" class = "btn btn-primary" type="button"  title="Отправить отчет по заказу клиенту"><span class="glyphicon glyphicon-envelope"></span></button>
 			<textarea name="emailhtml" id="emailhtml" orderid="'.$orderid.'"  cols="0" rows="0" style="display:none;">
 			'.$html1.$header.$title.$style.$table.$html2.'
 			</textarea>

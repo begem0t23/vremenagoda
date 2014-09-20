@@ -182,6 +182,7 @@ $paydate = $_POST['paydate'];
 				<th class="report_columns_head">Кому Адрес</th>
 				<th class="report_columns_head">Копия Адрес</th>
 				<th class="report_columns_head">Тема письма</th>
+				<th class="report_columns_head">Файл</th>
 				<th class="report_columns_head">Когда</th>
 				</tr>';
 
@@ -198,7 +199,6 @@ $paydate = $_POST['paydate'];
 				<td>'.$row_tab['realname'].'</td>
 				<td>'.$row_tab['email'].'</td>
 				<td>'.$row_tab['copy'].'</td>
-				<td>'.$row_tab['subject'].'</td>
 				<td>'.$row_tab['subject'].'</td>
 				<td>'.$row_tab['filename'].'</td>
 				<td>'.$row_tab['date'].'</td>
@@ -1964,6 +1964,8 @@ $subject = 'Заказ Банкета в ресторане Времена Го�
         // отправляем наше письмо
         if (!$mail->Send()) die ('Mailer Error: '.$mail->ErrorInfo); 
 		
+		if($copy)
+		{
         $mail2 = new PHPMailer();
         $mail2->From = 'info@vremena-goda.ru';           // от кого
         $mail2->FromName = 'www.vremena-goda.ru';   // от кого
@@ -1974,7 +1976,7 @@ $subject = 'Заказ Банкета в ресторане Времена Го�
         $mail2->Body = $mess;
         // отправляем наше письмо
         if (!$mail2->Send()) die ('Mailer Error: '.$mail2->ErrorInfo); 
-		
+		}
 		
 		
 		$insert="INSERT INTO `emails` (`id`, `orderid`, `userid`, `email`, `copy`, `subject`, `body`, `date`,`filename`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$email."', '".$copy."', '".$subject."', '".$mess."', NOW(), '".$filename."') ;";

@@ -27,9 +27,9 @@
 
 <style>
 .nav-title{width:200px !important;}
-.nav-element{width:150px !important;}
+.nav-element{width:200px !important;}
 	
-.small{width:350px !important;}
+.small{width:400px !important;}
 .big	{width:750px !important;}
 
    #weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
@@ -152,7 +152,7 @@ echo '<option value="0">Выберите менеджера</option>';
 <div id="otkaz_section"  style="display:none;" class="btn btn-default small">
 <div class="input-group" >
  <span class="input-group-addon"><span >Дата отказа</span></span>
- <input name="otkaz_date" data-mask="99.99.9999" maxlength="10" type="text" id="otkazdate" onchange="newotkaz();" onclick="$('#newpaydate' ).datepicker( 'show' );" class="form-control" placeholder="Дата платежа">
+ <input name="otkaz_date" data-mask="99.99.9999" maxlength="10" type="text" id="otkazdate" onchange="newotkaz();" onclick="$('#newtkaz' ).datepicker( 'show' );" class="form-control" placeholder="Дата платежа">
   </div>	
  
 <div class="input-group">
@@ -248,8 +248,12 @@ echo '<option value="0">Выберите менеджера</option>';
 
 <div id="allemails" ></div>
 
-</div>
+<div class="input-group">
 
+<button class="btn btn-primary  "  onclick="openemail();" >Отправить письмо</button>
+</div>	
+</div>
+<br><br>
 		<div id="report_section">      </div>
 
 <?php
@@ -335,6 +339,8 @@ function newpay()
 	if(val3)
 	{
 		$("#newpayadd").parent().show();
+		$("#newpayadd").removeClass("btn-default");
+		$("#newpayadd").addClass("btn-danger");
 		$("#newpaycancel").parent().show();	
 		$("#newpaycomm").parent().show();	
 		//$("#ispayout").parent().show();	
@@ -342,6 +348,8 @@ function newpay()
 	else
 	{
 		$("#newpayadd").parent().hide();	
+		$("#newpayadd").addClass("btn-default");
+		$("#newpayadd").removeClass("btn-danger");
 		$("#newpaycancel").parent().hide();	
 		$("#newpaycomm").parent().hide();	
 		//$("#ispayout").parent().hide();	
@@ -635,9 +643,12 @@ dialog.dialog('open');
 			$("#apv").addClass("btn-primary");
 		}else
 		{
+		if (!$("#newpayadd").hasClass("btn-danger"))
+			{
 			$("#apv").html('Показать');
 			$("#apv").addClass("btn-default");
 			$("#apv").removeClass("btn-primary");
+			}
 		}
 	
 	check_pay_view();
