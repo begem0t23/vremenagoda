@@ -42,7 +42,7 @@
 <?php
 
 fixednavbar();
-
+global $orderstatus;
 ?>
     <!-- Begin page content -->
     <div class="container">
@@ -61,7 +61,7 @@ fixednavbar();
 		 FROM orders o, users u, clients c 
 		 WHERE o.status > 1 AND o.status !=8 AND o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
 		"", //период (поле,начало,конец)
-		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>;edit  btn btn-primary,Редактирование заказа,<span class=".$q."glyphicon glyphicon-pencil".$q."></span>;events btn btn-primary,Просмотр мероприятий,<span class=".$q."glyphicon glyphicon-calendar".$q."></span>;payments btn btn-primary,Просмотр платежей,<span class=".$q."glyphicon glyphicon-book".$q."></span>"  //кнопки
+		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
 		);
 		
 		table(
@@ -73,7 +73,7 @@ fixednavbar();
 		 FROM orders o, users u, clients c 
 		 WHERE o.status > 1 AND o.status !=8 AND o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
 		"", //период (поле,начало,конец)
-		"view btn btn-primary,Просмотр заказа,<span class=".$q."glyphicon glyphicon-file".$q."></span>;edit  btn btn-primary,Редактирование заказа,<span class=".$q."glyphicon glyphicon-pencil".$q."></span>;events btn btn-primary,Просмотр мероприятий,<span class=".$q."glyphicon glyphicon-calendar".$q."></span>;payments btn btn-primary,Просмотр платежей,<span class=".$q."glyphicon glyphicon-book".$q."></span>"  //кнопки
+		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
 		);
 	} else {
 	
@@ -90,6 +90,22 @@ fixednavbar();
 	echo '<h3>Заказ №'.$_GET['view_zakazid'].'</h3>'.chr(10);
 	echo '<input type="hidden" id="hall" value="'.$rows['hallid'].'">'.chr(10);
 	echo '<input type="hidden" id="dateevent" value="'.convert_date2($rows['eventdate']).'">'.chr(10);
+
+	
+$bclass = "btn-danger";
+$bname1 = "Невозможно";
+$bname2 = "Невозможно";
+$bdisabled = "disabled";
+
+if ($rows['status'] == 2 || $rows['status'] == 4 || $rows['status'] == 6) 
+{
+$bclass = "btn-success";
+$bname1 = "Перейти";
+$bname2 = "Показать";
+$bdisabled = "";
+}
+
+
 	?>
 	
 <div class="input-group"  style="display:none;" >
@@ -102,16 +118,22 @@ fixednavbar();
 </div>
 
 
+<div class="input-group">
+<span class="input-group-addon nav-title"><span >Статус заказа</span></span>
+<button class="btn <?php echo $bclass; ?>  nav-element"  onclick = "gotoeditor(<?php echo $_GET['view_zakazid']; ?>)" disabled><?php echo $orderstatus[$rows['status']]; ?></button>
+</div>
+
+
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Редактирование заказа</span></span>
-<button class="btn btn-default  nav-element"  onclick = "gotoeditor(<?php echo $_GET['view_zakazid']; ?>)" >Перейти</button>
+<button class="btn  <?php echo $bclass; ?>  nav-element"  onclick = "gotoeditor(<?php echo $_GET['view_zakazid']; ?>)"  <?php echo $bisabled; ?>> <?php echo $bname1; ?></button>
 </div>
 
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Передача заказа</span></span>
-<button class="btn btn-default  nav-element" id="dlg" onclick="delegateview();">Показать</button>
+<button class="btn  <?php echo $bclass; ?>  nav-element" id="dlg" onclick="delegateview();"><?php echo $bname2; ?></button>
 </div>
 
 <div id="delegate_section"   style="display:none;"  class="btn btn-default small">
@@ -146,7 +168,7 @@ echo '<option value="0">Выберите менеджера</option>';
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Отказ клиента</span></span>
-<button class="btn btn-default  nav-element" id="cnl" onclick="otkazview();">Показать</button>
+<button class="btn  <?php echo $bclass; ?>   nav-element" id="cnl" onclick="otkazview();"><?php echo $bname2; ?></button>
 </div>
 
 <div id="otkaz_section"  style="display:none;" class="btn btn-default small">
@@ -170,7 +192,7 @@ echo '<option value="0">Выберите менеджера</option>';
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Платежи</span></span>
-<button class="btn btn-default  nav-element" id="apv" onclick="allpaymentsview();">Показать</button>
+<button class="btn btn-success  nav-element" id="apv" onclick="allpaymentsview();">Показать</button>
 </div>
 
 <div id="payments_section"  style="display:none;" class="btn btn-default">
@@ -222,7 +244,7 @@ echo '<option value="0">Выберите менеджера</option>';
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Размещение столов</span></span>
-<button class="btn btn-default  nav-element" id="hv" onclick="hallview();">Показать</button>
+<button class="btn btn-success  nav-element" id="hv" onclick="hallview();">Показать</button>
 </div>
 
 
@@ -607,12 +629,12 @@ dialog.dialog('open');
 		if($("#dlg").html()=='Показать')
 		{
 			$("#dlg").html('Скрыть');
-			$("#dlg").removeClass("btn-default");
+			$("#dlg").removeClass("btn-success");
 			$("#dlg").addClass("btn-primary");
 		}else
 		{
 			$("#dlg").html('Показать');
-			$("#dlg").addClass("btn-default");
+			$("#dlg").addClass("btn-success");
 			$("#dlg").removeClass("btn-primary");
 		}
 	check_dlg_view();
@@ -623,12 +645,12 @@ dialog.dialog('open');
 		if($("#cnl").html()=='Показать')
 		{
 			$("#cnl").html('Скрыть');
-			$("#cnl").removeClass("btn-default");
+			$("#cnl").removeClass("btn-success");
 			$("#cnl").addClass("btn-primary");
 		}else
 		{
 			$("#cnl").html('Показать');
-			$("#cnl").addClass("btn-default");
+			$("#cnl").addClass("btn-success");
 			$("#cnl").removeClass("btn-primary");
 		}
 	check_cnl_view();
@@ -639,14 +661,14 @@ dialog.dialog('open');
 		if($("#apv").html()=='Показать')
 		{
 			$("#apv").html('Скрыть');
-			$("#apv").removeClass("btn-default");
+			$("#apv").removeClass("btn-success");
 			$("#apv").addClass("btn-primary");
 		}else
 		{
 		if (!$("#newpayadd").hasClass("btn-danger"))
 			{
 			$("#apv").html('Показать');
-			$("#apv").addClass("btn-default");
+			$("#apv").addClass("btn-success");
 			$("#apv").removeClass("btn-primary");
 			}
 		}
@@ -726,12 +748,12 @@ dialog.dialog('open');
 		if($("#hv").html()=='Показать')
 		{
 			$("#hv").html('Скрыть');
-			$("#hv").removeClass("btn-default");
+			$("#hv").removeClass("btn-success");
 			$("#hv").addClass("btn-primary");
 		}else
 		{
 			$("#hv").html('Показать');
-			$("#hv").addClass("btn-default");
+			$("#hv").addClass("btn-success");
 			$("#hv").removeClass("btn-primary");
 		}
 	
