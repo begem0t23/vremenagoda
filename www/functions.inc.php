@@ -1479,6 +1479,7 @@ echo $empty_out;
 
 function fixedbotbar()
 {
+	return false;
 	global $userroles;
 ?>
     <div class="footer">
