@@ -43,6 +43,7 @@ if (@$_POST["dosend"])
 
 if (checklogin())
 {
+
 	if ($qq == "logout")
 	{
 		include("_logout.php");
@@ -82,6 +83,10 @@ if (checklogin())
 	elseif (@$q[0] == "edit")
 	{
 		include("_edit.php");
+	}
+	elseif ($qq == "agenstva")
+	{
+		include("_agenstva.php");
 	}
 	elseif ($qq == "debug")
 	{

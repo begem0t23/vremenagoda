@@ -808,7 +808,7 @@ fixednavbar();
 					spanpage1+='<input type="text" id="clientfrom" style="display:none;" value="'+data[4]+'" class="form-control" placeholder="Укажите откуда пришел">';
 
 					spanpage1+='<?php
-					$tsql2 = "select * from `agenсies` ;";
+					$tsql2 = "select * from `agenсies` WHERE isactive = 1;";
 					$r_from = mysql_query($tsql2);
 					if (mysql_num_rows($r_from)>0)
 					{	
@@ -828,7 +828,7 @@ fixednavbar();
 						}
 						?>
 						spanpage1+='<?php
-						echo '<option value="999">Другое</option>' . "";
+						//echo '<option value="999">Другое</option>' . "";
 						echo '</select>' . "";
 					}
 					?>';

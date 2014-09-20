@@ -26,13 +26,17 @@
  </head>
 
 <style>
-.nav-title{width:100px !important;}
+.nav-title{width:200px !important;}
 .nav-element{width:150px !important;}
 	
+.small{width:350px !important;}
+.big	{width:750px !important;}
 
    #weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
 		.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
-  
+		
+		.input-group{padding:10px 0 0 0 !important;}
+  .right{position:absolute; left:250px;}
 </style>  
   <body>
 <?php
@@ -84,6 +88,80 @@ fixednavbar();
 	echo '<input type="hidden" id="dateevent" value="'.convert_date2($rows['eventdate']).'">'.chr(10);
 	?>
 	
+<div class="input-group"  style="display:none;" >
+<span class="input-group-addon nav-title"><span >Операции</span></span>
+<select class="btn btn-default  nav-element" id="oper" onchange="operation();">
+<option value="delegate">Передать</option>
+<option value="cancel">Отказ</option>
+<option value="payment">Добавить платеж</option>
+</select>
+</div>
+
+
+
+<div class="input-group">
+<span class="input-group-addon nav-title"><span >Редактирование заказа</span></span>
+<button class="btn btn-default  nav-element"  onclick = "gotoeditor(<?php echo $_GET['view_zakazid']; ?>)" >Перейти</button>
+</div>
+
+
+<div class="input-group">
+<span class="input-group-addon nav-title"><span >Передача заказа</span></span>
+<button class="btn btn-default  nav-element" id="dlg" onclick="delegateview();">Показать</button>
+</div>
+
+<div id="delegate_section"   style="display:none;"  class="btn btn-default small">
+<div class="input-group">
+<select class="form-control" id="delegate" onchange="delegate();">
+<?php
+$sql="SELECT * FROM `users` WHERE `id` != '".$_SESSION["curuserid"]."'" ;
+echo '<option value="0">Выберите менеджера</option>';
+			$rez = mysql_query($sql);
+			if (mysql_num_rows($rez)>0)
+			{
+				while ($row = mysql_fetch_array($rez))
+				{
+					echo '<option value="'.$row['id'].'">'.$row['realname'].'</option>';
+				}
+			}
+?>
+</select>
+</div>	
+
+
+<div class="input-group">
+  <input type="text" id="delegate_reason" placeholder="Укажите причину передачи" class="form-control" orderid="<?php echo $_GET['view_zakazid']; ?>" onkeyup="newotkaz();">
+</div>	
+
+<div class="input-group" >
+  <button class="btn btn-default" onclick="add_delegate();" id="delegateadd">Передать</button>
+  <button class="btn btn-default right" onclick="cancel_delegate();" id="delegatecancel">Отмена</button>
+ </div>	
+</div>
+
+
+<div class="input-group">
+<span class="input-group-addon nav-title"><span >Отказ клиента</span></span>
+<button class="btn btn-default  nav-element" id="cnl" onclick="otkazview();">Показать</button>
+</div>
+
+<div id="otkaz_section"  style="display:none;" class="btn btn-default small">
+<div class="input-group" >
+ <span class="input-group-addon"><span >Дата отказа</span></span>
+ <input name="otkaz_date" data-mask="99.99.9999" maxlength="10" type="text" id="otkazdate" onchange="newotkaz();" onclick="$('#newpaydate' ).datepicker( 'show' );" class="form-control" placeholder="Дата платежа">
+  </div>	
+ 
+<div class="input-group">
+  <span class="input-group-addon"><span >Причина отказа</span></span>
+  <input type="text" id="otkaz_reason" placeholder="Укажите причину отказа" class="form-control" orderid="<?php echo $_GET['view_zakazid']; ?>" onkeyup="newotkaz();">
+</div>	
+
+ <div class="input-group" >
+  <button class="btn btn-default" onclick="add_otkaz();" id="otkazadd">Добавить</button>
+  <button class="btn btn-default right" onclick="cancel_otkaz();" id="otkazcancel">Отмена</button>
+ </div>	
+</div>
+
 
 
 <div class="input-group">
@@ -119,10 +197,7 @@ fixednavbar();
   </div>	
  
  
- <div class="input-group" style="display:none;">
- <span class="input-group-addon"><span >Возврат средств</span></span>
- <input  type="checkbox" id="ispayout" class="form-control" >
- </div>	
+ 
 
  <div class="input-group" style="display:none;">
   <span class="input-group-addon"><span >Комментарий</span></span>
@@ -131,7 +206,7 @@ fixednavbar();
  
   <div class="input-group" style="display:none;">
   <button class="btn btn-default" onclick="add_payment();" id="newpayadd">Добавить</button>
-  <button class="btn btn-default" onclick="cancel_payment();" id="newpaycancel">Отмена</button>
+  <button class="btn btn-default right" onclick="cancel_payment();" id="newpaycancel">Отмена</button>
  </div>	
 
 
@@ -139,18 +214,19 @@ fixednavbar();
 </table>
 </div>
 
-<br>
 
 
 <div class="input-group">
-<span class="input-group-addon nav-title"><span >Посадка</span></span>
+<span class="input-group-addon nav-title"><span >Размещение столов</span></span>
 <button class="btn btn-default  nav-element" id="hv" onclick="hallview();">Показать</button>
 </div>
-<br>
-	<div id="selectedhall" style="display:none;" class="btn btn-default">      </div>
+
+
+	<div id="selectedhall" style="display:none;" class="btn btn-default">      
+	</div>
 
 	<div class="input-group">
-<span class="input-group-addon  nav-title"><span >Отчет</span></span>
+<span class="input-group-addon  nav-title"><span >Показать отчет</span></span>
 <select id="show_report" onchange="get_report();"  class="form-control nav-element" >
 <option value="full"  selected="selected">Полный</option>
 <option  value="client">Для Клиента</option>
@@ -198,10 +274,15 @@ fixedbotbar();
 <script type="text/javascript" src="/jquery/jquery.tablesorter.widgets.js"></script>
 
 <script type="text/javascript">
-	
+
+function gotoeditor(orderid)
+{
+			location.href ="?edit/"+orderid+"/";
+}
+
+
 function newpay()
 {
-
 	val1 = $("#newpayment").val();
 
 	if(val1)
@@ -215,7 +296,7 @@ function newpay()
 		$("#newpayadd").parent().hide();	
 		$("#newpaycancel").parent().hide();	
 		$("#newpaycomm").parent().hide();	
-		$("#ispayout").parent().hide();	
+		//$("#ispayout").parent().hide();	
 	}
 	
 		val2 = $("#newpaymethod").val();
@@ -230,7 +311,7 @@ function newpay()
 		$("#newpayadd").parent().hide();	
 		$("#newpaycancel").parent().hide();	
 		$("#newpaycomm").parent().hide();	
-		$("#ispayout").parent().hide();	
+		//$("#ispayout").parent().hide();	
 	}
 	
 	val3 = $("#newpaydate").val();
@@ -240,14 +321,14 @@ function newpay()
 		$("#newpayadd").parent().show();
 		$("#newpaycancel").parent().show();	
 		$("#newpaycomm").parent().show();	
-		$("#ispayout").parent().show();	
+		//$("#ispayout").parent().show();	
 	}
 	else
 	{
 		$("#newpayadd").parent().hide();	
 		$("#newpaycancel").parent().hide();	
 		$("#newpaycomm").parent().hide();	
-		$("#ispayout").parent().hide();	
+		//$("#ispayout").parent().hide();	
 	}
 
 }	
@@ -386,17 +467,17 @@ dialog.dialog('open');
 		$("#newpayadd").val("");	
 		$("#newpaycancel").val("");
 		$("#newpaycomm").val("");
-		$("#ispayout").removeAttr("checked");
+		//$("#ispayout").removeAttr("checked");
 		newpay();
 	}
 
 	function add_payment(){
 	orderid = $("#newpayment").attr('orderid');
-	
+	//ispayout:$("#ispayout")[0].checked,
 			$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'addpayment', ispayout:$("#ispayout")[0].checked, paycomm:$("#newpaycomm").val(),  orderid:orderid, paysum: $("#newpayment").val(), paymeth:$("#newpaymethod").val(), paydate:$("#newpaydate").val()}
+			data: { operation: 'addpayment',  paycomm:$("#newpaycomm").val(),  orderid:orderid, paysum: $("#newpayment").val(), paymeth:$("#newpaymethod").val(), paydate:$("#newpaydate").val()}
 		})
 		.done(function( msg ) {
 				if(msg == 'yes'){
@@ -462,8 +543,38 @@ dialog.dialog('open');
 	
 	}	
 	
-	
-	
+	function delegateview()
+	{
+		if($("#dlg").html()=='Показать')
+		{
+			$("#dlg").html('Скрыть');
+			$("#dlg").removeClass("btn-default");
+			$("#dlg").addClass("btn-primary");
+		}else
+		{
+			$("#dlg").html('Показать');
+			$("#dlg").addClass("btn-default");
+			$("#dlg").removeClass("btn-primary");
+		}
+	check_dlg_view();
+	}
+		
+	function otkazview()
+	{
+		if($("#cnl").html()=='Показать')
+		{
+			$("#cnl").html('Скрыть');
+			$("#cnl").removeClass("btn-default");
+			$("#cnl").addClass("btn-primary");
+		}else
+		{
+			$("#cnl").html('Показать');
+			$("#cnl").addClass("btn-default");
+			$("#cnl").removeClass("btn-primary");
+		}
+	check_cnl_view();
+	}
+			
 	function allpaymentsview()
 	{
 		if($("#apv").html()=='Показать')
@@ -492,7 +603,29 @@ dialog.dialog('open');
 			$("#payments_section").show();
 		}
 	}
-	
+	function check_dlg_view()
+	{
+	get_all_payments();
+		if($("#dlg").html()=='Показать')
+		{
+			$("#delegate_section").hide();
+		}else
+		{
+			$("#delegate_section").show();
+		}
+	}
+		function check_cnl_view()
+	{
+	get_all_payments();
+		if($("#cnl").html()=='Показать')
+		{
+			$("#otkaz_section").hide();
+		}else
+		{
+			$("#otkaz_section").show();
+		}
+	}
+		
 	function hallview()
 	{
 		if($("#hv").html()=='Показать')

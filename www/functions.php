@@ -7,6 +7,80 @@ if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 
 
+
+if($_POST['operation'] == 'changeagdata')
+{
+$agid = $_POST['agid'];
+$agname = $_POST['agname'];
+$agentname = $_POST['agentname'];
+
+$agphone = $_POST['agphone'];
+$showag = $_POST['showag'];
+
+	if ($agid > 0) 
+	{
+		$tsql01 = "SELECT * FROM `agenсies` WHERE  `id` = ".$agid." ;";
+		
+		$rezult01 = mysql_query($tsql01);
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+		$rows01 =	mysql_fetch_array($rezult01);
+		
+		$update = "UPDATE `agenсies` SET `name` = '".$agname."',  `agentname` = '".$agentname."',  `phone` = '".$agphone."' ,  `isactive` = '".$showag."' WHERE  `id` = ".$agid." ;";
+			mysql_query($update);
+
+		} else {
+				Echo "почемуто нет такой записи";	
+				}
+
+		$tsql02 = "SELECT * FROM `agenсies`  WHERE `name` = '".$agname."' AND `agentname` = '".$agentname."' AND  `phone` = '".$agphone."' AND   `isactive` = '".$showag."'  ;";
+		$rezult02 = mysql_query($tsql02);
+		if (mysql_num_rows($rezult02) > 0) 
+		{
+			echo 'yes';
+		}
+
+	}	
+
+}
+
+
+
+
+if($_POST['operation'] == 'addag')
+{
+$agid = $_POST['agid'];
+$agname = $_POST['agname'];
+$agentname = $_POST['agentname'];
+
+$agphone = $_POST['agphone'];
+$showag = $_POST['showag'];
+
+	if ($agid == 0) 
+	{
+		
+		$insert = "INSERT INTO `agenсies` (`id`, `name`,   `agentname` ,  `phone` ,  `isactive` ) VALUES (NULL,  '".$agname."','".$agentname."','".$agphone."' , '".$showag."');";
+		
+			mysql_query($insert);
+
+	
+		$tsql02 = "SELECT * FROM `agenсies`  WHERE `name` = '".$agname."' AND `agentname` = '".$agentname."' AND  `phone` = '".$agphone."' AND   `isactive` = '".$showag."'  ;";
+		$rezult02 = mysql_query($tsql02);
+		if (mysql_num_rows($rezult02) > 0) 
+		{
+			echo 'yes';
+		}
+
+	}	
+
+}
+
+
+
+
+
+
+
 if ($_POST['operation'] == 'getreport') 
 {
 header('Content-Type: text/html; charset=utf-8');
