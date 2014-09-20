@@ -268,7 +268,7 @@ $bgs[1] = 'Да';
       allFields.removeClass( "ui-state-error" );
  
       valid = valid && checkLength( name, "username", 3, 100 );
-      valid = valid && checkLength( description, "description", 10, 200 );
+      //valid = valid && checkLength( description, "description", 10, 200 );
       valid = valid && checkLength( price, "price", 1, 10 );
  
       //valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\(\)\s])+$/i, "Недопустимые символы." );
@@ -365,7 +365,7 @@ $bgs[1] = 'Да';
   });
 	</script>
  <div id="dialog-form" title="Заполните информацию по услуге">
-  <p class="validateTips">Все поля должны быть заполнены.</p>
+  <p class="validateTips">Поля название и цена должны быть заполнены.</p>
   <form>
 	<input type="text" id="name" placeholder="Название" class="form-control" value="">
 	<input type="text" id="description" placeholder="Описание" class="form-control" value="">
