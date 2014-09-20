@@ -23,13 +23,13 @@ if($forwho == 'food') $title='Kitchen_Bar_Report_';
 	$dompdf->set_paper('A4', $land);
 	$dompdf->render();
 
-	//$dompdf->stream($title."VremenaGoda_Order№".$zid.".pdf", array("Attachment" => true));
+	//$dompdf->stream($title."VremenaGoda_Order_".$zid.".pdf", array("Attachment" => true));
 $output = $dompdf->output();
-//file_put_contents($title."VremenaGoda_Order№".$zid.".pdf", $output);
+file_put_contents("pdf/".$title."VremenaGoda_Order_".$zid.".pdf", $output);
   //exit(0);
 
   
-          $mess = $_POST['textemail'];
+         $mess = $_POST['textemail'];
         //$mess2 = $_POST['emailhtml'];
 
         // подключаем файл класса для отправки почты
@@ -46,7 +46,7 @@ $output = $dompdf->output();
 
          //если был файл, то прикрепляем его к письму
 
-                    $mail->AddAttachment($output, $title."VremenaGoda_Order№".$zid.".pdf");
+                    $mail->AddAttachment("pdf/".$title."VremenaGoda_Order_".$zid.".pdf","file.pdf");
 
         
 
@@ -55,7 +55,7 @@ $output = $dompdf->output();
         $mail->Body = $mess;
 
         // отправляем наше письмо
-        if (!$mail->Send()) die ('Mailer Error: '.$mail->ErrorInfo);
+        //if (!$mail->Send()) die ('Mailer Error: '.$mail->ErrorInfo); 
 		
 ?>
 

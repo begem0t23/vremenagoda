@@ -82,6 +82,10 @@ fixednavbar();
 	$rezult = mysql_query($select);
 	$rows = mysql_fetch_assoc($rezult);
 	
+	$select2 = "SELECT * FROM `clients` WHERE `id` = '".$rows['clientid']."';";
+	
+	$rezult2 = mysql_query($select2);
+	$rows2 = mysql_fetch_assoc($rezult2);
 	
 	echo '<h3>Заказ №'.$_GET['view_zakazid'].'</h3>'.chr(10);
 	echo '<input type="hidden" id="hall" value="'.$rows['hallid'].'">'.chr(10);
@@ -457,6 +461,7 @@ function sendemail()
 
 function openemail()
 {
+$("#pdffile").text($("#emailhtml").text());
 dialog.dialog('open');
 }
 
@@ -657,9 +662,7 @@ dialog.dialog('open');
 	
 			function checkhallselect()
 		{
-			
 
-		
 		}
 		
 </script>	
@@ -667,11 +670,18 @@ dialog.dialog('open');
 	<div id="sendemail-form" title="Заполните информацию по пользователю.">
   <p class="validateTips">Отправить отчет по E-mail.</p>
   <form id="myForm" action="functions.php" method="POST" enctype="multipart/form-data">
-	<input type="text" id="email" placeholder="Email Клиента" class="form-control" value="">
-	<input type="text" id="name" placeholder="Копия" class="form-control" value="">
-	<input name="file" id="file" value="" type="file"  size="50">
+	E-mail адрес Клиента:
+	<input type="text" id="email"  name="email" placeholder="Email Клиента" class="form-control" value="<?php echo $rows2['email']; ?>">
+	<br>
+	Отправить копию на адрес:
+	<input type="text" id="copy" name="copy" placeholder="Копия" class="form-control" value="" >
+	<br>
+	Название файла: <br>
+	<input name="filename" id="filename" value="<?php echo "VremenaGoda_Order_".$_GET['view_zakazid']."_.pdf"; ?>" type="text"  size="50">
 	<input type="hidden" value="sendemail" id="operation" name="operation">
-	<textarea rows = "8" name="textemail" placeholder="Текст Сообщения" class="form-control">Здравствуйте Уважаемый(ая) Имя! 
+	<input type="hidden" value="<?php echo $_GET['view_zakazid']; ?>" id="orderid" name="orderid">
+	<textarea  style = "display:none;" name = "pdffile" id="pdffile"></textarea>
+	<textarea  style = "display:none;" rows = "8" name="textemail" placeholder="Текст Сообщения" class="form-control">Здравствуйте Уважаемый(ая) Имя! 
 	<br><br>
 	Высылаем Вам копию Вашего заказа для ознакомления и ждем Ваших комментарием.
 	<br><br>
@@ -682,13 +692,10 @@ dialog.dialog('open');
 	<br>
 	Ресторан Времена Года.<br><br></textarea>
  </form>
- <div id="progress">
-        <div id="bar"></div>
-        <div id="percent">0%</div >
-</div>
+ 
 <br/>
  
-<div id="message"></div>
+
  
 </div>
   </body>

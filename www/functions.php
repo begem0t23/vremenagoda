@@ -1872,35 +1872,67 @@ echo '<br><br>
 
 if($_POST['operation'] == 'sendemail')
 {
-        $mess = $_POST['textemail'];
+
+require_once("dompdf/dompdf_config.inc.php");
+header('Content-Type: text/html; charset=utf-8');
+$pdf= $_POST['pdffile'];
+$filename= $_POST['filename'];
+$email= $_POST['email'];
+$copy= $_POST['copy'];
+$orderid= $_POST['orderid'];
+
+$land='portrait';
+
+$title='';
+ 
+
+	if ( get_magic_quotes_gpc() )
+	$pdf = stripslashes($pdf);
+  
+	$dompdf = new DOMPDF();
+	$dompdf->load_html($pdf);
+	$dompdf->set_paper('A4', $land);
+	$dompdf->render();
+
+	//$dompdf->stream($title."VremenaGoda_Order_".$zid.".pdf", array("Attachment" => true));
+$output = $dompdf->output();
+file_put_contents("pdf/".$filename, $output);
+  //exit(0);
+  
+         $mess = $_POST['textemail'];
         //$mess2 = $_POST['emailhtml'];
 
         // подключаем файл класса для отправки почты
        require 'class.phpmailer.php';
        require 'class.smtp.php';
-
+$subject = 'Заказ Банкета в ресторане Времена Года';
         $mail = new PHPMailer();
         $mail->From = 'info@vremena-goda.ru';           // от кого
         $mail->FromName = 'www.vremena-goda.ru';   // от кого
-        $mail->AddAddress('petervolok@yandex.ru', 'Имя'); // кому - адрес, Имя
-
+        $mail->AddAddress($email, 'Имя'); // кому - адрес, Имя
         $mail->IsHTML(true);        // выставляем формат письма HTML
-        $mail->Subject = 'Заказ Банкета в ресторане Времена Года';  // тема письма
-
-         //если был файл, то прикрепляем его к письму
-        if(isset($_FILES['file'])) {
-                 if($_FILES['file']['error'] == 0){
-                    $mail->AddAttachment($_FILES['file']['tmp_name'], $_FILES['file']['name']);
-                 }
-        }
-
-	
-
+        $mail->Subject = $subject;  // тема письма
+        $mail->AddAttachment("pdf/".$filename,$filename);
         $mail->Body = $mess;
-
         // отправляем наше письмо
-        if (!$mail->Send()) die ('Mailer Error: '.$mail->ErrorInfo);
+        if (!$mail->Send()) die ('Mailer Error: '.$mail->ErrorInfo); 
 		
+        $mail2 = new PHPMailer();
+        $mail2->From = 'info@vremena-goda.ru';           // от кого
+        $mail2->FromName = 'www.vremena-goda.ru';   // от кого
+        $mail2->AddAddress($copy, 'Имя'); // кому - адрес, Имя
+        $mail2->IsHTML(true);        // выставляем формат письма HTML
+        $mail2->Subject = $subject;  // тема письма
+        $mail2->AddAttachment("pdf/".$filename,$filename);
+        $mail2->Body = $mess;
+        // отправляем наше письмо
+        if (!$mail2->Send()) die ('Mailer Error: '.$mail2->ErrorInfo); 
+		
+		
+		
+		$insert="INSERT INTO `emails` (`id`, `orderid`, `userid`, `email`, `copy`, `subject`, `body`, `date`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$email."', '".$copy."', '".$subject."', '".$mess."', NOW()) ;";
+		mysql_query($insert);
+
 		echo 'yes';
 }
 ?>

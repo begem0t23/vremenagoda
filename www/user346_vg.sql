@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 16, 2014 at 04:19 PM
+-- Generation Time: Sep 20, 2014 at 06:07 PM
 -- Server version: 5.5.25
 -- PHP Version: 5.3.13
 
@@ -31,17 +31,23 @@ CREATE TABLE IF NOT EXISTS `agenсies` (
   `name` text NOT NULL,
   `agentname` text NOT NULL,
   `phone` text NOT NULL,
+  `isactive` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `agenсies`
 --
 
-INSERT INTO `agenсies` (`id`, `name`, `agentname`, `phone`) VALUES
-(1, 'первое агенство', '', ''),
-(2, 'второе агенство', '', '');
+INSERT INTO `agenсies` (`id`, `name`, `agentname`, `phone`, `isactive`) VALUES
+(1, 'Студия без паники', 'Полина', '', 1),
+(2, 'Совершенство', 'Максим Данилов', '', 1),
+(3, 'Агенство Праздник', '', '', 1),
+(4, 'Агенство Вера Кудряшова', '', '', 1),
+(5, 'Агенство О-банкет', '', '', 1),
+(6, 'Агенство Ресто', '', '', 1),
+(7, 'Агенство Мон Амур', '', '', 1);
 
 -- --------------------------------------------------------
 
@@ -57,17 +63,14 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `otkuda` tinytext NOT NULL,
   `agencyname` tinytext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `clients`
 --
 
 INSERT INTO `clients` (`id`, `name`, `phone`, `email`, `otkuda`, `agencyname`) VALUES
-(1, 'Иванов', '1231231231', 'фвывфывфыв', 'По рекомендации ', '0'),
-(2, 'Иванов', '1231231231', 'фвывфывфыв', 'По рекомендации ', 'undefined'),
-(3, 'Иванов', '1231231231', 'фвывфывфыв', 'По рекомендации ', 'undefined'),
-(4, '', '', '', '', '');
+(1, 'Иванов', '2342424324', 'ываываыва', 'Проходил мимо', '0');
 
 -- --------------------------------------------------------
 
@@ -1251,6 +1254,25 @@ CREATE TABLE IF NOT EXISTS `dishes_in_orders_history` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `emails`
+--
+
+CREATE TABLE IF NOT EXISTS `emails` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `orderid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `email` text NOT NULL,
+  `copy` text NOT NULL,
+  `subject` text NOT NULL,
+  `body` text NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `events_in_orders`
 --
 
@@ -1550,8 +1572,8 @@ INSERT INTO `services` (`id`, `name`, `description`, `price`, `byguestcount`, `c
 (6, 'Аренда зала', '100 руб с человека', 100.00, 0, '2014-08-17 11:29:13', 0, 0, 0),
 (7, 'Аренда зала', '100 руб с человека', 100.00, 1, '2014-08-17 11:31:42', 0, 5, 0),
 (8, 'Пробковый сбор', 'добавляется если клиент приходит со своим спиртым', 200.00, 1, '2014-08-26 15:00:11', 0, 6, 0),
-(9, 'Скидка на кухню', 'Скидка на все блюда без учета чаевых', 10.00, 0, '2014-08-27 11:48:27', 1, 1, 1),
-(10, 'Скидка на бар', 'Скидка на все напитки без учета чаевых', 10.00, 0, '2014-08-27 11:49:05', 1, 2, 1),
+(9, 'Скидка на кухню', 'Скидка на все блюда без учета чаевых', 0.00, 0, '2014-08-27 11:48:27', 1, 1, 1),
+(10, 'Скидка на бар', 'Скидка на все напитки без учета чаевых', 0.00, 0, '2014-08-27 11:49:05', 1, 2, 1),
 (12, 'Чаевые', 'Наценка за обслуживание кухни и бара без учета скидок', 10.00, 0, '2014-08-27 11:50:08', 1, 3, 1),
 (13, 'Пробковый сбор', 'добавляется если клиент приходит со своим спиртным', 200.00, 1, '2014-08-31 18:39:25', 0, 6, 0),
 (14, 'Пробковый сбор', 'добавляется если клиент приходит со своим спиртным', 300.00, 1, '2014-08-31 19:21:19', 1, 6, 0),
@@ -1571,7 +1593,7 @@ CREATE TABLE IF NOT EXISTS `services_in_orders` (
   `price` float(7,2) unsigned NOT NULL,
   `discont` int(3) unsigned NOT NULL DEFAULT '0',
   `num` float unsigned NOT NULL,
-  `comment` text CHARACTER SET latin1 NOT NULL,
+  `comment` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='заказы услуг' AUTO_INCREMENT=1 ;
 
@@ -1759,7 +1781,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `isactive` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `users`
@@ -1768,10 +1790,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO `users` (`id`, `login`, `pass`, `realname`, `role`, `isactive`) VALUES
 (1, 'aabogachev@gmail.com', '6c14da109e294d1e8155be8aa4b1ce8e', 'Bogachev', 5, 1),
 (2, 'petervolok@yandex.ru', '827ccb0eea8a706c4c34a16891f84e7b', 'PVolok', 5, 1),
-(3, 'igor_pronin@mail.ru', '6c14da109e294d1e8155be8aa4b1ce8e', 'Pronin', 5, 1),
+(3, 'igor_pronin@mail.ru', '827ccb0eea8a706c4c34a16891f84e7b', 'Pronin', 5, 1),
 (4, 'eee@yandex.ru', '3d2172418ce305c7d16d4b05597c6a59', 'qqq', 2, 0),
-(5, '123@123.com', 'b0baee9d279d34fa1dfd71aadb908c3f', 'user1', 1, 0),
-(6, '123@123.com', '3d2172418ce305c7d16d4b05597c6a59', 'user1', 1, 0);
+(5, '123@123.com', 'b0baee9d279d34fa1dfd71aadb908c3f', 'user1', 1, 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
