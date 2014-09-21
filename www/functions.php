@@ -137,6 +137,22 @@ $otkazdate = $_POST['otkazdate'];
 			echo 'yes';
 }
 
+if ($_POST['operation'] == 'adddelegate') 
+{
+$orderid = $_POST['orderid'];
+$otkazreason = $_POST['otkazreason'];
+$otkazdate = $_POST['otkazdate'];
+
+
+			//$insert = "INSERT INTO `payments_in_orders` (`id`,`orderid`, `summa`, `method`, `ispayout`, `comment`, `createdby`,`paymentdate`,`createdate`) VALUES (NULL, '".$orderid."', '".$paysum."', '".$paymeth."', '".$ispayout."', '".$paycomm."', '".$_SESSION["curuserid"]."', '".convert_date($paydate)."', NOW());";
+			
+			
+			//mysql_query($insert);
+
+			$update = "UPDATE `orders` SET `status` = '1' WHERE `id` = '".$orderid."' ;";
+			mysql_query($update);
+			echo 'yes';
+}
 
 
 if ($_POST['operation'] == 'getallpayments') 

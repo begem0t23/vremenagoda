@@ -156,7 +156,7 @@ echo '<option value="0">Выберите менеджера</option>';
 
 
 <div class="input-group">
-  <input type="text" id="delegate_reason" placeholder="Укажите причину передачи" class="form-control" orderid="<?php echo $_GET['view_zakazid']; ?>" onkeyup="newotkaz();">
+  <input type="text" id="delegatereason" placeholder="Укажите причину передачи" class="form-control" orderid="<?php echo $_GET['view_zakazid']; ?>" onkeyup="newotkaz();">
 </div>	
 
 <div class="input-group" >
@@ -570,6 +570,23 @@ dialog.dialog('open');
 		});
 	}
 
+	function add_delegate(){
+	orderid = $("#newpayment").attr('orderid');
+			$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'adddelegate',   orderid:orderid, delegatereason: $("#delegatereason").val()}
+		})
+		.done(function( msg ) {
+				if(msg == 'yes'){
+
+				location.href="?view_zakazid="+orderid;	
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				
+				}
+		});
+	}
 
 	function get_hall()
 	{
