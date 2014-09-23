@@ -1167,16 +1167,16 @@ $dishid = $_POST['dishid'];
 $menuid = $_POST['menuid'];
 $sectionid = $_POST['sectionid'];
 		header('Content-Type: text/html; charset=utf-8');
-		$tsql_0 = "SELECT *  FROM `dishes`	 WHERE  `id` = '".$dishid."' ; ";
+		$tsql_0 = "SELECT *  FROM `dishes_history`	 WHERE  `dishid` = '".$dishid."' order by `kogda` DESC limit 0,1; ";
 		$rezult_0 = mysql_query($tsql_0);
 
 	$rows_0 = mysql_fetch_array($rezult_0);
 ?>
-  <p class="validateTips">Поле "Описание" можно пока не заполнять.</p>
+  <p class="validateTips">Поле "Описание"  не необязательное.</p>
 
   <form>
 
-	<textarea colls="50" id="name" placeholder="Название" class="form-control" ><?php echo $rows_0['title']; ?></textarea>
+	<textarea colls="50" id="name" placeholder="Название" class="form-control" ><?php echo $rows_0['name']; ?></textarea>
 
 	
 
@@ -1276,7 +1276,7 @@ $sectionid = $_POST['sectionid'];
 					{
 					$sid = substr($val[$num1]['id'],1);
 					$selected = '';
-					if ($sectionid==$val[$num1]['id']) {$selected = 'selected = "selected"'; }
+					if ($sectionid==$sid) {$selected = 'selected = "selected"'; }
 						echo '<option value="'.$sid.'"  class="level_1" '.$selected.'>---'.$val[$num1]['name'].'</option>'.chr(10);
 
 						foreach ($val1 as $num2 => $val2) 
@@ -1286,7 +1286,7 @@ $sectionid = $_POST['sectionid'];
 							{
 							$sid = substr($val1[$num2]['id'],1);
 							$selected = '';
-							if ($sectionid == $val1[$num2]['id']) {$selected = 'selected = "selected"'; }
+							if ($sectionid == $sid) {$selected = 'selected = "selected"'; }
 							echo '<option value="'.$sid.'"  class="level_2" '.$selected.'>-------'.$val1[$num2]['name'].'</option>'.chr(10);
 							
 							}
@@ -1862,16 +1862,15 @@ echo '<br><br>
 					echo '<textarea style="display:none;" id="sectiontitle'.$val[$num1]['id'].'">'.$val[$num1]['name'].'</textarea>'.chr(10);
 					if ($_POST['typetree'] == 'menu')
 					{
-						echo  '<button class="level_1 btn btn-primary" type="button" name="adddish"  id="adddish'.$row_menutype["id"].$val[$num1]['id'].'" title="Добавть блюда в раздел">Добавить '.$isdrink[$val[$num1]['isdrink']][2].'</button>'.chr(10);
+						echo  '<button class="level_1 btn btn-primary" type="button" sectionid="'.substr($val[$num1]['id'],1).'" name="editdish"  id="0" title="Создать в этом разделе">Создать '.$isdrink[$val[$num1]['isdrink']][2].'</button>'.chr(10);
 					}
 					if ($_POST['typetree'] == 'dishes')
 					{
-						echo  '<button class="level_1 btn btn-primary" type="button" secid="'.$val[$num1]['id'].'" name="editdish"  id="editdish'.$row_menutype["id"].$val[$num1]['id'].'" title="Создать в этом разделе">Создать '.$isdrink[$val[$num1]['isdrink']][2].'</button>'.chr(10);
 					}
 					if ($_POST['typetree'] == 'sections')
 					{
-						echo '<button class="level_1 btn btn-primary" type="button" isdrink="'.$val[$num1]['isdrink'].'" name="editsection" sectionid="'.$val[$num1]['id'].'"  menuid="0"   title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
-						echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.$val[$num1]['id'].'"  alldishes="'.$val[$num1]['alldishes'].'"  menuid="0"   title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
+						echo '<button class="level_1 btn btn-primary" type="button" isdrink="'.$val[$num1]['isdrink'].'" name="editsection" sectionid="'.substr($val[$num1]['id'],1).'"  menuid="0"   title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
+						echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.substr($val[$num1]['id'],1).'"  alldishes="'.$val[$num1]['alldishes'].'"  menuid="0"   title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
 					}
 					echo '</th></tr></tbody>'.chr(10);
 				}
@@ -1906,16 +1905,15 @@ echo '<br><br>
 							echo '<textarea style="display:none;" id="sectiontitle'.$val1[$num2]['id'].'">'.$val1[$num2]['name'].'</textarea>'.chr(10);
 							if ($_POST['typetree'] == 'menu')
 							{
-								echo  '<button class="level_2 btn btn-primary" type="button" name="adddish" id="adddish'.$row_menutype["id"].$val1[$num2]['id'].'" title="Добавть блюда в раздел">Добавить '.$isdrink[$val1[$num2]['isdrink']][1].'</button>'.chr(10);
+						echo  '<button class="level_2 btn btn-primary" type="button" sectionid="'.substr($val1[$num2]['id'],1).'"  name="editdish"  id="0" title="Создать в этом разделе">Создать '.$isdrink[$val1[$num2]['isdrink']][2].'</button>'.chr(10);
 							}
 					if ($_POST['typetree'] == 'dishes')
 					{
-						echo  '<button class="level_2 btn btn-primary" type="button" secid="'.$val1[$num2]['id'].'"  name="editdish"  id="editdish'.$row_menutype["id"].$val1[$num2]['id'].'" title="Создать в этом разделе">Создать '.$isdrink[$val1[$num2]['isdrink']][2].'</button>'.chr(10);
 					}
 							if ($_POST['typetree'] == 'sections')
 							{
-								echo '<button class="level_2 btn btn-primary" type="button" isdrink="'.$val1[$num2]['isdrink'].'" name="editsection" sectionid="'.$val1[$num2]['id'].'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
-								echo '<button class="level_2 btn btn-primary" type="button" name="deletesection" sectionid="'.$val1[$num2]['id'].'" alldishes="'.$val1[$num2]['alldishes'].'" menuid="0"  id="'.$rows01["id"].'" title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
+								echo '<button class="level_2 btn btn-primary" type="button" isdrink="'.$val1[$num2]['isdrink'].'" name="editsection" sectionid="'.substr($val1[$num2]['id'],1).'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
+								echo '<button class="level_2 btn btn-primary" type="button" name="deletesection" sectionid="'.substr($val1[$num2]['id'],1).'" alldishes="'.$val1[$num2]['alldishes'].'" menuid="0"  id="'.$rows01["id"].'" title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
 							}
 							echo '</th></tr></tbody>'.chr(10);
 		}

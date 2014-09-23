@@ -493,11 +493,11 @@ $menuid = substr($menuid,1);
 							
 			if ($typetree == 'menu')
 			{
-				echo '<button class="btn btn-primary" type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить блюдо из меню">Убрать&nbsp;из&nbsp;меню</button>';
+				echo '<button class="btn btn-primary" type="button" name="editdish" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="edit" title="Редактировать"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;';
+				echo '<button class="btn btn-danger" type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить из меню в архив"><span class="glyphicon glyphicon-trash"></span></button>';
 			}
 			if ($typetree == 'dishes')
 			{
-				echo '<button class="btn btn-default" type="button" name="editdish" menuid="'.$menuid.'" secid="'.$sectionid.'" id="editdish'.$items[$i]["id"].'" class="edit" title="Редактировать">Редактировать</button>';
 			}
 			
 			echo '</td></tr>';					

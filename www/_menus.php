@@ -8,7 +8,7 @@
     <meta name="author" content="">   
     <title><?php
 	echo PRODUCTNAME;
-	?> :: Меню</title>
+	?> :: Блюда и Напитки</title>
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -58,36 +58,7 @@
 <body>
  
 
- 
- 
- <div id="dialog-adddish" title="Добавление блюда в меню">
- 
-<table id = "dishes"  class="tablesorter dishestoadd" style="width: 100%;"><colgroup>
-						<col width="45%">
-						<col width="35%">
-						<col width="10%">
-						<col width="10%">
-						<col width="10%">
-					
-						</colgroup><thead>
-							<tr>
-							<th class="sorter-false">Название</th>
-							<th class="sorter-false">Описание</th>
-							<th class="sorter-false">Вес</th>
-							<th class="sorter-false">Цена</th>
-							<th class="sorter-false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Действия&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-							</tr>
-							</thead>
-							<tbody><tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-			
-							</tr></tbody></table>
-							
-</div>
+
  
  <div id="dialog-editdish" title="Заполните информацию о блюде">
  
@@ -106,7 +77,7 @@ fixednavbar();
     <!-- Begin page content -->
     <div class="container">
 		<div class="page-header">
-        <h3>Редактирование Меню</h3>
+        <h3>Редактирование Блюд и Напитков</h3>
 		</div>
 		
 		<div id="menutree">
@@ -532,7 +503,6 @@ $('#tabs').smartTab({selected: 0});
 				print_menu_tree(menuid1);
 				menutitle = curmenutitle();
 				sectiontitle = $( "#menu_section option:selected").text().replace('-','');
-				dialog2.dialog('option', 'title', 'Добавление блюд в:  "'+menutitle + '" / раздел: "' + sectiontitle + '"');
 				dialog3.dialog( "close" );
 				} else {
 				alert ('Что-то пошло не так. '+msg);
@@ -609,27 +579,11 @@ $('#tabs').smartTab({selected: 0});
 	
 	
 	
-	
-     dialog2 = $( "#dialog-adddish" ).dialog({
-      autoOpen: false,
-	  position: [100,100],
-     height: '450',
-      width: '100%',
-      modal: true,
-      buttons: {
-        "Отмена": function() {
-          dialog2.dialog( "close" );
-        }
-      },
-      open: function() {
-    }
-    });
- 
+
       dialog3 = $( "#dialog-editdish" ).dialog({
       autoOpen: false,
-	  position: [100,100],
       height: '450',
-      width: '100%',
+      width: '800',
       modal: true,
       buttons: {
         "Сохранить": adddish,
@@ -637,14 +591,7 @@ $('#tabs').smartTab({selected: 0});
           dialog3.dialog( "close" );
 
         }
-      },
-      close: function() {
-	  dialog2.dialog( "open" );
-     },
-      open: function() {
-  
-	  
-	  }
+      }
     });
 	
  
@@ -687,29 +634,13 @@ $('#tabs').smartTab({selected: 0});
 				
     });
 
-	
-	$( document ).on( "click", "button[name=adddish]", function() {
-				id = $(this).attr("id");					
-				menutitle = curmenutitle();					
-				menuid = id.substr(7,1);
-				sectionid = id.substr(9);
-				sectiontitle = $("#sectiontitle_"+sectionid).val();					
-				get_dishes_for_add(menuid,sectionid);
-				dialog2.dialog('option', 'title', 'Добавление блюд в:  "'+menutitle + '" / раздел: "' + sectiontitle + '"');
 
-				$( ".ui-dialog" ).css("margin-top", "70px");
-				dialog2.dialog( "open" );
-		
-    });
-	
 
 	$( document ).on( "click", "button[name=editdish]", function() {
 				dishid = $(this).attr("id");
 				menuid = $(this).attr("menuid");
 				sectionid = $(this).attr("sectionid");
 				get_edit_dish_form(dishid, menuid, sectionid);
-			dialog2.dialog( "close" );
-				$( ".ui-dialog" ).css("margin-top", "70px");
 
 				dialog3.dialog( "open" );
     });
@@ -751,6 +682,7 @@ $('#tabs').smartTab({selected: 0});
 		
     });
 	
+
 	
 	$( document ).on( "click", "button[name=deletesection]", function() {
 			secid = $(this).attr("sectionid");
@@ -766,8 +698,6 @@ $('#tabs').smartTab({selected: 0});
 								}
 					}
     });
-	
-	
 	
   });
   
