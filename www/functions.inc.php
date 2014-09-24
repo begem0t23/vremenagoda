@@ -216,6 +216,8 @@ function checktablesondate($checkdate,$hallid)
 }
 
 
+
+
 function print_dishes_for_client_report($items,$sectionid,$forwho)
 {
 $output = Array();
@@ -316,11 +318,75 @@ $dish['count'] = 0;
 return $dish;
 }
 
+
+function dishes_in_section_by_arhiv($period,$menu_section,$cnt)
+{
+$dish = Array();
+$dish['count'] = 0;
+			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '0' AND isactive = '0'  ;";
+		$rezult01 = mysql_query($tsql01);
+
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+			while ($rows01 = mysql_fetch_array($rezult01)) 
+			{	
+				$dish['sum'] = 	@$dish['sum'] + ($rows01['num'] *  $rows01['price2']);
+				$dish[$dish['count']]['id'] = $rows01['id'];
+				$dish[$dish['count']]['title'] = $rows01['name'];
+				$dish[$dish['count']]['description'] = $rows01['description'];
+				$dish[$dish['count']]['isbasic'] = $rows01['isbasic'];
+				$dish[$dish['count']]['weight'] = $rows01['weight'];
+				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish[$dish['count']]['kogda'] = $rows01['kogda'];
+				$dish[$dish['count']]['cnt'] = $cnt + $dish['count'] +1;
+				$dish['count'] ++;
+			}
+		}
+return $dish;
+}
+
+
+function print_dishes_for_arhiv($items,$sectionid,$forwho)
+{
+$output = Array();
+$output['sum'] = 0;
+$sectionid = substr($sectionid,1);
+$menuid = substr(@$menuid,1);
+	if ($items['count'] > 0)
+	{
+$cnt = 0;			
+		for($i=0;$i<$items['count'];$i++)
+		{	
+$cnt++;
+$class =  '';
+			$xxx =round($cnt / 2);
+			if ($cnt == $xxx*2) {$class =  ' class="second_row"';}
+			if($items[$i]["title"])
+				{
+					$output['print'] = @$output['print'].'<tr'.$class.'>
+							<td>'.$items[$i]["cnt"].'</td>
+							<td><span id="dish_name'.$items[$i]["dishid"].'">'.$items[$i]["title"].'</span></td>';
+							$output['print'] = @$output['print'].'<td>'.$items[$i]["description"].'</td>';
+							$output['print'] = @$output['print'].'<td>'.$items[$i]["price"].'</td>';
+							$output['print'] = @$output['print'].'<td>'.$items[$i]["weight"].'</td>';
+							$output['print'] = @$output['print'].'<td>'.$items[$i]["kogda"].'</td>';
+							$output['print'] = @$output['print'].'<td><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-primary" type="button" name="dishtomenu" dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'" title="Вернуть в меню">В меню</button></td>';
+							$output['print'] = @$output['print'].'</tr>';
+				}							
+		}
+	}
+	return $output;
+}
+					
+
+
+
+
 function dishes_in_section($menu_id,$menu_section)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT * FROM `dishes_history` WHERE `menu_section` = ".$menu_section."  AND `menu` > 0 ;";
+		$tsql01 = "SELECT * FROM `dishes_history` WHERE `menu_section` = ".$menu_section."  AND `menu` > 0 and `isactive` = '1';";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -332,6 +398,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish[$dish['count']]['dishid'] = $rows01['dishid'];
 				$dish['count'] ++;
 			}
 		}
@@ -343,7 +410,7 @@ function dishes_in_section_for_summary($menu_section,$dishes,$cnt)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT * FROM `dishes` WHERE `menu_section` = ".$menu_section."  AND `isactive` = '1' ;";
+		$tsql01 = "SELECT * FROM `dishes_history` WHERE `menu_section` = ".$menu_section."  AND `isactive` = '1' ;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -359,7 +426,8 @@ $dish['count'] = 0;
 						$dish['sum'] = 	$dish['sum'] + ($dd["quant"] * $rows01['price']);
 		
 						$dish[$dish['count']]['id'] = $rows01['id'];
-						$dish[$dish['count']]['title'] = $rows01['title'];
+						$dish[$dish['count']]['dishid'] = $rows01['dishid'];
+						$dish[$dish['count']]['title'] = $rows01['name'];
 						$dish[$dish['count']]['description'] = $rows01['description'];
 						$dish[$dish['count']]['num'] = $dd["quant"];
 							$dish[$dish['count']]['note'] = $dd["note"];
@@ -379,11 +447,15 @@ return $dish;
 
 
 
-function dishes_in_section_by_menu($menu_id,$menu_section)
+function dishes_in_section_by_menu($menu_id,$menu_section,$typetree)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT dh.id, dh.name, dh.description, dh.weight, dh.price, dh.dishid  FROM dishes_history dh, dishes_in_menus dm WHERE dh.menu_section = '".$menu_section."' and dm.menuid = '".$menu_id."' and dm.dishid = dh.dishid AND dm.isactive = '1' AND dh.isactive = '1' AND dh.id IN (SELECT MAX(id) AS id FROM dishes_history GROUP BY dishid) ORDER BY dh.name ASC;";
+			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '".$menu_id."' AND isactive = '1'  ;";
+		if ($typetree == 'dishes')
+		{
+			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '0' AND isactive = '0'  ;";
+		}
 		$rezult01 = mysql_query($tsql01);
 
 
@@ -488,16 +560,24 @@ $menuid = substr($menuid,1);
 			echo '<td><span id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
 					<td><span id="dish_descr'.$items[$i]["id"].'">'.$items[$i]["description"].'</span></td>	
 							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>
-							<td>'.$items[$i]["price"].'</td>
-							<td colspan="2">';
+							<td>'.$items[$i]["price"].'</td>';
+			if ($typetree == 'dishes')
+			{
+				echo '<td>'.$items[$i]["kogda"].'</td>';
+			
+			}
 							
 			if ($typetree == 'menu')
 			{
+							echo '<td colspan="2">';
 				echo '<button class="btn btn-primary" type="button" name="editdish" menuid="'.$menuid.'" sectionid="'.$sectionid.'" dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'" class="edit" title="Редактировать"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;';
 				echo '<button class="btn btn-danger" type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'"  dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'" class="del" title="Удалить из меню в архив"><span class="glyphicon glyphicon-trash"></span></button>';
 			}
 			if ($typetree == 'dishes')
 			{
+							echo '<td colspan="1">';
+				echo '<button class="btn btn-primary" type="button" name="dishtomenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'" class="edit" title="Добавить в меню">В меню</button>&nbsp;';
+			
 			}
 			
 			echo '</td></tr>';					

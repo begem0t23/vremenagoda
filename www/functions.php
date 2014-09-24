@@ -1380,17 +1380,13 @@ $menuid = $_POST['menuid'];
 $dishid = $_POST['dishid'];
 
 
-	$insert = "INSERT INTO `dishes_in_menus` (`id`,`menuid`, `dishid`, `createdate`, `isactive`) VALUES (NULL, '".$menuid."', '".$dishid."', 'NOW()', '1');";
-	
-	mysql_query($insert);
+		$insert = "INSERT INTO `dishes_history` 
+		SELECT NULL, `dishid`,`name`,  `description`, `weight`,  `price`,  `menu_section`,  '".$menuid."',  `isbasic`,   '".$_SESSION['curuserid']."', '1' , NOW() 
+		WHERE `dishid` = '".$dishid."' ORDER BY `id` DESC LIMIT 0,1 ;";	
+		mysql_query($insert);
 
-
-		$tsql02 = "SELECT * FROM `dishes_in_menus`  WHERE `menuid` = '".$menuid."' AND  `dishid` = '".$dishid."' AND   `isactive` = '1' ;";
-		$rezult02 = mysql_query($tsql02);
-		if (mysql_num_rows($rezult02) > 0) 
-		{
 			echo 'yes';
-		}
+	
 }
 
 if($_POST['operation'] == 'dishfrommenu')
@@ -1399,18 +1395,17 @@ $menuid = $_POST['menuid'];
 $dishid = $_POST['dishid'];
 
 
-	$update = "UPDATE `dishes_in_menus` SET `isactive` = '0' WHERE `menuid` = '".$menuid."' AND  `dishid` = '".$dishid."';";
-	
-	mysql_query($update);
+		$update = "UPDATE `dishes_history` SET `isactive` = '0' WHERE  `dishid` = '".$dishid."' ;";
+		mysql_query($update);
 
+		$insert = "INSERT INTO `dishes_history` 
+		SELECT NULL, `dishid`,`name`,  `description`, `price`,`weight`,   `isbasic`,   `menu_section`,  '0',   '".$_SESSION['curuserid']."', '0' , NOW() 
+		FROM `dishes_history` WHERE `dishid` = '".$dishid."' ORDER BY `id` DESC LIMIT 0,1 ;";	
+		mysql_query($insert);
 
-	
-		$tsql02 = "SELECT * FROM `dishes_in_menus`  WHERE `menuid` = '".$menuid."' AND  `dishid` = '".$dishid."' AND   `isactive` = '0' ;";
-		$rezult02 = mysql_query($tsql02);
-		if (mysql_num_rows($rezult02) > 0) 
-		{
-			echo 'yes';
-		}
+		echo 'yes';
+
+			
 }
 
 
@@ -1594,10 +1589,6 @@ echo '<div class="btn-group" >
   <button  name="viewsect" onClick="viewtree(0);" type="button" class="btn btn-primary">Свернуть список</button>
 </div>'.chr(10);
 }
-if ($_POST['typetree'] == 'dishes')
-{
-echo '<button class=" btn btn-primary" type="button" name="editdish" id="0" title="Создать блюдо">Создать новое блюдо</button>';
-} 
 
 if ($_POST['typetree'] == 'sections')
  
@@ -1665,8 +1656,8 @@ echo '<br><br>
 	
 	
 
-	$yyy = dishes_in_section($row_menutype["id"],$rows0['id']);
-	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
+	$yyy = dishes_in_section($row_menutype["id"],$rows0['id'],$_POST['typetree']);
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id'],$_POST['typetree']);
 	$sections[$rows0['id']]['id'] = '_'.$rows0['id']; //непонял почему но без _ не работает
 	$sections[$rows0['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
 	
@@ -1687,8 +1678,8 @@ echo '<br><br>
 
 	while ($rows_1 = mysql_fetch_array($rezult_1)) {
 
-	$yyy = dishes_in_section($row_menutype["id"],$rows_1['id']);
-	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id']);
+	$yyy = dishes_in_section($row_menutype["id"],$rows_1['id'],$_POST['typetree']);
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id'],$_POST['typetree']);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['alldishes'] = $sections[$rows0['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']]['children'] ++;
@@ -1710,8 +1701,8 @@ echo '<br><br>
 
 	while ($rows_2 = mysql_fetch_array($rezult_2)) {
 
-	$yyy = dishes_in_section($row_menutype["id"],$rows_2['id']);
-	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_2['id']);
+	$yyy = dishes_in_section($row_menutype["id"],$rows_2['id'],$_POST['typetree']);
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_2['id'],$_POST['typetree']);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['alldishes'] = $sections[$rows0['id']]['alldishes'] + $yyy['count'];
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
@@ -1757,7 +1748,15 @@ echo '<br><br>
 
 			if ($sections[$num]['items']['count'] > 0)
 			{
-				print_dishes_for_editor($sections[$num]['items'], $sections[$num]['menuid'],$sections[$num]['id'],$_POST['typetree'] );
+				if ($_POST['typetree'] == 'dishes')
+				{
+					print_dishes_for_arhiv($sections[$num]['items'],$sections[$num]['id'],'food');
+				}
+				else
+				{
+				
+					print_dishes_for_editor($sections[$num]['items'], $sections[$num]['menuid'],$sections[$num]['id'],$_POST['typetree'] );
+				}
 			}
 			
 			foreach ($val as $num1 => $val1) 
@@ -1776,15 +1775,12 @@ echo '<br><br>
 					}
 					
 					echo '<tbody><tr id="sec'.$val[$num1]['id'].'"  class = "dis'.$sections[$num]['id'].$class.'"><th  colspan="4" class="level_1">'.chr(10);			
-					echo  '&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val[$num1]['name'].' ('.$isdrink[$val[$num1]['isdrink']][0].': '.$val[$num1]['dishes'].') '.chr(10);
+					echo  '&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val[$num1]['name'].' ('.$row_menutype["id"].$isdrink[$val[$num1]['isdrink']][0].': '.$val[$num1]['dishes'].') '.chr(10);
 					echo '</th><th class="level_1">'.chr(10);
 					echo '<textarea style="display:none;" id="sectiontitle'.$val[$num1]['id'].'">'.$val[$num1]['name'].'</textarea>'.chr(10);
 					if ($_POST['typetree'] == 'menu')
 					{
 						echo  '<button class="level_1 btn btn-primary" type="button" sectionid="'.substr($val[$num1]['id'],1).'" name="editdish"  id="0" title="Создать в этом разделе">Создать '.$isdrink[$val[$num1]['isdrink']][2].'</button>'.chr(10);
-					}
-					if ($_POST['typetree'] == 'dishes')
-					{
 					}
 					if ($_POST['typetree'] == 'sections')
 					{
@@ -1800,8 +1796,14 @@ echo '<br><br>
 					{
 
 						
-						print_dishes_for_editor($val[$num1]['items'],$val[$num1]['menuid'],$val[$num1]['id'],$_POST['typetree']);
-						
+								if ($_POST['typetree'] == 'dishes')
+								{
+									print_dishes_for_arhiv($val[$num1]['items'],$val[$num1]['id'],'food');
+								}
+								else
+								{
+										print_dishes_for_editor($val[$num1]['items'],$val[$num1]['menuid'],$val[$num1]['id'],$_POST['typetree']);
+								}
 					}
 
 						foreach ($val1 as $num2 => $val2) 
@@ -1826,9 +1828,7 @@ echo '<br><br>
 							{
 						echo  '<button class="level_2 btn btn-primary" type="button" sectionid="'.substr($val1[$num2]['id'],1).'"  name="editdish"  id="0" title="Создать в этом разделе">Создать '.$isdrink[$val1[$num2]['isdrink']][2].'</button>'.chr(10);
 							}
-					if ($_POST['typetree'] == 'dishes')
-					{
-					}
+
 							if ($_POST['typetree'] == 'sections')
 							{
 								echo '<button class="level_2 btn btn-primary" type="button" isdrink="'.$val1[$num2]['isdrink'].'" name="editsection" sectionid="'.substr($val1[$num2]['id'],1).'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
@@ -1842,7 +1842,14 @@ echo '<br><br>
 													
 								if ($val1[$num2]['items']['count'] > 0)
 								{
-									print_dishes_for_editor($val1[$num2]['items'],$val1[$num2]['menuid'],$val1[$num2]['id'],$_POST['typetree']);
+									if ($_POST['typetree'] == 'dishes')
+									{
+										print_dishes_for_arhiv($val1[$num2]['items'],$val1[$num2]['id'],'food');
+									}
+									else
+									{
+										print_dishes_for_editor($val1[$num2]['items'],$val1[$num2]['menuid'],$val1[$num2]['id'],$_POST['typetree']);
+									}
 								}
 
 							}
@@ -1934,4 +1941,212 @@ $subject = 'Заказ Банкета в ресторане Времена Го�
 
 		echo 'yes';
 }
+
+
+
+
+
+
+
+
+if($_POST['operation'] == 'printarhivtree')
+{
+
+$forwho = 'food';
+$cs1 = 6;
+$cs2 = 2;
+header('Content-Type: text/html; charset=utf-8');	
+
+$body_out = $body_out.'<table class="arhiv simple-little-table" style="width:100%;">
+<tr>
+<th  width="5" class="report_columns_head">№</th>
+<th  width="130" class="report_columns_head">Наименование</th>
+<th  width="100" class="report_columns_head">Описание</th>';
+
+	$body_out = $body_out.'<th  width="40" class="report_columns_head">Цена</th>';
+
+
+$body_out = $body_out.'<th  width="40" class="report_columns_head">Вес</th>';
+
+
+
+
+	$body_out = $body_out.'<th  width="100" class="report_columns_head">Дата</th>';
+
+	$body_out = $body_out.'<th  width="100" class="report_columns_head">Действия</th>';
+
+
+$body_out = $body_out.'</tr>
+</tbody>';
+
+
+
+	$sections = Array();
+		$tsql0 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '0' AND `isactive` = '1' ORDER BY `sortid` ASC;
+		 ";
+		$rezult0 = mysql_query($tsql0);
+
+
+	while ($rows0 = mysql_fetch_array($rezult0)) {
+	
+	$zzz = dishes_in_section_by_arhiv($period,$rows0['id'],@$cntdish);
+	$sections[$rows0['id']]['id'] = '_'.$rows0['id']; //непонял почему но без _ не работает
+	
+	$sections[$rows0['id']]['name'] = $rows0['section_name'];
+	$sections[$rows0['id']]['isdrink'] = $rows0['isdrink'];
+	
+	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['sum'] = @$sections[$rows0['id']]['sum'] + @$zzz['sum'];
+	$sections[$rows0['id']]['children'] = 0;
+	$sections[$rows0['id']]['items'] = $zzz;
+	$cntdish = @$cntdish + @$sections[$rows0['id']]['dishes'] ;
+
+	
+		$tsql_1 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
+		 ";
+		$rezult_1 = mysql_query($tsql_1);
+
+		while ($rows_1 = mysql_fetch_array($rezult_1)) {
+
+
+	$zzz = dishes_in_section_by_arhiv($period,$rows_1['id'],$cntdish);
+	$sections[$rows0['id']]['sum'] = @$sections[$rows0['id']]['sum'] + @$zzz['sum'];
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['children'] ++;
+	$sections[$rows0['id']][$rows_1['id']]['id'] = '_'.$rows_1['id']; //непонял почему но без _ не работает
+	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name'];
+
+	$sections[$rows0['id']][$rows_1['id']]['isdrink'] = $rows_1['isdrink']; 
+
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = @$sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['sum'] = @$sections[$rows0['id']][$rows_1['id']]['sum'] + @$zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']]['children'] = 0;
+	$sections[$rows0['id']][$rows_1['id']]['items'] = $zzz;
+$cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']]['dishes'];
+	
+		
+		$tsql_2 = "SELECT * 
+		 FROM `menu_sections`  
+		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
+		 ";
+	$rezult_2 = mysql_query($tsql_2);
+
+	while ($rows_2 = mysql_fetch_array($rezult_2)) {
+	
+
+	$zzz = dishes_in_section_by_arhiv($period,$rows_2['id'],$cntdish);
+	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']]['sum'] = @$sections[$rows0['id']]['sum'] + @$zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']]['sum'] = @$sections[$rows0['id']][$rows_1['id']]['sum'] + @$zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['id'] = '_'.$rows_2['id']; //непонял почему но без _ не работает
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
+	
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['isdrink'] = $rows_2['isdrink'];	
+	
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = @$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sum'] = @$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sum'] + @$zzz['sum'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
+$cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'];
+	
+
+	} //result_2
+			
+	} //result_1
+			
+	} //result0
+	
+// конец сборки	
+	
+	//print_r($sections);
+	//цикл по массиву секций с блюдами для конкретного меню для вывода на экран
+	foreach ($sections as $num => $val) 
+	{
+	
+		if ($sections[$num]['dishes'] > 0) 
+		{	
+			//$level0_sum[$sections[$num]['id']] = $sections[$num]['sum']; 
+			$body_out = $body_out.'<tbody><tr><th  colspan="'.($cs1 + $cs2).'" class="level_0">'.chr(10);			
+			$body_out = $body_out.$sections[$num]['name'].''.chr(10);
+			$body_out = $body_out.'</th></tr></tbody>'.chr(10);
+
+			if ($sections[$num]['items']['count'] > 0)
+			{
+				$out = print_dishes_for_arhiv($sections[$num]['items'], $sections[$num]['id'], $forwho);
+				$body_out = $body_out.$out['print'];
+			}
+			
+			foreach ($val as $num1 => $val1) 
+			{
+
+					
+					if (is_array($val1)) 
+					{
+					
+					
+				if (@$val[$num1]['dishes'] > 0) 
+				{	
+						if($val[$num1]['name']){
+			$body_out = $body_out.'<tbody><tr><th  colspan="'.($cs1 + $cs2).'"  class="level_1">'.chr(10);			
+							$body_out = $body_out.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].''.chr(10);
+							$body_out = $body_out.'</th></tr></tbody>'.chr(10);
+						}
+
+						
+					if ($val[$num1]['items']['count'] > 0)
+					{
+					
+					
+					
+						$out = print_dishes_for_arhiv($val[$num1]['items'],$val[$num1]['id'],$forwho);
+						$body_out = $body_out.$out['print'];
+}
+
+						foreach ($val1 as $num2 => $val2) 
+						{
+	
+					if (is_array($val2)) 
+					{
+					if (@$val1[$num2]['dishes'] > 0) 
+							{	
+						if($val1[$num2]['name']){
+			$body_out = $body_out.'<tbody><tr><th colspan="'.($cs1 + $cs2).'"  class="level_2">'.chr(10);			
+							$body_out = $body_out.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].''.chr(10);
+							$body_out = $body_out.'</th></tr></tbody>'.chr(10);
+						}
+
+													
+								if ($val1[$num2]['items']['count'] > 0)
+								{
+									$out = print_dishes_for_arhiv($val1[$num2]['items'],$val1[$num2]['id'],$forwho);
+									$body_out = $body_out.$out['print'];
+								}
+
+							}
+	
+					}
+	
+						}
+					}
+				}
+			}
+	
+		}
+	}
+	
+
+echo $body_out;
+
+}
+
+
+
+
+
+
 ?>

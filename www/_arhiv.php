@@ -41,6 +41,180 @@
 	color: #000;
   background-color: #FFFFC0 !important;
   }
+  
+  table {
+}
+caption, th, td {
+text-align:left;
+font-weight:normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+content:"";
+}
+blockquote, q {
+quotes:"" "";
+}
+
+
+
+
+.simple-little-table {
+width:700px;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#666;
+	font-size:12px;
+	_text-shadow: 1px 1px 0px #fff;
+	background:#fff;
+	_margin:15px;
+	border:#ccc 1px solid;
+	border-collapse:separate;
+
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+
+	-moz-box-shadow: 0 1px 2px #d1d1d1;
+	-webkit-box-shadow: 0 1px 2px #d1d1d1;
+	_box-shadow: 0 1px 2px #d1d1d1;
+	border-collapse:collapse;
+border-spacing:0;
+
+}
+
+.simple-little-table th {
+	font-weight:bold;
+	_padding:10px 13px 11px 13px;
+	_border-top:1px solid #2E2E2E;
+	_border-bottom:1px solid #2E2E2E;
+
+	background: #99bfe6;
+	_background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+	_background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+}
+.simple-little-table th:first-child{
+	text-align: left;
+	padding-left:20px;
+}
+.simple-little-table tr:first-child th:first-child{
+	-moz-border-radius-topleft:3px;
+	-webkit-border-top-left-radius:3px;
+	border-top-left-radius:3px;
+}
+.simple-little-table tr:first-child th:last-child{
+	-moz-border-radius-topright:3px;
+	-webkit-border-top-right-radius:3px;
+	border-top-right-radius:3px;
+}
+.simple-little-table tr{
+	text-align: center;
+	padding-left:20px;
+}
+.simple-little-table tr td:first-child{
+	text-align: left;
+	padding-left:20px;
+	border-left: 0;
+}
+.simple-little-table tr td {
+	 padding:4px;
+	border-top: 1px solid #ffffff;
+	border-bottom:1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	
+	_background: #fFFFFF;
+	_background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#FFFFFF));
+	_background: -moz-linear-gradient(top,  #FFFFFF,  #FFFFFF);
+}
+
+.simple-little-table tr:nth-child(even) td{
+	_background: #ebf2fa;                                                                                                                
+	_background: -webkit-gradient(linear, left top, left bottom, from(#ebf2fa), to(#ebf2fa));
+	_background: -moz-linear-gradient(top,  #ebf2fa,  #ebf2fa);
+}
+.simple-little-table tr:last-child td{
+	border-bottom:0;
+}
+.simple-little-table tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:3px;
+	-webkit-border-bottom-left-radius:3px;
+	border-bottom-left-radius:3px;
+}
+.simple-little-table tr:last-child td:last-child{
+	-moz-border-radius-bottomright:3px;
+	-webkit-border-bottom-right-radius:3px;
+	border-bottom-right-radius:3px;
+}
+.simple-little-table tr:hover td{
+	background: #f2f2f2;
+	_background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+	_background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
+}
+
+.simple-little-table a:link {
+	color: #666;
+	font-weight: bold;
+	text-decoration:none;
+}
+.simple-little-table a:visited {
+	color: #999999;
+	font-weight:bold;
+	text-decoration:none;
+}
+.simple-little-table a:active,
+.simple-little-table a:hover {
+	color: #bd5a35;
+	text-decoration:underline;
+}
+
+ 
+	
+  .level_0{
+  _padding:5px;
+  background-color: #FFD141 !important;
+  }
+    .level_1{
+	_padding:4px;
+  background-color: #FFF368 !important;
+  }
+    .level_2{
+	_padding:3px;
+  background-color: #FFFFC0 !important;
+  }
+  
+  	.report_columns_head{
+	font-size:12px;
+	 padding:10px;
+	color: #000;
+  background-color: #c1d2e4 !important;
+   	border-left: 1px solid #e0e0e0;
+
+  }
+  
+	.report_section{
+	font-size:14px;
+	 padding:10px;
+	color: #fff;
+  background-color: #66a6e7 !important;
+  }
+
+	.summary_section{
+	font-size:14px;
+	 padding:10px;
+	color: #fff;
+  background-color: #6bcf5d !important;
+ 
+  }
+ 	.lite_summary_section{
+	font-size:12px;
+	 padding:1px;
+	color: #fff;
+  background-color: #6bcf5d !important;
+ 
+  }
+   
+    ._second_row {
+   	background-color: #ebf2fa;                                                                                                                
+	}
 </style>  
 
 
@@ -173,19 +347,7 @@ fixednavbar();
 }
 	
 	
-	function get_edit_section_form(sectionid)
-	{
-	
-		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'geteditsectionform',sectionid: sectionid}
-		})
-		.done(function( msg ) {
-			$( "#dialog-editsection" ).html(msg);
-			});	
-	}
-	
+
 	
 	
 	function tree_hide(el,id)
@@ -290,59 +452,6 @@ $( ".stContainer" ).css("height", newh + "px")
  }
  
  
- 
-	function delete_section(secid){
-	
-			$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'deletesection', sectionid: secid}
-		})
-		.done(function( msg ) {
-				if(msg == 'yes'){
-				alert ('Раздел удалён из системы.');
-				print_menu_tree(curmenu());
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-	
-	}
-	
-
- function delete_dish(dishid,sectionid){
-	
-			$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'deletedish', dishid: dishid}
-		})
-		.done(function( msg ) {
-				if(msg == 'yes'){
-				alert ('Блюдо удалено из системы.');
-				get_dishes_for_add(curmenu(),sectionid);
-				print_menu_tree(curmenu());
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-	
-	}
-	
-	
-	
-	function get_edit_dish_form(dishid,menuid,sectionid){
-	
-		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'geteditdishform',dishid: dishid, menuid: menuid, sectionid: sectionid}
-		})
-		.done(function( msg ) {
-			$( "#dialog-editdish" ).html(msg);
-			});	
-	}
-	
 	
 	
 		function print_menu_tree(cnt){
@@ -350,39 +459,21 @@ $( ".stContainer" ).css("height", newh + "px")
 			$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'printmenutree', typetree: 'dishes'}
+			data: { operation: 'printarhivtree', typetree: 'dishes'}
 		})
 		.done(function( msg ) {
 			$( "#menutree" ).html(msg);
-			$(".menus")
-			.tablesorter(
-			{
+			$(".menus").tablesorter({
 				theme: 'blue',
 				widgets: ['zebra']
 			});
-			$('#tabs').smartTab({selected: cnt});
-			viewtree($.cookie("viewtree"));
+			//$('#tabs').smartTab({selected: cnt});
+			//viewtree($.cookie("viewtree"));
 		});
 	
 	}
 	
-	function dish_to_menu (dishid,menuid,sectionid){
 	
-		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'dishtomenu', menuid: menuid, dishid: dishid}
-		})
-		.done(function( msg ) {
-				if(msg == 'yes'){
-				//alert ('Блюдо добавлено в меню.');
-				get_dishes_for_add(menuid,sectionid);
-				print_menu_tree(menuid);
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-	}
 	
 	function dish_from_menu (dishid,menuid,sectionid){
 	
@@ -657,28 +748,7 @@ $('#tabs').smartTab({selected: 0});
     });
 
 	
-	$( document ).on( "click", "button[name=dishfrommenu]", function() {
-				dishid = $(this).attr("id");
-				menuid = $(this).attr("menuid");
-				sectionid = $(this).attr("sectionid");
-								if (confirm("Вы уверены что ходите убрать блюдо из меню?")) {
-					dish_from_menu(dishid, menuid, sectionid);
-				} else {
-				}
-				
-    });
 
-	$( document ).on( "click", "button[name=deletedish]", function() {
-				dishid = $(this).attr("id");
-				menuid = $(this).attr("menuid");
-				sectionid = $(this).attr("sectionid");
-				if (confirm("Вы уверены что ходите удалить блюдо из системы?")) {
-					delete_dish(dishid,sectionid);
-				} else {
-				}
-
-				
-    });
 
 	
 	$( document ).on( "click", "button[name=adddish]", function() {

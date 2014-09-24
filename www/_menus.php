@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
   <head>
     <meta charset="utf-8">
@@ -261,45 +261,6 @@ $( ".stContainer" ).css("height", newh + "px")
  }
  
  
- 
-	function delete_section(secid){
-	
-			$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'deletesection', sectionid: secid}
-		})
-		.done(function( msg ) {
-				if(msg == 'yes'){
-				alert ('Раздел удалён из системы.');
-				print_menu_tree(curmenu());
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-	
-	}
-	
-
- function delete_dish(dishid,sectionid){
-	
-			$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'deletedish', dishid: dishid}
-		})
-		.done(function( msg ) {
-				if(msg == 'yes'){
-				alert ('Блюдо удалено из системы.');
-				get_dishes_for_add(curmenu(),sectionid);
-				print_menu_tree(curmenu());
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-	
-	}
-	
 	
 	
 	function get_edit_dish_form(dishid,menuid,sectionid){
@@ -336,31 +297,14 @@ $( ".stContainer" ).css("height", newh + "px")
 		});
 	
 	}
-	
-	function dish_to_menu (dishid,menuid,sectionid){
-	
-		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'dishtomenu', menuid: menuid, dishid: dishid}
-		})
-		.done(function( msg ) {
-				if(msg == 'yes'){
-				//alert ('Блюдо добавлено в меню.');
-				get_dishes_for_add(menuid,sectionid);
-				print_menu_tree(menuid);
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-	}
+
 	
 	function dish_from_menu (dishid,menuid,sectionid){
 	
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'dishfrommenu', menuid: menuid, dishid: dishid}
+			data: { operation: 'dishfrommenu', menuid: menuid, dishid: dishid, sectionid:sectionid}
 		})
 		.done(function( msg ) {
 				if(msg == 'yes'){
@@ -375,24 +319,26 @@ $( ".stContainer" ).css("height", newh + "px")
 	
 
 	
-	function get_dishes_for_add(menuid,sectionid){
-	
-			$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'getdishesforadd', menuid: menuid, sectionid: sectionid, toadd: 'free'}
-		})
-		.done(function( msg ) {
-			$( "#dishes tbody" ).html(msg);
 
-		});
-
-	}
-	
 		$(document).ready(function(){
 			// когда страница загружена
 
 
+
+$( document ).on( "click", "button[name=dishfrommenu]", function() {
+				dishid = $(this).attr("id");
+				menuid = $(this).attr("menuid");
+				sectionid = $(this).attr("sectionid");
+								if (confirm("Вы уверены что ходите убрать блюдо из меню?")) {
+					dish_from_menu(dishid, menuid, sectionid);
+				} else {
+				}
+				
+    });
+	
+	
+	
+	
 			$(".menus")
 			.tablesorter(
 			{
@@ -400,12 +346,6 @@ $( ".stContainer" ).css("height", newh + "px")
 				widgets: ['zebra']
 			});
 			
-			$(".dishestoadd")
-			.tablesorter(
-			{
-				theme: 'blue',
-				widgets: ['zebra']
-			});
 
 
 print_menu_tree(1);		

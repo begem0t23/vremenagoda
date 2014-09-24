@@ -479,9 +479,8 @@ $(".report_client2")
     {
 		if(response.responseText == "yes")
 		{
-        	$("#message").html("<font color='green'>"+response.responseText+"</font>");
-			dialog.dialog("close");
  			alert("Сообщение отправлено");
+			$("#myForm").clear();
 		}
    },
     error: function()

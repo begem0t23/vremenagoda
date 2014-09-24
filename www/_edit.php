@@ -269,7 +269,7 @@ else
 	
 	
 
-	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id'],"");
 
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
 	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
@@ -285,7 +285,7 @@ else
 
 	while ($rows_1 = mysql_fetch_array($rezult_1)) {
 
-	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id']);
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id'],"");
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name'];
@@ -303,7 +303,7 @@ else
 
 	while ($rows_2 = mysql_fetch_array($rezult_2)) {
 
-	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_2['id']);
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_2['id'],"");
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
@@ -450,7 +450,7 @@ else
 	
 	
 
-	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id']);
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id'],"");
 
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
 	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
@@ -466,7 +466,7 @@ else
 
 	while ($rows_1 = mysql_fetch_array($rezult_1)) {
 
-	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id']);
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_1['id'],"");
 	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name'];
@@ -484,7 +484,7 @@ else
 
 	while ($rows_2 = mysql_fetch_array($rezult_2)) {
 
-	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_2['id']);
+	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows_2['id'],"");
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
