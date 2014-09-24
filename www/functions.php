@@ -1167,30 +1167,28 @@ $dishid = $_POST['dishid'];
 $menuid = $_POST['menuid'];
 $sectionid = $_POST['sectionid'];
 		header('Content-Type: text/html; charset=utf-8');
-		$tsql_0 = "SELECT *  FROM `dishes_history`	 WHERE  `dishid` = '".$dishid."' order by `kogda` DESC limit 0,1; ";
+		$tsql_0 = "SELECT *  FROM `dishes_history`	 WHERE  `dishid` = '".$dishid."' order by `id` DESC limit 0,1; ";
 		$rezult_0 = mysql_query($tsql_0);
 
 	$rows_0 = mysql_fetch_array($rezult_0);
+	$checked = ' ';
+	if ( $rows_0['isbasic'] == 1) $checked = 'checked';
 ?>
   <p class="validateTips">Поле "Описание"  не необязательное.</p>
 
   <form>
 
 	<textarea colls="50" id="name" placeholder="Название" class="form-control" ><?php echo $rows_0['name']; ?></textarea>
-
-	
-
-	<input type="text" id="description" placeholder="Описание" class="form-control" value="<?php echo $rows_0['description']; ?>">
-
-	<input type="text" id="weight" placeholder="Вес в граммах" class="form-control" value="<?php echo $rows_0['weight']; ?>">
-
-
-	<input type="text" id="price" placeholder="Цена" class="form-control" value="<?php echo $rows_0['price']; ?>">
+	<input onkeyup="changeform();" type="text" id="description" placeholder="Описание" class="form-control" value="<?php echo $rows_0['description']; ?>">
+	<input onkeyup="changeform();"  type="text" id="weight" placeholder="Вес в граммах" class="form-control" value="<?php echo $rows_0['weight']; ?>">
+	<input onkeyup="changeform();"  type="text" id="price" placeholder="Цена" class="form-control" value="<?php echo $rows_0['price']; ?>">
+	<input onchange="changeform();"  type="checkbox" id="isbasic"  <?php echo $checked; ?>> В меню для зала
 	<input type="hidden" id="dish_id"  value="<?php echo $dishid; ?>">
-	<br>
+	<input type="hidden" id="menu_id"  value="<?php echo $menuid; ?>">
+	<br>	<br>
 	  <p >Привязать к разделу:</p>
 
-	<select id="menu_section" >
+	<select id="menu_section"  onchange="changeform();"  >
 <?php	
 
 	$sections = Array();
@@ -1343,71 +1341,35 @@ $id = $_POST['dishid'];
 	
 if($_POST['operation'] == 'adddish')
 {
-$id = $_POST['dishid'];
+$dishid = $_POST['dishid'];
 $name = $_POST['dishname'];
 $description = $_POST['dishdescription'];
 $price = $_POST['dishprice'];
 $weight = $_POST['dishweight'];
 $menu_section = $_POST['menu_section'];
 $menuid = $_POST['menuid'];
+$isbasic = 0;
 
+if ($_POST['isbasic'] == 'true') $isbasic = 1;
 
-
-if ($id == 0) 
+if ($dishid == 0) 
 	{
-
+	
+	$insert = "INSERT INTO `dishes` (`id`, `title`, `isdrink`, `createdate`, `orderby`) VALUES (NULL, '0','".$name."',   NOW(),'0');";
+			mysql_query($insert);
 	}
 	
 	
 //echo rawurldecode($_POST['servname']);
-	if ($id > 0) 
-	{
-		$tsql01 = "SELECT * FROM `dishes`  WHERE `id` = ".$id." ;";
-		$rezult01 = mysql_query($tsql01);
-		if (mysql_num_rows($rezult01) > 0) 
-		{
-		$rows01 =	mysql_fetch_array($rezult01);
-		
-		$update = "UPDATE `dishes` SET `isactive` = '0' WHERE  `dishes`.`id` = ".$id." ;";
-		
-		mysql_query($update);
-
-		} else {
-				Echo "почемуто нет такой записи";	
-				}
+	if ($dishid > 0) 
+	{	
+		$tsql02 = "update `dishes_history`  set `isactive` = '0' where `dishid` = '".$dishid."'  ;";
+		mysql_query($tsql02);
 	}	
-	
-	$insert = "INSERT INTO `dishes` (`id`, `title`, `description`, `weight`, `price`, `menu_section`, `createdate`, `isactive`) VALUES (NULL, '".$name."', '".$description."', '".$weight."', '".$price."', '".$menu_section."',  NOW(), '1');";
-			mysql_query($insert);
 
-	
-		
-		$tsql02 = "SELECT * FROM `dishes`  WHERE `title` = '".$name."' AND  `description` = '".$description."' AND  `weight` = '".$weight."' AND  `price` = '".$price."' AND  `menu_section` = '".$menu_section."' AND  `isactive` = '1' ;";
-		$rezult02 = mysql_query($tsql02);
-		if (mysql_num_rows($rezult02) > 0) 
-		{
-		
-				if($menuid > 0) {
-					$rows02 =	mysql_fetch_array($rezult02);
-					$insert2 = "INSERT INTO `dishes_in_menus` (`id`, `menuid`, `dishid`,  `createdate`, `isactive`) VALUES (NULL, '".$menuid."', '".$rows02['id']."',  NOW(), '1');";
-					mysql_query($insert2);
-					
-						$tsql03 = "SELECT * FROM `dishes_in_menus`  WHERE `menuid` = '".$menuid."' AND  `dishid` = '".$rows02['id']."' AND   `isactive` = '1' ;";
-						$rezult03 = mysql_query($tsql03);
-						if (mysql_num_rows($rezult03) > 0) 
-						{
-			
-							echo 'yes';
-						}
-					
-					} else {
-						echo 'yes';
-					}
-		
-		}
-
-		
-	
+		$insert = "INSERT INTO `dishes_history` (`id`, `dishid`,`name`,  `description`, `weight`,  `price`,  `menu_section`,  `menu`,  `isbasic`,  `createdby`, `isactive`, `kogda` ) VALUES (NULL , '".$dishid."','".$name."','".$description."','".$weight."','".$price."','".$menu_section."','".$menuid."','".$isbasic."','".$_SESSION['curuserid']."' ,'1', NOW() ) ;";	
+		mysql_query($insert);
+		echo 'yes';
 }
 
 
@@ -1500,49 +1462,6 @@ $toadd = $_POST['toadd'];
 
 
 
-
-
-if($_POST['operation'] == 'getdishesforaddcopy')
-{
-$menuid = $_POST['menuid'];
-$sectionid = $_POST['sectionid'];
-$toadd = $_POST['toadd'];
-
-		$tsql01 = "SELECT * FROM `dishes`   WHERE `menu_section` = ".$sectionid."  AND `isactive` = '1' ORDER BY `title` ASC;";
-		$rezult01 = mysql_query($tsql01);
-
-	if (mysql_num_rows($rezult01) > 0) 
-	{
-		header('Content-Type: text/html; charset=utf-8');
-
-		while ($rows01 = mysql_fetch_array($rezult01)) 
-		{	
-			$tsql02 = "SELECT d.menuid, m.type_name FROM dishes_in_menus d, menus m WHERE  d.dishid = ".$rows01["id"]." AND d.isactive = '1' AND d.menuid = m.id ;";
-			$rezult02 = mysql_query($tsql02);
-			if($toadd == 'free')
-			{
-				if (mysql_num_rows($rezult02) == 0) 
-				{	
-
-					echo '<tr>
-							<td><span id=dishname'.$rows01["id"].'>'.$rows01["title"].'</span></td>
-							<td><span id=dishdescr'.$rows01["id"].'>'.$rows01["description"].'</span></td>
-							<td><span id=dishweight'.$rows01["id"].'>'.$rows01["weight"].'</span></td>
-							<td><span id=dishprice'.$rows01["id"].'>'.$rows01["price"].'</span></td>
-							<td><button type="button" class="btn btn-primary" name="dishtomenu" sectionid="'.$sectionid.'"  menuid="'.$menuid.'" id="'.$rows01["id"].'" title="Добавть блюдо в меню"><span class="glyphicon glyphicon-chevron-down"></span></button>	
-							<button type="button" class="btn btn-primary" name="editdish" sectionid="'.$sectionid.'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать блюдо"><span class="glyphicon glyphicon-pencil"></span></button>
-							<button type="button" class="btn btn-primary" name="deletedish" sectionid="'.$sectionid.'"  menuid="0"  id="'.$rows01["id"].'" title="Удалить блюдо"><span class="glyphicon glyphicon-trash"></span></button></td>	
-						</tr>';
-				}
-
-			}
-
-		}
-			
-		
-	}
-
-}
 
 
 					
@@ -1869,8 +1788,8 @@ echo '<br><br>
 					}
 					if ($_POST['typetree'] == 'sections')
 					{
-						echo '<button class="level_1 btn btn-primary" type="button" isdrink="'.$val[$num1]['isdrink'].'" name="editsection" sectionid="'.substr($val[$num1]['id'],1).'"  menuid="0"   title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
-						echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.substr($val[$num1]['id'],1).'"  alldishes="'.$val[$num1]['alldishes'].'"  menuid="0"   title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
+						echo '<button class="level_1 btn btn-primary" type="button" name="editsection" sectionid="'.substr($val[$num1]['id'],1).'"  menuid="0"   isdrink="'.$val[$num1]['isdrink'].'"  title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
+						echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.substr($val[$num1]['id'],1).'"  menuid="0"   alldishes="'.$val[$num1]['alldishes'].'"  title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
 					}
 					echo '</th></tr></tbody>'.chr(10);
 				}

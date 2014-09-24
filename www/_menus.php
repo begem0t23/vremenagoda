@@ -8,7 +8,7 @@
     <meta name="author" content="">   
     <title><?php
 	echo PRODUCTNAME;
-	?> :: Блюда и Напитки</title>
+	?> :: Меню</title>
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -77,7 +77,7 @@ fixednavbar();
     <!-- Begin page content -->
     <div class="container">
 		<div class="page-header">
-        <h3>Редактирование Блюд и Напитков</h3>
+        <h3>Редактирование Меню</h3>
 		</div>
 		
 		<div id="menutree">
@@ -386,11 +386,7 @@ $( ".stContainer" ).css("height", newh + "px")
 			$( "#dishes tbody" ).html(msg);
 
 		});
-	
-	
-	
-	
-	
+
 	}
 	
 		$(document).ready(function(){
@@ -493,7 +489,7 @@ $('#tabs').smartTab({selected: 0});
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'adddish', dishname: name.val(),isbasic: isbasic.val(), dishdescription: description.val(), dishweight: weight.val(), dishprice: price.val(), dishid: dish_id.val(), menu_section: menu_section.val(), menuid: menu_id.val()}
+			data: { operation: 'adddish', dishname: name.val(),isbasic: isbasic.prop("checked"), dishdescription: description.val(), dishweight: weight.val(), dishprice: price.val(), dishid: dish_id.val(), menu_section: menu_section.val(), menuid: menu_id.val()}
 		})
 		.done(function( msg ) {
 			if(msg == 'yes'){
@@ -509,75 +505,12 @@ $('#tabs').smartTab({selected: 0});
 				}
 		});
 		
-		
-		
 	}
       return valid;
     }
  
- 
- 
- 
- 
-   function addsection() {
 
-		var	section_id = $( "#section_id" ),
-		sectionname = $( "#sectionname" ),
-		sectionparent = $( "#sectionparent" ),
-		isdrink = $( "#isdrink" ),
-		allFields = $( [] ).add( sectionname ).add( sectionparent ).add( section_id).add( isdrink),
-		tips = $( ".validateTips" );
-		
-		operation = 'addsection';
-		if(section_id.val() > 0) {operation = 'editsection';}
-		
-      var valid = true;
-      allFields.removeClass( "ui-state-error" );
  
-      valid = valid && checkLength( sectionname, "названия", 3, 250 );
-  
-      if ( valid ) 
-	  {
-
-		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: operation,  sectionname: sectionname.val(), sectionparent: sectionparent.val(), sectionid: section_id.val(), isdrink: isdrink.prop('checked')}
-		})
-		.done(function( msg ) {
-			if(msg == 'yes'){
-				alert ('Информация о разделе сохранена.');
-				print_menu_tree(curmenu());
-				dialog4.dialog( "close" );
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-		
-		
-		
-	}
-      return valid;
-    }
- 
- 
- 
- 	     dialog4 = $( "#dialog-editsection" ).dialog({
-      autoOpen: false,
-	  position: [100,100],
-      height: '450',
-      width: '100%',
-      modal: true,
-      buttons: {
-   "Сохранить": addsection,
-        "Отмена": function() {
-          dialog4.dialog( "close" );
-
-        }
-      },
-    });
-	
-	
 	
 
       dialog3 = $( "#dialog-editdish" ).dialog({
@@ -595,53 +528,20 @@ $('#tabs').smartTab({selected: 0});
     });
 	
  
- 
-    form = dialog3.find( "form" ).on( "submit", function( event ) {
-      event.preventDefault();
-      adddish();
-    });
- 
-
-	
-	$( document ).on( "click", "button[name=dishtomenu]", function() {
-				dishid = $(this).attr("id");
-				menuid = $(this).attr("menuid");
-				sectionid = $(this).attr("sectionid");
-				dish_to_menu(dishid, menuid, sectionid);
-    });
-
-	
-	$( document ).on( "click", "button[name=dishfrommenu]", function() {
-				dishid = $(this).attr("id");
-				menuid = $(this).attr("menuid");
-				sectionid = $(this).attr("sectionid");
-								if (confirm("Вы уверены что ходите убрать блюдо из меню?")) {
-					dish_from_menu(dishid, menuid, sectionid);
-				} else {
-				}
-				
-    });
-
-	$( document ).on( "click", "button[name=deletedish]", function() {
-				dishid = $(this).attr("id");
-				menuid = $(this).attr("menuid");
-				sectionid = $(this).attr("sectionid");
-				if (confirm("Вы уверены что ходите удалить блюдо из системы?")) {
-					delete_dish(dishid,sectionid);
-				} else {
-				}
-
-				
-    });
-
-
 
 	$( document ).on( "click", "button[name=editdish]", function() {
-				dishid = $(this).attr("id");
+				dishid = $(this).attr("dishid");
 				menuid = $(this).attr("menuid");
 				sectionid = $(this).attr("sectionid");
 				get_edit_dish_form(dishid, menuid, sectionid);
 
+				$(".ui-dialog-buttonset button").each(function(){
+					if($(this).html() == "Сохранить")
+					{
+						$(this).attr("disabled","disabled");
+						$(this).removeClass("btn-danger");
+					}			 
+				});
 				dialog3.dialog( "open" );
     });
 	
@@ -656,52 +556,25 @@ $('#tabs').smartTab({selected: 0});
 					tree_show(this,secid)
 						}					
     });
-	
-	
 
 
 
-	
-	
-		$( document ).on( "click", "button[name=addsection]", function() {
-				secid = $(this).attr("sectionid");
-
-				get_edit_section_form(secid);
-				$( ".ui-dialog" ).css("margin-top", "70px");
-				dialog4.dialog( "open" );
-		
-    });
-	
-			$( document ).on( "click", "button[name=editsection]", function() {
-				secid = $(this).attr("sectionid");
-				secid = secid.substr(1);
-				get_edit_section_form(secid);
-				$( ".ui-dialog" ).css("margin-top", "70px");
-				
-				dialog4.dialog( "open" );
-		
-    });
-	
-
-	
-	$( document ).on( "click", "button[name=deletesection]", function() {
-			secid = $(this).attr("sectionid");
-			secid = secid.substr(1);
-			alldishes = $(this).attr("alldishes");
-
-			if (alldishes > 0) {
-				alert("Этот раздел удалить не возможно, так как к нему привязано " + alldishes + " блюд. \n Перенесите блюда в другие разделы или удалите их из системы.");
-			} else {
-					if (confirm("Вы уверены что ходите удалить раздел из системы?")) {
-						delete_section(secid);
-						} else {
-								}
-					}
-    });
 	
   });
   
+ function changeform()
+ {
+	$(".ui-dialog-buttonset button").each(function(){
  
+		if($(this).html() == "Сохранить")
+			{
+				$(this).removeAttr("disabled");
+				$(this).addClass("btn-danger");
+			}
+ 
+	});
+ 
+ }
  
 	</script>
   </body>

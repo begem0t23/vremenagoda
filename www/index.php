@@ -56,9 +56,9 @@ if (checklogin())
 	{
 		include("_menus.php");
 	}
-	elseif ($qq == "dishes")
+	elseif ($qq == "arhiv")
 	{
-		include("_dishes.php");
+		include("_arhiv.php");
 	}
 	elseif ($qq == "sections")
 	{

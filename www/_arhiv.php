@@ -8,7 +8,7 @@
     <meta name="author" content="">   
     <title><?php
 	echo PRODUCTNAME;
-	?> :: Блюда и Напитки</title>
+	?> :: Архив Блюда и Напитки</title>
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -106,7 +106,7 @@ fixednavbar();
     <!-- Begin page content -->
     <div class="container">
 		<div class="page-header">
-        <h3>Редактирование Блюд и Напитков</h3>
+        <h3>Архив Блюд и Напитков</h3>
 		</div>
 		
 		<div id="menutree">

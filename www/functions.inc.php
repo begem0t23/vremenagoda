@@ -320,7 +320,7 @@ function dishes_in_section($menu_id,$menu_section)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT * FROM `dishes` WHERE `menu_section` = ".$menu_section."  AND `isactive` = '1' ;";
+		$tsql01 = "SELECT * FROM `dishes_history` WHERE `menu_section` = ".$menu_section."  AND `menu` > 0 ;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -328,7 +328,7 @@ $dish['count'] = 0;
 			while ($rows01 = mysql_fetch_array($rezult01)) 
 			{			
 				$dish[$dish['count']]['id'] = $rows01['id'];
-				$dish[$dish['count']]['title'] = $rows01['title'];
+				$dish[$dish['count']]['title'] = $rows01['name'];
 				$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
@@ -383,7 +383,7 @@ function dishes_in_section_by_menu($menu_id,$menu_section)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT dh.id, dh.name, dh.weight, dh.price, dh.dishid  FROM dishes_history dh, dishes_in_menus dm WHERE dh.menu_section = '".$menu_section."' and dm.menuid = '".$menu_id."' and dm.dishid = dh.dishid AND dm.isactive = '1' AND dh.isactive = '1' AND dh.id IN (SELECT MAX(id) AS id FROM dishes_history GROUP BY dishid) ORDER BY dh.name ASC;";
+		$tsql01 = "SELECT dh.id, dh.name, dh.description, dh.weight, dh.price, dh.dishid  FROM dishes_history dh, dishes_in_menus dm WHERE dh.menu_section = '".$menu_section."' and dm.menuid = '".$menu_id."' and dm.dishid = dh.dishid AND dm.isactive = '1' AND dh.isactive = '1' AND dh.id IN (SELECT MAX(id) AS id FROM dishes_history GROUP BY dishid) ORDER BY dh.name ASC;";
 		$rezult01 = mysql_query($tsql01);
 
 
@@ -394,7 +394,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['id'] = $rows01['id'];
 				$dish[$dish['count']]['dishid'] = $rows01['dishid'];
 				$dish[$dish['count']]['title'] = $rows01['name'];
-				//$dish[$dish['count']]['description'] = $rows01['description'];
+				$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
 				$dish[$dish['count']]['kogda'] = $rows01['kogda'];
@@ -493,8 +493,8 @@ $menuid = substr($menuid,1);
 							
 			if ($typetree == 'menu')
 			{
-				echo '<button class="btn btn-primary" type="button" name="editdish" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="edit" title="Редактировать"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;';
-				echo '<button class="btn btn-danger" type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'" id="'.$items[$i]["id"].'" class="del" title="Удалить из меню в архив"><span class="glyphicon glyphicon-trash"></span></button>';
+				echo '<button class="btn btn-primary" type="button" name="editdish" menuid="'.$menuid.'" sectionid="'.$sectionid.'" dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'" class="edit" title="Редактировать"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;';
+				echo '<button class="btn btn-danger" type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'"  dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'" class="del" title="Удалить из меню в архив"><span class="glyphicon glyphicon-trash"></span></button>';
 			}
 			if ($typetree == 'dishes')
 			{
@@ -1526,7 +1526,7 @@ function fixednavbar()
 			?>">
               <a href="?settings" class="dropdown-toggle" data-toggle="dropdown">Настройки<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="?dishes">Блюда и Напитки</a></li>
+                <li><a href="?arhiv">Архив</a></li>
                 <li><a href="?sections">Разделы</a></li>
                 <li><a href="?menus">Меню</a></li>
                 <li><a href="?uslugi">Услуги</a></li>
