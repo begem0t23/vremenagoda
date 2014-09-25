@@ -475,17 +475,17 @@ $( ".stContainer" ).css("height", newh + "px")
 	
 	
 	
-	function dish_from_menu (dishid,menuid,sectionid){
+	function dish_to_menu (dishid,menuid,sectionid){
 	
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'dishfrommenu', menuid: menuid, dishid: dishid}
+			data: { operation: 'dishtomenu', menuid: menuid, dishid: dishid,sectionid:sectionid}
 		})
 		.done(function( msg ) {
 				if(msg == 'yes'){
 				//alert ('Блюдо удалено из меню.');
-				get_dishes_for_add(menuid,sectionid);
+				//get_dishes_for_add(menuid,sectionid);
 				print_menu_tree(menuid);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
@@ -495,23 +495,7 @@ $( ".stContainer" ).css("height", newh + "px")
 	
 
 	
-	function get_dishes_for_add(menuid,sectionid){
-	
-			$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'getdishesforadd', menuid: menuid, sectionid: sectionid, toadd: 'free'}
-		})
-		.done(function( msg ) {
-			$( "#dishes tbody" ).html(msg);
 
-		});
-	
-	
-	
-	
-	
-	}
 	
 		$(document).ready(function(){
 			// когда страница загружена
@@ -741,10 +725,14 @@ $('#tabs').smartTab({selected: 0});
 
 	
 	$( document ).on( "click", "button[name=dishtomenu]", function() {
-				dishid = $(this).attr("id");
+				dishid = $(this).attr("dishid");
 				menuid = $(this).attr("menuid");
 				sectionid = $(this).attr("sectionid");
-				dish_to_menu(dishid, menuid, sectionid);
+								if (confirm("Вы уверены что хотите вернуть блюдо в меню?")) {
+					dish_to_menu(dishid, menuid, sectionid);
+				} else {
+				}
+			
     });
 
 	

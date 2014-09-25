@@ -5,8 +5,7 @@ require_once("functions.inc.php");
 $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'changeagdata')
 {
@@ -44,8 +43,7 @@ $showag = $_POST['showag'];
 
 }
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'addag')
 {
@@ -75,11 +73,7 @@ $showag = $_POST['showag'];
 
 }
 
-
-
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'getreport') 
 {
@@ -101,6 +95,8 @@ if ($_POST['operation'] == 'getsummallpayments')
 	echo $rows['total'] + 0;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
 if ($_POST['operation'] == 'addpayment') 
 {
 $orderid = $_POST['orderid'];
@@ -120,6 +116,8 @@ if($payout == 'true') $ispayout = 1;
 			echo 'yes';
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
 if ($_POST['operation'] == 'addotkaz') 
 {
 $orderid = $_POST['orderid'];
@@ -136,6 +134,8 @@ $otkazdate = $_POST['otkazdate'];
 			mysql_query($update);
 			echo 'yes';
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'adddelegate') 
 {
@@ -154,6 +154,7 @@ $otkazdate = $_POST['otkazdate'];
 			echo 'yes';
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'getallpayments') 
 {
@@ -199,8 +200,7 @@ $paydate = $_POST['paydate'];
 echo $ech;
 }
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'getallemails') 
 {
@@ -243,11 +243,7 @@ $paydate = $_POST['paydate'];
 echo $ech;
 }
 
-
-
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'gethall') 
 {
@@ -260,10 +256,7 @@ $orderid = $_POST['orderid'];
 get_hall($hallid,$dateevent,$place,$orderid);
 }
 
-
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'addtable') 
 {
@@ -289,9 +282,7 @@ $place = $_POST['place'];
 			echo 'yes';
 }
 
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'removetable') 
 {
@@ -314,7 +305,7 @@ $place = $_POST['place'];
 
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'addchiar') 
 {
@@ -366,6 +357,7 @@ $totabid = $_POST['totabid'];
 			
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'removechiar') 
 {
@@ -405,6 +397,7 @@ $tabid = $_POST['tabid'];
 		}		
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'hallresize') 
 {
@@ -417,8 +410,7 @@ $nheight = $_POST['nheight'];
 			echo 'yes';		
 }
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'changetabnum') 
 {
@@ -441,7 +433,7 @@ $place = $_POST['place'];
 			
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'changetabangle') 
 {
@@ -464,6 +456,7 @@ $place = $_POST['place'];
 			
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'changetable') 
 {
@@ -493,6 +486,7 @@ $place = $_POST['place'];
 		
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'saveevent') 
 {
@@ -544,6 +538,7 @@ $date = $_POST['eventdate'];
 
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'getallevents') 
 {
@@ -590,6 +585,7 @@ $ech=$ech."]".chr(10);
 echo $ech;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'deletesection')
 {
@@ -618,7 +614,9 @@ $id = $_POST['sectionid'];
 
 }	
 	
-if($_POST['operation'] == 'addsection')
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
+	if($_POST['operation'] == 'addsection')
 {
 $id = $_POST['sectionid'];
 $name = $_POST['sectionname'];
@@ -664,6 +662,8 @@ if ($id == 0)
 		}
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'editsection')
 {
@@ -724,6 +724,7 @@ if ($id > 0)
 	echo $ech;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'geteditsectionform')
 {
@@ -850,7 +851,7 @@ $sectionid = $_POST['sectionid'];
 	
 }
 	
-	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 	
 if($_GET['operation'] == 'dishesorder')
 {
@@ -880,6 +881,7 @@ if($_GET['operation'] == 'dishesorder')
 
 }	
 	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'changehall')
 {
@@ -913,6 +915,7 @@ $cnt = $_POST['hallcnt'];
 	}	
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'addhall')
 {
@@ -989,8 +992,7 @@ if ($height > $maxheight) $height = $maxheight;
 	
 }
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'deletehall')
 {
@@ -1023,10 +1025,7 @@ if ($id > 0)
 	
 }
 
-
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'changeuserdata')
 {
@@ -1063,9 +1062,7 @@ $role = $_POST['userrole'];
 
 }
 
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'changeuserpass')
 {
@@ -1102,7 +1099,7 @@ $role = $_POST['userrole'];
 
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'adduser')
 {
@@ -1127,7 +1124,7 @@ if ($id == 0)
 	}
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'deleteuser')
 {
@@ -1159,7 +1156,7 @@ if ($id > 0)
 	
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'geteditdishform')
 {
@@ -1296,18 +1293,11 @@ $sectionid = $_POST['sectionid'];
 	//конец цикла
 
 
-  
-  
- 
   echo '</select></form>';
-  
-  
-
 
 }
 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'deletedish')
 {
@@ -1336,8 +1326,7 @@ $id = $_POST['dishid'];
 
 }	
 	
-	
-	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 	
 if($_POST['operation'] == 'adddish')
 {
@@ -1354,40 +1343,82 @@ if ($_POST['isbasic'] == 'true') $isbasic = 1;
 
 if ($dishid == 0) 
 	{
-	
-	$insert = "INSERT INTO `dishes` (`id`, `title`, `isdrink`, `createdate`, `orderby`) VALUES (NULL, '0','".$name."',   NOW(),'0');";
+
+	$insert = "INSERT INTO `dishes` (`id`, `title`, `isdrink`, `createdate`, `orderby`) VALUES (NULL, '0','".$name."',  NOW(),'0');";
 			mysql_query($insert);
+			
+			$changes = 'создание,';
 	}
 	
 	
 //echo rawurldecode($_POST['servname']);
 	if ($dishid > 0) 
 	{	
+	$select = "SELECT * FROM `dishes_history` WHERE `dishid` = '".$dishid."' AND  `isactive` > 0";
+	$rezult = mysql_query($select);
+	$rows = mysql_fetch_array($rezult);
+	if ($rows['name'] != $name)
+	{
+		$changes = $changes.'название,';
+	}
+	if ($rows['description'] != $description)
+	{
+		$changes = $changes.'описание,';
+	}
+	if ($rows['price'] != $price)
+	{
+		$changes = $changes.'цена,';
+	}
+	if ($rows['weight'] != $weight)
+	{
+		$changes = $changes.'вес,';
+	}
+	
+	if ($rows['isbasic'] != $isbasic)
+	{
+		$changes = $changes.'тип меню,';
+	}
+	
+	if ($rows['menu_section'] != $menu_section)
+	{
+		$changes = $changes.'раздел,';
+	}
+	
+	if ($rows['isactive'] == '2')
+	{
+		$changes = $changes.'возвращено,';
+	}
+	
+	
 		$tsql02 = "update `dishes_history`  set `isactive` = '0' where `dishid` = '".$dishid."'  ;";
 		mysql_query($tsql02);
 	}	
 
-		$insert = "INSERT INTO `dishes_history` (`id`, `dishid`,`name`,  `description`, `weight`,  `price`,  `menu_section`,  `menu`,  `isbasic`,  `createdby`, `isactive`, `kogda` ) VALUES (NULL , '".$dishid."','".$name."','".$description."','".$weight."','".$price."','".$menu_section."','".$menuid."','".$isbasic."','".$_SESSION['curuserid']."' ,'1', NOW() ) ;";	
+		$insert = "INSERT INTO `dishes_history` (`id`, `dishid`,`name`,  `description`, `price`,   `weight`,  `isbasic`, `menu_section`,  `menu`,  `createdby`, `isactive`, `changes`,`kogda` ) VALUES (NULL , '".$dishid."','".$name."','".$description."','".$price."','".$weight."','".$isbasic."','".$menu_section."','".$menuid."','".$_SESSION['curuserid']."' ,'1', '".$changes."' , NOW() ) ;";	
 		mysql_query($insert);
 		echo 'yes';
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'dishtomenu')
 {
 $menuid = $_POST['menuid'];
 $dishid = $_POST['dishid'];
 
+		$update = "UPDATE `dishes_history` SET `isactive` = '0' WHERE  `dishid` = '".$dishid."' ;";
+		mysql_query($update);
 
 		$insert = "INSERT INTO `dishes_history` 
-		SELECT NULL, `dishid`,`name`,  `description`, `weight`,  `price`,  `menu_section`,  '".$menuid."',  `isbasic`,   '".$_SESSION['curuserid']."', '1' , NOW() 
-		WHERE `dishid` = '".$dishid."' ORDER BY `id` DESC LIMIT 0,1 ;";	
+		SELECT NULL, `dishid`,`name`,  `description`,  `price`, `weight`,  `isbasic`,  `menu_section`,  '".$menuid."',   '".$_SESSION['curuserid']."', '2' , 'из архива,', NOW() 
+		FROM `dishes_history` WHERE `dishid` = '".$dishid."' ORDER BY `id` DESC LIMIT 0,1 ;";	
 		mysql_query($insert);
 
 			echo 'yes';
 	
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'dishfrommenu')
 {
@@ -1399,7 +1430,7 @@ $dishid = $_POST['dishid'];
 		mysql_query($update);
 
 		$insert = "INSERT INTO `dishes_history` 
-		SELECT NULL, `dishid`,`name`,  `description`, `price`,`weight`,   `isbasic`,   `menu_section`,  '0',   '".$_SESSION['curuserid']."', '0' , NOW() 
+		SELECT NULL, `dishid`,`name`,  `description`, `price`,`weight`,   `isbasic`,   `menu_section`,  '0',   '".$_SESSION['curuserid']."', '1' , 'в архив,', NOW() 
 		FROM `dishes_history` WHERE `dishid` = '".$dishid."' ORDER BY `id` DESC LIMIT 0,1 ;";	
 		mysql_query($insert);
 
@@ -1408,58 +1439,7 @@ $dishid = $_POST['dishid'];
 			
 }
 
-
-
-
-
-
-
-if($_POST['operation'] == 'getdishesforadd')
-{
-$menuid = $_POST['menuid'];
-$sectionid = $_POST['sectionid'];
-$toadd = $_POST['toadd'];
-
-		$tsql01 = "SELECT * FROM `dishes`   WHERE `menu_section` = ".$sectionid."  AND `isactive` = '1' ORDER BY `title` ASC;";
-		$rezult01 = mysql_query($tsql01);
-
-	if (mysql_num_rows($rezult01) > 0) 
-	{
-		header('Content-Type: text/html; charset=utf-8');
-
-		while ($rows01 = mysql_fetch_array($rezult01)) 
-		{	
-			$tsql02 = "SELECT d.menuid, m.type_name FROM dishes_in_menus d, menus m WHERE  d.dishid = ".$rows01["id"]." AND d.isactive = '1' AND d.menuid = m.id ;";
-			$rezult02 = mysql_query($tsql02);
-			if($toadd == 'free')
-			{
-				if (mysql_num_rows($rezult02) == 0) 
-				{	
-
-					echo '<tr>
-							<td><span id=dishname'.$rows01["id"].'>'.$rows01["title"].'</span></td>
-							<td><span id=dishdescr'.$rows01["id"].'>'.$rows01["description"].'</span></td>
-							<td><span id=dishweight'.$rows01["id"].'>'.$rows01["weight"].'</span></td>
-							<td><span id=dishprice'.$rows01["id"].'>'.$rows01["price"].'</span></td>
-							<td><button type="button" class="btn btn-primary" name="dishtomenu" sectionid="'.$sectionid.'"  menuid="'.$menuid.'" id="'.$rows01["id"].'" title="Добавть блюдо в меню">Добавить в меню</button></td>	
-						</tr>';
-				}
-
-			}
-
-		}
-			
-		
-	}
-
-}
-
-
-
-
-
-
-					
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'addservice')
 {
@@ -1529,7 +1509,7 @@ if ($id == 0)
 	
 }
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'deleteservice')
 {
@@ -1562,9 +1542,7 @@ if ($id > 0)
 	
 }
 
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'printmenutree')
 {
@@ -1585,8 +1563,9 @@ header('Content-Type: text/html; charset=utf-8');
 if ($_POST['typetree'] == 'dishes' OR $_POST['typetree'] == 'menu')
 {
 echo '<div class="btn-group" >
-  <button  name="viewfull" onClick="viewtree(1);" type="button" class="btn btn-primary ">Развернуть список</button>
-  <button  name="viewsect" onClick="viewtree(0);" type="button" class="btn btn-primary">Свернуть список</button>
+  <button  name="viewfull" onClick="viewtree(1);" type="button" class="btn btn-primary ">Показать все</button>
+  <button  name="viewsect" onClick="viewtree(0);" type="button" class="btn btn-primary">Спрятать все</button>
+  <button  name="viewsect" onClick="viewfromarchiv();" type="button" class="btn fromarhiv">Показать непринятые</button>
 </div>'.chr(10);
 }
 
@@ -1750,7 +1729,7 @@ echo '<br><br>
 			{
 				if ($_POST['typetree'] == 'dishes')
 				{
-					print_dishes_for_arhiv($sections[$num]['items'],$sections[$num]['id'],'food');
+					print_dishes_for_arhiv($sections[$num]['items'],$sections[$num]['id'],$row_menutype["id"]);
 				}
 				else
 				{
@@ -1775,7 +1754,7 @@ echo '<br><br>
 					}
 					
 					echo '<tbody><tr id="sec'.$val[$num1]['id'].'"  class = "dis'.$sections[$num]['id'].$class.'"><th  colspan="4" class="level_1">'.chr(10);			
-					echo  '&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val[$num1]['name'].' ('.$row_menutype["id"].$isdrink[$val[$num1]['isdrink']][0].': '.$val[$num1]['dishes'].') '.chr(10);
+					echo  '&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val[$num1]['name'].' ('.$isdrink[$val[$num1]['isdrink']][0].': '.$val[$num1]['dishes'].') '.chr(10);
 					echo '</th><th class="level_1">'.chr(10);
 					echo '<textarea style="display:none;" id="sectiontitle'.$val[$num1]['id'].'">'.$val[$num1]['name'].'</textarea>'.chr(10);
 					if ($_POST['typetree'] == 'menu')
@@ -1798,7 +1777,7 @@ echo '<br><br>
 						
 								if ($_POST['typetree'] == 'dishes')
 								{
-									print_dishes_for_arhiv($val[$num1]['items'],$val[$num1]['id'],'food');
+									print_dishes_for_arhiv($val[$num1]['items'],$val[$num1]['id'],$row_menutype["id"]);
 								}
 								else
 								{
@@ -1844,7 +1823,7 @@ echo '<br><br>
 								{
 									if ($_POST['typetree'] == 'dishes')
 									{
-										print_dishes_for_arhiv($val1[$num2]['items'],$val1[$num2]['id'],'food');
+										print_dishes_for_arhiv($val1[$num2]['items'],$val1[$num2]['id'],$row_menutype["id"]);
 									}
 									else
 									{
@@ -1873,6 +1852,7 @@ echo '<br><br>
 }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'sendemail')
 {
@@ -1942,12 +1922,7 @@ $subject = 'Заказ Банкета в ресторане Времена Го�
 		echo 'yes';
 }
 
-
-
-
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'printarhivtree')
 {
@@ -1959,22 +1934,15 @@ header('Content-Type: text/html; charset=utf-8');
 
 $body_out = $body_out.'<table class="arhiv simple-little-table" style="width:100%;">
 <tr>
-<th  width="5" class="report_columns_head">№</th>
+
 <th  width="130" class="report_columns_head">Наименование</th>
 <th  width="100" class="report_columns_head">Описание</th>';
 
 	$body_out = $body_out.'<th  width="40" class="report_columns_head">Цена</th>';
-
-
-$body_out = $body_out.'<th  width="40" class="report_columns_head">Вес</th>';
-
-
-
-
-	$body_out = $body_out.'<th  width="100" class="report_columns_head">Дата</th>';
-
-	$body_out = $body_out.'<th  width="100" class="report_columns_head">Действия</th>';
-
+	$body_out = $body_out.'<th  width="40" class="report_columns_head">Вес</th>';
+	$body_out = $body_out.'<th  width="100" class="report_columns_head">Изменения</th>';
+	$body_out = $body_out.'<th  width="50" class="report_columns_head">Дата</th>';
+	$body_out = $body_out.'<th  width="50" class="report_columns_head">Действия</th>';
 
 $body_out = $body_out.'</tr>
 </tbody>';
@@ -2065,6 +2033,9 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 	
 	//print_r($sections);
 	//цикл по массиву секций с блюдами для конкретного меню для вывода на экран
+$level1otstup='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';					
+$level2otstup='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';					
+
 	foreach ($sections as $num => $val) 
 	{
 	
@@ -2077,7 +2048,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 
 			if ($sections[$num]['items']['count'] > 0)
 			{
-				$out = print_dishes_for_arhiv($sections[$num]['items'], $sections[$num]['id'], $forwho);
+				$out = print_dishes_for_arhiv($sections[$num]['items'], $sections[$num]['id'], $sections[$num]['isdrink']);
 				$body_out = $body_out.$out['print'];
 			}
 			
@@ -2088,12 +2059,11 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 					if (is_array($val1)) 
 					{
 					
-					
 				if (@$val[$num1]['dishes'] > 0) 
 				{	
 						if($val[$num1]['name']){
 			$body_out = $body_out.'<tbody><tr><th  colspan="'.($cs1 + $cs2).'"  class="level_1">'.chr(10);			
-							$body_out = $body_out.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].''.chr(10);
+							$body_out = $body_out.$level1otstup.$val[$num1]['name'].''.chr(10);
 							$body_out = $body_out.'</th></tr></tbody>'.chr(10);
 						}
 
@@ -2103,7 +2073,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 					
 					
 					
-						$out = print_dishes_for_arhiv($val[$num1]['items'],$val[$num1]['id'],$forwho);
+						$out = print_dishes_for_arhiv($val[$num1]['items'],$val[$num1]['id'],$val[$num1]['isdrink']);
 						$body_out = $body_out.$out['print'];
 }
 
@@ -2116,14 +2086,14 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 							{	
 						if($val1[$num2]['name']){
 			$body_out = $body_out.'<tbody><tr><th colspan="'.($cs1 + $cs2).'"  class="level_2">'.chr(10);			
-							$body_out = $body_out.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].''.chr(10);
+							$body_out = $body_out.$level2otstup.$val1[$num2]['name'].''.chr(10);
 							$body_out = $body_out.'</th></tr></tbody>'.chr(10);
 						}
 
 													
 								if ($val1[$num2]['items']['count'] > 0)
 								{
-									$out = print_dishes_for_arhiv($val1[$num2]['items'],$val1[$num2]['id'],$forwho);
+									$out = print_dishes_for_arhiv($val1[$num2]['items'],$val1[$num2]['id'],$val1[$num2]['isdrink']);
 									$body_out = $body_out.$out['print'];
 								}
 
@@ -2144,6 +2114,7 @@ echo $body_out;
 
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 
 

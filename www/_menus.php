@@ -41,6 +41,11 @@
 	color: #000;
   background-color: #FFFFC0 !important;
   }
+  
+  .fromarhiv {
+	color: #000;
+  background-color: #11FFC0 !important;
+  }
 </style>  
 
 
@@ -190,7 +195,11 @@ normal_height()
  }
  
  
- 
+ function viewfromarchiv()
+ {
+ viewtree(0);
+ $(".fromarhiv").show();
+ }
  	function tree_show(el,id)
  {
  
@@ -309,7 +318,7 @@ $( ".stContainer" ).css("height", newh + "px")
 		.done(function( msg ) {
 				if(msg == 'yes'){
 				//alert ('Блюдо удалено из меню.');
-				get_dishes_for_add(menuid,sectionid);
+				//get_dishes_for_add(menuid,sectionid);
 				print_menu_tree(menuid);
 				} else {
 				alert ('Что-то пошло не так. '+msg);
@@ -326,10 +335,10 @@ $( ".stContainer" ).css("height", newh + "px")
 
 
 $( document ).on( "click", "button[name=dishfrommenu]", function() {
-				dishid = $(this).attr("id");
+				dishid = $(this).attr("dishid");
 				menuid = $(this).attr("menuid");
 				sectionid = $(this).attr("sectionid");
-								if (confirm("Вы уверены что ходите убрать блюдо из меню?")) {
+								if (confirm("Вы уверены что хотите убрать блюдо из меню?")) {
 					dish_from_menu(dishid, menuid, sectionid);
 				} else {
 				}
@@ -435,7 +444,7 @@ $('#tabs').smartTab({selected: 0});
 			if(msg == 'yes'){
 				//alert ('Информация о блюде сохранена.');
 				menuid1 = curmenu();
-				get_dishes_for_add(menuid1,menu_section.val());
+				//get_dishes_for_add(menuid1,menu_section.val());
 				print_menu_tree(menuid1);
 				menutitle = curmenutitle();
 				sectiontitle = $( "#menu_section option:selected").text().replace('-','');
