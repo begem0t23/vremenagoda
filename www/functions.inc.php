@@ -319,11 +319,11 @@ return $dish;
 }
 
 
-function dishes_in_section_by_arhiv($period,$menu_section,$cnt)
+function dishes_in_section_by_arhiv($addsql,$menu_section,$cnt)
 {
 $dish = Array();
 $dish['count'] = 0;
-			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '0' AND isactive > 0  ;";
+			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' ".$addsql." ;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -349,7 +349,7 @@ return $dish;
 }
 
 
-function print_dishes_for_arhiv($items,$sectionid,$isdrink)
+function print_dishes_for_arhiv($items,$sectionid,$isdrink,$type)
 {
 $output = Array();
 $output['sum'] = 0;
@@ -375,7 +375,7 @@ $class =  '';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["weight"].'</td>';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["changes"].'</td>';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["kogda"].'</td>';
-							$output['print'] = @$output['print'].'<td><button  class = "btn btn-primary" type="button" name="dishtomenu" dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'"   menuid="'.$menuid.'"  sectionid="'.$items[$i]["sectionid"].'" title="Вернуть в меню">В меню</button></td>';
+							if($type == '0') $output['print'] = @$output['print'].'<td><button  class = "btn btn-primary" type="button" name="dishtomenu" dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'"   menuid="'.$menuid.'"  sectionid="'.$items[$i]["sectionid"].'" title="Вернуть в меню">В меню</button></td>';
 							$output['print'] = @$output['print'].'</tr>';
 				}							
 		}

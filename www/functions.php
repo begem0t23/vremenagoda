@@ -1347,7 +1347,7 @@ if ($dishid == 0)
 	$insert = "INSERT INTO `dishes` (`id`, `title`, `isdrink`, `createdate`, `orderby`) VALUES (NULL, '0','".$name."',  NOW(),'0');";
 			mysql_query($insert);
 			
-			$changes = 'создание,';
+			$changes = '4,';//создание
 	}
 	
 	
@@ -1359,34 +1359,34 @@ if ($dishid == 0)
 	$rows = mysql_fetch_array($rezult);
 	if ($rows['name'] != $name)
 	{
-		$changes = $changes.'название,';
+		$changes = $changes.'7,';//название
 	}
 	if ($rows['description'] != $description)
 	{
-		$changes = $changes.'описание,';
+		$changes = $changes.'8,';//описание
 	}
 	if ($rows['price'] != $price)
 	{
-		$changes = $changes.'цена,';
+		$changes = $changes.'5,';//цена
 	}
 	if ($rows['weight'] != $weight)
 	{
-		$changes = $changes.'вес,';
+		$changes = $changes.'6,';//вес
 	}
 	
 	if ($rows['isbasic'] != $isbasic)
 	{
-		$changes = $changes.'тип меню,';
+		$changes = $changes.'9,';//тип меню
 	}
 	
 	if ($rows['menu_section'] != $menu_section)
 	{
-		$changes = $changes.'раздел,';
+		$changes = $changes.'10,';//Изменение раздела
 	}
 	
 	if ($rows['isactive'] == '2')
 	{
-		$changes = $changes.'возвращено,';
+		$changes = $changes.'3,';//возвращение в меню
 	}
 	
 	
@@ -1410,7 +1410,7 @@ $dishid = $_POST['dishid'];
 		mysql_query($update);
 
 		$insert = "INSERT INTO `dishes_history` 
-		SELECT NULL, `dishid`,`name`,  `description`,  `price`, `weight`,  `isbasic`,  `menu_section`,  '".$menuid."',   '".$_SESSION['curuserid']."', '2' , 'из архива,', NOW() 
+		SELECT NULL, `dishid`,`name`,  `description`,  `price`, `weight`,  `isbasic`,  `menu_section`,  '".$menuid."',   '".$_SESSION['curuserid']."', '2' , '2,', NOW() 
 		FROM `dishes_history` WHERE `dishid` = '".$dishid."' ORDER BY `id` DESC LIMIT 0,1 ;";	
 		mysql_query($insert);
 
@@ -1430,7 +1430,7 @@ $dishid = $_POST['dishid'];
 		mysql_query($update);
 
 		$insert = "INSERT INTO `dishes_history` 
-		SELECT NULL, `dishid`,`name`,  `description`, `price`,`weight`,   `isbasic`,   `menu_section`,  '0',   '".$_SESSION['curuserid']."', '1' , 'в архив,', NOW() 
+		SELECT NULL, `dishid`,`name`,  `description`, `price`,`weight`,   `isbasic`,   `menu_section`,  '0',   '".$_SESSION['curuserid']."', '1' , '1,', NOW() 
 		FROM `dishes_history` WHERE `dishid` = '".$dishid."' ORDER BY `id` DESC LIMIT 0,1 ;";	
 		mysql_query($insert);
 
@@ -1924,8 +1924,109 @@ $subject = 'Заказ Банкета в ресторане Времена Го�
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
+if($_POST['operation'] == 'printperiodsforarhiv')
+{
+header('Content-Type: text/html; charset=utf-8');
+
+$type = $_POST['type']; 
+
+
+if ($type != 99) 
+{
+	$sqltype = " AND CONCAT(',',`changes`) LIKE '%,".$type."%'";
+}
+
+if ($type == 1) 
+{
+	$sqltype = " AND menu = '0' AND isactive > 0 ";
+}
+
+if ($type == 0) 
+{
+	$sqltype = " AND menu = '0' AND isactive > 0 ";
+}
+
+global $months;
+$sql1 = "SELECT DISTINCT YEAR(`kogda`) AS `year` FROM `dishes_history` WHERE `id` > 0 ".$sqltype;
+$rezult1 = mysql_query($sql1);
+while($rows1 = mysql_fetch_array($rezult1))
+{
+		echo '<select id="arhivdate'.$rows1['year'].'" onchange="changeperiod('.$rows1['year'].');">
+		<option period="year" value="'.$rows1['year'].'" >'.$rows1['year'].'</option>';
+
+		$sql2 = "SELECT DISTINCT MONTH(`kogda`)  AS `month` FROM `dishes_history` WHERE YEAR(`kogda`) = ".$rows1['year'].$sqltype." ;";
+		$rezult2 = mysql_query($sql2);
+		while($rows2 = mysql_fetch_array($rezult2))
+		{
+				echo '<option period="month"  value="'.$rows2['month'].'" >&nbsp;&nbsp;'.$months[$rows2['month']].'</option>';
+				$sql3 = "SELECT DISTINCT DATE(`kogda`) AS `date` FROM `dishes_history`  WHERE MONTH(`kogda`) = ".$rows2['month'].$sqltype." ;";
+				$rezult3 = mysql_query($sql3);
+				while($rows3 = mysql_fetch_array($rezult3))
+				{
+						echo '<option period="date" value="'.$rows3['date'].'" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$rows3['date'].'</option>';
+
+				}
+
+		}
+
+		echo '</select>';
+}
+
+
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
 if($_POST['operation'] == 'printarhivtree')
 {
+$period = $_POST['period']; 
+$value = $_POST['value']; 
+$year = $_POST['year']; 
+$type = $_POST['type']; 
+
+$sqldate = "";
+$sqltype = "";
+
+if ($period == 'year')
+{
+$sqldate = " and YEAR(`kogda`) = '".$value."'";
+
+} 
+
+
+if ($period == 'month')
+{
+$sqldate = " and YEAR(`kogda`) = '".$year."' and MONTH(`kogda`) = '".$value."'" ;
+
+}
+
+if ($period == 'date')
+{
+$sqldate = " and DATE(`kogda`) = '".$value."'" ;
+
+}
+
+
+
+
+if ($type != 99) 
+{
+	$sqltype = " and CONCAT(',',`changes`) LIKE '%,".$type."%'";
+}
+
+if ($type == 1) 
+{
+	$sqltype = " and menu = '0' AND isactive > 0 ";
+}
+
+if ($type == 0) 
+{
+	$sqltype = " and menu = '0' AND isactive > 0 ";
+}
+
+
+$addsql = $sqltype.$sqldate;
 
 $forwho = 'food';
 $cs1 = 6;
@@ -1959,7 +2060,7 @@ $body_out = $body_out.'</tr>
 
 	while ($rows0 = mysql_fetch_array($rezult0)) {
 	
-	$zzz = dishes_in_section_by_arhiv($period,$rows0['id'],@$cntdish);
+	$zzz = dishes_in_section_by_arhiv($addsql,$rows0['id'],@$cntdish);
 	$sections[$rows0['id']]['id'] = '_'.$rows0['id']; //непонял почему но без _ не работает
 	
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
@@ -1981,7 +2082,7 @@ $body_out = $body_out.'</tr>
 		while ($rows_1 = mysql_fetch_array($rezult_1)) {
 
 
-	$zzz = dishes_in_section_by_arhiv($period,$rows_1['id'],$cntdish);
+	$zzz = dishes_in_section_by_arhiv($addsql,$rows_1['id'],$cntdish);
 	$sections[$rows0['id']]['sum'] = @$sections[$rows0['id']]['sum'] + @$zzz['sum'];
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] ++;
@@ -2006,7 +2107,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']]['dishes'];
 	while ($rows_2 = mysql_fetch_array($rezult_2)) {
 	
 
-	$zzz = dishes_in_section_by_arhiv($period,$rows_2['id'],$cntdish);
+	$zzz = dishes_in_section_by_arhiv($addsql,$rows_2['id'],$cntdish);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['sum'] = @$sections[$rows0['id']]['sum'] + @$zzz['sum'];
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
@@ -2048,7 +2149,7 @@ $level2otstup='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 
 			if ($sections[$num]['items']['count'] > 0)
 			{
-				$out = print_dishes_for_arhiv($sections[$num]['items'], $sections[$num]['id'], $sections[$num]['isdrink']);
+				$out = print_dishes_for_arhiv($sections[$num]['items'], $sections[$num]['id'], $sections[$num]['isdrink'],$type);
 				$body_out = $body_out.$out['print'];
 			}
 			
@@ -2073,7 +2174,7 @@ $level2otstup='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 					
 					
 					
-						$out = print_dishes_for_arhiv($val[$num1]['items'],$val[$num1]['id'],$val[$num1]['isdrink']);
+						$out = print_dishes_for_arhiv($val[$num1]['items'],$val[$num1]['id'],$val[$num1]['isdrink'],$type);
 						$body_out = $body_out.$out['print'];
 }
 
@@ -2093,7 +2194,7 @@ $level2otstup='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 													
 								if ($val1[$num2]['items']['count'] > 0)
 								{
-									$out = print_dishes_for_arhiv($val1[$num2]['items'],$val1[$num2]['id'],$val1[$num2]['isdrink']);
+									$out = print_dishes_for_arhiv($val1[$num2]['items'],$val1[$num2]['id'],$val1[$num2]['isdrink'],$type);
 									$body_out = $body_out.$out['print'];
 								}
 

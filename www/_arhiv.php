@@ -20,6 +20,10 @@
 	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
 
 <style>
+.left{
+float:left;
+}
+
 .rouble {
   position: relative; }
 
@@ -282,12 +286,29 @@ fixednavbar();
 		<div class="page-header">
         <h3>Архив Блюд и Напитков</h3>
 		</div>
+				<div id="types" class="left">		
+		<select id="arhivtype" onchange="changetype();">
+		<option value="0" all="0">Удаленные</option>
+		<option value="" all="0" disabled>---просмотр истории---</option>
+		<option value="1" all="1">Удаление в архив</option>
+		<option value="2" all="1">Восстановление из архива</option>
+		<option value="3" all="1">Возврат в меню</option>
+		<option value="4" all="1">Создание нового</option>
+		<option value="5" all="1">Изменение цены</option>
+		<option value="6" all="1">Изменение веса</option>
+		<option value="7" all="1">Изменение названия</option>
+		<option value="8" all="1">Изменение описания</option>
+		<option value="9" all="1">Изменение типа меню</option>
+		<option value="10" all="1">Изменение раздела</option>
+		<option value="99" all="1">Любые изменения</option>
 		
-		<div id="menutree">
-
+		</select>
 
 		</div>
+		
+		<div id="periods" class="left">		</div>
 	  
+		<div id="menutree">		</div>
 	
     </div>
 
@@ -323,6 +344,8 @@ fixednavbar();
 
 
 	<script>
+	
+	var curyear = '2014';
 	function viewtree(key) {
 	if(key == 1) 
 	{
@@ -335,7 +358,7 @@ fixednavbar();
 	
 	if(key == 0) 
 	{
-					$.cookie("viewtree", '0',{ expires: 1, path: '/' });
+			$.cookie("viewtree", '0',{ expires: 1, path: '/' });
 			$(".glyphicon-minus").addClass("glyphicon-plus");
 			$(".glyphicon-minus").removeClass("glyphicon-minus");
 			$(".dis_0 span").removeClass("glyphicon-plus");
@@ -453,13 +476,25 @@ $( ".stContainer" ).css("height", newh + "px")
  
  
 	
-	
-		function print_menu_tree(cnt){
-
+		function print_periods(type){
+		
 			$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'printarhivtree', typetree: 'dishes'}
+			data: { operation: 'printperiodsforarhiv', type: type}
+		})
+		.done(function( msg ) {
+			$( "#periods" ).html(msg);
+			});
+	}
+	
+		
+		function print_menu_tree(period,value,type,year){
+		
+			$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'printarhivtree', period: period, value: value, type: type,year: year}
 		})
 		.done(function( msg ) {
 			$( "#menutree" ).html(msg);
@@ -467,9 +502,8 @@ $( ".stContainer" ).css("height", newh + "px")
 				theme: 'blue',
 				widgets: ['zebra']
 			});
-			//$('#tabs').smartTab({selected: cnt});
-			//viewtree($.cookie("viewtree"));
-		});
+
+			});
 	
 	}
 	
@@ -484,9 +518,7 @@ $( ".stContainer" ).css("height", newh + "px")
 		})
 		.done(function( msg ) {
 				if(msg == 'yes'){
-				//alert ('Блюдо удалено из меню.');
-				//get_dishes_for_add(menuid,sectionid);
-				print_menu_tree(menuid);
+					changeperiod('2014');
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -516,7 +548,7 @@ $( ".stContainer" ).css("height", newh + "px")
 			});
 
 
-print_menu_tree(1);		
+	changetype();	
 	
 	
 			
@@ -604,7 +636,7 @@ $('#tabs').smartTab({selected: 0});
 				//alert ('Информация о блюде сохранена.');
 				menuid1 = curmenu();
 				get_dishes_for_add(menuid1,menu_section.val());
-				print_menu_tree(menuid1);
+		changeperiod('2014');
 				menutitle = curmenutitle();
 				sectiontitle = $( "#menu_section option:selected").text().replace('-','');
 				dialog2.dialog('option', 'title', 'Добавление блюд в:  "'+menutitle + '" / раздел: "' + sectiontitle + '"');
@@ -652,7 +684,7 @@ $('#tabs').smartTab({selected: 0});
 		.done(function( msg ) {
 			if(msg == 'yes'){
 				alert ('Информация о разделе сохранена.');
-				print_menu_tree(curmenu());
+				changeperiod('2014');
 				dialog4.dialog( "close" );
 				} else {
 				alert ('Что-то пошло не так. '+msg);
@@ -822,7 +854,24 @@ $('#tabs').smartTab({selected: 0});
 	
   });
   
+   function changetype()
+ {
  
+	type = $("#arhivtype :selected").val();
+	print_periods(type);
+	changeperiod(curyear);
+ }
+  
+ function changeperiod(year)
+ {
+	period = $("#arhivdate"+year+" :selected").attr("period");
+	value = $("#arhivdate"+year+" :selected").val();
+	type = $("#arhivtype :selected").val();
+	//alert(value);
+	
+	print_menu_tree(period,value,type,year);
+	
+ }
  
 	</script>
   </body>
