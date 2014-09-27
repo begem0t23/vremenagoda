@@ -9,110 +9,153 @@
     
     <title><?php
 	echo PRODUCTNAME;
-	?></title>
-     <!-- Bootstrap core CSS -->
+	?> :: Мероприятия</title>
+    <!-- Bootstrap core CSS -->
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="/css/sticky-footer-navbar.css" rel="stylesheet">
+      <script src="/jquery/jquery.min.js"></script>
+	<script src="/jquery/jquery-ui.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+
+   <link href="/css/sticky-footer-navbar.css" rel="stylesheet">
 
     <link href="/jquery/jquery-ui.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="/jquery/jquery-ui.theme.min.css" rel="stylesheet">
-	<link href="/jquery/smarttab/styles/smart_tab_vertical.css" rel="stylesheet" type="text/css">	
-	<link href="/css/jquery.contextMenu.css" rel="stylesheet" type="text/css">	
-	<link href="/css/tables_in_hall.css" rel="stylesheet" type="text/css">	
+	<link href="/jquery/smarttab/styles/smart_tab.css" rel="stylesheet" type="text/css">	
 	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
-
- </head>
+<link href='css/fullcalendar.css' rel='stylesheet' />
+<script src='jquery/moment.min.js'></script>
+<script src='jquery/fullcalendar.min.js'></script>
+<script src='jquery/ru.js'></script>
+	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 
 <style>
-.nav-title{width:200px !important;}
-.nav-element{width:200px !important;}
+
+</style>
+<script>
+function normal_height()
+  {
+  
+ 
+			
+ newh1 = $( "#calendar" ).height() + 30;
+newh2 = $( "#list" ).height() + 30;
+$( ".stContainer" ).css("height", newh1 + newh2 +"px")
+
+ }
+ 
+	$(document).ready(function() {
 	
-.small{width:400px !important;}
-.big	{width:750px !important;}
-
-   #weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
-		.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
+$('#tabs2').smartTab({
+    selected: 0,  // Selected Tab, 0 = first tab
+    saveState:false, // Remembers tab selection 
+    contentURL:null, // content url, Enables Ajax content loading. ex: 'service.php'   
+    contentCache:true, // Cache Ajax content
+    keyNavigation:true, // Enable/Disable keyboard navigation(left and right keys are used if enabled)
+    autoProgress:false, // Auto navigate tabs on interval
+    progressInterval: 3500, // Auto navigate Interval (used only if "autoProgress" is set to true)
+    stopOnFocus:false, // Stop auto navigation on focus and resume on outfocus
+    transitionEffect:'none', // Effect on navigation, none/hslide/vslide/slide/fade
+    transitionSpeed:'400', // Transition animation speed
+    transitionEasing:'easeInOutExpo', // Transition animation easing
+    autoHeight:false, // Automatically adjust content height
+    onLeaveTab: null, // triggers when leaving a tab
+    onShowTab: null  // triggers when showing a tab
+});  
+			$('#external-events .fc-event').each(function() {
 		
-		.input-group{padding:10px 0 0 0 !important;}
-  .right{position:absolute; left:250px;}
-</style>  
-  <body>
-<?php
-
-fixednavbar();
-
-global $orderstatus;
-?>
-    <!-- Begin page content -->
-    <div class="container">
-      <div class="page-header">
-<?php	
-	$q1 ='"';
-		
-		table(
-		"Заказы ".$_SESSION["curusername"], //заголовок
-		"50,100,200,200,100",	//ширина колонок
-		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа",	//заголовки
-		"id,realname,eventdate,name,orderstatus",	//поля
-		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name 
-		 FROM orders o, users u, clients c 
-		 WHERE o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
-		"", //период (поле,начало,конец)
-		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
-		);
-		
-		table(
-		"Заказы других менеджеров", //заголовок
-		"50,100,200,200,100",	//ширина колонок
-		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа",	//заголовки
-		"id,realname,eventdate,name,orderstatus",	//поля
-		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name
-		 FROM orders o, users u, clients c 
-		 WHERE  o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
-		"", //период (поле,начало,конец)
-		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
-		);
-?>
-      </div>
-    </div>
-
-<?php
-fixedbotbar();
-?>
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-   <script src="/jquery/jquery.min.js"></script>
-	<script src="/jquery/jquery.ui.datepicker-ru.js"></script>
-	<script src="/jquery/jquery-ui.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-	<script src="/jquery/validator.js"></script>
-	<script src="/jquery/jquery.cookie.js"></script>
-	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
-	<script src="/jquery/jquery.json-2.4.js"></script>
-	<script src="/jquery/jquery.form.js"></script>
-	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
+			// create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+			// it doesn't need to have a start or end
+			var eventObject = {
+				title: $.trim($(this).text()) // use the element's text as the event title
+			};
+			
+			// store the Event Object in the DOM element so we can get to it later
+			$(this).data('eventObject', eventObject);
+			
+			// make the event draggable using jQuery UI
+			$(this).draggable({
+				zIndex: 999,
+				revert: true,      // will cause the event to go back to its
+				revertDuration: 0  //  original position after the drag
+			});
+			
+		});
 	
-			<script src="/jquery/tables_in_hall.js"></script>
-	<script src="/jquery/jquery.contextMenu.js"></script>
-
-<!-- TableSorter core JavaScript ================================================== -->
-		<!-- choose a theme file -->
-<link rel="stylesheet" href="/css/theme.blue.css">
-
-<!-- load jQuery and tablesorter scripts -->
-<script type="text/javascript" src="/jquery/jquery.tablesorter.js"></script>
-<!-- tablesorter widgets (optional) -->
-<script type="text/javascript" src="/jquery/jquery.tablesorter.widgets.js"></script>
-
-<script type="text/javascript">
-
 
 	
-$(function(){
-   
-$('#newpaydate').datepicker({ maxDate: "+0D" });
+	
+	
+	  $('#calendar').fullCalendar({
+	   aspectRatio: 1.5,
+	  height: 470,
+	  	header: {
+				left: 'prev',
+				center: 'title',
+				right: 'next'
+			},
+	 eventClick: function(event) {
+        if (event.url) {
+            window.open(event.url);
+            return false;
+        }
+    },
+	    eventAfterRender: function(event, element) {
+ normal_height();			
+ },
+			selectable: false,
+			selectHelper: true,
+			select: addevent,
+
+			editable: false,
+			droppable: false, // this allows things to be dropped onto the calendar !!!
+			drop: function(date) { // this function is called when something is dropped
+			
+				// retrieve the dropped element's stored Event Object
+				var originalEventObject = $(this).data('eventObject');
+				
+				// we need to copy it, so that multiple events don't have a reference to the same object
+				var copiedEventObject = $.extend({}, originalEventObject);
+				
+				// assign it the date that was reported
+				copiedEventObject.start = date;
+				
+				// render the event on the calendar
+				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+				$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+				
+				// is the "remove after drop" checkbox checked?
+				if ($('#drop-remove').is(':checked')) {
+					// if so, remove the element from the "Draggable Events" list
+					$(this).remove();
+				}
+				
+			},
+			eventLimit: true, // allow "more" link when too many events
+			events: {
+        url: 'functions.php',
+        type: 'POST',
+        data: {
+            operation: 'getallorders',
+            custom_param2: 'somethingelse'
+        },
+        error: function() {
+            alert('there was an error while fetching events!');
+        },
+        color: 'yellow',   // a non-ajax option
+        textColor: 'black' // a non-ajax option
+    },
+			  eventClick: viewevent,
+			
+			eventDrop: refreshevents,
+			
+			
+        // put your options and callbacks here
+    });
+	
+	
+	
+	$('#newpaydate').datepicker({ maxDate: "+0D" });
 $('#otkazdate').datepicker({ maxDate: "+0D" });
 
  $("#allpaytab")
@@ -153,27 +196,163 @@ $(".report_client2")
 			location.href ="/?r=<?echo rand();?>";
 		});
 
-     dialog = $( "#sendemail-form" ).dialog({
-      autoOpen: false,
-      height: 350,
-      width: 700,
-      modal: true,
-      buttons: {
-        "Отправить": sendemail,
-        "Отмена": function() {
-          dialog.dialog( "close" );
-        }
-      }
-    });
+
  
 	var orderid = $("#newpayment").attr('orderid');
+	
+	$('#calendar').fullCalendar( 'refetchEvents' );	
+	normal_height();
+});
+	
+	
+	function showst()
+	{
+	
+	}
+	
+	
+	function refreshevents(calEvent, jsEvent, view)
+	{
 
-});	
-</script>	
+		$("#title").val(calEvent.title);
+	$("#todo").val(calEvent.todo);
+	$("#date").val(normdate(calEvent.start));
+	$("#id").val(calEvent.id);
+	
+	
+		saveevent();
+
+	
+	}
+	
+	
+	
+		function addevent(start)
+	{
+	$("#id").val('0');
+		$("#date").val(normdate(start));
+		//dialog.dialog('option', 'title', 'Добавление нового мероприятия');
+		//dialog.dialog("open");
+	}
+	
+	
+	function viewevent ( calEvent, jsEvent, view){
+	
+
+	$("#title").val(calEvent.title);
+	$("#todo").val(calEvent.todo);
+	$("#date").val(normdate(calEvent.start));
+	$("#id").val(calEvent.id);
+//	$("#complete").val(calEvent.complete);
+
+		}
+	
+	function saveevent()
+	{
+
+		id = $("#id").val();
+		title = $("#title").val();
+		todo = $("#todo").val();
+		start = $("#date").val();
+	//	complete = $("#complete").val();
+
+
+alert (id);
+		
+				$('#calendar').fullCalendar('unselect');
+	}
+	
+	function normdate(fulldate)
+	{
+		var ed = new Date(fulldate);
+		d = ('0'+ed.getDate()).slice(-2);
+		m = ('0'+(ed.getMonth() +1)).slice(-2) ;
+		y = ed.getFullYear();
+		date = y+'-'+m+'-'+d;
+		return date;
+	}
+	
+</script>
+</head>
+<body>
+  
+<?php
+	global $userroles;
+fixednavbar();
+
+?>
+
+    <!-- Begin page content -->
+    <div class="container">
+ 
+   <div id="tabs2" style="min-width: 700px; width: 100%;">
+    <ul>
+	<li><a href="#eventview1" onclick="$('#calendar').fullCalendar( 'refetchEvents' );normal_height();			">Календарь</a></li>
+	<li><a href="#eventview2" onclick="normal_height();" >Список</a></li>
+	</ul>
+	<div id="eventview1" >
+	<div id='calendar'></div>
+	</div>
+	<div id="eventview2" >
+	<div id='list'>
+	
+	<?php
+			table(
+		"Заказы ".$_SESSION["curusername"], //заголовок
+		"50,100,200,200,100",	//ширина колонок
+		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа",	//заголовки
+		"id,realname,eventdate,name,orderstatus",	//поля
+		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name 
+		 FROM orders o, users u, clients c 
+		 WHERE o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
+		"", //период (поле,начало,конец)
+		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
+		);
+		
+		table(
+		"Заказы других менеджеров", //заголовок
+		"50,100,200,200,100",	//ширина колонок
+		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа",	//заголовки
+		"id,realname,eventdate,name,orderstatus",	//поля
+		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name
+		 FROM orders o, users u, clients c 
+		 WHERE  o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
+		"", //период (поле,начало,конец)
+		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
+		);
+		
+		?>
+		
+		
+	
+	
+	
+	
+	</div>
+	</div>
+ </div>
+<?php
+
+//fixedbotbar();
+
+?>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!-- TableSorter core JavaScript ================================================== -->
+		<!-- choose a theme file -->
+<link rel="stylesheet" href="/css/theme.blue.css">
+
+<!-- load jQuery and tablesorter scripts -->
+<script type="text/javascript" src="/jquery/jquery.tablesorter.js"></script>
+<!-- tablesorter widgets (optional) -->
+<script type="text/javascript" src="/jquery/jquery.tablesorter.widgets.js"></script>
+
     <!-- Placed at the end of the document so the pages load faster -->
 
 
- 
-</div>
-  </body>
+
+ </div>
+ </body>
 </html>

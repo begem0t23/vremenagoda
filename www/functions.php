@@ -587,6 +587,54 @@ echo $ech;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
+if ($_POST['operation'] == 'getallorders') 
+{
+		header('Content-Type: text/html; charset=utf-8');
+
+
+	$tsql01 = "select o.*, h.name from `orders` AS o, `hall` AS h WHERE h.id = o.hallid  ;";
+	//echo $tsql01; 
+	$result01 = mysql_query($tsql01);
+	if (mysql_num_rows($result01)>0)
+	{			
+	$ech=$ech."[".chr(10);
+		
+		while ($rows01 = mysql_fetch_array($result01))
+		{
+	
+		$startdate = $rows01['eventdate'];
+		if($rows01['eventtime'] > 0) 
+		{
+			$time = explode($rows01['eventtime'],":");
+			$start = $startdate."T".$rows01['eventtime'];
+		}
+			else
+		{
+			$start = $startdate;
+		}
+		
+			$start = $startdate;
+
+		$ech=$ech.'{'.chr(10);
+		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
+		$ech=$ech.'"title": "'.$rows01['name'].'",'.chr(10);
+		$ech=$ech.'"start": "'.$start.'",'.chr(10);
+		$ech=$ech.'"todo": "'.$rows01['comment'].'",'.chr(10);
+		$ech=$ech.'"url": "?view/'.$rows01['id'].'/",'.chr(10);
+		$ech=$ech.'"date": "'.$start.'"'.chr(10);
+		
+		$ech=$ech."},".chr(10);
+		
+		}
+	}
+ $ech=substr($ech,0,strlen($ech)-2);
+$ech=$ech."]".chr(10);
+
+echo $ech;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
 if($_POST['operation'] == 'deletesection')
 {
 $id = $_POST['sectionid'];
