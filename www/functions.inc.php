@@ -473,6 +473,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['id'] = $rows01['id'];
 				$dish[$dish['count']]['dishid'] = $rows01['dishid'];
 				$dish[$dish['count']]['isactive'] = $rows01['isactive'];
+				$dish[$dish['count']]['isbasic'] = $rows01['isbasic'];
 				$dish[$dish['count']]['title'] = $rows01['name'];
 				$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
@@ -495,13 +496,16 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 	{
 		for($i=0;$i<$items['count'];$i++)
 		{			
-			echo '<tr>';
-			echo '<td><span isactive="'.$items[$i]["isactive"].'" id="dishname'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
-							<td><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
-							<td>'.$items[$i]["price"].'</td>
-							<td><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
-							<td><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
-							<td><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
+					$aclass='';
+			if ($items[$i]["isbasic"] == 1) $aclass .= ' basic';
+
+			echo '<tr  class = "'.$aclass.'">';
+			echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'" id="dishname'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
+							<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
+							<td  class = "'.$aclass.'">'.$items[$i]["price"].'</td>
+							<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
+							<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
+							<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 			echo '</tr>';					
 		}
 	}
@@ -524,28 +528,31 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 		}
 		//die(var_dump($dish_in_order));
 		for($i=0;$i<$items['count'];$i++)
-		{			
-			echo '<tr>';
+		{		
+			$aclass='';
+			if ($items[$i]["isbasic"] == 1) $aclass .= ' basic';
+
+			echo '<tr  class = "'.$aclass.'">';
 			if (@$dish_in_order[$items[$i]["id"]])
 			{
 				$item = $dish_in_order[$items[$i]["id"]];
 				//die(var_dump($num));
-				echo '<td><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>'.$item["dname"].'</span></td>
-					<td><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
-					<td>'.$item["price"].'</td>
-					<td><input dishid="'.$items[$i]["dishid"].'"  type="text" readonly="readonly" name="quant" id="quant'.$items[$i]["id"].'" value="'.$item["num"].'" class="quant" size="1"></td>
-					<td><input dishid="'.$items[$i]["dishid"].'"  name = "note" readonly="readonly" id="note'.$items[$i]["id"].'" value="'.$item["note"].'" type="text" class="note"></td>
-					<td><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-primary '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Удалить</button></td>';
+				echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>'.$item["dname"].'</span></td>
+					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
+					<td  class = "'.$aclass.'">'.$item["price"].'</td>
+					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" readonly="readonly" name="quant" id="quant'.$items[$i]["id"].'" value="'.$item["num"].'" class="quant" size="1"></td>
+					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  name = "note" readonly="readonly" id="note'.$items[$i]["id"].'" value="'.$item["note"].'" type="text" class="note"></td>
+					<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-primary '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Удалить</button></td>';
 				echo '</tr>';					
 			}
 			else
 			{
-				echo '<td><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
-					<td><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
-					<td>'.$items[$i]["price"].'</td>
-					<td><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
-					<td><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
-					<td><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
+				echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
+					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
+					<td  class = "'.$aclass.'">'.$items[$i]["price"].'</td>
+					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
+					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
+					<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 				echo '</tr>';					
 			}
 		}
@@ -565,7 +572,9 @@ $menuid = substr($menuid,1);
 		for($i=0;$i<$items['count'];$i++)
 		{	
 			$aclass='';
-			if ($items[$i]["isactive"] == 2) $aclass = ' fromarhiv';
+			if ($items[$i]["isactive"] == 2) $aclass .= ' fromarhiv';
+
+			if ($items[$i]["isbasic"] == 1) $aclass .= ' basic';
 			echo '<tr class = "dis_'.$sectionid.$aclass.' fullrow ">';
 			echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
 					<td class = "'.$aclass.'"><span id="dish_descr'.$items[$i]["id"].'">'.$items[$i]["description"].'</span></td>	

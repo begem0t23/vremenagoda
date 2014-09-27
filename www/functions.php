@@ -1617,9 +1617,10 @@ header('Content-Type: text/html; charset=utf-8');
 if ($_POST['typetree'] == 'dishes' OR $_POST['typetree'] == 'menu')
 {
 echo '<div class="btn-group" >
-  <button  name="viewfull" onClick="viewtree(1);" type="button" class="btn btn-primary ">Показать все</button>
   <button  name="viewsect" onClick="viewtree(0);" type="button" class="btn btn-primary">Спрятать все</button>
-  <button  name="viewsect" onClick="viewfromarchiv();" type="button" class="btn fromarhiv">Показать непринятые</button>
+  <button  name="viewsect" onClick="viewfromarchiv();" type="button" class="btn fromarhiv">Только непринятые</button>
+  <button  name="viewsect" onClick="viewbasic();" type="button" class="btn basic">Только простые</button>
+  <button  name="viewfull" onClick="viewtree(1);" type="button" class="btn btn-primary ">Показать все</button>
 </div>'.chr(10);
 }
 
@@ -1781,15 +1782,9 @@ echo '<br><br>
 
 			if ($sections[$num]['items']['count'] > 0)
 			{
-				if ($_POST['typetree'] == 'dishes')
-				{
-					print_dishes_for_arhiv($sections[$num]['items'],$sections[$num]['id'],$row_menutype["id"]);
-				}
-				else
-				{
 				
 					print_dishes_for_editor($sections[$num]['items'], $sections[$num]['menuid'],$sections[$num]['id'],$_POST['typetree'] );
-				}
+
 			}
 			
 			foreach ($val as $num1 => $val1) 

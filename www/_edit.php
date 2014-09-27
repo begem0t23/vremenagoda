@@ -80,6 +80,11 @@
 			.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
 	
 		#weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
+		
+		   .basic {
+	color: #000;
+  background-color: #ff11C0 !important;
+  }
   </style>  
 
   </head>

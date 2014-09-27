@@ -46,6 +46,10 @@
 	color: #000;
   background-color: #11FFC0 !important;
   }
+  .basic {
+	color: #000;
+  background-color: #ff11C0 !important;
+  }
 </style>  
 
 
@@ -199,7 +203,17 @@ normal_height()
  {
  viewtree(0);
  $(".fromarhiv").show();
+ normal_height();
  }
+ 
+  function viewbasic()
+ {
+ viewtree(0);
+ $(".basic").show();
+ normal_height();
+ }
+ 
+ 
  	function tree_show(el,id)
  {
  
