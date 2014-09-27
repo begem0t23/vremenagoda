@@ -84,6 +84,10 @@ if (checklogin())
 	{
 		include("_edit.php");
 	}
+	elseif (@$q[0] == "view")
+	{
+		include("_view.php");
+	}
 	elseif ($qq == "agenstva")
 	{
 		include("_agenstva.php");

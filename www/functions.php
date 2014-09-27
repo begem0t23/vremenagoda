@@ -1175,8 +1175,8 @@ $sectionid = $_POST['sectionid'];
 
   <form>
 
-	<textarea colls="50" id="name" placeholder="Название" class="form-control" ><?php echo $rows_0['name']; ?></textarea>
-	<input onkeyup="changeform();" type="text" id="description" placeholder="Описание" class="form-control" value="<?php echo $rows_0['description']; ?>">
+	<textarea onkeyup="changeform();" colls="50" id="name" placeholder="Название" class="form-control" ><?php echo $rows_0['name']; ?></textarea>
+	<textarea onkeyup="changeform();" colls="50" id="description" placeholder="Описание" class="form-control"><?php echo $rows_0['description']; ?></textarea>
 	<input onkeyup="changeform();"  type="text" id="weight" placeholder="Вес в граммах" class="form-control" value="<?php echo $rows_0['weight']; ?>">
 	<input onkeyup="changeform();"  type="text" id="price" placeholder="Цена" class="form-control" value="<?php echo $rows_0['price']; ?>">
 	<input onchange="changeform();"  type="checkbox" id="isbasic"  <?php echo $checked; ?>> В меню для зала
