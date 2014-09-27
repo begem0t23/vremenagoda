@@ -1344,7 +1344,7 @@ $isbasic = 0;
 	$rezult2 = mysql_query($select2);
 	$rows2 = mysql_fetch_array($rezult2);
 
-	
+	$changes = '';
 if ($_POST['isbasic'] == 'true') $isbasic = 1;
 
 if ($dishid == 0) 
@@ -1780,15 +1780,8 @@ echo '<br><br>
 					if ($val[$num1]['items']['count'] >= 0)
 					{
 
-						
-								if ($_POST['typetree'] == 'dishes')
-								{
-									print_dishes_for_arhiv($val[$num1]['items'],$val[$num1]['id'],$row_menutype["id"]);
-								}
-								else
-								{
-										print_dishes_for_editor($val[$num1]['items'],$val[$num1]['menuid'],$val[$num1]['id'],$_POST['typetree']);
-								}
+											print_dishes_for_editor($val[$num1]['items'],$val[$num1]['menuid'],$val[$num1]['id'],$_POST['typetree']);
+
 					}
 
 						foreach ($val1 as $num2 => $val2) 
@@ -1827,14 +1820,8 @@ echo '<br><br>
 													
 								if ($val1[$num2]['items']['count'] > 0)
 								{
-									if ($_POST['typetree'] == 'dishes')
-									{
-										print_dishes_for_arhiv($val1[$num2]['items'],$val1[$num2]['id'],$row_menutype["id"]);
-									}
-									else
-									{
 										print_dishes_for_editor($val1[$num2]['items'],$val1[$num2]['menuid'],$val1[$num2]['id'],$_POST['typetree']);
-									}
+
 								}
 
 							}
