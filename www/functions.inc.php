@@ -516,10 +516,10 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 	if ($items['count'] > 0)
 	{
 		$dish_in_order = array();
-		$r_dish_in_order = mysql_query("SELECT do.*,dh.dishid as did,dh.name as dname FROM `dishes_in_orders` do left join dishes_history dh on do.dishid = dh.id where do.orderid=" . $order);
+		$r_dish_in_order = mysql_query("SELECT do.*,dh.dishid as did,dh.price as price2,dh.name as dname FROM `dishes_in_orders` do left join dishes_history dh on do.dishid = dh.id where do.orderid=" . $order);
 		while ($row_dish_in_order = mysql_fetch_array($r_dish_in_order))
 		{
-			$dish_in_order[$row_dish_in_order["dishid"]] = array("did"=>$row_dish_in_order["did"],"id"=>$row_dish_in_order["id"], "price"=>$row_dish_in_order["price"],
+			$dish_in_order[$row_dish_in_order["dishid"]] = array("did"=>$row_dish_in_order["did"],"id"=>$row_dish_in_order["id"], "price"=>$row_dish_in_order["price2"],
 			"num"=>$row_dish_in_order["num"],"note"=>$row_dish_in_order["note"],"dname"=>$row_dish_in_order["dname"]);
 		}
 		//die(var_dump($dish_in_order));

@@ -1339,12 +1339,18 @@ $menu_section = $_POST['menu_section'];
 $menuid = $_POST['menuid'];
 $isbasic = 0;
 
+
+	$select2 = "SELECT * FROM `menu_sections` WHERE `id` = '".$menu_section."' ";
+	$rezult2 = mysql_query($select2);
+	$rows2 = mysql_fetch_array($rezult2);
+
+	
 if ($_POST['isbasic'] == 'true') $isbasic = 1;
 
 if ($dishid == 0) 
 	{
 
-	$insert = "INSERT INTO `dishes` (`id`, `title`, `isdrink`, `createdate`, `orderby`) VALUES (NULL, '0','".$name."',  NOW(),'0');";
+	$insert = "INSERT INTO `dishes` (`id`, `title`, `description`, `price`, `weight`, `isdrink`, `isbasic`, `menu_section`, `createdate`, `orderby`) VALUES(NULL, '0','".$name."', '".$description."', '".$price."', '".$weight."', '".$rows2['isdrink']."', '".$isbasic."',  '".$menu_section."', NOW(),'0');";
 			mysql_query($insert);
 			
 			$changes = '4,';//создание
