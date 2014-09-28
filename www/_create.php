@@ -548,8 +548,9 @@ fixednavbar();
 			if ($row_serv["byguestcount"]==1)
 							{
 								$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
-								<input '.$tocalc.'  bgs="1" name="discontservchb" id="discontservchb'.$row_serv["id"].'" type="checkbox"  value="">';
-							
+								<input '.$tocalc.' name="discontservchb" id="discontservchb'.$row_serv["id"].'" type="checkbox"  value="">';
+				$discont ='<input bgs="1" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="0" name="discontserv">';
+						
 							}
 									
 			echo '<tr >';
@@ -1365,8 +1366,9 @@ fixednavbar();
 
 
 
-					
-					$( document ).on( "keyup", "input[name=quantserv]", function() {
+
+
+						$( document ).on( "keyup", "input[name=quantserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(9);
 				tocalc = $(this).attr("tocalc");
@@ -1379,17 +1381,14 @@ fixednavbar();
 					$("#addserv"+id).removeClass("btn-default");
 					$("#addserv"+id).addClass("btn-danger");
 					
-					if($("#discontserv"+id).val() != '') 
-					{
 						$("#addserv"+id).removeClass("disabled");					
-					}
 				
 				} else
 
 				{
 					$("#addserv"+id).addClass("disabled");
 					
-					if($("#commentserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
+					if($("#commentserv"+id).val() == '' ) 
 
 					{
 						$("#addserv"+id).addClass("btn-default");
@@ -1402,6 +1401,9 @@ fixednavbar();
 				
 			});
 
+			
+
+
 		
  			$( document ).on( "click", "input[name=discontserv]", function() {
         $(this).select();
@@ -1411,11 +1413,11 @@ fixednavbar();
   		id = $(this).attr("id");
 		id = id.substr(11);
 		if ($(this).val() == "") $(this).val(0);
-		if ($(this).val() == "0") 	$("#addserv"+id).removeClass("disabled");					
+		//if ($(this).val() == "0") 	$("#addserv"+id).removeClass("disabled");					
 
     });
 
-	$( document ).on( "change", "input[name=discontservchb]", function() {
+			$( document ).on( "change", "input[name=discontservchb]", function() {
 				id = $(this).attr("id");
 				id = id.substr(14);
 
@@ -1424,12 +1426,19 @@ fixednavbar();
 					$("#addserv"+id).removeClass("btn-default");
 					$("#addserv"+id).addClass("btn-danger");
 					$("#addserv"+id).removeClass("disabled");					
-				
-				} else
+				} 
+				else
 				{
-					$("#addserv"+id).addClass("disabled");
-					$("#addserv"+id).addClass("btn-default");
-					$("#addserv"+id).removeClass("btn-danger");
+					if($("#commentserv"+id).val() == '' ) 
+					{
+						$("#addserv"+id).addClass("disabled");
+						$("#addserv"+id).addClass("btn-default");
+						$("#addserv"+id).removeClass("btn-danger");
+					} 
+					else
+					{
+						$("#addserv"+id).addClass("disabled");					
+					}
 				}
 
 
@@ -1443,34 +1452,13 @@ fixednavbar();
 				id = id.substr(11);
 				
 		if ($(this).val() == "") $(this).val(0);
-		if ($(this).val() == "0") 	$("#addserv"+id).removeClass("disabled");					
+		//if ($(this).val() == "0") 	$("#addserv"+id).removeClass("disabled");					
 
-				if($(this).val() != "") 
-				{
-					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).addClass("btn-danger");
-					if($("#quantserv"+id).val() != '') 
-					{
-						$("#addserv"+id).removeClass("disabled");					
-					}
-				
-				} else
-				{
-					$("#addserv"+id).addClass("disabled");
-					
-					if($("#quantserv"+id).val() == '' & $("#commentserv"+id).val() == '') 
-					{
-						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-danger");
-					
-					}
-				
-				}
-				
+
 			});			
 		
 			
-				$( document ).on( "keyup", "input[name=commentserv]", function() {
+			$( document ).on( "keyup", "input[name=commentserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(11);
 				bgs = $("#discontserv"+id).attr("bgs");
@@ -1481,13 +1469,27 @@ fixednavbar();
 					$("#addserv"+id).removeClass("btn-default");
 					$("#addserv"+id).addClass("btn-danger");
 				
-				} else
+				} 
+				else
 				{
-					if(($("#quantserv"+id).val() == '' || bgs == 1) & $("#discontserv"+id).val() == '') 
+					if ( bgs != '1')
 					{
-						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-danger");
-						$("#addserv"+id).addClass("disabled");
+						if($("#quantserv"+id).val() == '' ) 
+						{
+							$("#addserv"+id).addClass("btn-default");
+							$("#addserv"+id).removeClass("btn-danger");
+							$("#addserv"+id).addClass("disabled");
+						}
+					}
+					else
+					{
+						if ($("#discontservchb"+id).prop("checked") == false)
+						{
+
+							$("#addserv"+id).addClass("btn-default");
+							$("#addserv"+id).removeClass("btn-danger");
+							$("#addserv"+id).addClass("disabled");						
+						}
 					}
 				
 				}
@@ -1495,7 +1497,6 @@ fixednavbar();
 			});			
 		
 
-	
 		
 			
 			$( document ).on( "click", "button[name=addserv]", function() {
@@ -1516,7 +1517,7 @@ fixednavbar();
 						$("#quantserv"+id).removeAttr("readonly");
 					}
 					$("#discontserv"+id).removeAttr("readonly");
-					$("#discontserv"+id).removeAttr("disabled");
+					$("#discontservchb"+id).removeAttr("disabled");
 					$("#commentserv"+id).removeAttr("readonly");
 
 					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
@@ -1545,7 +1546,7 @@ fixednavbar();
 					$("#discontserv"+id).attr("readonly","readonly");
 					if (bgs == 1)
 					{
-										$("#discontserv"+id).attr("disabled","disabled");
+						$("#discontservchb"+id).attr("disabled","disabled");
 					}
 					$("#commentserv"+id).attr("readonly","readonly");
 										

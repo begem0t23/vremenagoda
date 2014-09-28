@@ -636,7 +636,7 @@ else
 				$btnclass = 'btn-primary';
 				$comment = $item["comment"];
 				$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["num"].'">';
-				$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["discont"].'" name="discontserv">';
+				$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["discont"].'" name="discontserv" readonly>';
 				$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$item["price"].'">';
 				$tocalcrowclass = "";
 		
@@ -653,8 +653,9 @@ else
 				if ($row_serv["byguestcount"]==1)
 				{
 					$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" value="'.$item["num"].'" type="text" disabled>
-					<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="'.$item["discont"].'">';
-					$discont ='';
+					<input '.$tocalc.'  bgs="1" name="discontservchb" id="discontservchb'.$row_serv["id"].'" type="checkbox"  value="'.$item["discont"].'" checked disabled>';
+							$discont ='<input bgs="1" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="'.$item["discont"].'" name="discontserv" readonly>';
+
 				}
 										
 			}
@@ -663,7 +664,7 @@ else
 				$butname = "Добавить";
 				$btnclass = 'btn-default disabled';
 				$quant = '<input name="quantserv" id="quantserv'.$row_serv["id"].'" type="text" size="2" value="">';
-				$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="" name="discontserv">';
+				$discont ='<input id="discontserv'.$row_serv["id"].'" type="text" size="2" value="0" name="discontserv">';
 				$price='<input  '.@$tocalc.' name="priceserv" id="priceserv'.$row_serv["id"].'" type="text" size="5" value="'.$row_serv["price"].'">';
 				$tocalcrowclass = "";
 				$comment = "";
@@ -679,9 +680,10 @@ else
 				}
 				if ($row_serv["byguestcount"]==1)
 				{
-					$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
-					<input '.$tocalc.'  bgs="1" name="discontserv" id="discontserv'.$row_serv["id"].'" type="checkbox"  value="">';
-					$discont ='';
+											$quant =  '<input size="2" name="quantserv" class="byguestcount" id="quantserv'.$row_serv["id"].'" type="text" disabled>
+								<input '.$tocalc.'  bgs="1" name="discontservchb" id="discontservchb'.$row_serv["id"].'" type="checkbox"  value="">';
+						$discont ='<input bgs="1" id="discontserv'.$row_serv["id"].'" type="text" size="2" value="0" name="discontserv">';
+
 				}
 										
 			}			
@@ -1294,6 +1296,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 			});		
 			
 			
+						
 					$( document ).on( "keyup", "input[name=quantserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(9);
@@ -1307,17 +1310,14 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					$("#addserv"+id).removeClass("btn-default");
 					$("#addserv"+id).addClass("btn-danger");
 					
-					if($("#discontserv"+id).val() != '') 
-					{
 						$("#addserv"+id).removeClass("disabled");					
-					}
 				
 				} else
 
 				{
 					$("#addserv"+id).addClass("disabled");
 					
-					if($("#commentserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
+					if($("#commentserv"+id).val() == '' ) 
 
 					{
 						$("#addserv"+id).addClass("btn-default");
@@ -1328,105 +1328,105 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 				
 				}
 				
-			});;
+			});
 
 			
-			$( document ).on( "change", "input[name=discontserv]", function() {
-				id = $(this).attr("id");
-				id = id.substr(11);
-				bgs = $(this).attr("bgs");
-				
-				if (bgs == 1) 
-				{
-					$(this).val('');
-					if ($(this).prop('checked'))
-					{
-					$(this).val('0');
-					}
-				}
-				
-				if($(this).val() != "") 
 
 
-				{
-					$("#addserv"+id).removeClass("btn-default");
-					$("#addserv"+id).addClass("btn-danger");
-					if($("#quantserv"+id).val() != '') 
-
-
-					{
-						$("#addserv"+id).removeClass("disabled");					
-					}
-				
-				} else
-				{
-					$("#addserv"+id).addClass("disabled");
-					
-					if(($("#quantserv"+id).val() == '' || bgs == 1) & $("#commentserv"+id).val() == '') 
-
-					{
-						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-danger");
-					
-					}
-				
-				}
-
-
-			});			
 		
-			
-				$( document ).on( "change", "input[name=commentserv]", function() {
-				id = $(this).attr("id");
-				id = id.substr(11);
+ 			$( document ).on( "click", "input[name=discontserv]", function() {
+        $(this).select();
+    });
 
-				if($(this).val() != "") 
+	$( document ).on( "change", "input[name=discontserv]", function() {
+  		id = $(this).attr("id");
+		id = id.substr(11);
+		if ($(this).val() == "") $(this).val(0);
+		//if ($(this).val() == "0") 	$("#addserv"+id).removeClass("disabled");					
+
+    });
+
+			$( document ).on( "change", "input[name=discontservchb]", function() {
+				id = $(this).attr("id");
+				id = id.substr(14);
+
+				if ($(this).prop("checked") )
 				{
 					$("#addserv"+id).removeClass("btn-default");
 					$("#addserv"+id).addClass("btn-danger");
-				
-				} else
+					$("#addserv"+id).removeClass("disabled");					
+				} 
+				else
 				{
-					if($("#quantserv"+id).val() == '' & $("#discontserv"+id).val() == '') 
+					if($("#commentserv"+id).val() == '' ) 
 					{
+						$("#addserv"+id).addClass("disabled");
 						$("#addserv"+id).addClass("btn-default");
 						$("#addserv"+id).removeClass("btn-danger");
-						$("#addserv"+id).addClass("disabled");
+					} 
+					else
+					{
+						$("#addserv"+id).addClass("disabled");					
 					}
-				
 				}
-				
-			});			
+
+
+			});
+			
+
 			
 			$( document ).on( "keyup", "input[name=discontserv]", function() {
 
 				id = $(this).attr("id");
 				id = id.substr(11);
 				
+		if ($(this).val() == "") $(this).val(0);
+		//if ($(this).val() == "0") 	$("#addserv"+id).removeClass("disabled");					
+
+
+			});			
+		
+			
+			$( document ).on( "keyup", "input[name=commentserv]", function() {
+				id = $(this).attr("id");
+				id = id.substr(11);
+				bgs = $("#discontserv"+id).attr("bgs");
+			
 
 				if($(this).val() != "") 
 				{
 					$("#addserv"+id).removeClass("btn-default");
 					$("#addserv"+id).addClass("btn-danger");
-					if($("#quantserv"+id).val() != '') 
-					{
-						$("#addserv"+id).removeClass("disabled");					
-					}
 				
-				} else
+				} 
+				else
 				{
-					$("#addserv"+id).addClass("disabled");
-					
-					if($("#quantserv"+id).val() == '' & $("#commentserv"+id).val() == '') 
+					if ( bgs != '1')
 					{
-						$("#addserv"+id).addClass("btn-default");
-						$("#addserv"+id).removeClass("btn-danger");
-					
+						if($("#quantserv"+id).val() == '' ) 
+						{
+							$("#addserv"+id).addClass("btn-default");
+							$("#addserv"+id).removeClass("btn-danger");
+							$("#addserv"+id).addClass("disabled");
+						}
+					}
+					else
+					{
+						if ($("#discontservchb"+id).prop("checked") == false)
+						{
+
+							$("#addserv"+id).addClass("btn-default");
+							$("#addserv"+id).removeClass("btn-danger");
+							$("#addserv"+id).addClass("disabled");						
+						}
 					}
 				
 				}
 				
-			});				
+			});			
+		
+
+		
 			$( document ).on( "click", "button[name=addserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(7);
@@ -1438,12 +1438,10 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					$("#servicename"+id).css("color", "");
 
 					$("#priceserv"+id).removeAttr("readonly");
-					if ($("#quantserv"+id).attr("class")!="byguestcount")
-					{
-						$("#quantserv"+id).removeAttr("readonly");
-					}
+					$("#quantserv"+id).removeAttr("readonly");
+
 					$("#discontserv"+id).removeAttr("readonly");
-					$("#discontserv"+id).removeAttr("disabled");
+					$("#discontservchb"+id).removeAttr("disabled");
 					$("#commentserv"+id).removeAttr("readonly");
 
 					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
@@ -1469,13 +1467,9 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					$("#priceserv"+id).attr("readonly","readonly");
 					$("#quantserv"+id).attr("readonly","readonly");
 					$("#discontserv"+id).attr("readonly","readonly");
-					if (typeof bgs != 'undefined')
-					{
-						if (bgs == 1)
-						{
-							$("#discontserv"+id).attr("disabled","disabled");
-						}
-					}
+
+					$("#discontservchb"+id).attr("disabled","disabled");
+
 					$("#commentserv"+id).attr("readonly","readonly");
 										
 					var services="";

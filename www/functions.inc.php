@@ -68,11 +68,12 @@ $ech = "";
 				$ech2.= '<div style="width:'.$row_tab7['width'].'px;height:'.$row_tab7['height'].'px;" class="newtable '.$class.'" tabid="0" typeid="'.$row_tab7['typeid'].'"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">'.$title.'</div>';
 			}
  			}
-					$ech2.= '<div style="width:80px;height:40px;" class="newtable " tabid="0" typeid="0"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">'.$title.'</div>';
+			
+				if($place=='halleditor') 	$ech2.= '<div style="width:80px;height:40px;" class="newtable " tabid="0" typeid="0"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">'.$title.'</div>';
 
 	}
 	$tabsinorder='';
-	if(place=='report') $tabsinorder=' В заказе столов: '.$pr['tabsinorder'];
+	if($place=='report') $tabsinorder=' В заказе столов: '.$pr['tabsinorder'];
 	$ech2.= '<br><div class="title"><h4>Всего столов: '.$pr['tabquant'].$tabsinorder.'.</h4></div>';
 	if ($pr['tabsinorder'] == 0  & $place=='report') 
 	{

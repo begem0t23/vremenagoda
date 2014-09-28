@@ -644,7 +644,7 @@ element_resize(tabid, ui.size.width, ui.size.height);
 				$(".hallplace").droppable({  tolerance : 'fit',accept : '.newtable, .table.primary,.table.success'});
 				
 				
-				$("#hallplace-"+hallid+" .table").draggable({ 
+				$("#hallplace-"+hallid+" .table:not(.element)").draggable({ 
 					grid:[ 10, 10 ],
 					scroll:false, 
 					snap:true,
