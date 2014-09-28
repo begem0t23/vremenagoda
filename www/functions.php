@@ -1406,24 +1406,31 @@ $description = $_POST['dishdescription'];
 $price = $_POST['dishprice'];
 $weight = $_POST['dishweight'];
 $menu_section = $_POST['menu_section'];
-$menuid = $_POST['menuid'];
+
 $isbasic = 0;
 
 
 	$select2 = "SELECT * FROM `menu_sections` WHERE `id` = '".$menu_section."' ";
 	$rezult2 = mysql_query($select2);
 	$rows2 = mysql_fetch_array($rezult2);
+$menuid = '1';
+if($rows2['isdrink'] == '1') $menuid = '2';
 
 	$changes = '';
 if ($_POST['isbasic'] == 'true') $isbasic = 1;
 
 if ($dishid == 0) 
 	{
-
-	$insert = "INSERT INTO `dishes` (`id`, `title`, `description`, `price`, `weight`, `isdrink`, `isbasic`, `menu_section`, `createdate`, `orderby`) VALUES(NULL, '0','".$name."', '".$description."', '".$price."', '".$weight."', '".$rows2['isdrink']."', '".$isbasic."',  '".$menu_section."', NOW(),'0');";
+$nowtime = time();
+	$insert = "INSERT INTO `dishes` (`id`, `title`, `description`, `price`, `weight`, `isdrink`, `isbasic`, `menu_section`, `createdate`, `orderby`) VALUES(NULL, '".$name."', '".$description."', '".$price."', '".$weight."', '".$rows2['isdrink']."', '".$isbasic."',  '".$menu_section."', FROM_UNIXTIME(".$nowtime."),'0');";
 			mysql_query($insert);
 			
 			$changes = '4,';//создание
+	$select3 = "SELECT * FROM `dishes` WHERE `title` = '".$name."' AND `description` =  '".$description."' AND  `price` = '".$price."' AND `weight` = '".$weight."' AND `isdrink` = '".$rows2['isdrink']."' AND `isbasic`  = '".$isbasic."' AND  `menu_section` = '".$menu_section."' AND `createdate` =  FROM_UNIXTIME(".$nowtime.") ;";
+	$rezult3 = mysql_query($select3);
+	$rows3 = mysql_fetch_array($rezult3);
+	$dishid = 	$rows3['id'];
+			echo $select3;
 	}
 	
 	
@@ -1470,6 +1477,9 @@ if ($dishid == 0)
 		mysql_query($tsql02);
 	}	
 
+	
+	
+	
 		$insert = "INSERT INTO `dishes_history` (`id`, `dishid`,`name`,  `description`, `price`,   `weight`,  `isbasic`, `menu_section`,  `menu`,  `createdby`, `isactive`, `changes`,`kogda` ) VALUES (NULL , '".$dishid."','".$name."','".$description."','".$price."','".$weight."','".$isbasic."','".$menu_section."','".$menuid."','".$_SESSION['curuserid']."' ,'1', '".$changes."' , NOW() ) ;";	
 		mysql_query($insert);
 		echo 'yes';

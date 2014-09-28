@@ -473,11 +473,7 @@ function dishes_in_section_by_menu($menu_id,$menu_section,$typetree)
 $dish = Array();
 $dish['count'] = 0;
 			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '".$menu_id."' AND isactive > 0  ;";
-		if ($typetree == 'dishes')
-		{
-			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '0' AND isactive > 0  ;";
-		}
-		$rezult01 = mysql_query($tsql01);
+			$rezult01 = mysql_query($tsql01);
 
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -1085,6 +1081,11 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'<th  colspan="'.$sumcol.'" class="lite_summary_section">'.($drink_sum - $drink_discont).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -$sumcol ).'" class="lite_report_section">Итого по Блюдам и Напиткам без скидок:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.$sumcol.'" class="lite_report_section">'.$allsumm.'</th>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
 		$body_out = $body_out.'<tr>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая стоимость по услугам</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$sumcol.'">'.$service_sum.'</td>'.chr(10);
@@ -1291,6 +1292,12 @@ border-spacing:0;
 	.report_section{
 	font-size:14px;
 	 padding:10px;
+	color: #fff;
+  background-color: #66a6e7 !important;
+  }
+	.lite_report_section{
+	font-size:12px;
+	 padding:1px;
 	color: #fff;
   background-color: #66a6e7 !important;
   }
@@ -1555,7 +1562,7 @@ if ( mysql_num_rows($rezult) > 0){
 	}
 
 
-echo '<table class="tablesorter baseview">'.chr(10);
+echo '<table class="tablesorter baseview" style="width:100%">'.chr(10);
 
 echo $cols_out.$head_out.$body_out;
 

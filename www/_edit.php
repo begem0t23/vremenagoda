@@ -405,9 +405,12 @@ else
 		<form id=frm3 role="form" data-toggle="validator">
 
 		<span id="weightcalc" class="btn btn-default">
-			<div id="drinkweightall">Общий объём: 0г</div>
+			<div id="drinkweightall">Спиртное всего: 0г</div>
 
-			<div id="drinkweightaver">Средний объём: 0г</div>
+			<div id="drinkweightaver">Спиртное среднее: 0г</div>
+			<div id="drinkweightall2">Безалк. всего: 0г</div>
+
+			<div id="drinkweightaver2">Безалк. среднее: 0г</div>
 
 		</span>
 

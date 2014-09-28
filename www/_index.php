@@ -293,7 +293,7 @@ fixednavbar();
 	<div id="eventview1" >
 	<div id='calendar'></div>
 	</div>
-	<div id="eventview2" >
+	<div id="eventview2" style="width:100%;">
 	<div id='list'>
 	
 	<?php

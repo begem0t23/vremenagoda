@@ -361,7 +361,7 @@ $drink_sum = $sum[1];
 			if($rows011["id"] == 12)
 			{
 				$teapay = ($food_sum + $drink_sum)/$ss["discont"];
-				$teapayproc = ' ('.round($ss["discont"],0).'%)';
+				$teapayproc = round($ss["discont"],0).'% ';
 				$show =0;		
 				$teapay_comment = $ss["comment"];
 			}
@@ -412,6 +412,7 @@ $drink_sum = $sum[1];
 					$drinkdiscproc = ' ('.(round($drink_discont/$drink_sum,2)*100).'%)';
 					}
 
+$allsumm = $food_sum + $drink_sum;
 
 $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $service_sum - $service_discont ;
 
@@ -453,6 +454,11 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'<th  colspan="2" class="lite_summary_section">'.($drink_sum - $drink_discont).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -2 ).'" class="lite_report_section">Итого по Блюдам и Напиткам без скидок:</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="2" class="lite_report_section">'.$allsumm.'</th>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+
 		$body_out = $body_out.'<tr>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Общая стоимость по услугам</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="2">'.$service_sum.'</td>'.chr(10);
@@ -469,7 +475,7 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Наценка за обслуживание</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 2).'">Наценка за обслуживание ('.$teapayproc.' От общей суммы заказа без скидок: '.$allsumm.')</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$teapay.'</td>'.chr(10);
 			$body_out = $body_out.'<td  colspan="1">'.$teapay_comment.'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -639,6 +645,12 @@ border-spacing:0;
 	.report_section{
 	font-size:14px;
 	 padding:10px;
+	color: #fff;
+  background-color: #0761BD !important;
+  }
+	.lite_report_section{
+	font-size:12px;
+	 padding:1px;
 	color: #fff;
   background-color: #0761BD !important;
   }
