@@ -242,7 +242,7 @@ if (@$ci)
 	$managerid = 0; $creatorid = $_SESSION["curuserid"]; $status=1;
 	if ($_SESSION["curuserrole"]==5) $managerid = $_SESSION["curuserid"]; $status=2;
 	$tsql = "insert into orders (creatorid, createdate, clientid, eventdate, eventtime, guestcount, status,managerid,hallid, type, comment, totaltime) 
-	values(".mysql_real_escape_string($creatorid).",CURDATE(), ".mysql_real_escape_string($ci)."
+	values(".mysql_real_escape_string($creatorid).",NOW(), ".mysql_real_escape_string($ci)."
 	,FROM_UNIXTIME('".strtotime(@$_POST["de"])."')
 	,'".mysql_real_escape_string(@$_POST["te"])."'
 	,'".mysql_real_escape_string(@$gc)."'

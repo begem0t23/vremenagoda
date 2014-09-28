@@ -4,6 +4,29 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
+function dishgetchangetype($id, $orderid)
+{
+	if (!@$orderid) return 0;
+	//$tsql = "SELECT o.createdate, do.dishid from dishes_in_orders do left join orders o on do.orderid=o.id where do.id=" . $id ;
+	$tsql = "SELECT * from dishes_history dh left join dishes_in_orders do on dh.dishid = do.dishid left join orders o on do.orderid=o.id where o.id=" . $orderid . " and dh.id=" . $id ;
+	//echo $tsql;
+	//die(0);
+	$rez = mysql_query($tsql);
+	if (mysql_num_rows($rez)>0)
+	{
+		$row = mysql_fetch_array($rez);
+		$tsql2 = "SELECT * from dishes_history where dishid=" . $row["dishid"] . " and kogda>'" .$row["createdate"]. "' order by kogda desc";
+		//echo $tsql2;
+		$rez2 = mysql_query($tsql2);
+		if (mysql_num_rows($rez2)>1)
+		{
+			return mysql_num_rows($rez2);
+		}
+		return 0;
+	}
+	return 0;
+}
+
 function get_hall($hallid,$dateevent,$place,$orderid)
 {
 //echo $hallid.'_'.$dateevent.'_'.$place.'_'.$orderid;
@@ -232,7 +255,7 @@ function checktablesondate($checkdate,$hallid)
 
 
 
-function print_dishes_for_client_report($items,$sectionid,$forwho)
+function print_dishes_for_client_report($items,$sectionid,$forwho,$orderid)
 {
 $output = Array();
 $output['sum'] = 0;
@@ -264,7 +287,12 @@ $class =  '';
 							}
 							if($forwho <> "client") 
 							{
-								$output['print'] = @$output['print'].'<td>'.$items[$i]["note"].'</td>';
+								$output['print'] = @$output['print'].'<td>'.$items[$i]["note"];
+								if (dishgetchangetype($items[$i]["id"],$orderid)>0)
+								{
+									$output['print'] = @$output['print'] . "<br><font color=red><small>* у блюда произошли изменения</small></font>";
+								}
+								$output['print'] = @$output['print'].'</td>';
 							}
 							
 							$output['print'] = @$output['print'].'</tr>';
@@ -837,7 +865,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 
 			if ($sections[$num]['items']['count'] > 0)
 			{
-				$out = print_dishes_for_client_report($sections[$num]['items'], $sections[$num]['id'], $forwho);
+				$out = print_dishes_for_client_report($sections[$num]['items'], $sections[$num]['id'], $forwho,$orderid);
 				$body_out = $body_out.$out['print'];
 			}
 			
@@ -863,7 +891,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 					
 					
 					
-						$out = print_dishes_for_client_report($val[$num1]['items'],$val[$num1]['id'],$forwho);
+						$out = print_dishes_for_client_report($val[$num1]['items'],$val[$num1]['id'],$forwho,$orderid);
 						$body_out = $body_out.$out['print'];
 }
 
@@ -883,7 +911,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 													
 								if ($val1[$num2]['items']['count'] > 0)
 								{
-									$out = print_dishes_for_client_report($val1[$num2]['items'],$val1[$num2]['id'],$forwho);
+									$out = print_dishes_for_client_report($val1[$num2]['items'],$val1[$num2]['id'],$forwho,$orderid);
 									$body_out = $body_out.$out['print'];
 								}
 
