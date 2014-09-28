@@ -492,10 +492,6 @@ $dish['count'] = 0;
 return $dish;
 }
 
-
-
-
-
 function dishes_in_section_by_menu($menu_id,$menu_section,$typetree)
 {
 $dish = Array();
@@ -523,6 +519,32 @@ $dish['count'] = 0;
 return $dish;
 }
 
+function dishes_in_section_by_menu_edit($menu_id,$menu_section,$typetree)
+{
+$dish = Array();
+$dish['count'] = 0;
+			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '".$menu_id."' order by dishid asc, kogda desc;";
+			$rezult01 = mysql_query($tsql01);
+
+
+		if (mysql_num_rows($rezult01) > 0) 
+		{
+			while ($rows01 = mysql_fetch_array($rezult01)) 
+			{			
+				$dish[$dish['count']]['id'] = $rows01['id'];
+				$dish[$dish['count']]['dishid'] = $rows01['dishid'];
+				$dish[$dish['count']]['isactive'] = $rows01['isactive'];
+				$dish[$dish['count']]['isbasic'] = $rows01['isbasic'];
+				$dish[$dish['count']]['title'] = $rows01['name'];
+				$dish[$dish['count']]['description'] = $rows01['description'];
+				$dish[$dish['count']]['weight'] = $rows01['weight'];
+				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish[$dish['count']]['kogda'] = $rows01['kogda'];
+				$dish['count'] ++;
+			}
+		}
+return $dish;
+}
 
 
 function print_dishes($items)
@@ -558,7 +580,7 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 	if ($items['count'] > 0)
 	{
 		$dish_in_order = array();
-		$r_dish_in_order = mysql_query("SELECT do.*,dh.dishid as did,dh.price as price2,dh.name as dname FROM `dishes_in_orders` do left join dishes_history dh on do.dishid = dh.id where do.orderid=" . $order);
+		$r_dish_in_order = mysql_query("SELECT do.*,dh.dishid as did,dh.price as price2,dh.name as dname FROM `dishes_in_orders` do left join dishes_history dh on do.dishid = dh.id where do.orderid=" . $order . ";");
 		while ($row_dish_in_order = mysql_fetch_array($r_dish_in_order))
 		{
 			$dish_in_order[$row_dish_in_order["dishid"]] = array("did"=>$row_dish_in_order["did"],"id"=>$row_dish_in_order["id"], "price"=>$row_dish_in_order["price2"],
@@ -575,7 +597,12 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 			{
 				$item = $dish_in_order[$items[$i]["id"]];
 				//die(var_dump($num));
-				echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>'.$item["dname"].'</span></td>
+				echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>' . $item["dname"];
+				if ($items[$i]["isactive"]!=1) 
+				{
+					echo "<br><font color=red><small>* у блюда произошли изменения</small></font>";
+				}
+				echo '</span></td>
 					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 					<td  class = "'.$aclass.'">'.$item["price"].'</td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" readonly="readonly" name="quant" id="quant'.$items[$i]["id"].'" value="'.$item["num"].'" class="quant" size="1"></td>
@@ -585,6 +612,9 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 			}
 			else
 			{
+				if ($items[$i]["isactive"]==1)
+				//if ($dish_in_order[$items[$i]["isactive"])
+				{
 				echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
 					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 					<td  class = "'.$aclass.'">'.$items[$i]["price"].'</td>
@@ -592,6 +622,7 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
 					<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 				echo '</tr>';					
+				}
 			}
 		}
 	}
