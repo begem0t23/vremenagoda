@@ -12,8 +12,7 @@ $ech = "";
 	{
 		checktablesondate($dateevent,$hallid);
 	}
-	
-		
+
 
 		$tsql2 = "SELECT h.*, hx.childhall FROM `hall` AS h LEFT JOIN `halls_expansion` AS hx ON h.id = hx.parenthall  WHERE `id` = '".$hallid."';";
 			$rez_tab = mysql_query($tsql2);
@@ -32,24 +31,14 @@ $ech = "";
 			{				
 				checktablesondate($dateevent,$row_tab['childhall']);
 			}
-				$tsql3 = "SELECT * FROM `hall`   WHERE `id` = '".$row_tab['childhall']."';";
+				$tsql3 = "SELECT * FROM `hall` WHERE `id` = '".$row_tab['childhall']."';";
 				$rez_tab3 = mysql_query($tsql3);
 				//$ech .= mysql_error(); 
 				if (mysql_num_rows($rez_tab3)>0)
 				{
 					$row_tab3 = mysql_fetch_array($rez_tab3);
-					
-					//$pr = gettablesondate($row_tab['childhall'],$dateevent,$place);
-					
 					$ech3 = $ech3.'<h4>Дополнительно: '.$row_tab3['name'].'</h4>';
 					$ech3 = $ech3.'<div  id="childhall" hallid="'.$row_tab['childhall'].'" dateevent="'.$dateevent.'" place="'.$place.'">';
-					
-					//$ech3.= '<div class="newtable table1" tabid="0" typeid="2"  place="'.$place.'"  hallid="'.$row_tab['childhall'].'"  dateevent="'.$dateevent.'">Стол</div>';
-					//$ech3.=  '<div class="newtable table0" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$row_tab['childhall'].'"  dateevent="'.$dateevent.'">Стол</div>';
-					//$ech+='<div class="newchiar" tabid="0" >стул</div>';
-					//$ech3.= '<br><div class="title"><h4>Количество столов: '.$pr['tabquant'].'.</h4></div>';
-					
-					//$ech3 = $ech3.$pr['tables'];
 					$ech3 = $ech3.'</div>';
 				}
 			}	
@@ -60,11 +49,27 @@ $ech = "";
 		$pr = gettablesondate($hallid,$dateevent,$place,$orderid);
 		$ech1 = $ech1.$pr['tables'];
 
-	if($place == 'order' || $place == 'editor')
+	if($place == 'order' || $place == 'editor' || $place == 'halleditor')
 	{
- 			$ech2.= '<div class="newtable table1" tabid="0" typeid="2"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
- 			$ech2.=  '<div class="newtable table0" tabid="0" typeid="1"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">Стол</div>';
-			//$ech+='<div class="newchiar" tabid="0" >стул</div>';
+	
+		$tsql7 = "SELECT * FROM `table_types` ;";
+			$rez_tab7 = mysql_query($tsql7);
+
+			while ($row_tab7 = mysql_fetch_array($rez_tab7))
+			{
+
+			$class = '';	
+			$name = $row_tab7['name'];
+			$title = 'Элемент';
+			if($row_tab7['istable'] == '1') 
+			{$title = 'cтол';
+			if($row_tab7['iscircle'] == '1') $class .= ' circle';
+			
+				$ech2.= '<div style="width:'.$row_tab7['width'].'px;height:'.$row_tab7['height'].'px;" class="newtable '.$class.'" tabid="0" typeid="'.$row_tab7['typeid'].'"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">'.$title.'</div>';
+			}
+ 			}
+					$ech2.= '<div style="width:80px;height:40px;" class="newtable " tabid="0" typeid="0"  place="'.$place.'"  hallid="'.$hallid.'"  dateevent="'.$dateevent.'">'.$title.'</div>';
+
 	}
 	$tabsinorder='';
 	if(place=='report') $tabsinorder=' В заказе столов: '.$pr['tabsinorder'];
@@ -122,7 +127,7 @@ $tabsinorder = 0;
 			$tabquant = mysql_num_rows($rez_tab);
 				while ($row_tab = mysql_fetch_array($rez_tab))
 				{
-			$inorder='success';	
+			$inorder=' success';	
 			
 			if($place == 'order' || $place == 'report' || $place == 'editor')
 			{
@@ -131,7 +136,7 @@ $tabsinorder = 0;
 				//$ech .= mysql_error(); 
 				if (mysql_num_rows($rez_tab0)>0)
 				{
-					$inorder = 'warning ordered'.$orderid;
+					$inorder = ' warning ordered'.$orderid;
 				}
 			}
 			
@@ -141,7 +146,7 @@ $tabsinorder = 0;
 				if ($row_tab["orderid"] == $orderid)
 				{	
 					$tabsinorder++;
-					$inorder = 'primary';
+					$inorder = ' primary';
 				}
 			}
 			
@@ -151,13 +156,21 @@ $tabsinorder = 0;
 				if ($row_tab["orderid"] == $orderid)
 				{	
 					$tabsinorder++;
-					$inorder = 'success ordered'.$orderid;
+					$inorder = ' success ordered'.$orderid;
 					$cooka.=  '"'.$row_tab["id"].'":{"tabid":"'.$row_tab["id"].'"},';
 				}
 			}
 
+			$class=' table';
+			if ($row_tab["iscircle"] == '1') $class .= ' circle';
+			if ($row_tab["istable"] == '0') 
+			{
+			$inorder = '';
+			$class .=' element';
+			}
+			
 				//$sumpersons = $sumpersons + $row_tab["persons"];
-					$ech = $ech.'<div class="context-menu-one table'.$row_tab["iscircle"].' table '.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'"  isfull="'.$isfull.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; " place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
+					$ech = $ech.'<div class="context-menu-one '.$class.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'"  isfull="'.$isfull.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; " place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
 					
 					//for($i=0;$i<$row_tab["persons"];$i++)
 					//{

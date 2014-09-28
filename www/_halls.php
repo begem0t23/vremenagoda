@@ -97,9 +97,9 @@ fixednavbar();
 		}
 	}
 	
+	//echo '<li><a href="#hall-0">+</a></li>';
 	
 	?>
-	<li><a href="#hall-0">+</a></li>
 
 	</ul>
 
@@ -122,22 +122,20 @@ $bgs[1] = 'Да';
 					
 		}
 	
-						echo '<div id="hall-0" >';
-						echo ' <div id="dialog-form" title="Заполните информацию по залу.">
-  <p class="validateTips">Для создания нового зала заполните форму.</p>
-  <form>
-	<input type="text" id="hallname" placeholder="Название Зала" class="form-control" value="">
-	<input type="text" id="halldescr" placeholder="Описание Зала" class="form-control" value="">
-	<input type="text" id="hallcnt" placeholder="Количество Персон" class="form-control" value="">
-	<br>
-	<button class="btn btn-default" onclick="addhall();">Создать</button>
-	<button class="btn btn-default right" onclick="form[ 0 ].reset(); " >Очистить</button>
+						//echo '<div id="hall-0" >';
+						//echo ' <div id="dialog-form" title="Заполните информацию по залу.">
+  //<p class="validateTips">Для создания нового зала заполните форму.</p>
+  //<form>
+//	<input type="text" id="hallname" placeholder="Название Зала" class="form-control" value="">
+//	<input type="text" id="halldescr" placeholder="Описание Зала" class="form-control" value="">
+//	<input type="text" id="hallcnt" placeholder="Количество Персон" class="form-control" value="">
+//	<br>
+//	<button class="btn btn-default" onclick="addhall();">Создать</button>
+//	<button class="btn btn-default right" onclick="form[ 0 ].reset(); " >Очистить</button>
+// </form>
+//</div>';
 
-
- </form>
-</div>';
-
-					echo '</div>';
+					//echo '</div>';
 	}
 ?>		  
 

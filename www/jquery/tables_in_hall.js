@@ -14,6 +14,22 @@
 	
 	}
 	
+	function element_resize(hallid,nwidth,nheight){
+	 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'elementresize', tabid: tabid, nwidth:nwidth, nheight: nheight}
+			})
+			.done(function( msg ) {
+				if(msg == 'yes'){
+				get_hall(hallid);
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+			});
+	
+	}
+
 	
 		function change_tabangle(hallid,tabid,tabangle,place,dateevent,destination){
 
@@ -173,7 +189,7 @@
 				  stop: addtable
 				});
 				
-
+$("#hallcontent-"+hallid+" .element").resizable({grid:10, resize: normal_height, stop: elemresize});
 				$("#hallcontent-"+hallid+" .hallplace").droppable({  tolerance : 'fit',accept : '.newtable, .table'}).resizable({grid:10, resize: normal_height, stop: hallresize});
 				$("#hallcontent-"+hallid+" .table").draggable({ 
 					grid:[ 10, 10 ],
@@ -464,6 +480,17 @@ hall_resize(curmenu(), ui.size.width, ui.size.height);
 
  	}
 
+	
+		
+	function elemresize( event, ui ) {
+	tabid = $(this).attr('tabid');
+
+element_resize(tabid, ui.size.width, ui.size.height);
+
+ 	}
+
+	
+	
 		function get_selected_hall(hallid,dateevent,place,destination,orderid)
 		{
 

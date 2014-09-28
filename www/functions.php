@@ -271,6 +271,15 @@ $place = $_POST['place'];
 
 	if($place == 'halleditor')
 	{
+	
+
+			if($typeid == '0')
+			{
+				$typeid = time();
+			$insert = "INSERT INTO `table_types` (`typeid`, `name`, `width`, `height`, `image`, `iscircle`, `istable`, `isactive`) VALUES (".$typeid.", '', '80', '40', '', '0', '0', '1');";
+mysql_query($insert);
+	
+			}
 		$insert = "INSERT INTO `tables` (`id`, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle`, `group`) VALUES (NULL, 'new', '0', '".$hallid."', '".$ntop."', '".$nleft."', '".$typeid."', '0','0');";
 	}
 	if($place=='order' || $place=='editor')
@@ -406,6 +415,19 @@ $nwidth = $_POST['nwidth'];
 $nheight = $_POST['nheight'];
 			
 			$update = "UPDATE `hall` SET  `width`  = '".$nwidth."',  `height`  = '".$nheight."'  WHERE `id`  = '".$hallid."';";
+			mysql_query($update);		
+			echo 'yes';		
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
+if ($_POST['operation'] == 'elementresize') 
+{
+$tabid = $_POST['tabid'];
+$nwidth = $_POST['nwidth'];
+$nheight = $_POST['nheight'];
+			
+			$update = "UPDATE `table_types` SET  `width`  = '".$nwidth."',  `height`  = '".$nheight."'  WHERE `typeid`  = (Select `typeid` from `tables` where `id` = '".$tabid."');";
 			mysql_query($update);		
 			echo 'yes';		
 }
