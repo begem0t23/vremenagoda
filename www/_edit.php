@@ -1513,8 +1513,8 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					$(this).addClass("primary");
 				} else
 				{
-					$("#hallplace-" +hallid +" .table").removeClass("success");
-					$("#hallplace-" +hallid +" .table").addClass("primary");
+					$("#hallplace-" +hallid +" .table:not(.element)").removeClass("success");
+					$("#hallplace-" +hallid +" .table:not(.element)").addClass("primary");
 				}
 					var tables="";
 					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
@@ -1534,10 +1534,10 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 						taball[tabid] = element ;
 					} else
 					{
-						$("#hallplace-" +hallid +" .table").each(function(){
+						$("#hallplace-" +hallid +" .table:not(.element)").each(function(){
 							tabid1 = $(this).attr("tabid");
 							tabnum1 = $(this).html();
-							element = ({tabid:tabid1, tabnum:tabnum1});
+							element = (tabid1);
 							taball[tabid1] = element ;
 						});
 					}
@@ -1558,8 +1558,8 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					$(this).removeClass("primary");
 				} else
 				{
-					$("#hallplace-" +hallid +" .table").addClass("success");
-					$("#hallplace-" +hallid +" .table").removeClass("primary");
+					$("#hallplace-" +hallid +" .table:not(.element)").addClass("success");
+					$("#hallplace-" +hallid +" .table:not(.element)").removeClass("primary");
 				}
 					
 					var tables="";
@@ -1572,7 +1572,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 							delete taball[tabid];
 					} else
 					{
-						$("#hallplace-" +hallid +" .table").each(function(){
+						$("#hallplace-" +hallid +" .table:not(.element)").each(function(){
 							tabid1 = $(this).attr("tabid");
 							delete taball[tabid1];
 						});
@@ -1698,7 +1698,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 							data = data.split(":");
 							if (data[0]=="OK")
 							{
-								var nn = noty({text: 'Сохранено, номер заказа ' + data[1], type: 'information', timeout:5000, callback: {afterClose: function() {location.href="?view_zakazid="+data[1];}}, onClick: function(){delete nn;}});							
+								var nn = noty({text: 'Сохранено, номер заказа ' + data[1], type: 'information', timeout:5000, callback: {afterClose: function() {location.href="?view/"+data[1]+"/";}}, onClick: function(){delete nn;}});							
 								$.removeCookie("clientname");
 								$.removeCookie("editclientid");
 								$.removeCookie("clientfrom");

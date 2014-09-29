@@ -636,10 +636,11 @@ if ($_POST['operation'] == 'getallorders')
 		}
 		
 			$start = $startdate;
-
+			$changes = '';
+		if(anydishgetchangetype($rows01['id']) > 0) $changes = ' !!!';
 		$ech=$ech.'{'.chr(10);
 		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
-		$ech=$ech.'"title": "'.$rows01['name'].'",'.chr(10);
+		$ech=$ech.'"title": "'.$rows01['name'].$changes.'",'.chr(10);
 		$ech=$ech.'"start": "'.$start.'",'.chr(10);
 		$ech=$ech.'"todo": "'.$rows01['comment'].'",'.chr(10);
 		$ech=$ech.'"url": "?view/'.$rows01['id'].'/",'.chr(10);
@@ -1557,41 +1558,28 @@ if ($id == 0)
 		if (mysql_num_rows($rezult01) > 0) 
 		{
 		
-		if($tocalc == '0')
-		{
-			$rows01 =	mysql_fetch_array($rezult01);
-			$order = $rows01['orderby'];
+
+		$update = "UPDATE `services` SET `description` = '".$description."', `price` = '".$price."' WHERE  `services`.`id` = ".$id." ;";
 		
-			$update = "UPDATE `services` SET `isactive` = '0' WHERE  `services`.`id` = ".$id." ;";
-		
-			mysql_query($update);
-		} else
-		{
-					$update = "UPDATE `services` SET `description` = '".$description."', `price` = '".$price."' WHERE  `services`.`id` = ".$id." ;";
-		
-					mysql_query($update);
+		mysql_query($update);
 
 		
 		
-		}
+	
 		} else {
 				Echo "почемуто нет такой записи";	
 				}
 	}	
 	
-		if($tocalc == '0')
+		if ($id == 0) 
 		{
-		$insert = "INSERT INTO `services` (`id`, `name`, `description`, `price`, `byguestcount`, `createdate`, `isactive`, `orderby`, `tocalculate`) VALUES (NULL, '".$name."', '".$description."', '".$price."', '".$byguestcount."',  NOW(), '1', ".$order.", '0');";
+			$insert = "INSERT INTO `services` (`id`, `name`, `description`, `price`, `byguestcount`, `createdate`, `isactive`, `orderby`, `tocalculate`) VALUES (NULL, '".$name."', '".$description."', '".$price."', '".$byguestcount."',  NOW(), '1', ".$order.", '0');";
+			mysql_query($insert);
 		}
 		
-		mysql_query($insert);
-	
-		$tsql02 = "SELECT * FROM `services`  WHERE `name` = '".$name."' AND  `description` = '".$description."' AND  `price` = '".$price."' AND  `isactive` = '1' ;";
-		$rezult02 = mysql_query($tsql02);
-		if (mysql_num_rows($rezult02) > 0) 
-		{
+
 			echo 'yes';
-		}
+
 	
 }
 
@@ -1618,12 +1606,9 @@ if ($id > 0)
 				Echo "почемуто нет такой записи";	
 				}
 
-		$tsql02 = "SELECT * FROM `services`  WHERE `id` = '".$id."' AND    `isactive` = '0' ;";
-		$rezult02 = mysql_query($tsql02);
-		if (mysql_num_rows($rezult02) > 0) 
-		{
+
 			echo 'yes';
-		}	
+	
 	}
 	
 }

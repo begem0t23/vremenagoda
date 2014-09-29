@@ -4,6 +4,18 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
+function anydishgetchangetype($orderid)
+{
+	$changes = 0;
+	$tsql = "SELECT * from dishes_in_orders WHERE `orderid` = '".$orderid."' ;" ;
+	$rez = mysql_query($tsql);
+	while ($rows = mysql_fetch_array($rez))
+	{
+		$changes += dishgetchangetype($rows['dishid'], $orderid);
+	}
+	return $changes;
+}
+
 function dishgetchangetype($id, $orderid)
 {
 	if (!@$orderid) return 0;
@@ -170,7 +182,7 @@ $tabsinorder = 0;
 				if ($row_tab["orderid"] == $orderid)
 				{	
 					$tabsinorder++;
-					$inorder = ' primary';
+					$inorder = ' primary ordered'.$orderid.' hall'.$hallid;
 				}
 			}
 			
@@ -180,8 +192,8 @@ $tabsinorder = 0;
 				if ($row_tab["orderid"] == $orderid)
 				{	
 					$tabsinorder++;
-					$inorder = ' success ordered'.$orderid;
-					$cooka.=  '"'.$row_tab["id"].'":{"tabid":"'.$row_tab["id"].'"},';
+					$inorder = ' success ordered'.$orderid.' hall'.$hallid;
+					$ordertables[$row_tab["id"]] = $row_tab["id"];
 				}
 			}
 
@@ -205,10 +217,19 @@ $tabsinorder = 0;
 					
 				}
 			}
-							$cooka = substr($cooka,0,strlen($cooka)-1);
-							
-								if(!$_COOKIE["tables"]) setcookie ("tables", '{'.$cooka.'}',time()+33600);
-								
+				if( $place == 'editor')
+			{
+				$cookietables = json_decode($_COOKIE["tables"],true);
+				if($ordertables){
+				foreach($ordertables as $i=>$ot)
+				{
+					if (!$cookietables[$i]) $cookietables[$i] = $ot ;
+				}
+				}
+				
+				
+								 setcookie ("tables", json_encode($cookietables),time()+33600);
+			}					
 								
 						$ech = $ech.'</div>';
 						$out['tabsinorder'] = $tabsinorder;
@@ -288,10 +309,13 @@ $class =  '';
 							if($forwho <> "client") 
 							{
 								$output['print'] = @$output['print'].'<td>'.$items[$i]["note"];
+							if($forwho == "full") 
+							{
 								if (dishgetchangetype($items[$i]["id"],$orderid)>0)
 								{
 									$output['print'] = @$output['print'] . "<br><font color=red><small>* у блюда произошли изменения</small></font>";
 								}
+							}
 								$output['print'] = @$output['print'].'</td>';
 							}
 							
@@ -709,6 +733,8 @@ $rows = mysql_fetch_array($rezult);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['name'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
+if($forwho != "food" & $forwho != "drink") 
+{		
 		$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
 		$body_out = $body_out.'<td colspan="'.$cs1.'">Телефон</td>'.chr(10);
 		$body_out = $body_out.'<td colspan="'.$cs2.'">'.$rows['phone'].'</td>'.chr(10);
@@ -718,7 +744,7 @@ $rows = mysql_fetch_array($rezult);
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">E-mail</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['email'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
-
+}
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по мероприятию</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -797,12 +823,13 @@ if($forwho <> "client")
 $body_out = $body_out.'</tr>
 </tbody>';
 
-
-
+$filtr ="";
+if($forwho == "food" )  $filtr = "AND `isdrink` = 0";
+if($forwho == "drink" )  $filtr = "AND `isdrink` > 0";
 	$sections = Array();
 		$tsql0 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '0' AND `isactive` = '1' ORDER BY `sortid` ASC;
+		 WHERE `level` = '0' AND `isactive` = '1' ".$filtr." ORDER BY `sortid` ASC;
 		 ";
 		$rezult0 = mysql_query($tsql0);
 
@@ -824,7 +851,7 @@ $body_out = $body_out.'</tr>
 	
 		$tsql_1 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
+		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."'  AND `isactive` = '1'  ".$filtr."  ORDER BY `sortid` ASC
 		 ";
 		$rezult_1 = mysql_query($tsql_1);
 
@@ -849,7 +876,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']]['dishes'];
 		
 		$tsql_2 = "SELECT * 
 		 FROM `menu_sections`  
-		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."'  AND `isactive` = '1' ORDER BY `sortid` ASC
+		 WHERE `level` = '2' AND `parent_id` = '".$rows_1['id']."'  AND `isactive` = '1'  ".$filtr."  ORDER BY `sortid` ASC
 		 ";
 	$rezult_2 = mysql_query($tsql_2);
 
@@ -1600,18 +1627,23 @@ if ( mysql_num_rows($rezult) > 0){
 		$curval = $orderstatus[$curval];
 		}
 		
+		
 		$body_out = $body_out.'<td>'.chr(10);
 		$body_out = $body_out.$curval.chr(10);
 		$body_out = $body_out.'</td>'.chr(10);
 		}
 
+		//проверка изменений в заказе
+		$changes = '';
+		if (anydishgetchangetype($rows['id']) > 0) $changes = '<br><font color=red><small>* у блюд произошли изменения</small></font>'; 
+		
 		if($tbuts)
 		{	
 			$body_out = $body_out.'<td>';
 			foreach ($buts as $key => $val)	
 				{
 				$but = explode(',',$val);
-				$body_out = $body_out.'<button type="button" class="'.$but[0].' " title="'.$but[1].'">'.$but[2].'</button>'.chr(10);
+				$body_out = $body_out.'<button type="button" class="'.$but[0].' " title="'.$but[1].'">'.$but[2].'</button>'.$changes.chr(10);
 				}
 			$body_out = $body_out.'</td>';
 		}

@@ -615,6 +615,7 @@ element_resize(tabid, ui.size.width, ui.size.height);
 				//раскраска выбранных столов
 				tables = "";
 				if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
+				alert(tables);
 				if (tables) 
 				{
 					var taball = $.parseJSON(tables);

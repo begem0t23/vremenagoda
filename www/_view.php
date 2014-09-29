@@ -230,7 +230,8 @@ echo '<option value="0">Выберите менеджера</option>';
 <select id="show_report" onchange="get_report();"  class="form-control nav-element" >
 <option value="full"  selected="selected">Полный</option>
 <option  value="client">Для Клиента</option>
-<option  value="food">Для Кухни и Бара</option>
+<option  value="food">Для Кухни</option>
+<option  value="drink">Для Бара</option>
 </select>
 </div>
 
