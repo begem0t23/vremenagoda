@@ -137,10 +137,9 @@ fixednavbar();
 		<form id=frm2 role="form" data-toggle="validator">
 
 		<span id="weightcalc" class="btn btn-default">
-			<div id="foodweightall">Общий вес: 0г</div>
-
-			<div id="foodweightaver">Средний вес: 0г</div>
-
+			<div id="foodweight"> Блюда: 0г/0г</div>
+			<div id="drink1weight">Спиртное: 0г/0г</div>
+			<div id="drink2weight"> Напитки: 0г/0г</div>
 		</span>
 <?php
 	//сборка массива секций с блюдами для конкретного меню
@@ -319,12 +318,11 @@ fixednavbar();
 		<form id=frm3 role="form" data-toggle="validator">
 
 		<span id="weightcalc" class="btn btn-default">
-			<div id="drinkweightall">Общий объём: 0г</div>
-
-			<div id="drinkweightaver">Средний объём: 0г</div>
-
+			<div id="foodweight"> Блюда: 0г/0г</div>
+			<div id="drink1weight">Спиртное: 0г/0г</div>
+			<div id="drink2weight"> Напитки: 0г/0г</div>
 		</span>
-
+ 
 <?php	
 
 	//сборка массива секций с блюдами для конкретного меню
@@ -1134,7 +1132,7 @@ fixednavbar();
 					alladd = $("#createform  .btn-danger").length;			
 					if(alladd > 0) 
 					{
-						alert("Остались недобавленные позиции: " + alladd);
+	
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 						return false;
 					} 
@@ -1603,7 +1601,7 @@ fixednavbar();
 					
 					if(isfull==0) 
 					{
-						element = ({tabid:tabid, tabnum:tabnum});
+						element = (tabid);
 						taball[tabid] = element ;
 					} else
 					{
@@ -1685,7 +1683,7 @@ fixednavbar();
 
 			if(alladd > 0) 
 			{
-				alert("Остались недобавленные позиции: " + alladd);
+
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 			} else
 			{

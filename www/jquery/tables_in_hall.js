@@ -331,7 +331,7 @@ $("#hallcontent-"+hallid+" .element").resizable({grid:10, resize: normal_height,
 						angle = parseInt($(this).attr('angle'));
 						dateevent = $(this).attr('dateevent');
 						tabid = $(this).attr('tabid');
-						tabnum = $(this).html();
+						tabnum = $(this).text();
 						
 						if( key == 'editname') 
 						{
@@ -493,8 +493,9 @@ element_resize(tabid, ui.size.width, ui.size.height);
 	
 		function get_selected_hall(hallid,dateevent,place,destination,orderid)
 		{
+			if (!orderid) orderid = $("#orderid").val();
 
-	  		$.ajax({
+			$.ajax({
 			type: "POST",
 			url: "functions.php",
 			data: { operation: 'gethall', hallid: hallid, dateevent:dateevent, place:place, orderid:orderid}
@@ -615,7 +616,7 @@ element_resize(tabid, ui.size.width, ui.size.height);
 				//раскраска выбранных столов
 				tables = "";
 				if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
-				alert(tables);
+
 				if (tables) 
 				{
 					var taball = $.parseJSON(tables);
@@ -665,7 +666,7 @@ element_resize(tabid, ui.size.width, ui.size.height);
 						angle = parseInt($(this).attr('angle'));
 						dateevent = $(this).attr('dateevent');
 						tabid = $(this).attr('tabid');
-						tabnum = $(this).html();
+						tabnum = $(this).text();
 						check = $(this).hasClass("primary");
 						destination = $(this).parent().parent().attr('id');
 						

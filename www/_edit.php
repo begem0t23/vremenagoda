@@ -77,7 +77,7 @@
   }
    .right{float:right;}
  
-			.topbutton { position:fixed; top:1px; left:900px;z-index:9999;}
+			.topbutton { position:fixed; top:1px; left:950px;z-index:9999;}
 	
 		#weightcalc {font-size:12px; position:fixed; top:1px; left:700px;z-index:9999;}
 		
@@ -226,10 +226,9 @@ else
 		<form id=frm2 role="form" data-toggle="validator">
 
 		<span id="weightcalc" class="btn btn-default">
-			<div id="foodweightall">Общий вес: 0г</div>
-
-			<div id="foodweightaver">Средний вес: 0г</div>
-
+			<div id="foodweight"> Блюда: 0г/0г</div>
+			<div id="drink1weight">Спиртное: 0г/0г</div>
+			<div id="drink2weight"> Напитки: 0г/0г</div>
 		</span>
 <?php
 	//сборка массива секций с блюдами для конкретного меню
@@ -408,13 +407,9 @@ else
 		<form id=frm3 role="form" data-toggle="validator">
 
 		<span id="weightcalc" class="btn btn-default">
-			<div id="drinkweightall">Спиртное всего: 0г</div>
-
-			<div id="drinkweightaver">Спиртное среднее: 0г</div>
-			<div id="drinkweightall2">Безалк. всего: 0г</div>
-
-			<div id="drinkweightaver2">Безалк. среднее: 0г</div>
-
+			<div id="foodweight">Блюда общ./срдн.: 0г/0г</div>
+			<div id="drink1weight">Спиртное общ./срдн.: 0г/0г</div>
+			<div id="drink2weight">Напитки общ./срдн.: 0г/0г</div>
 		</span>
 
 <?php	
@@ -1091,7 +1086,6 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					alladd = $("#createform  .btn-danger").length;			
 					if(alladd > 0) 
 					{
-						alert("Остались недобавленные позиции: " + alladd);
 						$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 						//return false;
 					} 
@@ -1530,7 +1524,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					
 					if(isfull==0) 
 					{
-						element = ({tabid:tabid, tabnum:tabnum});
+						element = (tabid);
 						taball[tabid] = element ;
 					} else
 					{
@@ -1539,6 +1533,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 							tabnum1 = $(this).html();
 							element = (tabid1);
 							taball[tabid1] = element ;
+	
 						});
 					}
 					
@@ -1611,7 +1606,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 			alladd = $("#createform  .btn-danger").length;			
 			if(alladd > 0) 
 			{
-				alert("Остались недобавленные позиции: " + alladd);
+				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 			} 
 			//else
 			//{

@@ -2,13 +2,15 @@
 		{
 
 		wfood = 0;
-		wdrink = 0;
+		wdrink1 = 0;
+		wdrink2 = 0;
 		persons = $.cookie("guestcount") * 1;
 		if(persons > 0) 
 		{
-			$("#createform .btn-primary").each(function(){
+			$(".btn-primary").each(function(){
 				if ($(this ).text() == 'Удалить') 
 				{
+
 					id = $(this).attr('id');
 					id = id.substr(7);
 					quant = $("#quant"+id).val();
@@ -17,20 +19,24 @@
 					{
 						wfood+=$("#weightfood"+id).html() * 1 * quant;
 					}
-					if ($(this ).hasClass("weightdrink"))
+					if ($(this ).hasClass("weight1drink"))
 					{
-						wdrink+=$("#weightdrink"+id).html() * 1 * quant;
+						wdrink1+=$("#weightdrink"+id).html() * 1 * quant;
+					}
+					if ($(this ).hasClass("weight2drink"))
+					{
+						wdrink2+=$("#weightdrink"+id).html() * 1 * quant;
 					}
 				}
 			});
 
 			wfa = Number(wfood/persons).toFixed(2);
-			wfd = Number(wdrink/persons).toFixed(2);
+			wfd1 = Number(wdrink1/persons).toFixed(2);
+			wfd2 = Number(wdrink2/persons).toFixed(2);
 			
-			$("#foodweightall").html("Общий вес:" + Number(wfood).toFixed(2));
-			$("#foodweightaver").html("Средний вес:" + wfa);
-			$("#drinkweightall").html("Общий литраж:" + Number(wdrink).toFixed(2));
-			$("#drinkweightaver").html("Средний литраж:" + wfd);
+			  $("#foodweight").html(" Блюда: " + Number(wfood).toFixed(2) +"г/"+wfa+"г");
+			$("#drink1weight").html("Спиртное: " + Number(wdrink1).toFixed(2) +"г/"+wfd1+"г");
+			$("#drink2weight").html(" Напитки: " + Number(wdrink2).toFixed(2) +"г/"+wfd2+"г");
 		}
 		else
 		{

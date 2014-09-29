@@ -160,19 +160,21 @@ $tabsinorder = 0;
 			if (mysql_num_rows($rez_tab)>0)
 			{
 			
-			$tabquant = mysql_num_rows($rez_tab);
+			$tabquant = 0;
 				while ($row_tab = mysql_fetch_array($rez_tab))
 				{
 			$inorder=' success';	
-			
+			if ($row_tab["istable"] == 1) $tabquant ++;
 			if($place == 'order' || $place == 'report' || $place == 'editor')
 			{
-				$tsql02 = "SELECT * FROM `tables_in_orders` WHERE `tableid` = '".$row_tab["id"]."';";
+				$tsql02 = "SELECT * FROM `tables_on_date` WHERE `id` = '".$row_tab["id"]."' AND `orderid` > 0  ;";
 				$rez_tab0 = mysql_query($tsql02);
 				//$ech .= mysql_error(); 
 				if (mysql_num_rows($rez_tab0)>0)
 				{
-					$inorder = ' warning ordered'.$orderid;
+
+						$inorder = ' warning ordered'.$orderid;
+
 				}
 			}
 			
@@ -206,7 +208,7 @@ $tabsinorder = 0;
 			}
 			
 				//$sumpersons = $sumpersons + $row_tab["persons"];
-					$ech = $ech.'<div class="context-menu-one '.$class.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'"  isfull="'.$isfull.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; " place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
+					$ech = $ech.'<div class="context-menu-one '.$class.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'"  isfull="'.$isfull.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; line-height:'.($row_tab["height"]-7).'px;" place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
 					
 					//for($i=0;$i<$row_tab["persons"];$i++)
 					//{
@@ -574,7 +576,9 @@ return $dish;
 function print_dishes($items)
 {
 $wclass = 'weightfood';
-if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
+$wid = 'weightfood';
+if (@$items['isdrink'] == 1) { $wclass = 'weight1drink'; $wid = 'weightdrink';}
+if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 
 	if ($items['count'] > 0)
 	{
@@ -585,7 +589,7 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 
 			echo '<tr  class = "'.$aclass.'">';
 			echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'" id="dishname'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
-							<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
+							<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 							<td  class = "'.$aclass.'">'.$items[$i]["price"].'</td>
 							<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
 							<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
@@ -598,8 +602,10 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 function print_dishes_for_edit($items, $order)
 {
 $wclass = 'weightfood';
+$wid = 'weightfood';
 if ($order) {
-if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
+if (@$items['isdrink'] == 1) { $wclass = 'weight1drink'; $wid = 'weightdrink';}
+if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 
 	if ($items['count'] > 0)
 	{
@@ -627,7 +633,7 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 					echo "<br><font color=red><small>* у блюда произошли изменения</small></font>";
 				}
 				echo '</span></td>
-					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
+					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 					<td  class = "'.$aclass.'">'.$item["price"].'</td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" readonly="readonly" name="quant" id="quant'.$items[$i]["id"].'" value="'.$item["num"].'" class="quant" size="1"></td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  name = "note" readonly="readonly" id="note'.$items[$i]["id"].'" value="'.$item["note"].'" type="text" class="note"></td>
@@ -640,7 +646,7 @@ if (@$items['isdrink'] == 1) $wclass = 'weightdrink';
 				//if ($dish_in_order[$items[$i]["isactive"])
 				{
 				echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
-					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wclass.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
+					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 					<td  class = "'.$aclass.'">'.$items[$i]["price"].'</td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
