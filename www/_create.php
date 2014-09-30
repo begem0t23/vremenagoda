@@ -113,6 +113,9 @@ fixednavbar();
 		  <li id=pageright><a href="#">&raquo;</a></li>
 		</ul>
 
+<div id="dialog-editdish" title="Заполните информацию о блюде">
+ 
+</div>
 		<input type=hidden id=timestart value="">
 	
 			<div id=createform style="width: 100%;">
@@ -142,6 +145,8 @@ fixednavbar();
 			<div id="drink2weight"> Напитки: 0г/0г</div>
 		</span>
 <?php
+								echo  '<button class=" btn btn-primary" type="button" sectionid="0" name="editdish"  id="0" title="Добавиь специальное блюдо">Специальное блюдо</button>'.chr(10);
+
 	//сборка массива секций с блюдами для конкретного меню
 	$tsql = "select * from menus where `id` ='1';";
 	$r_menutype = mysql_query($tsql);
@@ -1110,21 +1115,72 @@ fixednavbar();
 				//aler("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
 			//}
 		}
+		
+		
+		
+		
+		
+		
+		
+		function get_edit_dish_form(dishid,menuid,sectionid){
+	
+		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'geteditdishform',dishid: dishid, menuid: menuid, sectionid: sectionid}
+		})
+		.done(function( msg ) {
+			$( "#dialog-editdish" ).html(msg);
+			});	
+	}
+	
+
+    function adddish() {
+		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'addspecialdish', dishname: $( "#name" ).val(), dishdescription: $( "#description" ).val(), dishweight: $( "#weight" ).val(), dishprice: $( "#price" ).val(),   menuid: $( "#menu_id" ).val()}
+		})
+		.done(function( msg ) {
+			if(msg == 'yes'){
+				print_special_dishes(orderid);
+				dialog3.dialog( "close" );
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+		});
+
+    }	
+	
+	
 		$(document).ready(function(){
 			// когда страница загружена
-			
-			
-			
-  
-			
-			
-			
-				if (typeof $.cookie("clientname") != 'undefined')
-				{
-					// Богачев :: убрал. заебало.
-					//docheckclientname($.cookie("clientname"));
-				}
+						
+     dialog3 = $( "#dialog-editdish" ).dialog({
+      autoOpen: false,
+      height: '450',
+      width: '800',
+      modal: true,
+      buttons: {
+        "Сохранить": adddish,
+        "Отмена": function() {
+          dialog3.dialog( "close" );
 
+        }
+      }
+    });
+	
+	
+	
+		$( document ).on( "click", "button[name=editdish]", function() {
+				dishid = $(this).attr("dishid");
+				menuid = $(this).attr("menuid");
+				sectionid = $(this).attr("sectionid");
+				get_edit_dish_form(dishid, menuid, sectionid);
+				dialog3.dialog( "open" );
+    });
+			
+			
 				
 
 			$( document ).on( "click", ".navbar a", function() 

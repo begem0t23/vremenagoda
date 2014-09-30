@@ -1242,7 +1242,7 @@ $sectionid = $_POST['sectionid'];
 	$checked = ' ';
 	if ( $rows_0['isbasic'] == 1) $checked = 'checked';
 ?>
-  <p class="validateTips">Поле "Описание"  не необязательное.</p>
+  <p class="validateTips"></p>
 
   <form>
 
@@ -1250,14 +1250,17 @@ $sectionid = $_POST['sectionid'];
 	<textarea onkeyup="changeform();" colls="50" id="description" placeholder="Описание" class="form-control"><?php echo $rows_0['description']; ?></textarea>
 	<input onkeyup="changeform();"  type="text" id="weight" placeholder="Вес в граммах" class="form-control" value="<?php echo $rows_0['weight']; ?>">
 	<input onkeyup="changeform();"  type="text" id="price" placeholder="Цена" class="form-control" value="<?php echo $rows_0['price']; ?>">
-	<input onchange="changeform();"  type="checkbox" id="isbasic"  <?php echo $checked; ?>> В меню для зала
 	<input type="hidden" id="dish_id"  value="<?php echo $dishid; ?>">
 	<input type="hidden" id="menu_id"  value="<?php echo $menuid; ?>">
-	<br>	<br>
-	  <p >Привязать к разделу:</p>
+	
+	
+	<?php
+	if ($sectionid > 0)
+	{
+	echo '	<input onchange="changeform();"  type="checkbox" id="isbasic"  <?php echo $checked; ?> В меню для зала<br>	<br>
+<p >Привязать к разделу:</p>';
 
-	<select id="menu_section"  onchange="changeform();"  >
-<?php	
+	echo '<select id="menu_section"  onchange="changeform();" >';
 
 	$sections = Array();
 		$tsql0 = "SELECT * 
@@ -1365,7 +1368,7 @@ $sectionid = $_POST['sectionid'];
 
 
   echo '</select></form>';
-
+}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
