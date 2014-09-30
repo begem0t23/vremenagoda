@@ -16,6 +16,7 @@ require_once("config.inc.php");
 require_once("functions.inc.php");
 
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
+				$neworder = 1;
 
 $ec = @$_POST["ec"];
 $ci = @$_POST["ci"];
@@ -77,7 +78,7 @@ else
 			if ($_SESSION["curuserrole"]>=5) {
 
 				if ($oi) {
-
+				$neworder = 0;
 				$tsql = "update orders set eventdate=FROM_UNIXTIME('".strtotime(@$_POST["de"])."'), eventtime='".mysql_real_escape_string(@$_POST["te"])."',
 				guestcount='".mysql_real_escape_string(@$gc)."', 
 				status='".mysql_real_escape_string($status)."', 
@@ -359,7 +360,8 @@ if ($oi>0) {
 	}
 
 }
-
+if(	$neworder == 1) 	orders_history($oi,'1');
+if(	$neworder == 0) 	orders_history($oi,'4');
 	
 	echo "OK:".$oi;
 }

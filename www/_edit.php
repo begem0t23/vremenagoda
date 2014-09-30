@@ -99,6 +99,7 @@
 fixednavbar();
 
 if ($_SESSION["curuserrole"]>=5) {
+				orders_history($q[1],'3');
 
 ?>
 

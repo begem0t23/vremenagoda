@@ -4,6 +4,17 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
+
+function orders_history($orderid,$operationid)
+{
+				$insert = "INSERT INTO `orders_history` (`id`,`orderid`, `operationid`, `datetime`, `userid`) VALUES (NULL, '".$orderid."', '".$operationid."', NOW(), '".$_SESSION["curuserid"]."') ;";
+			mysql_query($insert);
+			
+}
+
+
+
+
 function anydishgetchangetype($orderid)
 {
 	$changes = 0;

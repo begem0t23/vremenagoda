@@ -86,7 +86,20 @@ header('Content-Type: text/html; charset=utf-8');
 		);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
 if ($_POST['operation'] == 'getsummallpayments') 
+{
+	$orderid = $_POST['orderid'];
+	$select = "SELECT sum(summa * ((ispayout * -2) +1)) AS total FROM `payments_in_orders` WHERE `orderid` = '".$orderid.";";
+	$rezult = mysql_query($select);
+	$rows = mysql_fetch_array($rezult);
+	echo $rows['total'] + 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
+if ($_POST['operation'] == 'getordersumm') 
 {
 	$orderid = $_POST['orderid'];
 	$select = "SELECT sum(summa * ((ispayout * -2) +1)) AS total FROM `payments_in_orders` WHERE `orderid` = '".$orderid.";";
@@ -103,16 +116,14 @@ $orderid = $_POST['orderid'];
 $paysum = $_POST['paysum'];
 $paymeth = $_POST['paymeth'];
 $paydate = $_POST['paydate'];
-$payout = $_POST['ispayout'];
+$ispayout = $_POST['ispayout'];
 $paycomm = $_POST['paycomm'];
-$ispayout = 0;
-if($payout == 'true') $ispayout = 1;
 
 			$insert = "INSERT INTO `payments_in_orders` (`id`,`orderid`, `summa`, `method`, `ispayout`, `comment`, `createdby`,`paymentdate`,`createdate`) VALUES (NULL, '".$orderid."', '".$paysum."', '".$paymeth."', '".$ispayout."', '".$paycomm."', '".$_SESSION["curuserid"]."', '".convert_date($paydate)."', NOW());";
-			
-			
 			mysql_query($insert);
 
+			if ($ispayout == 0) orders_history($orderid,'5');
+			if ($ispayout == 1) orders_history($orderid,'18');
 			echo 'yes';
 }
 
@@ -125,13 +136,13 @@ $otkazreason = $_POST['otkazreason'];
 $otkazdate = $_POST['otkazdate'];
 
 
-			//$insert = "INSERT INTO `payments_in_orders` (`id`,`orderid`, `summa`, `method`, `ispayout`, `comment`, `createdby`,`paymentdate`,`createdate`) VALUES (NULL, '".$orderid."', '".$paysum."', '".$paymeth."', '".$ispayout."', '".$paycomm."', '".$_SESSION["curuserid"]."', '".convert_date($paydate)."', NOW());";
-			
-			
-			//mysql_query($insert);
-
 			$update = "UPDATE `orders` SET `status` = '0' WHERE `id` = '".$orderid."' ;";
 			mysql_query($update);
+			
+			$insert = "INSERT INTO `canceledorders` (`id`,`orderid`,  `userid`, `reason`, `datetime`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$reason."', NOW() ;";
+			mysql_query($insert);
+
+			orders_history($orderid,'13');
 			echo 'yes';
 }
 
@@ -140,17 +151,17 @@ $otkazdate = $_POST['otkazdate'];
 if ($_POST['operation'] == 'adddelegate') 
 {
 $orderid = $_POST['orderid'];
-$otkazreason = $_POST['otkazreason'];
-$otkazdate = $_POST['otkazdate'];
+$delegatereason = $_POST['delegatereason'];
+$newuserid = $_POST['newuserid'];
 
-
-			//$insert = "INSERT INTO `payments_in_orders` (`id`,`orderid`, `summa`, `method`, `ispayout`, `comment`, `createdby`,`paymentdate`,`createdate`) VALUES (NULL, '".$orderid."', '".$paysum."', '".$paymeth."', '".$ispayout."', '".$paycomm."', '".$_SESSION["curuserid"]."', '".convert_date($paydate)."', NOW());";
-			
-			
-			//mysql_query($insert);
-
-			$update = "UPDATE `orders` SET `status` = '1' WHERE `id` = '".$orderid."' ;";
+			$update = "UPDATE `orders` SET `status` = '1', `managerid` = '".$newuserid."' WHERE `id` = '".$orderid."' ;";
 			mysql_query($update);
+
+			$insert = "INSERT INTO `delegatedorders` (`id`,`orderid`,  `fromuserid`, `touserid`, `reason`, `datetime`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$newuserid."','".$reason."', NOW() ;";
+			mysql_query($insert);
+
+			orders_history($orderid,'7');
+
 			echo 'yes';
 }
 
@@ -180,14 +191,16 @@ $paydate = $_POST['paydate'];
 				while ($row_tab = mysql_fetch_array($rez_tab))
 				{
 				$summa = $row_tab['summa'];
-				if($row_tab['ispayout'] == 1) $summa = 0 - $summa;
+				
+				$sclass=" payin";
+				if($summa < 0) $sclass=" payout";
 				$total+=$summa;
-				$ech = $ech.'<tr>
-				<td>'.$row_tab['id'].'</td>
-				<td>'.$row_tab['paymentdate'].'</td>
-				<td>'.$row_tab['methodname'].'</td>
-				<td>'.$row_tab['comment'].'</td>
-				<td>'.$summa.'</td>
+				$ech = $ech.'<tr class="'.$sclass.'">
+				<td class="'.$sclass.'">'.$row_tab['id'].'</td>
+				<td class="'.$sclass.'">'.$row_tab['paymentdate'].'</td>
+				<td class="'.$sclass.'">'.$row_tab['methodname'].'</td>
+				<td class="'.$sclass.'">'.$row_tab['comment'].'</td>
+				<td class="'.$sclass.'">'.$summa.'</td>
 				</tr>';
 				}
 			}
@@ -637,7 +650,8 @@ if ($_POST['operation'] == 'getallorders')
 		
 			$start = $startdate;
 			$changes = '';
-		if(anydishgetchangetype($rows01['id']) > 0) $changes = ' !!!';
+		if(anydishgetchangetype($rows01['id']) > 0) $changes = ' (изменения)';
+		if($rows01['status'] == 0) $changes = ' (отказ)';
 		$ech=$ech.'{'.chr(10);
 		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
 		$ech=$ech.'"title": "'.$rows01['name'].$changes.'",'.chr(10);
@@ -1975,6 +1989,7 @@ $subject = 'Заказ Банкета в ресторане Времена Го�
 		$insert="INSERT INTO `emails` (`id`, `orderid`, `userid`, `email`, `copy`, `subject`, `body`, `date`,`filename`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$email."', '".$copy."', '".$subject."', '".$mess."', NOW(), '".$filename."') ;";
 		mysql_query($insert);
 
+			orders_history($orderid,'6');
 		echo 'yes';
 }
 
