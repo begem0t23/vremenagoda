@@ -1060,7 +1060,7 @@ fixednavbar();
 				additional_pars["cp"] = $.cookie("clientphone");
 				additional_pars["ce"] = $.cookie("clientemail");
 				additional_pars["cf"] = $.cookie("clientfrom");
-				additional_pars["cf4"] = $.cookie("clientefrom4");
+				additional_pars["cf4"] = $.cookie("clientfrom4");
 				additional_pars["de"] = $.cookie("dateevent");
 				additional_pars["te"] = $.cookie("timeevent");
 				additional_pars["gc"] = $.cookie("guestcount");
@@ -1275,7 +1275,7 @@ fixednavbar();
 			});
 
 			
-			$( document ).on( "keyup", "input[name=note]", function() {
+			$( document ).on( "keyup", "textarea[name=note]", function() {
 				id = $(this).attr("id");
 				id = id.substr(4);
 

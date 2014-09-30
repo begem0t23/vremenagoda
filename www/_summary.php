@@ -50,7 +50,7 @@ $cols_out = '';
 $head_out = '';
 
 		 
-$tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, o.hallid, o.guestcount
+$tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, c.otkuda, c.agencyname, o.hallid, o.guestcount
 		 FROM orders o, users u, clients c
 		 WHERE o.id = ".$zid." AND  o.creatorid = u.id AND o.clientid = c.id";
 		 
@@ -67,7 +67,14 @@ $rows = mysql_fetch_array($rezult);
 		$rows11 = mysql_fetch_array($rezult11);
 		$hallname =$rows11['name'] ;
 		}
-
+		
+$otkuda = $_POST["cf"];
+	if($_POST["cf"] == 'От Агентства'){
+		$tsql12 = "SELECT * FROM `agenсies`  WHERE `id` = '".$_POST["cf4"]."' ;"; 
+		$rezult12 = mysql_query($tsql12);
+		$rows12 = mysql_fetch_array($rezult12);
+		$otkuda = $_POST["cf"].' ('.$rows12['name'].')' ;
+		}
 if ($ci)
 {
 	$tsql = "select * from clients where id = ".mysql_escape_string($ci).";";
@@ -98,6 +105,11 @@ if ($ci)
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$_POST["ce"].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">Откуда</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$otkuda.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+		
 
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по мероприятию</th>'.chr(10);

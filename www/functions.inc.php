@@ -592,7 +592,7 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 							<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 							<td  class = "'.$aclass.'">'.$items[$i]["price"].'</td>
 							<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
-							<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
+							<td  class = "'.$aclass.'"><textarea dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></textarea></td>
 							<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 			echo '</tr>';					
 		}
@@ -636,7 +636,7 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 					<td  class = "'.$aclass.'">'.$item["price"].'</td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" readonly="readonly" name="quant" id="quant'.$items[$i]["id"].'" value="'.$item["num"].'" class="quant" size="1"></td>
-					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  name = "note" readonly="readonly" id="note'.$items[$i]["id"].'" value="'.$item["note"].'" type="text" class="note"></td>
+					<td  class = "'.$aclass.'"><textarea dishid="'.$items[$i]["dishid"].'"  name = "note" readonly="readonly" id="note'.$items[$i]["id"].'" value="" type="text" class="note">'.$item["note"].'</textarea></td>
 					<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-primary '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Удалить</button></td>';
 				echo '</tr>';					
 			}
@@ -649,7 +649,7 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 					<td  class = "'.$aclass.'">'.$items[$i]["price"].'</td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
-					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></td>
+					<td  class = "'.$aclass.'"><textarea dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></textarea></td>
 					<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
 				echo '</tr>';					
 				}
@@ -711,7 +711,7 @@ $tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.e
 		 FROM orders o, users u, clients c, hall h
 		 WHERE o.id = ".$orderid." AND  o.creatorid = u.id AND o.clientid = c.id AND o.hallid = h.id";
 		 
-$tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, o.hallid, o.guestcount, o.type, o.comment
+$tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.email, c.phone, c.otkuda, c.agencyname, o.hallid, o.guestcount, o.type, o.comment
 		 FROM orders o, users u, clients c
 		 WHERE o.id = ".$orderid." AND  o.creatorid = u.id AND o.clientid = c.id";
 		 
@@ -728,7 +728,14 @@ $rows = mysql_fetch_array($rezult);
 		$rows11 = mysql_fetch_array($rezult11);
 		$hallname =$rows11['name'] ;
 		}
-
+$otkuda = $rows['otkuda'];
+	if($rows['otkuda'] == 'От Агентства'){
+		$tsql12 = "SELECT * FROM `agenсies`  WHERE `id` = '".$rows['agencyname']."' ;"; 
+		$rezult12 = mysql_query($tsql12);
+		$rows12 = mysql_fetch_array($rezult12);
+		$otkuda = $rows['otkuda'].' ('.$rows12['name'].')' ;
+		}
+		
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).' class="report_section" class="report_section"">Информация по клиенту</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
@@ -750,6 +757,13 @@ if($forwho != "food" & $forwho != "drink")
 		$body_out = $body_out.'<td  colspan="'.$cs1.'">E-mail</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['email'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
+		
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs1.'">Откуда</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$otkuda.'</td>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+		
+
 }
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по мероприятию</th>'.chr(10);
