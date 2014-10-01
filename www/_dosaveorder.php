@@ -265,16 +265,16 @@ if (@$ci)
 	$tsql = "SELECT LAST_INSERT_ID() from orders;";
 	$r_order = mysql_query($tsql);
 	$row_order = mysql_fetch_array($r_order);
-	$oi2 = $row_order[0];
-	$oi = $oi2;
-	if ($oi2>0) {
+	$oi = $row_order[0];
+	$oi = $oi;
+	if ($oi>0) {
 		//υσι
 	} else {
 		echo "ERR:3=" . mysql_error();
 	}
 }
 
-if ($oi2>0) {
+if (($oi>0) && (!$ce)) {
 	if (@$_POST["dd"]) {
 	$dishes = json_decode($_POST["dd"],true);
 
@@ -285,7 +285,7 @@ if ($oi2>0) {
 		if (mysql_num_rows($r_dishes)>0)
 		{
 			$row_dishes = mysql_fetch_array($r_dishes);
-			$tsql = "insert into dishes_in_orders (orderid,dishid,price,num,note) values (".mysql_real_escape_string($oi2).",
+			$tsql = "insert into dishes_in_orders (orderid,dishid,price,num,note) values (".mysql_real_escape_string($oi).",
 			'".mysql_real_escape_string($row_dishes["id"])."',
 			'".mysql_real_escape_string($row_dishes["price"])."',
 			'".mysql_real_escape_string($dd["quant"])."',
@@ -315,7 +315,7 @@ if ($oi2>0) {
 		if (mysql_num_rows($r_services)>0)
 		{
 			$row_services = mysql_fetch_array($r_services);
-			$tsql = "insert into services_in_orders (orderid,serviceid,price,discont,num,comment) values (".mysql_real_escape_string($oi2).",
+			$tsql = "insert into services_in_orders (orderid,serviceid,price,discont,num,comment) values (".mysql_real_escape_string($oi).",
 			'".mysql_real_escape_string($row_services["id"])."',
 			'".mysql_real_escape_string($ss["priceserv"])."',
 			'".mysql_real_escape_string($ss["discont"])."',
@@ -355,12 +355,12 @@ if ($oi2>0) {
 	foreach($tables as $i=>$tt1)
 	{
 	
-			$tsql = "insert into tables_in_orders (orderid,tableid) values ('".$oi2."','".$i."');";		
+			$tsql = "insert into tables_in_orders (orderid,tableid) values ('".$oi."','".$i."');";		
 
 			$r_order = mysql_query($tsql);			
 			if (mysql_error()) die("ERR:8=" .$tsql);			
 
-		$tsql = "UPDATE  `tables_on_date` SET `orderid` = '".$oi2."' WHERE `id` = '".$i."';";		
+		$tsql = "UPDATE  `tables_on_date` SET `orderid` = '".$oi."' WHERE `id` = '".$i."';";		
 
 			$r_order = mysql_query($tsql);			
 			if (mysql_error()) die("ERR:8=" .$tsql);			
@@ -368,8 +368,8 @@ if ($oi2>0) {
 	}
 
 }
-if(	$neworder == 1) 	orders_history($oi2,'1',0);
-if(	$neworder == 0) 	orders_history($oi2,'4',0);
+if(	$neworder == 1) 	orders_history($oi,'1',0);
+if(	$neworder == 0) 	orders_history($oi,'4',0);
 	
 	echo "OK:".$oi;
 }
