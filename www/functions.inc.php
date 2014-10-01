@@ -31,7 +31,7 @@ function dishgetchangetype($id, $orderid)
 {
 	if (!@$orderid) return 0;
 	//$tsql = "SELECT o.createdate, do.dishid from dishes_in_orders do left join orders o on do.orderid=o.id where do.id=" . $id ;
-	$tsql = "SELECT * from dishes_history dh left join dishes_in_orders do on dh.dishid = do.dishid left join orders o on do.orderid=o.id where o.id=" . $orderid . " and dh.id=" . $id ;
+	$tsql = "SELECT * from dishes_history dh left join dishes_in_orders do on dh.dishid = do.dishid left join orders o on do.orderid=o.id where o.id=" . $orderid . " and dh.id=" . $id . "" ;
 	//echo $tsql;
 	//die(0);
 	$rez = mysql_query($tsql);
@@ -44,6 +44,31 @@ function dishgetchangetype($id, $orderid)
 		if (mysql_num_rows($rez2)>1)
 		{
 			return mysql_num_rows($rez2);
+		}
+		return 0;
+	}
+	return 0;
+}
+
+function dishgetchangedata($id, $orderid)
+{
+	if (!@$orderid) return 0;
+	//$tsql = "SELECT o.createdate, do.dishid from dishes_in_orders do left join orders o on do.orderid=o.id where do.id=" . $id ;
+	$tsql = "SELECT * from dishes_history dh left join dishes_in_orders do on dh.dishid = do.dishid left join orders o on do.orderid=o.id where o.id=" . $orderid . " and dh.id=" . $id . " AND (CONCAT(',',dh.changes) LIKE '%,5,%' OR CONCAT(',',dh.changes) LIKE '%,1,%' ) " ;
+	//echo $tsql;
+	//die(0);
+	$rez = mysql_query($tsql);
+	if (mysql_num_rows($rez)>0)
+	{
+		$row = mysql_fetch_array($rez);
+		$tsql2 = "SELECT * from dishes_history where dishid=" . $row["dishid"] . " and kogda>'" .$row["createdate"]. "'  AND (CONCAT(',',changes) LIKE '%,5,%' OR CONCAT(',',changes) LIKE '%,1,%' )  order by kogda desc limit 0,1";
+		//echo $tsql2;
+		$rez2 = mysql_query($tsql2);
+		if (mysql_num_rows($rez2)>0)
+		{
+			$row2 = mysql_fetch_array($rez2);
+			if($row2['changes'] == '1,') return 'Удалено в архив '.$row2['kogda'] ;
+			if($row2['changes'] == '5,') return 'Старая цена: '.$row2['price'] ;
 		}
 		return 0;
 	}
@@ -326,7 +351,8 @@ $class =  '';
 							{
 								if (dishgetchangetype($items[$i]["id"],$orderid)>0)
 								{
-									$output['print'] = @$output['print'] . "<br><font color=red><small>* у блюда произошли изменения</small></font>";
+									
+									$output['print'] = @$output['print'] . "<br><font color=red><small>* изменения ".dishgetchangedata($items[$i]["id"],$orderid)."</small></font>";
 								}
 							}
 								$output['print'] = @$output['print'].'</td>';
@@ -430,6 +456,7 @@ return $dish;
 
 function print_dishes_for_arhiv($items,$sectionid,$isdrink,$type)
 {
+global $changes;
 $output = Array();
 $output['sum'] = 0;
 $sectionid = substr($sectionid,1);
@@ -447,12 +474,18 @@ $class =  '';
 			if ($cnt == $xxx*2) {$class =  ' class="second_row"';}
 			if($items[$i]["title"])
 				{
+				$valchanges = '';
+				$numchanges = explode(",", substr($items[$i]["changes"],0,strlen($items[$i]["changes"]) -1));
+				foreach($numchanges as $chi => $chval)
+				{
+					$valchanges .=$changes[$chval].','; 
+				}				
 					$output['print'] = @$output['print'].'<tr'.$class.'>
 							<td><span id="dish_name'.$items[$i]["dishid"].'">'.$items[$i]["title"].'</span></td>';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["description"].'</td>';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["price"].'</td>';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["weight"].'</td>';
-							$output['print'] = @$output['print'].'<td>'.$items[$i]["changes"].'</td>';
+							$output['print'] = @$output['print'].'<td>'.$valchanges.'</td>';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["kogda"].'</td>';
 							if($type == '0') $output['print'] = @$output['print'].'<td><button  class = "btn btn-primary" type="button" name="dishtomenu" dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'"   menuid="'.$menuid.'"  sectionid="'.$items[$i]["sectionid"].'" title="Вернуть в меню">В меню</button></td>';
 							$output['print'] = @$output['print'].'</tr>';
@@ -641,7 +674,7 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 				echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>' . $item["dname"];
 				if ($items[$i]["isactive"]!=1) 
 				{
-					echo "<br><font color=red><small>* у блюда произошли изменения</small></font>";
+					echo "<br><font color=red><small>* изменения ".dishgetchangedata($items[$i]["id"],$orderid)."</small></font>";
 				}
 				echo '</span></td>
 					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>

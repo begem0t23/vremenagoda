@@ -253,7 +253,7 @@ $otkazdate = $_POST['otkazdate'];
 			$insert = "INSERT INTO `canceledorders` (`id`,`orderid`,  `userid`, `reason`, `datetime`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$reason."', NOW() ;";
 			mysql_query($insert);
 
-			orders_history($orderid,'13',0);
+			orders_history($orderid,'24',9);
 			echo 'yes';
 }
 
@@ -2127,7 +2127,23 @@ $subject = 'Заказ Банкета в ресторане Времена Го�
 		$insert="INSERT INTO `emails` (`id`, `orderid`, `userid`, `email`, `copy`, `subject`, `body`, `date`,`filename`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$email."', '".$copy."', '".$subject."', '".$mess."', NOW(), '".$filename."') ;";
 		mysql_query($insert);
 
-			orders_history($orderid,'6',0);
+		orders_history($orderid,'6',0);
+
+
+
+			$sql = "SELECT * FROM `orders`  WHERE `id` = '".$orderid."' ;";
+			$rez = mysql_query($sql);
+			$row = mysql_fetch_array($rez);
+			$procstatus = $row['procstatus'];
+
+			if($procstatus == 0) 
+			{
+			$update = "UPDATE `orders` SET `procstatus` = '1'  WHERE `id` = '".$orderid."' ;";
+			mysql_query($update);
+			
+			orders_history($orderid,'24',1);
+			}
+
 		echo 'yes';
 }
 
@@ -2155,6 +2171,10 @@ if ($type == 0)
 	$sqltype = " AND menu = '0' AND isactive > 0 ";
 }
 
+if ($type == 99) 
+{
+	$sqltype = " AND (CONCAT(',',`changes`) LIKE '%,5,%' OR CONCAT(',',`changes`) LIKE '%,6,%'  OR CONCAT(',',`changes`) LIKE '%,7,%'  OR CONCAT(',',`changes`) LIKE '%,8,%' ) ";
+}
 global $months;
 $sql1 = "SELECT DISTINCT YEAR(`kogda`) AS `year` FROM `dishes_history` WHERE `id` > 0 ".$sqltype;
 $rezult1 = mysql_query($sql1);
@@ -2234,6 +2254,10 @@ if ($type == 0)
 	$sqltype = " and menu = '0' AND isactive > 0 ";
 }
 
+if ($type == 99) 
+{
+	$sqltype = " AND (CONCAT(',',`changes`) LIKE '%,5,%' OR CONCAT(',',`changes`) LIKE '%,6,%'  OR CONCAT(',',`changes`) LIKE '%,7,%'  OR CONCAT(',',`changes`) LIKE '%,8,%' ) ";
+}
 
 $addsql = $sqltype.$sqldate;
 

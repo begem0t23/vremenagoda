@@ -232,7 +232,7 @@ else
 			<div id="drink2weight"> Напитки: 0г/0г</div>
 		</span>
 <?php
-							echo  '<button class=" btn btn-primary" type="button" sectionid="101" name="editdish"  id="0" title="Добавиь заказное блюдо">Заказное блюдо</button>'.chr(10);
+							//echo  '<button class=" btn btn-primary" type="button" sectionid="101" name="editdish"  id="0" title="Добавиь заказное блюдо">Заказное блюдо</button>'.chr(10);
 
 	//сборка массива секций с блюдами для конкретного меню
 	$tsql = "select * from menus where `id` ='1';";
@@ -416,8 +416,8 @@ else
 		</span>
 
 <?php	
-							echo  '<button class=" btn btn-primary" type="button" sectionid="102" name="editdish"  id="0" title="Добавиь специальный спиртной напиток">Заказной спиртной напиток</button>'.chr(10);
-							echo  '<button class=" btn btn-primary" type="button" sectionid="103" name="editdish"  id="0" title="Добавиь специальное блюдо">Заказной безалкогольный напиток</button>'.chr(10);
+							//echo  '<button class=" btn btn-primary" type="button" sectionid="102" name="editdish"  id="0" title="Добавиь специальный спиртной напиток">Заказной спиртной напиток</button>'.chr(10);
+							//echo  '<button class=" btn btn-primary" type="button" sectionid="103" name="editdish"  id="0" title="Добавиь специальное блюдо">Заказной безалкогольный напиток</button>'.chr(10);
 
 	//сборка массива секций с блюдами для конкретного меню
 	$tsql = "select * from menus where `id` ='2';";
