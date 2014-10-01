@@ -360,8 +360,8 @@ if ($oi>0) {
 	}
 
 }
-if(	$neworder == 1) 	orders_history($oi,'1');
-if(	$neworder == 0) 	orders_history($oi,'4');
+if(	$neworder == 1) 	orders_history($oi,'1',0);
+if(	$neworder == 0) 	orders_history($oi,'4',0);
 	
 	echo "OK:".$oi;
 }

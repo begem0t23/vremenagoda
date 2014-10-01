@@ -118,6 +118,24 @@ echo '
 
 }
 
+if ($rows['status'] == 8)
+{
+echo '
+<div class="input-group">
+<span class="input-group-addon nav-title"><span >Статус заказа</span></span>
+<select class="btn btn-primary nav-element"  onchange = "viewstatus();" id="stat1">
+<option value="8" class="btn  btn-primary">Выполнен</option>
+<option value="2" class="btn  btn-success">В работе</option>
+</select>
+</div>
+<div id="status_section"   style="display:none;"  class="btn btn-default small">
+<div class="input-group" >
+  <button class="btn btn-default" onclick="add_stat();" id="statadd">Сохранить</button>
+  <button class="btn btn-default right" onclick="cancel_stat();" id="statcancel">Отмена</button>
+</div>	
+</div>
+';}
+
 
 
 
@@ -463,6 +481,25 @@ fixedbotbar();
 
 <script type="text/javascript">
 
+function add_stat()
+{
+	orderid = $("#newpayment").attr('orderid');
+
+			$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'addstat', orderid:orderid, status:$("#stat1 :selected").val()}
+		})
+		.done(function( msg ) {
+				if(msg == 'yes'){
+				location.href="?view/"+orderid+"/";	
+					} else {
+				alert ('Что-то пошло не так. '+msg);
+				
+				}
+		});
+}
+
 function add_procstat()
 {
 	orderid = $("#newpayment").attr('orderid');
@@ -715,22 +752,8 @@ $(".report_client2")
     });
 	
   
-		$('table').delegate('button.view', 'click' ,function(){
-			location.href ="?view/="+$(this).closest('tr').children().first().html()+"/";
-		});
 
-   		$('table').delegate('button.edit', 'click' ,function(){
-			location.href ="?edit/"+$(this).closest('tr').children().first().html()+"/";
-		});
-
-    	$('table').delegate('button.events', 'click' ,function(){
-			location.href ="?events";
-		});
-		
-    	$('table').delegate('button.exit', 'click' ,function(){
-			location.href ="/?r=<?echo rand();?>";
-		});
-
+ 
      dialog = $( "#sendemail-form" ).dialog({
       autoOpen: false,
       height: 350,

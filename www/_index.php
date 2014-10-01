@@ -53,6 +53,10 @@ function get_orders(startdate,enddate)
       theme: 'blue',
        widgets: ['zebra','filter']
     });
+			$('table').delegate('button.view', 'click' ,function(){
+			location.href ="?view/"+$(this).closest('tr').children().first().html()+"/";
+		});
+
 					} else {
 				alert ('Что-то пошло не так. '+msg);
 				

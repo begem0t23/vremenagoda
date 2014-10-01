@@ -224,6 +224,22 @@ $procstatus = $_POST['procstatus'];
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
+if ($_POST['operation'] == 'addstat') 
+{
+$orderid = $_POST['orderid'];
+$status = $_POST['status'];
+
+
+			$update = "UPDATE `orders` SET  `status` = '".$status."'  WHERE `id` = '".$orderid."' ;";
+			mysql_query($update);
+			
+
+			orders_history($orderid,'22',$status);
+			echo 'yes';
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
 if ($_POST['operation'] == 'addotkaz') 
 {
 $orderid = $_POST['orderid'];
@@ -759,15 +775,27 @@ if ($_POST['operation'] == 'getallorders')
 		
 			$start = $startdate;
 			$changes = '';
+			$color = '#777777';
+			
 		if(anydishgetchangetype($rows01['id']) > 0) $changes .= ' (изменения)';
-		if($rows01['procstatus'] == 9) $changes .= ' (отказ)';
-		if($rows01['status'] == 1) $changes .= ' (передается)';
+		
+		if($rows01['managerid'] == $_SESSION['curuserid'])
+		{
+			if($rows01['status'] == 1) $color = '#f0ad4e';
+			if($rows01['status'] == 2) $color = '#449d44';
+			if($rows01['status'] == 8) $color = '#428bca';
+		if($rows01['procstatus'] == 9) $color = '#c9302c';
+		
+		
+		}
+		
 		$ech=$ech.'{'.chr(10);
 		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
-		$ech=$ech.'"title": "'.$rows01['name'].$changes.'",'.chr(10);
+		$ech=$ech.'"title": "'.$rows01['id'].'. '.$rows01['name'].$changes.'",'.chr(10);
 		$ech=$ech.'"start": "'.$start.'",'.chr(10);
 		$ech=$ech.'"todo": "'.$rows01['comment'].'",'.chr(10);
 		$ech=$ech.'"url": "?view/'.$rows01['id'].'/",'.chr(10);
+		$ech=$ech.'"color": "'.$color.'",'.chr(10);
 		$ech=$ech.'"date": "'.$start.'"'.chr(10);
 		
 		$ech=$ech."},".chr(10);
