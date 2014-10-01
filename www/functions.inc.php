@@ -5,9 +5,9 @@
 //date_default_timezone_set ("Europe/Moscow");
 
 
-function orders_history($orderid,$operationid)
+function orders_history($orderid,$operationid,$statusid)
 {
-				$insert = "INSERT INTO `orders_history` (`id`,`orderid`, `operationid`, `datetime`, `userid`) VALUES (NULL, '".$orderid."', '".$operationid."', NOW(), '".$_SESSION["curuserid"]."') ;";
+				$insert = "INSERT INTO `orders_history` (`id`,`orderid`, `operationid`, `statusid`, `datetime`, `userid`) VALUES (NULL, '".$orderid."', '".$operationid."','".$statusid."', NOW(), '".$_SESSION["curuserid"]."') ;";
 			mysql_query($insert);
 			
 }
@@ -1565,6 +1565,8 @@ $button3 = '<form action="#" method="POST" >
 function table($tname, $tcols, $thead, $tbody, $tsql, $tdate, $tbuts )
 {
 global $orderstatus;
+global $procstatus;
+global $paymentstatus;
 $curdate = new DateTime("now");
 $curdate = $curdate->format('Y-m-d');
 
@@ -1656,6 +1658,14 @@ if ( mysql_num_rows($rezult) > 0){
 		if ($val == 'orderstatus') { 
 
 		$curval = $orderstatus[$curval];
+		}
+		if ($val == 'procstatus') { 
+
+		$curval = $procstatus[$curval];
+		}
+		if ($val == 'paystatus') { 
+
+		$curval = $paymentstatus[$curval];
 		}
 		
 		

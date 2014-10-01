@@ -33,14 +33,13 @@
 
 </style>
 <script>
-function normal_height()
+function normal_height(tab)
   {
   
- 
-			
- newh1 = $( "#calendar" ).height() + 30;
-newh2 = $( "#list" ).height() + 30;
-$( ".stContainer" ).css("height", newh1 + newh2 +"px")
+newh = $( "#eventview"+tab ).height() + 30;
+
+$( ".stContainer" ).css("height", newh +"px")
+$( ".stMain" ).css("height", newh +"px")
 
  }
  
@@ -101,7 +100,7 @@ $('#tabs2').smartTab({
         }
     },
 	    eventAfterRender: function(event, element) {
- normal_height();			
+		
  },
 			selectable: false,
 			selectHelper: true,
@@ -201,7 +200,7 @@ $(".report_client2")
 	var orderid = $("#newpayment").attr('orderid');
 	
 	$('#calendar').fullCalendar( 'refetchEvents' );	
-	normal_height();
+	normal_height(1);
 });
 	
 	
@@ -287,8 +286,8 @@ fixednavbar();
  
    <div id="tabs2" style="min-width: 700px; width: 100%;">
     <ul>
-	<li><a href="#eventview1" onclick="$('#calendar').fullCalendar( 'refetchEvents' );normal_height();			">Календарь</a></li>
-	<li><a href="#eventview2" onclick="normal_height();" >Список</a></li>
+	<li><a href="#eventview1" onclick="$('#calendar').fullCalendar( 'refetchEvents' );normal_height(1);">Календарь</a></li>
+	<li><a href="#eventview2" onclick="normal_height(2);" >Список</a></li>
 	</ul>
 	<div id="eventview1" >
 	<div id='calendar'></div>
@@ -300,9 +299,9 @@ fixednavbar();
 			table(
 		"Заказы ".$_SESSION["curusername"], //заголовок
 		"50,100,200,200,100",	//ширина колонок
-		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа",	//заголовки
-		"id,realname,eventdate,name,orderstatus",	//поля
-		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name 
+		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа, Статус Производства, Платежный Статус",	//заголовки
+		"id,realname,eventdate,name,orderstatus,procstatus,paystatus",	//поля
+		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name, o.procstatus, o.paystatus 
 		 FROM orders o, users u, clients c 
 		 WHERE o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
 		"", //период (поле,начало,конец)
@@ -312,9 +311,9 @@ fixednavbar();
 		table(
 		"Заказы других менеджеров", //заголовок
 		"50,100,200,200,100",	//ширина колонок
-		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа",	//заголовки
+		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа, Статус Производства, Платежный Статус",	//заголовки
 		"id,realname,eventdate,name,orderstatus",	//поля
-		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name
+		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name, o.procstatus, o.paystatus
 		 FROM orders o, users u, clients c 
 		 WHERE  o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
 		"", //период (поле,начало,конец)

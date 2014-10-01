@@ -122,8 +122,66 @@ $paycomm = $_POST['paycomm'];
 			$insert = "INSERT INTO `payments_in_orders` (`id`,`orderid`, `summa`, `method`, `ispayout`, `comment`, `createdby`,`paymentdate`,`createdate`) VALUES (NULL, '".$orderid."', '".$paysum."', '".$paymeth."', '".$ispayout."', '".$paycomm."', '".$_SESSION["curuserid"]."', '".convert_date($paydate)."', NOW());";
 			mysql_query($insert);
 
-			if ($ispayout == 0) orders_history($orderid,'5');
-			if ($ispayout == 1) orders_history($orderid,'18');
+			$sql = "SELECT * FROM `orders`  WHERE `id` = '".$orderid."' ;";
+			$rez = mysql_query($sql);
+			$row = mysql_fetch_array($rez);
+			$paystatus = $row['paystatus'];
+
+			if ($ispayout == 0) 
+			{
+				if($paystatus == 0) 
+				{
+					$paystatus = 1;
+				orders_history($orderid,'23',1);	
+				}
+				orders_history($orderid,'5',0);
+			}
+			if ($ispayout == 1) 
+			{
+				if($paystatus == 6) {
+					$paystatus = 7;
+				orders_history($orderid,'23',7);	
+				}
+				orders_history($orderid,'18',0);
+			}
+			
+				$update = "UPDATE `orders` SET  `paystatus` = '".$paystatus."'  WHERE `id` = '".$orderid."' ;";
+				mysql_query($update);
+				
+			
+			echo 'yes';
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
+if ($_POST['operation'] == 'addpaystat') 
+{
+$orderid = $_POST['orderid'];
+$paystatus = $_POST['paystatus'];
+
+
+			$update = "UPDATE `orders` SET  `paystatus` = '".$paystatus."'  WHERE `id` = '".$orderid."' ;";
+			mysql_query($update);
+			
+
+			orders_history($orderid,'23',$paystatus);
+			echo 'yes';
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
+if ($_POST['operation'] == 'addprocstat') 
+{
+$orderid = $_POST['orderid'];
+$procstatus = $_POST['procstatus'];
+
+
+			$update = "UPDATE `orders` SET  `procstatus` = '".$procstatus."'  WHERE `id` = '".$orderid."' ;";
+			mysql_query($update);
+			
+
+			orders_history($orderid,'24',$procstatus);
 			echo 'yes';
 }
 
@@ -136,13 +194,13 @@ $otkazreason = $_POST['otkazreason'];
 $otkazdate = $_POST['otkazdate'];
 
 
-			$update = "UPDATE `orders` SET `status` = '0' WHERE `id` = '".$orderid."' ;";
+			$update = "UPDATE `orders` SET `procstatus` = '9', `paystatus` = '6'  WHERE `id` = '".$orderid."' ;";
 			mysql_query($update);
 			
 			$insert = "INSERT INTO `canceledorders` (`id`,`orderid`,  `userid`, `reason`, `datetime`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$reason."', NOW() ;";
 			mysql_query($insert);
 
-			orders_history($orderid,'13');
+			orders_history($orderid,'13',0);
 			echo 'yes';
 }
 
@@ -157,10 +215,24 @@ $newuserid = $_POST['newuserid'];
 			$update = "UPDATE `orders` SET `status` = '1', `managerid` = '".$newuserid."' WHERE `id` = '".$orderid."' ;";
 			mysql_query($update);
 
-			$insert = "INSERT INTO `delegatedorders` (`id`,`orderid`,  `fromuserid`, `touserid`, `reason`, `datetime`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$newuserid."','".$reason."', NOW() ;";
+			$insert = "INSERT INTO `delegatedorders` (`id`,`orderid`,  `fromuserid`, `touserid`, `reason`, `datetime`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$newuserid."','".$delegatereason."', NOW()) ;";
 			mysql_query($insert);
 
-			orders_history($orderid,'7');
+			orders_history($orderid,'7',0);
+
+			echo 'yes';
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
+if ($_POST['operation'] == 'delegateok') 
+{
+$orderid = $_POST['orderid'];
+
+			$update = "UPDATE `orders` SET `status` = '2' WHERE `id` = '".$orderid."' ;";
+			mysql_query($update);
+
+			orders_history($orderid,'8',0);
 
 			echo 'yes';
 }
@@ -651,7 +723,7 @@ if ($_POST['operation'] == 'getallorders')
 			$start = $startdate;
 			$changes = '';
 		if(anydishgetchangetype($rows01['id']) > 0) $changes = ' (изменения)';
-		if($rows01['status'] == 0) $changes = ' (отказ)';
+		if($rows01['procstatus'] == 9) $changes = ' (отказ)';
 		$ech=$ech.'{'.chr(10);
 		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
 		$ech=$ech.'"title": "'.$rows01['name'].$changes.'",'.chr(10);
@@ -1989,7 +2061,7 @@ $subject = 'Заказ Банкета в ресторане Времена Го�
 		$insert="INSERT INTO `emails` (`id`, `orderid`, `userid`, `email`, `copy`, `subject`, `body`, `date`,`filename`) VALUES (NULL, '".$orderid."', '".$_SESSION["curuserid"]."', '".$email."', '".$copy."', '".$subject."', '".$mess."', NOW(), '".$filename."') ;";
 		mysql_query($insert);
 
-			orders_history($orderid,'6');
+			orders_history($orderid,'6',0);
 		echo 'yes';
 }
 
