@@ -791,7 +791,7 @@ if ($_POST['operation'] == 'getallorders')
 		
 		$ech=$ech.'{'.chr(10);
 		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
-		$ech=$ech.'"title": "'.$rows01['id'].'. '.$rows01['name'].$changes.'",'.chr(10);
+		$ech=$ech.'"title": "'.$rows01['id'].'. '.$rows01['name'].' ('.$rows01['guestcount'].')",'.chr(10);
 		$ech=$ech.'"start": "'.$start.'",'.chr(10);
 		$ech=$ech.'"todo": "'.$rows01['comment'].'",'.chr(10);
 		$ech=$ech.'"url": "?view/'.$rows01['id'].'/",'.chr(10);
