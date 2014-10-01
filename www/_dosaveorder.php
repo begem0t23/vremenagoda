@@ -98,7 +98,7 @@ else
 				$dishes = json_decode($_POST["dd"],true);
 				foreach($dishes as $i=>$dd)
 				{
-					$tsql = "select * from dishes where id = ".mysql_escape_string($i).";";
+					$tsql = "select * from dishes_history where id = ".mysql_escape_string($i).";";
 					$r_dishes = mysql_query($tsql);
 					if (mysql_num_rows($r_dishes)>0)
 					{
@@ -118,7 +118,7 @@ else
 					}
 					else
 					{
-						die("ERR:4=не найден идентификатор блюда");
+						die("ERR:4=not found dishid".$oi);
 					}
 				}
 				}
@@ -280,7 +280,7 @@ if ($oi2>0) {
 
 	foreach($dishes as $i=>$dd)
 	{
-		$tsql = "select * from dishes where id = ".mysql_escape_string($i).";";
+		$tsql = "select * from dishes_history where id = ".mysql_escape_string($i).";";
 		$r_dishes = mysql_query($tsql);
 		if (mysql_num_rows($r_dishes)>0)
 		{
@@ -300,7 +300,7 @@ if ($oi2>0) {
 		}
 		else
 		{
-			die("ERR:4=не найден идентификатор блюда");
+						die("ERR:4=not found dishid".$oi);
 		}
 	}
 	}
