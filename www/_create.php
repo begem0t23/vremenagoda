@@ -145,8 +145,7 @@ fixednavbar();
 			<div id="drink2weight"> Напитки: 0г/0г</div>
 		</span>
 <?php
-								echo  '<button class=" btn btn-primary" type="button" sectionid="0" name="editdish"  id="0" title="Добавиь специальное блюдо">Специальное блюдо</button>'.chr(10);
-
+	
 	//сборка массива секций с блюдами для конкретного меню
 	$tsql = "select * from menus where `id` ='1';";
 	$r_menutype = mysql_query($tsql);

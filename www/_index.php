@@ -33,15 +33,57 @@
 
 </style>
 <script>
-function normal_height(tab)
-  {
-  
-newh = $( "#eventview"+tab ).height() + 30;
 
+
+function get_orders(startdate,enddate)
+{
+
+			$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'getordersbydate', startdate:startdate, enddate:enddate}
+		})
+		.done(function( msg ) {
+				if(msg){
+				$("#list").html(msg);
+				
+				  $(".baseview")
+  .tablesorter(
+  {
+      theme: 'blue',
+       widgets: ['zebra','filter']
+    });
+					} else {
+				alert ('Что-то пошло не так. '+msg);
+				
+				}
+		});
+}
+
+function curdate()
+{
+ var moment = $('#calendar').fullCalendar('getDate');
+	month = moment.month() +1;
+	year = moment.year();
+	 $("#linkeventview1").html("Список Заказов "+$(".fc-center h2").html() );
+	 $("#linkeventview2").html("Календарь Заказов "+$(".fc-center h2").html() );
+	 dayCount = new Date(year, month , 0).getDate();
+	 if (month < 10) month = '0'+month;
+	 start = year+'-'+month+'-01';
+	 end = year+'-'+month+'-'+dayCount;
+	 		get_orders(start,end);
+
+	}
+	
+
+	function normal_height(tab)
+{
+newh =550;
+if (tab == 2) newh = $( "#eventview"+tab ).height() + 30;
 $( ".stContainer" ).css("height", newh +"px")
 $( ".stMain" ).css("height", newh +"px")
 
- }
+  }
  
 	$(document).ready(function() {
 	
@@ -152,7 +194,11 @@ $('#tabs2').smartTab({
         // put your options and callbacks here
     });
 	
-	
+			$( document ).on( "click", ".fc-button", function() {
+			curdate();
+			normal_height(1);
+			});
+curdate();
 	
 	$('#newpaydate').datepicker({ maxDate: "+0D" });
 $('#otkazdate').datepicker({ maxDate: "+0D" });
@@ -171,30 +217,14 @@ $(".report_client2")
        widgets: ['zebra']
     });
 	
-  $(".baseview")
-  .tablesorter(
-  {
-      theme: 'blue',
-       widgets: ['zebra','filter']
-    });
+
 	
   
 		$('table').delegate('button.view', 'click' ,function(){
 			location.href ="?view/"+$(this).closest('tr').children().first().html()+"/";
 		});
 
-   		$('table').delegate('button.edit', 'click' ,function(){
-			location.href ="?edit/"+$(this).closest('tr').children().first().html()+"/";
-		});
-
-    	$('table').delegate('button.events', 'click' ,function(){
-			location.href ="?events";
-		});
-		
-    	$('table').delegate('button.exit', 'click' ,function(){
-			location.href ="/?r=<?echo rand();?>";
-		});
-
+   
 
  
 	var orderid = $("#newpayment").attr('orderid');
@@ -286,46 +316,14 @@ fixednavbar();
  
    <div id="tabs2" style="min-width: 700px; width: 100%;">
     <ul>
-	<li><a href="#eventview1" onclick="$('#calendar').fullCalendar( 'refetchEvents' );normal_height(1);">Календарь</a></li>
-	<li><a href="#eventview2" onclick="normal_height(2);" >Список</a></li>
+	<li><a  style="font-size:18px ; line-height:1.2"  href="#eventview1" onclick="$('#calendar').fullCalendar( 'refetchEvents' );normal_height(1);"  id="linkeventview2">Календарь Заказов</a></li>
+	<li ><a   style="font-size:18px ; line-height:1.2" href="#eventview2" onclick="normal_height(2);" id="linkeventview1">Список Заказов</a></li>
 	</ul>
 	<div id="eventview1" >
 	<div id='calendar'></div>
 	</div>
 	<div id="eventview2" style="width:100%;">
 	<div id='list'>
-	
-	<?php
-			table(
-		"Заказы ".$_SESSION["curusername"], //заголовок
-		"50,100,200,200,100",	//ширина колонок
-		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа, Статус Производства, Платежный Статус",	//заголовки
-		"id,realname,eventdate,name,orderstatus,procstatus,paystatus",	//поля
-		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name, o.procstatus, o.paystatus 
-		 FROM orders o, users u, clients c 
-		 WHERE o.managerid = ".$_SESSION["curuserid"]." AND o.managerid = u.id AND o.clientid = c.id", //sql кроме даты
-		"", //период (поле,начало,конец)
-		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
-		);
-		
-		table(
-		"Заказы других менеджеров", //заголовок
-		"50,100,200,200,100",	//ширина колонок
-		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа, Статус Производства, Платежный Статус",	//заголовки
-		"id,realname,eventdate,name,orderstatus,procstatus,paystatus",	//поля
-		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name, o.procstatus, o.paystatus
-		 FROM orders o, users u, clients c 
-		 WHERE  o.managerid != ".$_SESSION["curuserid"]." AND o.managerid = u.id AND o.clientid = c.id", //sql кроме даты 
-		"", //период (поле,начало,конец)
-		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
-		);
-		
-		?>
-		
-		
-	
-	
-	
 	
 	</div>
 	</div>

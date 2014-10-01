@@ -1577,16 +1577,9 @@ if($tdate) {
 
 $date = explode(',',$tdate);
 
-$date1 = date('Y-m-d',strtotime($curdate)-24*3600*$date[1]);
-$date2 = date('Y-m-d',strtotime($curdate)+24*3600*$date[2]);
 
-if (strtotime($date1) < strtotime($date2)) {
-$fromdate = $date1;
-$todate = $date2;
-} else {
-$fromdate = $date2;
-$todate = $date1;
-}
+$fromdate = $date[1];
+$todate = $date[2];
 
 $sqldate = " AND ".$date[0]." >= '".$fromdate."' AND ".$date[0]." <= '".$todate."';";
 //echo $sqldate ;
