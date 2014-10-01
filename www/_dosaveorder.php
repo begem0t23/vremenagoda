@@ -274,7 +274,7 @@ if (@$ci)
 	}
 }
 
-if (($oi>0) && (!$ce)) {
+if (($oi>0) && (!$ec)) {
 	if (@$_POST["dd"]) {
 	$dishes = json_decode($_POST["dd"],true);
 
@@ -371,6 +371,6 @@ if (($oi>0) && (!$ce)) {
 if(	$neworder == 1) 	orders_history($oi,'1',0);
 if(	$neworder == 0) 	orders_history($oi,'4',0);
 	
-	echo "OK:".$oi;
 }
+	echo "OK:".$oi;
 ?>
