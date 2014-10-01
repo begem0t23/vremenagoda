@@ -303,7 +303,7 @@ fixednavbar();
 		"id,realname,eventdate,name,orderstatus,procstatus,paystatus",	//поля
 		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name, o.procstatus, o.paystatus 
 		 FROM orders o, users u, clients c 
-		 WHERE o.managerid = ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты
+		 WHERE o.managerid = ".$_SESSION["curuserid"]." AND o.managerid = u.id AND o.clientid = c.id", //sql кроме даты
 		"", //период (поле,начало,конец)
 		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
 		);
@@ -312,10 +312,10 @@ fixednavbar();
 		"Заказы других менеджеров", //заголовок
 		"50,100,200,200,100",	//ширина колонок
 		"Номер Заказа,Ответственный,Дата Банкета,Клиент,Статус Заказа, Статус Производства, Платежный Статус",	//заголовки
-		"id,realname,eventdate,name,orderstatus",	//поля
+		"id,realname,eventdate,name,orderstatus,procstatus,paystatus",	//поля
 		"SELECT o.id, o.eventdate, o.status orderstatus, u.realname, c.name, o.procstatus, o.paystatus
 		 FROM orders o, users u, clients c 
-		 WHERE  o.managerid != ".$_SESSION["curuserid"]." AND o.creatorid = u.id AND o.clientid = c.id", //sql кроме даты 
+		 WHERE  o.managerid != ".$_SESSION["curuserid"]." AND o.managerid = u.id AND o.clientid = c.id", //sql кроме даты 
 		"", //период (поле,начало,конец)
 		"view btn btn-primary,Просмотр заказа,Открыть"  //кнопки
 		);

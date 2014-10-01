@@ -722,8 +722,9 @@ if ($_POST['operation'] == 'getallorders')
 		
 			$start = $startdate;
 			$changes = '';
-		if(anydishgetchangetype($rows01['id']) > 0) $changes = ' (изменения)';
-		if($rows01['procstatus'] == 9) $changes = ' (отказ)';
+		if(anydishgetchangetype($rows01['id']) > 0) $changes .= ' (изменения)';
+		if($rows01['procstatus'] == 9) $changes .= ' (отказ)';
+		if($rows01['status'] == 1) $changes .= ' (передается)';
 		$ech=$ech.'{'.chr(10);
 		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
 		$ech=$ech.'"title": "'.$rows01['name'].$changes.'",'.chr(10);
