@@ -4,6 +4,9 @@
 		wfood = 0;
 		wdrink1 = 0;
 		wdrink2 = 0;
+		wfood0 = 0;
+		wdrink10 = 0;
+		wdrink20 = 0;
 		persons = $.cookie("guestcount") * 1;
 		if(persons > 0) 
 		{
@@ -30,6 +33,33 @@
 				}
 			});
 
+			$("#createform .btn-primary").each(function(){
+				if ($(this ).text() == 'Удалить') 
+				{
+
+					id = $(this).attr('id');
+					id = id.substr(7);
+					quant = $("#quant"+id).val();
+
+					if ($(this ).hasClass("weightfood"))
+					{
+						wfood0+=$("#weightfood"+id).html() * 1 * quant;
+					}
+					if ($(this ).hasClass("weight1drink"))
+					{
+						wdrink10+=$("#weightdrink"+id).html() * 1 * quant;
+					}
+					if ($(this ).hasClass("weight2drink"))
+					{
+						wdrink20+=$("#weightdrink"+id).html() * 1 * quant;
+					}
+				}
+			});
+
+		wfood -= wfood0;
+		wdrink1 -= wdrink10;
+		wdrink2 -= wdrink20;
+			
 			wfa = Number(wfood/persons).toFixed(2);
 			wfd1 = Number(wdrink1/persons).toFixed(2);
 			wfd2 = Number(wdrink2/persons).toFixed(2);
