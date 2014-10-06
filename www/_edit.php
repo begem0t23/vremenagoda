@@ -1502,6 +1502,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 		hallid = $(this).attr("hallid");
 		isfull = $(this).attr("isfull");
 	tabnum = $(this).html();
+
 			if($(this).hasClass("success"))
 			{
 					
@@ -1516,7 +1517,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					$("#hallplace-" +hallid +" .table:not(.element)").addClass("primary");
 				}
 					var tables="";
-					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
+					if ($.cookie("tables") != 'null') tables = $.cookie("tables");
 					if (tables)
 					{
 						var taball = $.parseJSON(tables);

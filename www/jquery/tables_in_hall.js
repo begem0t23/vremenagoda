@@ -615,22 +615,26 @@ element_resize(tabid, ui.size.width, ui.size.height);
 
 				//раскраска выбранных столов
 				tables = "";
-				if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
-
+				if ($.cookie("tables")  != 'null') tables = $.cookie("tables");
+									
 				if (tables) 
 				{
+				
 					var taball = $.parseJSON(tables);
 					$.each(taball, function(index, value) 
 					{
 						//console.log(index + " "+ value['tabnum']);
+
 						if (index)
 						{
+
+						
 							$("#table"+index).removeClass("success");
 							$("#table"+index).addClass("primary");
 						}					
 					});
 				}
-				
+
 				
 				if(place != 'report')
 				{
@@ -656,7 +660,7 @@ element_resize(tabid, ui.size.width, ui.size.height);
 				});
 				
 				checkhallselect(hallid);
-				
+
 				
 			 $.contextMenu({
 					selector: '.context-menu-one.success,.context-menu-one.primary', 
