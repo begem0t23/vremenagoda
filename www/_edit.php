@@ -137,7 +137,7 @@ if ($q[1]>0)
 		die("cant find order");
 	}
 	$row_order = mysql_fetch_array($r_order);
-	if ((($row_order["managerid"]!=$_SESSION["curuserid"]) && ($row_order["creatorid"]!=$_SESSION["curuserid"])) && ($_SESSION["curuserrole"]<8))
+	if (((($row_order["managerid"]!=$_SESSION["curuserid"]) && ($row_order["creatorid"]!=$_SESSION["curuserid"])) && ($_SESSION["curuserrole"]<8)) || ($_SESSION["curuserrole"]<5))
 	{
 			echo '</div></div>   <div class="container">
       <div class="page-header">
