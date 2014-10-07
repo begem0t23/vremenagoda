@@ -1778,12 +1778,19 @@ function fixednavbar()
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li <?php
+            <?
+			if ($_SESSION["curuserrole"]>1) {?>	<li <?php
 			if ($qq=="") echo 'class="active"';
 			?>><a href="/">Заказы</a></li>
+			<?
+			}
+			if ($_SESSION["curuserrole"]>1) {?>			
             <li <?php
 			if ($qq=="create") echo 'class="active"';
 			?>><a href="?create">Создать заказ</a></li>
+			<?
+			}
+			if ($_SESSION["curuserrole"]>5) {?>
             <li class="dropdown<?php
 			if ($qq=="profile") echo ' active"';
 			?>">
@@ -1793,7 +1800,17 @@ function fixednavbar()
                 <li><a href="?sections">Разделы</a></li>
                 <li><a href="?menus">Меню</a></li>
                 <li><a href="?uslugi">Услуги</a></li>
-               <li><a href="?users">Пользователи</a></li>
+               <?
+			   if ($_SESSION["curuserrole"]==9)
+			   {
+				echo '<li><a href="?users">Пользователи</a></li>';
+			   }
+			   else
+			   {
+				echo '<!--кнопка управления пользователями доступна только админу-->';
+				echo '<li class="disabled"><a href="#">Пользователи</a></li>';			   
+			   }
+			   ?>
                <li><a href="?halls">Залы</a></li>
                <li><a href="?agenstva">Агенства</a></li>
                 <!--<li><a href="#">Другие настройки</a></li>
@@ -1803,6 +1820,7 @@ function fixednavbar()
                 <li><a href="#">Другие настройки</a></li>-->
               </ul>
             </li>			
+			<?}?>
             <!--<li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Отчеты<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">

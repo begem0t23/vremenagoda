@@ -1,3 +1,6 @@
+<?
+if ($_SESSION["curuserrole"]<6) die("У вас нет прав на доступ к этому разделу");
+?>
 <<!DOCTYPE html>
 <html lang="ru">
   <head>

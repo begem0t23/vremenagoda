@@ -89,8 +89,8 @@ else
 				$r_order = mysql_query($tsql);
 				if (mysql_error()) die("ERR:1=" . mysql_error());
 				if (@$_POST["dd"]) {
-				$tsql = 'insert into `dishes_in_orders_history` (orderid,dishid,price,num,note)  
-						 SELECT orderid,dishid,price,num,note FROM `dishes_in_orders` WHERE orderid='.$oi;
+				$tsql = "insert into `dishes_in_orders_history` (orderid,dishid,price,num,note, userid)  
+						 SELECT orderid,dishid,price,num,note,'". mysql_real_escape_string($_SESSION["curuserid"]) ."' FROM `dishes_in_orders` WHERE orderid=".$oi;
 				$r_history = mysql_query($tsql);
 				if (mysql_error()) die("ERR:1=" . mysql_error());
 				$tsql = 'delete FROM `dishes_in_orders` WHERE orderid='.$oi.';';
@@ -124,16 +124,16 @@ else
 				}
 				else
 				{
-					$tsql = 'insert into `dishes_in_orders_history` (orderid,dishid,price,num,note)  
-							 SELECT orderid,dishid,price,num,note FROM `dishes_in_orders` WHERE orderid='.$oi.";";
+					$tsql = "insert into `dishes_in_orders_history` (orderid,dishid,price,num,note,userid)  
+							 SELECT orderid,dishid,price,num,note,'". mysql_real_escape_string($_SESSION["curuserid"]) ."' FROM `dishes_in_orders` WHERE orderid=".$oi.";";
 					$r_history = mysql_query($tsql);
 					if (mysql_error()) die("ERR:1=" . mysql_error());					
 					$tsql = 'delete FROM `dishes_in_orders` WHERE orderid='.$oi.';';
 					mysql_query($tsql);				
 				}
 				if (@$_POST["ss"]) {
-				$tsql = 'insert into `services_in_orders_history` (orderid,serviceid,price,discont,num,comment)  
-						 SELECT orderid,serviceid,price,discont,num,comment FROM `services_in_orders` WHERE orderid='.$oi.";";
+				$tsql = "insert into `services_in_orders_history` (orderid,serviceid,price,discont,num,comment,userid)  
+						 SELECT orderid,serviceid,price,discont,num,comment,'". mysql_real_escape_string($_SESSION["curuserid"]) ."' FROM `services_in_orders` WHERE orderid=".$oi.";";
 				$r_history = mysql_query($tsql);
 				if (mysql_error()) die("ERR:1=" . mysql_error());
 				$tsql = 'delete FROM `services_in_orders` WHERE orderid='.$oi.';';
@@ -183,8 +183,8 @@ else
 				}
 				else
 				{
-					$tsql = 'insert into `services_in_orders_history` (orderid,serviceid,price,discont,num,comment)  
-							 SELECT orderid,serviceid,price,discont,num,comment FROM `services_in_orders` WHERE orderid='.$oi;
+					$tsql = "insert into `services_in_orders_history` (orderid,serviceid,price,discont,num,comment,userid)  
+							 SELECT orderid,serviceid,price,discont,num,comment,'". mysql_real_escape_string($_SESSION["curuserid"]) ."' FROM `services_in_orders` WHERE orderid=".$oi;
 					$r_history = mysql_query($tsql);				
 					$tsql = 'delete FROM `services_in_orders` WHERE orderid='.$oi.';';
 					mysql_query($tsql);

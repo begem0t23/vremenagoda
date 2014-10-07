@@ -1,3 +1,6 @@
+<?
+if ($_SESSION["curuserrole"]!=9) die("Доступ к данному разделу предсотавлен Администратору");
+?>
 <<!DOCTYPE html>
 <html lang="ru">
   <head>
