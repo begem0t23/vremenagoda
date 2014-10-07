@@ -100,7 +100,8 @@ fixednavbar();
 
 if ($_SESSION["curuserrole"]>=5) {
 				orders_history($q[1],'3');
-
+if ($q[1]>0)
+{
 ?>
 
     <!-- Begin page content -->
@@ -129,8 +130,6 @@ if ($_SESSION["curuserrole"]>=5) {
 
 		<div id=spanpage1 style="visibility: hidden; max-width: 400px;">
 		<?php
-if ($q[1]>0)
-{
 	$tsql = "select DATE_FORMAT(eventdate,'%d.%m.%Y') as ed, orders.* from orders where id = ".mysql_escape_string($q[1]).";";
 	$r_order = mysql_query($tsql);
 	if (mysql_num_rows($r_order)==0)
@@ -138,6 +137,15 @@ if ($q[1]>0)
 		die("cant find order");
 	}
 	$row_order = mysql_fetch_array($r_order);
+	if ((($row_order["managerid"]!=$_SESSION["curuserid"]) && ($row_order["creatorid"]!=$_SESSION["curuserid"])) && ($_SESSION["curuserrole"]<8))
+	{
+			echo '</div></div>   <div class="container">
+      <div class="page-header">
+        <h3 style="color:#FF8080">У вас нет прав на открытие этого заказа в режиме редактирования</h3>
+      </div>
+	</div>';		
+		die();
+	}
 	$tsql = "select * from clients where id = ".mysql_escape_string($row_order["clientid"]).";";
 	$r_user = mysql_query($tsql);
 	
@@ -213,11 +221,7 @@ if ($q[1]>0)
 	{
 		echo "ID not found";
 	}
-}
-else
-{
-	echo "ID not correct";
-}
+
 		?>
 		</div>
 		
@@ -1757,6 +1761,15 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 		
 	</script>
 <?php
+		}
+		else
+		{
+			echo '    <div class="container">
+      <div class="page-header">
+        <h3>Order ID not correct</h3>
+      </div>
+	</div>';
+		}
 	}else
 	{
 ?>
