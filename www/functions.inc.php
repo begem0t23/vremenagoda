@@ -1837,7 +1837,7 @@ function fixednavbar()
 			?>><a href="?create">Создать заказ</a></li>
 			<?
 			}
-			if ($_SESSION["curuserrole"]>5) {?>
+			if ($_SESSION["curuserrole"]>4) {?>
             <li class="dropdown<?php
 			if ($qq=="profile") echo ' active"';
 			?>">
@@ -1848,7 +1848,7 @@ function fixednavbar()
                 <li><a href="?menus">Меню</a></li>
                 <li><a href="?uslugi">Услуги</a></li>
                <?
-			   if ($_SESSION["curuserrole"]==9)
+			   if ($_SESSION["curuserrole"]>4)
 			   {
 				echo '<li><a href="?users">Пользователи</a></li>';
 			   }

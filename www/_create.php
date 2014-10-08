@@ -1306,7 +1306,7 @@ fixednavbar();
 								.done(function(data) {
 								if (data == '0' || data == '1' || data == '2' || data == '9')
 									{
-									alert(data);
+									//alert(data);
 									$("#hallstatus").show(); 
 									$("#hallstatus option[value="+data+"]").atrr("selected","selected");
 									

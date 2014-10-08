@@ -1,5 +1,5 @@
 <?
-if ($_SESSION["curuserrole"]!=9) die("Доступ к данному разделу предсотавлен Администратору");
+//if ($_SESSION["curuserrole"]!=9) die("Доступ к данному разделу предсотавлен Администратору");
 ?>
 <<!DOCTYPE html>
 <html lang="ru">
@@ -244,8 +244,8 @@ $bgs[1] = 'Да';
 	
     if (login.is(':visible')) 
 	{
-		valid = valid && checkRegexp( login, /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/, "Email заполнен неверно." );
-		// valid = valid && checkLength( login, "login/Email", 5, 100 );
+		//valid = valid && checkRegexp( login, /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/, "Email заполнен неверно." );
+		 valid = valid && checkLength( login, "login/Email", 5, 10 );
 		valid = valid && checkLength( name, "Имя пользователя", 3, 50 );
 		valid = valid && checkLength( role, "Роль/Права", 1, 1 );
 		operation = "changeuserdata";
