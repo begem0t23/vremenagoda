@@ -277,15 +277,62 @@ $tabsinorder = 0;
 }
 
 
+function gethallondate($checkdate,$hallid)
+{
+				$tsql3 = "SELECT * FROM `halls_on_date` WHERE `id` = '".$hallid."' AND `date` = '".convert_date($checkdate)."';";
+				$rez_tab3 = mysql_query($tsql3);
+				if (mysql_num_rows($rez_tab3) > 0)
+				{
+					$row = mysql_fetch_array($rez_tab3) ;
+					$out = $row['status'];
+					
+				}
+
+					return $out;
+
+}
+
+function checkhallondate($checkdate,$hallid) 
+{
+
+				$insert = "INSERT INTO  `halls_on_date` (`id`, `hallid`, `date`, `status`) VALUES (NULL, '".$hallid."',  '".convert_date($checkdate)."', '0') ;" ;
+				
+//echo $insert;
+
+		$tsql2 = "SELECT * FROM `halls_on_date` WHERE `hallid` = '".$hallid."' AND `date` = '".convert_date($checkdate)."';";
+			$rez_tab = mysql_query($tsql2);
+			if (mysql_num_rows($rez_tab)==0)
+			{
+			
+				mysql_query($insert);
+
+				$tsql3 = "SELECT * FROM `halls_on_date` WHERE `id` = '".$hallid."' AND `date` = '".convert_date($checkdate)."';";
+				$rez_tab3 = mysql_query($tsql3);
+				if (mysql_num_rows($rez_tab3) > 0)
+				{
+					return 'yes';
+				}
+
+			}
+			else
+			{
+				return 'yes';
+			}
+
+
+}
+
+
 
 
 function checktablesondate($checkdate,$hallid) 
 {
+checkhallondate($checkdate,$hallid);
 
 				$insert = "INSERT INTO  `tables_on_date` 
 				SELECT NULL, `num`, `persons`, `hallid`, `top`, `left`, `typeid`, `angle` , `group`, '0', '".convert_date($checkdate)."' , '".$_SESSION["curuserid"]."'
 				FROM  `tables` WHERE `hallid` = '".$hallid."'" ;
-
+				
 //echo $insert;
 
 		$tsql2 = "SELECT * FROM `tables_on_date` WHERE `hallid` = '".$hallid."' AND `date` = '".convert_date($checkdate)."';";

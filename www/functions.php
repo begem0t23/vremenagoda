@@ -5,6 +5,28 @@ require_once("functions.inc.php");
 $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
+
+
+
+if($_POST['operation'] == 'gethallondate')
+{
+$checkdate = $_POST['checkdate'];
+$hallid = $_POST['hallid'];
+
+				$tsql3 = "SELECT * FROM `halls_on_date` WHERE `hallid` = '".$hallid."' AND `date` = '".convert_date($checkdate)."';";
+				$rez_tab3 = mysql_query($tsql3);
+				if (mysql_num_rows($rez_tab3) > 0)
+				{
+					$row = mysql_fetch_array($rez_tab3) ;
+					$out = $row['status'];
+					
+				}
+
+					echo $out;
+
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if($_POST['operation'] == 'getordersbydate')

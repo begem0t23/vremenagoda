@@ -889,6 +889,13 @@ fixednavbar();
 						}
 						echo '</select>' . "";
 					}
+					global $hallstatus;
+						echo '<select name="hallstatus" id="hallstatus" class="form-control" disabled style="display:none" >' . "";
+					foreach ($hallstatus as $st => $val)
+					{	
+							echo '<option value="'.$st.'">'.$val.'</option>' . "";
+					}
+						echo '</select>' . "";
 					?>';
 					spanpage1+='</div><br>';
 					spanpage1+='<br><div  id="selectedhall"></div>';
@@ -906,6 +913,7 @@ fixednavbar();
 				});
 			}
 		}
+		
 		function erasevaluesincookie()
 		{
 			if ($("#clientsearch").val())
@@ -1117,10 +1125,6 @@ fixednavbar();
 		
 		
 		
-		
-		
-		
-		
 		function get_edit_dish_form(dishid,menuid,sectionid){
 	
 		$.ajax({
@@ -1292,8 +1296,26 @@ fixednavbar();
 							} 
 							else
 							{
-								get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
-								$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
+
+
+
+							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
+
+							$.post("functions.php", {operation: 'gethallondate', hallid:$("#hall").val(), checkdate:$("#dateevent").val()},
+								function(data){})
+								.done(function(data) {
+								if (data == '0' || data == '1' || data == '2' || data == '9')
+									{
+									alert(data);
+									$("#hallstatus").show(); 
+									$("#hallstatus option[value="+data+"]").atrr("selected","selected");
+									
+									}
+								});
+							
+							
+							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
+
 							}
 						}
 					}
