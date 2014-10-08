@@ -160,7 +160,8 @@ fixednavbar();
 				echo 	'<colgroup>
 						<col width="250" />
 						<col width="50" />
-						<col width="50" />
+						<col width="30" />
+						<col width="30" />
 						<col width="20" />
 						<col width="50" />
 						<col width="150" />
@@ -171,6 +172,7 @@ fixednavbar();
 						<th class="sorter-false">Название</th>
 						<th class="sorter-false">Порции (кг)</th>
 						<th class="sorter-false">Цена</th>
+						<th class="sorter-false">Спец Цена</th>
 						<th class="sorter-false">Кол-во</th>
 						<th class="sorter-false">Комментарий</th>
 						<th class="sorter-false">Действие</th>
@@ -247,7 +249,7 @@ fixednavbar();
 		if ($sections[$num]['dishes'] > 0) 
 		{	
 			
-			echo '<tbody><tr><th  colspan="6" class="level_0">'.chr(10);			
+			echo '<tbody><tr><th  colspan="7" class="level_0">'.chr(10);			
 			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
 			echo '</th></tr></tbody>'.chr(10);
 
@@ -261,7 +263,7 @@ fixednavbar();
 				
 				if ($val[$num1]['dishes'] > 0) 
 				{	
-					echo '<tbody><tr><th  colspan="6" class="level_1">'.chr(10);			
+					echo '<tbody><tr><th  colspan="7" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 
@@ -278,7 +280,7 @@ fixednavbar();
 	
 							if ($val1[$num2]['dishes'] > 0) 
 							{	
-								echo '<tbody><tr><th  colspan="6" class="level_2">'.chr(10);			
+								echo '<tbody><tr><th  colspan="7" class="level_2">'.chr(10);			
 								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
 								echo '</th></tr></tbody>'.chr(10);
 													
@@ -343,7 +345,8 @@ fixednavbar();
 				echo 	'<colgroup>
 						<col width="250" />
 						<col width="50" />
-						<col width="50" />
+						<col width="30" />
+						<col width="30" />
 						<col width="20" />
 						<col width="50" />
 						<col width="150" />
@@ -354,6 +357,7 @@ fixednavbar();
 							<th class="sorter-false">Название</th>
 							<th class="sorter-false">Порции (кг)</th>
 							<th class="sorter-false">Цена</th>
+							<th class="sorter-false">Спец Цена</th>
 							<th class="sorter-false">Кол-во</th>
 							<th class="sorter-false">Комментарий</th>
 							<th class="sorter-false">Действие</th>
@@ -430,7 +434,7 @@ fixednavbar();
 		if ($sections[$num]['dishes'] > 0) 
 		{	
 			
-			echo '<tbody><tr><th  colspan="6" class="level_0">'.chr(10);			
+			echo '<tbody><tr><th  colspan="7" class="level_0">'.chr(10);			
 			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
 			echo '</th></tr></tbody>'.chr(10);
 
@@ -444,7 +448,7 @@ fixednavbar();
 				
 				if (@$val[$num1]['dishes'] > 0) 
 				{	
-					echo '<tbody><tr><th  colspan="6" class="level_1">'.chr(10);			
+					echo '<tbody><tr><th  colspan="7" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 
@@ -461,7 +465,7 @@ fixednavbar();
 	
 							if (@$val1[$num2]['dishes'] > 0) 
 							{	
-								echo '<tbody><tr><th  colspan="6" class="level_2">'.chr(10);			
+								echo '<tbody><tr><th  colspan="7" class="level_2">'.chr(10);			
 								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
 								echo '</th></tr></tbody>'.chr(10);
 													
@@ -1142,7 +1146,7 @@ fixednavbar();
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'addspecialdish', dishname: $( "#name" ).val(), dishdescription: $( "#description" ).val(), dishweight: $( "#weight" ).val(), dishprice: $( "#price" ).val(),   menuid: $( "#menu_id" ).val()}
+			data: { operation: 'addspecialdish', dishname: $( "#name" ).val(), dishdescription: $( "#description" ).val(), dishweight: $( "#weight" ).val(), dishprice: $( "#price" ).val(),dishspecialprice: $( "#specialprice" ).val(),   menuid: $( "#menu_id" ).val()}
 		})
 		.done(function( msg ) {
 			if(msg == 'yes'){

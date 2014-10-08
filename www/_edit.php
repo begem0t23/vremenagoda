@@ -252,7 +252,9 @@ if ($q[1]>0)
 				echo 	'<colgroup>
 						<col width="250" />
 						<col width="50" />
-						<col width="50" />
+						<col width="30" />
+						<col width="30" />
+						<col width="30" />
 						<col width="20" />
 						<col width="50" />
 						<col width="150" />
@@ -263,6 +265,8 @@ if ($q[1]>0)
 							<th class="sorter-false">Название</th>
 							<th class="sorter-false">Порции (кг)</th>
 							<th class="sorter-false">Цена</th>
+							<th class="sorter-false">Спец Цена</th>
+							<th class="sorter-false">Цена Архив</th>
 							<th class="sorter-false">Кол-во</th>
 							<th class="sorter-false">Комментарий</th>
 							<th class="sorter-false">Действие</th>
@@ -339,7 +343,7 @@ if ($q[1]>0)
 		if ($sections[$num]['dishes'] > 0) 
 		{	
 			
-			echo '<tbody><tr><th  colspan="6" class="level_0">'.chr(10);			
+			echo '<tbody><tr><th  colspan="8" class="level_0">'.chr(10);			
 			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
 			echo '</th></tr></tbody>'.chr(10);
 
@@ -356,7 +360,7 @@ if ($q[1]>0)
 				
 				if ($val[$num1]['dishes'] > 0) 
 				{	
-					echo '<tbody><tr><th  colspan="6" class="level_1">'.chr(10);			
+					echo '<tbody><tr><th  colspan="8" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 
@@ -373,7 +377,7 @@ if ($q[1]>0)
 	
 							if ($val1[$num2]['dishes'] > 0) 
 							{	
-								echo '<tbody><tr><th  colspan="6" class="level_2">'.chr(10);			
+								echo '<tbody><tr><th  colspan="8" class="level_2">'.chr(10);			
 								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
 								echo '</th></tr></tbody>'.chr(10);
 													
@@ -437,7 +441,9 @@ if ($q[1]>0)
 				echo 	'<colgroup>
 						<col width="250" />
 						<col width="50" />
-						<col width="50" />
+						<col width="30" />
+						<col width="30" />
+						<col width="30" />
 						<col width="20" />
 						<col width="50" />
 						<col width="150" />
@@ -448,6 +454,8 @@ if ($q[1]>0)
 							<th class="sorter-false">Название</th>
 							<th class="sorter-false">Порции (кг)</th>
 							<th class="sorter-false">Цена</th>
+							<th class="sorter-false">Спец Цена</th>
+							<th class="sorter-false">Цена Архив</th>
 							<th class="sorter-false">Кол-во</th>
 							<th class="sorter-false">Комментарий</th>
 							<th class="sorter-false">Действие</th>
@@ -524,7 +532,7 @@ if ($q[1]>0)
 		if ($sections[$num]['dishes'] > 0) 
 		{	
 			
-			echo '<tbody><tr><th  colspan="6" class="level_0">'.chr(10);			
+			echo '<tbody><tr><th  colspan="8" class="level_0">'.chr(10);			
 			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
 			echo '</th></tr></tbody>'.chr(10);
 
@@ -538,7 +546,7 @@ if ($q[1]>0)
 				
 				if (@$val[$num1]['dishes'] > 0) 
 				{	
-					echo '<tbody><tr><th  colspan="6" class="level_1">'.chr(10);			
+					echo '<tbody><tr><th  colspan="8" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 
@@ -555,7 +563,7 @@ if ($q[1]>0)
 	
 							if (@$val1[$num2]['dishes'] > 0) 
 							{	
-								echo '<tbody><tr><th  colspan="6" class="level_2">'.chr(10);			
+								echo '<tbody><tr><th  colspan="8" class="level_2">'.chr(10);			
 								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
 								echo '</th></tr></tbody>'.chr(10);
 													

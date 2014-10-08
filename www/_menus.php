@@ -385,9 +385,10 @@ $('#tabs').smartTab({selected: 0});
 		description = $( "#description" ),
 		weight = $( "#weight" ),
 		price = $( "#price" ),
+		specialprice = $( "#specialprice" ),
 		menu_section = $( "#menu_section" ),
 		dish_id = $( "#dish_id" ),
-		allFields = $( [] ).add( name ).add( description ).add( price ).add( weight ).add( menu_section ),
+		allFields = $( [] ).add( name ).add( description ).add( price ).add( specialprice ).add( weight ).add( menu_section ),
 		tips = $( ".validateTips" );
  
     function updateTips( t ) {
@@ -425,11 +426,12 @@ $('#tabs').smartTab({selected: 0});
 		description = $( "#description" ),
 		weight = $( "#weight" ),
 		price = $( "#price" ),
+		specialprice = $( "#specialprice" ),
 		isbasic = $( "#isbasic" ),
 		menu_section = $( "#menu_section" ),
 		dish_id = $( "#dish_id" ),
 		menu_id = $( "#menu_id" ),
-		allFields = $( [] ).add( name ).add( isbasic ).add( description ).add( price ).add( weight ).add( menu_section ).add( dish_id ).add( menu_id ),
+		allFields = $( [] ).add( name ).add( isbasic ).add( description ).add( price ).add( specialprice ).add( weight ).add( menu_section ).add( dish_id ).add( menu_id ),
 		tips = $( ".validateTips" );
 
 
@@ -440,10 +442,12 @@ $('#tabs').smartTab({selected: 0});
       valid = valid && checkLength( description, "описания", 0, 250 );
       valid = valid && checkLength( weight, "веса", 2, 5 );
      valid = valid && checkLength( price, "цена", 1, 10 );
+     valid = valid && checkLength( specialprice, "специальная цена", 1, 10 );
  
       //valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\(\)\s])+$/i, "Недопустимые символы." );
      //valid = valid && checkRegexp( description, /^[a-z]([0-9a-z_\s])+$/i, "Недопустимые символы." );
        valid = valid && checkRegexp( price, /^([0-9.])+$/, "Цена может состоять только из цифр : 0-9 и точки" );
+       valid = valid && checkRegexp( specialprice, /^([0-9.])+$/, "Цена может состоять только из цифр : 0-9 и точки" );
        valid = valid && checkRegexp( weight, /^([0-9])+$/, "Цена должна состоять только из цифр : 0-9" );
  
       if ( valid ) 
@@ -452,7 +456,7 @@ $('#tabs').smartTab({selected: 0});
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'adddish', dishname: name.val(),isbasic: isbasic.prop("checked"), dishdescription: description.val(), dishweight: weight.val(), dishprice: price.val(), dishid: dish_id.val(), menu_section: menu_section.val(), menuid: menu_id.val()}
+			data: { operation: 'adddish', dishname: name.val(),isbasic: isbasic.prop("checked"), dishdescription: description.val(), dishweight: weight.val(), dishprice: price.val(), dishspecialprice: specialprice.val(), dishid: dish_id.val(), menu_section: menu_section.val(), menuid: menu_id.val()}
 		})
 		.done(function( msg ) {
 			if(msg == 'yes'){

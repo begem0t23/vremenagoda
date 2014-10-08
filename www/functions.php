@@ -1422,6 +1422,7 @@ $sectionid = $_POST['sectionid'];
 	<textarea onkeyup="changeform();" colls="50" id="description" placeholder="Описание" class="form-control"><?php echo $rows_0['description']; ?></textarea>
 	<input onkeyup="changeform();"  type="text" id="weight" placeholder="Вес в граммах" class="form-control" value="<?php echo $rows_0['weight']; ?>">
 	<input onkeyup="changeform();"  type="text" id="price" placeholder="Цена" class="form-control" value="<?php echo $rows_0['price']; ?>">
+	<input onkeyup="changeform();"  type="text" id="specialprice" placeholder="Специальная Цена" class="form-control" value="<?php echo $rows_0['specialprice']; ?>">
 	<input type="hidden" id="dish_id"  value="<?php echo $dishid; ?>">
 	<input type="hidden" id="menu_id"  value="<?php echo $menuid; ?>">
 	
@@ -1580,6 +1581,7 @@ $dishid = $_POST['dishid'];
 $name = $_POST['dishname'];
 $description = $_POST['dishdescription'];
 $price = $_POST['dishprice'];
+$specialprice = $_POST['dishspecialprice'];
 $weight = $_POST['dishweight'];
 $menu_section = $_POST['menu_section'];
 
@@ -1627,6 +1629,10 @@ $nowtime = time();
 	if ($rows['price'] != $price)
 	{
 		$changes = $changes.'5,';//цена
+	}
+	if ($rows['specialprice'] != $specialprice)
+	{
+		$changes = $changes.'55,';//спец цена
 	}
 	if ($rows['weight'] != $weight)
 	{
@@ -1857,6 +1863,8 @@ echo '<br><br>
 						<col width="10%" />
 						<col width="10%" />
 						<col width="10%" />
+
+						<col width="10%" />
 			
 						</colgroup>';
 
@@ -1866,6 +1874,8 @@ echo '<br><br>
 							<th class="sorter-false">Описание</th>
 							<th class="sorter-false">Вес (кг)</th>
 							<th class="sorter-false">Цена</th>
+							<th class="sorter-false">Спец Цена</th>
+
 							<th class="sorter-false" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Действия&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 							</tr>
 							</thead>';
@@ -1962,7 +1972,7 @@ echo '<br><br>
 								$tree = '';
 			if($sections[$num]['dishes'] >0) {$tree = '<span menuid="'.$row_menutype["id"].'" id="tree'.$sections[$num]['id'].'" class="tree glyphicon glyphicon-minus"></span>';}
 
-			echo '<tbody><tr id ="sec'.$sections[$num]['id'].'" class="dis_0"><th  colspan="4" class="level_0">'.chr(10);			
+			echo '<tbody><tr id ="sec'.$sections[$num]['id'].'" class="dis_0"><th  colspan="5" class="level_0">'.chr(10);			
 			echo  $tree.'&nbsp;'.$sections[$num]['name'].' ('.$isdrink[$sections[$num]['isdrink']][0].': '.$sections[$num]['dishes'].') '.chr(10);
 			echo '</th><th class="level_0">'.chr(10);
 			echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.chr(10);
@@ -1994,7 +2004,7 @@ echo '<br><br>
 						$class = ' full';
 					}
 					
-					echo '<tbody><tr id="sec'.$val[$num1]['id'].'"  class = "dis'.$sections[$num]['id'].$class.'"><th  colspan="4" class="level_1">'.chr(10);			
+					echo '<tbody><tr id="sec'.$val[$num1]['id'].'"  class = "dis'.$sections[$num]['id'].$class.'"><th  colspan="5" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val[$num1]['name'].' ('.$isdrink[$val[$num1]['isdrink']][0].': '.$val[$num1]['dishes'].') '.chr(10);
 					echo '</th><th class="level_1">'.chr(10);
 					echo '<textarea style="display:none;" id="sectiontitle'.$val[$num1]['id'].'">'.$val[$num1]['name'].'</textarea>'.chr(10);
@@ -2033,7 +2043,7 @@ echo '<br><br>
 								$class = ' full';
 							}
 
-							echo '<tbody><tr id="sec'.$val1[$num2]['id'].'" class = "dis'.$val[$num1]['id'].$class.'  "><th  colspan="4" class="level_2">'.chr(10);			
+							echo '<tbody><tr id="sec'.$val1[$num2]['id'].'" class = "dis'.$val[$num1]['id'].$class.'  "><th  colspan="5" class="level_2">'.chr(10);			
 							echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$tree.'&nbsp;'.$val1[$num2]['name'].' ('.$isdrink[$val1[$num2]['isdrink']][0].': '.$val1[$num2]['dishes'].') '.chr(10);
 							echo '</th><th class="level_2">'.chr(10);
 							echo '<textarea style="display:none;" id="sectiontitle'.$val1[$num2]['id'].'">'.$val1[$num2]['name'].'</textarea>'.chr(10);
@@ -2282,7 +2292,7 @@ if ($type == 99)
 $addsql = $sqltype.$sqldate;
 
 $forwho = 'food';
-$cs1 = 6;
+$cs1 = 7;
 $cs2 = 2;
 header('Content-Type: text/html; charset=utf-8');	
 
@@ -2293,6 +2303,7 @@ $body_out = $body_out.'<table class="arhiv simple-little-table" style="width:100
 <th  width="100" class="report_columns_head">Описание</th>';
 
 	$body_out = $body_out.'<th  width="40" class="report_columns_head">Цена</th>';
+	$body_out = $body_out.'<th  width="40" class="report_columns_head">Спец Цена</th>';
 	$body_out = $body_out.'<th  width="40" class="report_columns_head">Вес</th>';
 	$body_out = $body_out.'<th  width="100" class="report_columns_head">Изменения</th>';
 	$body_out = $body_out.'<th  width="50" class="report_columns_head">Дата</th>';

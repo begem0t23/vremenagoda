@@ -463,6 +463,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['note'] = $rows01['note'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price2'];
+				$dish[$dish['count']]['specialprice'] = $rows01['specialprice'];
 				$dish[$dish['count']]['cnt'] = $cnt + $dish['count'] +1;
 				$dish['count'] ++;
 			}
@@ -491,6 +492,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['isbasic'] = $rows01['isbasic'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish[$dish['count']]['specialprice'] = $rows01['specialprice'];
 				$dish[$dish['count']]['kogda'] = $rows01['kogda'];
 				$dish[$dish['count']]['sectionid'] = $menu_section;
 				$dish[$dish['count']]['cnt'] = $cnt + $dish['count'] +1;
@@ -563,6 +565,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish[$dish['count']]['specialprice'] = $rows01['specialprice'];
 				$dish[$dish['count']]['dishid'] = $rows01['dishid'];
 				$dish['count'] ++;
 			}
@@ -599,6 +602,7 @@ $dish['count'] = 0;
 						$dish[$dish['count']]['note'] = $dd["note"];
 						$dish[$dish['count']]['weight'] = $rows01['weight'];
 						$dish[$dish['count']]['price'] = $rows01['price'];
+						$dish[$dish['count']]['specialprice'] = $rows01['specialprice'];
 						$dish[$dish['count']]['cnt'] = $cnt + $dish['count'] +1;
 						$dish['count'] ++;
 					}
@@ -629,6 +633,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish[$dish['count']]['specialprice'] = $rows01['specialprice'];
 				$dish[$dish['count']]['kogda'] = $rows01['kogda'];
 				$dish['count'] ++;
 			}
@@ -656,6 +661,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
+				$dish[$dish['count']]['specialprice'] = $rows01['specialprice'];
 				$dish[$dish['count']]['kogda'] = $rows01['kogda'];
 				$dish['count'] ++;
 			}
@@ -682,6 +688,7 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 			echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'" id="dishname'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
 							<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 							<td  class = "'.$aclass.'">'.$items[$i]["price"].'</td>
+							<td  class = "'.$aclass.'">'.$items[$i]["specialprice"].'</td>
 							<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
 							<td  class = "'.$aclass.'"><textarea dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></textarea></td>
 							<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
@@ -726,6 +733,8 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 				echo '</span></td>
 					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 					<td  class = "'.$aclass.'">'.$item["price"].'</td>
+					<td  class = "'.$aclass.'">'.$item["specialprice"].'</td>
+					<td  class = "'.$aclass.'">'.$item["arhivprice"].'</td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" readonly="readonly" name="quant" id="quant'.$items[$i]["id"].'" value="'.$item["num"].'" class="quant" size="1"></td>
 					<td  class = "'.$aclass.'"><textarea dishid="'.$items[$i]["dishid"].'"  name = "note" readonly="readonly" id="note'.$items[$i]["id"].'" value="" type="text" class="note">'.$item["note"].'</textarea></td>
 					<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-primary '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Удалить</button></td>';
@@ -739,6 +748,8 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 				echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>'.$items[$i]["title"].'</span></td>
 					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 					<td  class = "'.$aclass.'">'.$items[$i]["price"].'</td>
+					<td  class = "'.$aclass.'">'.$item["specialprice"].'</td>
+					<td  class = "'.$aclass.'">'.$item["arhivprice"].'</td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
 					<td  class = "'.$aclass.'"><textarea dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></textarea></td>
 					<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
@@ -769,7 +780,8 @@ $menuid = substr($menuid,1);
 			echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
 					<td class = "'.$aclass.'"><span id="dish_descr'.$items[$i]["id"].'">'.$items[$i]["description"].'</span></td>	
 							<td class = "'.$aclass.'">'.number_format(($items[$i]["weight"])/1000,2).'</td>
-							<td class = "'.$aclass.'">'.$items[$i]["price"].'</td>';
+							<td class = "'.$aclass.'">'.$items[$i]["price"].'</td>
+							<td class = "'.$aclass.'">'.$items[$i]["specialprice"].'</td>';
 				echo '<td colspan="2" class = "'.$aclass.'">';
 				echo '<button class="btn btn-primary" type="button" name="editdish" menuid="'.$menuid.'" sectionid="'.$sectionid.'" dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'" class="edit" title="Редактировать"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;';
 				echo '<button class="btn btn-danger" type="button" name="dishfrommenu" menuid="'.$menuid.'" sectionid="'.$sectionid.'"  dishid="'.$items[$i]["dishid"].'"  id="'.$items[$i]["id"].'" class="del" title="Удалить из меню в архив"><span class="glyphicon glyphicon-trash"></span></button>';
