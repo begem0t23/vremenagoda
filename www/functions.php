@@ -774,7 +774,7 @@ if ($_POST['operation'] == 'getallorders')
 		header('Content-Type: text/html; charset=utf-8');
 
 
-	$tsql01 = "select o.*, h.name from `orders` AS o, `hall` AS h WHERE h.id = o.hallid  ;";
+	$tsql01 = "select o.*, h.name, hon.status AS hallstatus from `orders` AS o, `hall` AS h, halls_on_date AS hon WHERE h.id = o.hallid And h.id = hon.hallid and o.eventdate = hon.date ;";
 	//echo $tsql01; 
 	$result01 = mysql_query($tsql01);
 	if (mysql_num_rows($result01)>0)
@@ -797,23 +797,21 @@ if ($_POST['operation'] == 'getallorders')
 		
 			$start = $startdate;
 			$changes = '';
-			$color = '#777777';
+			$color = '#449d44';
 			
 		if(anydishgetchangetype($rows01['id']) > 0) $changes .= ' (изменения)';
 		
-		if($rows01['managerid'] == $_SESSION['curuserid'])
-		{
-			if($rows01['status'] == 1) $color = '#f0ad4e';
-			if($rows01['status'] == 2) $color = '#449d44';
-			if($rows01['status'] == 8) $color = '#428bca';
-		if($rows01['procstatus'] == 9) $color = '#c9302c';
+			//if($rows01['status'] == 1) $color = '#f0ad4e';
+			//if($rows01['status'] == 2) $color = '#449d44';
+			//if($rows01['status'] == 8) $color = '#428bca';
+		//if($rows01['procstatus'] == 9) $color = '#c9302c';
+		if($rows01['hallstatus'] == 9) $color = '#c9302c';
 		
 		
-		}
 		
 		$ech=$ech.'{'.chr(10);
 		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
-		$ech=$ech.'"title": "'.$rows01['id'].'. '.$rows01['name'].' ('.$rows01['guestcount'].')",'.chr(10);
+		$ech=$ech.'"title": "'.$rows01['id'].'. '.$rows01['name'].' ('.$rows01['guestcount'].') ",'.chr(10);
 		$ech=$ech.'"start": "'.$start.'",'.chr(10);
 		$ech=$ech.'"todo": "'.$rows01['comment'].'",'.chr(10);
 		$ech=$ech.'"url": "?view/'.$rows01['id'].'/",'.chr(10);
