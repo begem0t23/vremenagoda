@@ -41,6 +41,8 @@ if (@$_POST["dosend"])
 	}
 }
 
+
+
 if (checklogin())
 {
 

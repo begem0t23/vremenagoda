@@ -38,7 +38,9 @@
 		.input-group{padding:10px 0 0 0 !important;}
   .right{position:absolute; left:250px;}
   input[type="checkbox"]{width:20px;height:20px;padding:8px; margin:8px;}
-  
+  .payin{background-color:#D9FAB5 !important;}
+  .payout{background-color:#FAB5B5 !important;}
+  .removed{background-color:#333333 !important;color:#aaaaaa !important;}
   
 </style>  
   <body>
@@ -46,6 +48,18 @@
 
 fixednavbar();
 global $orderstatus;
+renewpaystatus($q[1]);
+$order = getorderinfo($q[1]);
+
+$sql="SELECT * FROM `users` " ;
+			$rez = mysql_query($sql);
+			if (mysql_num_rows($rez)>0)
+			{
+				while ($row = mysql_fetch_array($rez))
+				{
+					$users[$row['id']] = $row['realname'];
+				}
+			}
 ?>
     <!-- Begin page content -->
     <div class="container">
@@ -65,10 +79,80 @@ global $orderstatus;
 	$rezult2 = mysql_query($select2);
 	$rows2 = mysql_fetch_assoc($rezult2);
 
-	echo '<h3>Заказ №'.$q[1].'</h3>'.chr(10);
+	echo '<h3>Заказ №'.$q[1].' / создал: '.$users[$order['creatorid']].' / ведёт: '.$users[$order['managerid']].'</h3>'.chr(10);
+	$total = getpaymentsfororder($q[1]);
+	//echo $total['payin'].'<br>'.$total['payout'];
 	echo '<input type="hidden" id="hall" value="'.$rows['hallid'].'">'.chr(10);
 	echo '<input type="hidden" id="dateevent" value="'.convert_date2($rows['eventdate']).'">'.chr(10);
 
+
+	$isadmin = $_SESSION["curuserrole"] == 9;
+	$onclass = ' btn-success';
+	$offclass = ' btn-default';
+	$onfunc = '';
+	$offfunc = 'disabled';
+	$invis = 'style = "display:none"';
+	
+	$access['orderstatus']['class'] = $onclass;
+	$access['procstatus']['class'] = $onclass;
+	$access['paystatus']['class'] = $onclass;
+	$access['payments']['class'] = $onclass;
+	$access['gotoeditor']['class'] = $onclass;
+	$access['viewtables']['class'] = $onclass;
+	$access['payments']['class'] = $onclass;
+	$access['viewreport']['class'] = $onclass;
+	
+	$access['orderstatus']['func'] = $onfunc;
+	$access['orderstatus'][1]['func'] = $onfunc;
+	$access['orderstatus'][2]['func'] = $onfunc;
+	$access['orderstatus'][8]['func'] = $onfunc;
+
+	$access['procstatus']['func'] = $onfunc;
+	$access['procstatus'][0]['func'] = $invis;
+	$access['procstatus'][1]['func'] = $onfunc;
+	$access['procstatus'][2]['func'] = $onfunc;
+	$access['procstatus'][3]['func'] = $invis;
+	$access['procstatus'][9]['func'] = $onfunc;
+
+	$access['paystatus']['func'] = $onfunc;
+	$access['paystatus'][0]['func'] = $invis;
+	$access['paystatus'][1]['func'] = $onfunc;
+	$access['paystatus'][2]['func'] = $onfunc;
+	$access['paystatus'][3]['func'] = $invis;
+	$access['paystatus'][6]['func'] = $invis;
+	$access['paystatus'][7]['func'] = $invis;
+	$access['paystatus'][8]['func'] = $invis;
+
+	$access['payments']['func'] = $onfunc;
+	$access['payments']['add']['func'] = $onfunc;
+	$access['gotoeditor']['func'] = $onfunc;
+	$access['viewtables']['func'] = $onfunc;
+	$access['payments']['func'] = $onfunc;
+	$access['viewreport']['func'] = $onfunc;
+	
+	if ($rows['managerid'] != $_SESSION["curuserid"]  and !$isadmin)
+	{
+	$access['orderstatus']['class'] = $offclass;
+	$access['procstatus']['class'] = $offclass;
+	$access['paystatus']['class'] = $offclass;
+	$access['payments']['class'] = $offclass;
+	$access['gotoeditor']['class'] = $offclass;
+	$access['viewtables']['class'] = $offclass;
+	$access['payments']['class'] = $offclass;
+	$access['viewreport']['class'] = $offclass;
+	
+	$access['orderstatus']['func'] = $offfunc;
+	$access['procstatus']['func'] = $offfunc;
+	$access['paystatus']['func'] = $offfunc;
+	$access['payments']['func'] = $offfunc;
+	$access['gotoeditor']['func'] = $offfunc;
+	$access['viewtables']['func'] = $offfunc;
+	$access['payments']['func'] = $offfunc;
+	$access['viewreport']['func'] = $offfunc;
+	
+	}
+	
+	
 $bclass = "btn-success";
 $bname1 = "Перейти";
 $bname2 = "Показать";
@@ -78,18 +162,6 @@ $nbname = "Показать";
 $nbdisabled = "";
 	
 
-
-if ($rows['status'] == 1  || $rows['status'] == 8 || $rows['procstatus'] == 9 ) 
-{
-//$bclass = "btn-danger";
-//$bname1 = "Невозможно";
-//$bname2 = "Невозможно";
-//$bdisabled = "disabled";
-
-//$nbclass = "btn-danger";
-//$nbname = "Невозможно";
-//$nbdisabled = "disabled";
-}
 
 
 if( $rows['status'] == 1)
@@ -118,85 +190,142 @@ echo '
 
 }
 
-if ($rows['status'] == 8)
+
+
+//проверка платежей
+	if($total['payout'] == 0 & $total['all'] > 0)
+	{
+	$access['procstatus'][3]['func'] = $onfunc;
+	}
+
+
+
+	if($total['payout'] < 0)
+	{
+		$access['paystatus'][6]['func'] = $invis;
+	}
+
+	if($total['all'] > 0)
+	{
+		$access['paystatus'][0]['func'] = $invis;
+	}
+
+	if($total['all'] <= 0 & $total['payout'] < 0)
+	{
+		$access['paystatus'][7]['func'] = $invis;
+	}
+
+	if($total['all'] <= 0)
+	{
+		$access['payments']['add']['func'] = $invis;
+	}
+	
+//если завершен
+if($rows['status'] == 8)
 {
+	$access['orderstatus'][1]['func'] = $invis;
+
+	if(!$isadmin)
+	{
+	$access['orderstatus']['func'] = $offfunc;
+	}
+	$access['paystatus']['func'] = $offfunc;
+	$access['gotoeditor']['func'] = $offfunc;
+	$access['payments']['add']['func'] = $invis;
+	$access['viewreport']['func'] = $offfunc;
+}
+
+//если не отправлен клиенту блокировать изменения статуса
+if($rows['procstatus'] == 0)
+{
+	$access['procstatus']['func'] = $offfunc;
+}
+
+//если отказ 
+if($rows['procstatus'] == 9)
+{
+
+	$access['gotoeditor']['func'] = $offfunc;
+	$access['viewreport']['func'] = $offfunc;
+
+	$access['paystatus'][1]['func'] = $invis;
+	$access['paystatus'][2]['func'] = $invis;
+	$access['paystatus'][3]['func'] = $invis;
+
+	$access['paystatus']['func'] = $offfunc;
+
+	$access['paystatus'][6]['func'] = $invis;
+	$access['paystatus'][7]['func'] = $onfunc;
+
+	if($total['all'] > 0)
+	{
+		$access['paystatus'][8]['func'] = $invis;
+	}
+	
+	$access['procstatus']['func'] = $offfunc;
+	if($isadmin & $rows['status'] != 8)
+	{
+		$access['procstatus']['func'] = $onfunc;
+	}
+
+	if($rows['paystatus'] != 8  & $rows['paystatus'] != 0)
+	{
+		$access['orderstatus'][8]['func'] = $invis;
+	}
+	
+	if($rows['paystatus'] == 0 )
+	{
+		$access['payments']['func'] = $offfunc;
+	}
+	
+	}
+
+
+
+if($rows['paystatus'] == 0 || $rows['paystatus'] == 6)
+{
+	$access['paystatus']['func'] = $offfunc;
+
+}
+
 echo '
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Статус заказа</span></span>
-<select class="btn btn-primary nav-element"  onchange = "viewstatus();" id="stat1">
-<option value="8" class="btn  btn-primary">Выполнен</option>
-<option value="2" class="btn  btn-success">В работе</option>
-</select>
-</div>
-<div id="status_section"   style="display:none;"  class="btn btn-default small">
-<div class="input-group" >
-  <button class="btn btn-default" onclick="add_stat();" id="statadd">Сохранить</button>
-  <button class="btn btn-default right" onclick="cancel_stat();" id="statcancel">Отмена</button>
-</div>	
-</div>
-';}
-
-
-
-
-if ($rows['status'] == 2)
+<select class="btn '.$access['orderstatus']['class'].' nav-element"  onchange = "viewstatus();" id="stat1"  '.$access['orderstatus']['func'].'>';
+if($rows['procstatus'] == 9)
 {
-echo '
-<div class="input-group">
-<span class="input-group-addon nav-title"><span >Статус заказа</span></span>
-<select class="btn btn-success nav-element"  onchange = "viewstatus();" id="stat1">
-<option value="2" class="btn  btn-success">В работе</option>
-<option value="1" class="btn  btn-warning">Передается</option>
-<option value="8" class="btn  btn-primary">Выполнен</option>
-</select>
-</div>
-<div id="status_section"   style="display:none;"  class="btn btn-default small">
-<div class="input-group" >
-  <button class="btn btn-default" onclick="add_stat();" id="statadd">Сохранить</button>
-  <button class="btn btn-default right" onclick="cancel_stat();" id="statcancel">Отмена</button>
-</div>	
-</div>
-';}
+//echo '<option value="8" class="btn  btn-primary">Завершён</option>';
+}
 
 
-
-
-if ($rows['status'] == 1)
-{
-echo '
-<div class="input-group">
-<span class="input-group-addon nav-title"><span >Статус заказа</span></span>
-<select class="btn btn-warning nav-element"  onchange = "viewstatus();"  id="stat1">
-<option value="1" class="btn  btn-warning">Передается</option>
-</select>
-</div>
-';}
-
-
-
-
+global $orderstatus;
+	
+	foreach ($orderstatus AS $pi0 => $pval)
+	{
+	
+		$sel = '';
+		if($rows['status'] == $pi0) $sel=' selected';
+		
+			$out.= '<option value="'.$pi0.'" '.$sel.' '.$access['orderstatus'][$pi0]['func'].' >'.$pval.'</option>';
+		
+	}
+echo $out;
 ?>
+
+</select>
+</div>
+<div id="status_section"   style="display:none;"  class="btn btn-default small">
+<div class="input-group" >
+  <button class="btn btn-default" onclick="add_stat();" id="statadd">Сохранить</button>
+  <button class="btn btn-default right" onclick="cancel_stat();" id="statcancel">Отмена</button>
+</div>	
+</div>
+
 <input type="hidden" id="curstat" value="<?php echo $rows['status']; ?>">
 
 
 	
 
-<div id="otkaz_section"  style="display:none;" class="btn btn-default small">
-<div class="input-group" >
- <span class="input-group-addon"><span >Дата отказа</span></span>
- <input  data-mask="99.99.9999" maxlength="10" type="text" id="otkazdate" onchange="newotkaz();" onclick="$('#otkazdate' ).datepicker( 'show' );" class="form-control" placeholder="Дата отказа">
-  </div>	
- 
-<div class="input-group">
-  <span class="input-group-addon"><span >Причина отказа</span></span>
-  <input type="text" id="otkazreason" placeholder="Укажите причину отказа" class="form-control" orderid="<?php echo $q[1]; ?>" onkeyup="newotkaz();">
-</div>	
-
- <div class="input-group" >
-  <button class="btn btn-default" onclick="add_otkaz();" id="otkazadd">Добавить</button>
-  <button class="btn btn-default right" onclick="cancel_otkaz();" id="otkazcancel">Отмена</button>
- </div>	
-</div>
 
 
 <div id="delegate_section"   style="display:none;"  class="btn btn-default small">
@@ -238,25 +367,43 @@ echo '<option value="0">Выберите менеджера</option>';
 
 global $procstatus;
 	
-	foreach ($procstatus AS $pi => $pval)
+	foreach ($procstatus AS $pi1 => $pval)
 	{
 	
 		$sel = '';
-		if($rows['procstatus'] == $pi) $sel=' selected';
-			$prout.= '<option value="'.$pi.'" '.$sel.'>'.$pval.'</option>';
-		
+		if($rows['procstatus'] == $pi1) $sel=' selected';
+
+			$prout.= '<option value="'.$pi1.'" '.$sel.'  '.$access['procstatus'][$pi1]['func'].' >'.$pval.'</option>';
+
 	}
 
 ?>
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Статус Производства</span></span>
-<select class="btn <?php echo $nbclass; ?> nav-element" id="procstat"  onchange = "viewprocstatus();" <?php echo $nbdisabled; ?>>
+<select class="btn <?php echo $access['procstatus']['class']; ?> nav-element" id="procstat"  onchange = "viewprocstatus();" <?php echo $access['procstatus']['func']; ?>>
 <?php echo $prout; ?>
 </select>
 <input type="hidden" id="curprocstat" value="<?php echo $rows['procstatus']; ?>">
 </div>
 
+
+<div id="otkaz_section"  style="display:none;" class="btn btn-default small">
+<div class="input-group" >
+ <span class="input-group-addon"><span >Дата отказа</span></span>
+ <input  data-mask="99.99.9999" maxlength="10" type="text" id="otkazdate" onchange="newotkaz();" onclick="$('#otkazdate' ).datepicker( 'show' );" class="form-control" placeholder="Дата отказа">
+  </div>	
+ 
+<div class="input-group">
+  <span class="input-group-addon"><span >Причина отказа</span></span>
+  <input type="text" id="otkazreason" placeholder="Укажите причину отказа" class="form-control" orderid="<?php echo $q[1]; ?>" onkeyup="newotkaz();">
+</div>	
+
+ <div class="input-group" >
+  <button class="btn btn-default" onclick="add_otkaz();" id="otkazadd">Добавить</button>
+  <button class="btn btn-default right" onclick="cancel_otkaz();" id="otkazcancel">Отмена</button>
+ </div>	
+</div>
 
 <div id="procstatus_section"   style="display:none;"  class="btn btn-default small">
 <div class="input-group" >
@@ -290,14 +437,11 @@ else
 
 global $paymentstatus;
 	
-	foreach ($paymentstatus AS $pi => $pval)
+	foreach ($paymentstatus AS $pi2 => $pval)
 	{
-		if (($rows['paystatus'] < 6 & $pi < 6) || ($rows['paystatus'] > 5 & $pi > 5) )
-		{
 		$sel = '';
-		if($rows['paystatus'] == $pi) $sel=' selected';
-			$pout.= '<option value="'.$pi.'" '.$sel.'>'.$pval.'</option>';
-		}
+		if($rows['paystatus'] == $pi2) $sel=' selected';
+			$pout.= '<option value="'.$pi2.'" '.$sel.'  '.$access['paystatus'][$pi2]['func'].' >'.$pval.'</option>';
 	}
 	
 ?>
@@ -305,7 +449,7 @@ global $paymentstatus;
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Статус Платежей</span></span>
-<select class="btn <?php echo $nbclass; ?> nav-element" id="paystat"  onchange = "viewpaystatus();" <?php echo $nbdisabled; ?>>
+<select class="btn <?php echo $access['paystatus']['class']; ?> nav-element" id="paystat"  onchange = "viewpaystatus();" <?php echo $access['paystatus']['func']; ?>>
 <?php echo $pout; ?>
 </select>
 <input type="hidden" id="curpaystat" value="<?php echo $rows['paystatus']; ?>">
@@ -313,7 +457,7 @@ global $paymentstatus;
 
 
 <div id="paystatus_section"   style="display:none;"  class="btn btn-default small">
-<div class="input-group" >
+<div class="input-group"  >
   <button class="btn btn-default" onclick="add_paystat();" id="paystatadd">Сохранить</button>
   <button class="btn btn-default right" onclick="cancel_paystat();" id="paystatcancel">Отмена</button>
 </div>	
@@ -327,7 +471,7 @@ global $paymentstatus;
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span ><?php echo $tit0; ?></span></span>
-<button class="btn btn-success  nav-element" id="apv" onclick="allpaymentsview();">Показать</button>
+<button class="btn <?php echo $access['payments']['class']; ?>   nav-element" id="apv" onclick="allpaymentsview();" <?php echo $access['payments']['func']; ?>>Показать</button>
 </div>
 
 <div id="payments_section"  style="display:none;" class="btn btn-default">
@@ -340,7 +484,7 @@ global $paymentstatus;
 
 
 
-<div class="input-group">
+<div class="input-group" <?php echo $access['payments']['add']['func']; ?>  >
   <span class="input-group-addon"><span ><?php echo $tit1; ?></span></span>
   <input type="text" id="newpayment" placeholder="введите сумму" class="form-control" orderid="<?php echo $q[1]; ?>" onkeyup="newpay();">
 </div>	
@@ -384,7 +528,7 @@ global $paymentstatus;
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Редактирование заказа</span></span>
-<button class="btn  <?php echo $bclass; ?>  nav-element"  onclick = "gotoeditor(<?php echo $q[1]; ?>)"  <?php echo $bdisabled; ?>> <?php echo $bname1; ?></button>
+<button class="btn  <?php echo $access['gotoeditor']['class']; ?>  nav-element"  onclick = "gotoeditor(<?php echo $q[1]; ?>)"    <?php echo $access['gotoeditor']['func']; ?> > <?php echo $bname1; ?></button>
 </div>
 
 
@@ -411,7 +555,7 @@ global $paymentstatus;
 
 <div class="input-group">
 <span class="input-group-addon nav-title"><span >Размещение столов</span></span>
-<button class="btn btn-success  nav-element" id="hv" onclick="hallview();">Показать</button>
+<button class="btn  <?php echo $access['viewtables']['class']; ?>  nav-element" id="hv" onclick="hallview();"  <?php echo $access['viewtables']['func']; ?>>Показать</button>
 </div>
 
 
@@ -420,7 +564,7 @@ global $paymentstatus;
 
 	<div class="input-group">
 <span class="input-group-addon  nav-title"><span >Показать отчет</span></span>
-<select id="show_report" onchange="get_report();"  class="form-control nav-element" >
+<select id="show_report" onchange="get_report();"  class="form-control nav-element   <?php echo $access['viewreport']['class']; ?> "  <?php echo $access['viewreport']['func']; ?>>
 <option value="full"  selected="selected">Полный</option>
 <option  value="client">Для Клиента</option>
 <option  value="food">Для Кухни</option>
@@ -589,17 +733,17 @@ function viewpaystatus()
 
 function viewprocstatus()
 {
-curprocstat = $("#curprocstat").val();
-		if ($("#stat1 :selected").val() == 0)
+
+	if ($("#procstat  :selected").val() == 9)
 	{
 		$("#procstat").removeClass("btn-success");
 		$("#procstat").addClass("btn-danger");
-		if (curprocstat != 0) $("#otkaz_section").show();
+		$("#otkaz_section").show();
 		$("#procstatus_section").hide();
 	}
 	else
 	{	
-	if (curprocstat != $("#stat1 :selected").val()) $("#procstatus_section").show();
+		$("#procstatus_section").show();
 		$("#otkaz_section").hide();
 	}
 }
@@ -614,7 +758,6 @@ curstat = $("#curstat").val();
 		$("#stat1").removeClass("btn-primary");
 		$("#stat1").addClass("btn-warning");
 		if (curstat != 1) $("#delegate_section").show();
-		$("#otkaz_section").hide();
 		$("#status_section").hide();
 	}	
 		if ($("#stat1 :selected").val() == 2)
@@ -624,7 +767,6 @@ curstat = $("#curstat").val();
 		$("#stat1").removeClass("btn-primary");
 		$("#stat1").addClass("btn-success");
 		$("#delegate_section").hide();
-		$("#otkaz_section").hide();
 				if (curstat != 2) $("#status_section").show();
 		}		
 			if ($("#stat1 :selected").val() == 8)
@@ -634,7 +776,6 @@ curstat = $("#curstat").val();
 		$("#stat1").removeClass("btn-success");
 		$("#stat1").addClass("btn-primary");
 		$("#delegate_section").hide();
-		$("#otkaz_section").hide();
 		if (curstat != 8) 	$("#status_section").show();	
 	}		
 	
@@ -723,9 +864,6 @@ function newpay()
 	
 $(function(){
 
-
-
-
    
 $('#newpaydate').datepicker({ maxDate: "+0D" });
 $('#otkazdate').datepicker({ maxDate: "+0D" });
@@ -798,7 +936,9 @@ $(".report_client2")
 		if(response.responseText == "yes")
 		{
  			alert("Сообщение отправлено");
-			$("#myForm").clear();
+				location.href="?view/"+orderid+"/";	
+
+				//$("#myForm").clear();
 		}
    },
     error: function()
@@ -813,6 +953,9 @@ $(".report_client2")
 
 
  get_report();
+
+
+
 });
 
 
@@ -845,6 +988,39 @@ dialog.dialog('open');
 		newpay();
 	}
 
+	
+	
+	
+	function remove_payment(payid)
+	{
+		if (confirm("Вы уверены что хотите отменить платеж?")) 
+		{
+
+				orderid = $("#newpayment").attr('orderid');
+
+					$.ajax({
+					type: "POST",
+					url: "functions.php",
+					data: { operation: 'removepayment', payid:payid, ordrid:orderid}
+				})
+				.done(function( msg ) {
+						if(msg == 'yes'){
+						location.href="?view/"+orderid+"/";	
+							} else {
+						alert ('Что-то пошло не так. '+msg);
+						
+						}
+				});
+			
+
+		} else {
+				}
+
+
+	}
+	
+	
+	
 	function add_payment(){
 	orderid = $("#newpayment").attr('orderid');
 
@@ -856,9 +1032,11 @@ dialog.dialog('open');
 		.done(function( msg ) {
 				if(msg == 'yes'){
 
-				cancel_payment();
-					get_all_payments();
-					get_report();
+				
+				location.href="?view/"+orderid+"/";	
+				//cancel_payment();
+					//get_all_payments();
+					//get_report();
 					} else {
 				alert ('Что-то пошло не так. '+msg);
 				
@@ -994,7 +1172,7 @@ function add_delegate()
 		.done(function( msg ) {
 			
 					$("#allpayments").html(msg);
-					check_pay_view();
+					//check_pay_view();
 				
 		});
 		

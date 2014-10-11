@@ -1,5 +1,6 @@
 <?
-if ($_SESSION["curuserrole"]<6) die("У вас нет прав на доступ к этому разделу");
+global $accesdenied;
+if ($_SESSION["curuserrole"]<6) die($accessdenied);
 ?>
 <<!DOCTYPE html>
 <html lang="ru">

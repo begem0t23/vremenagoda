@@ -167,6 +167,21 @@ if ($_POST['operation'] == 'getordersumm')
 	echo $rows['total'] + 0;
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
+if ($_POST['operation'] == 'removepayment')
+{
+$payid = $_POST['payid'];
+$orderid = $_POST['orderid'];
+	
+	$update = "UPDATE `payments_in_orders` SET `iscancel` = 1 WHERE `id`= ".$payid." ;";
+	mysql_query($update);
+	
+renewpaystatus($orderid);	
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 if ($_POST['operation'] == 'addpayment') 
@@ -209,6 +224,7 @@ $paycomm = $_POST['paycomm'];
 				
 			
 			echo 'yes';
+renewpaystatus($orderid);	
 }
 
 
@@ -320,13 +336,19 @@ $orderid = $_POST['orderid'];
 $paysum = $_POST['paysum'];
 $paymeth = $_POST['paymeth'];
 $paydate = $_POST['paydate'];
+$colspan = 3;
 	header('Content-Type: text/html; charset=utf-8');	
-				$ech = $ech.'<table id="allpaytab" class="simple-little-table"><tr>
-				<th class="report_columns_head">№</th>
-				<th class="report_columns_head">Дата</th>
+				$ech = $ech.'<table id="allpaytab" class="simple-little-table"><tr>';
+					if($_SESSION["curuserrole"] == 9)
+					{
+						$colspan = 4;
+						$ech = $ech.'<th class="report_columns_head">Отменить</th>';
+					}
+				$ech = $ech.'<th class="report_columns_head">Дата</th>
 				<th class="report_columns_head">Метод</th>
 				<th class="report_columns_head">Комментарий</th>
 				<th class="report_columns_head">Сумма</th>
+				<th class="report_columns_head">Тип платежа</th>
 				</tr>';
 
 		$tsql2 = "SELECT po.*, pm.name AS methodname FROM `payments_in_orders` AS po, `paymentmethods` AS pm WHERE po.orderid = '".$orderid."' AND po.method = pm.id ORDER BY po.paymentdate ASC;";
@@ -338,22 +360,44 @@ $paydate = $_POST['paydate'];
 				while ($row_tab = mysql_fetch_array($rez_tab))
 				{
 				$summa = $row_tab['summa'];
-				
+				$type = 'Задаток';
+
 				$sclass=" payin";
-				if($summa < 0) $sclass=" payout";
+				if($summa < 0) 
+				{
+				$sclass=" payout";
+				$type = 'Возврат';
+				}
+				if ($row_tab['iscancel'] == 1)  
+				{
+				$type = 'Удалено';
+				$sclass=" removed";
+				}
+				else 
+				{
 				$total+=$summa;
-				$ech = $ech.'<tr class="'.$sclass.'">
-				<td class="'.$sclass.'">'.$row_tab['id'].'</td>
-				<td class="'.$sclass.'">'.$row_tab['paymentdate'].'</td>
+				}
+				$ech = $ech.'<tr class="'.$sclass.'">';
+				if($_SESSION["curuserrole"] == 9 )
+				{
+					$ech = $ech.'<td class="'.$sclass.'">';
+					if ($row_tab['iscancel'] == 0) 
+					{
+						$ech = $ech.'<button class = "btn btn-danger" type="submit"  title="Отменить платеж" onclick="remove_payment('.$row_tab['id'].');"><span class="glyphicon glyphicon-remove"></span></button>';
+					}
+					$ech = $ech.'</td>';
+				}
+				$ech = $ech.'<td class="'.$sclass.'">'.$row_tab['paymentdate'].'</td>
 				<td class="'.$sclass.'">'.$row_tab['methodname'].'</td>
 				<td class="'.$sclass.'">'.$row_tab['comment'].'</td>
 				<td class="'.$sclass.'">'.$summa.'</td>
+				<td class="'.$sclass.'">'.$type.'</td>
 				</tr>';
 				}
 			}
 							$ech = $ech.'<tr>
-				<td colspan = "4"  class="summary_section">ВСЕГО:</td>
-				<td  class="summary_section">'.$total.'</td>
+				<td colspan = "'.$colspan.'"  class="summary_section">ВСЕГО:</td>
+				<td colspan = "2" class="summary_section">'.$total.'</td>
 				</tr>';
 				$ech = $ech.'</table>';
 
@@ -803,9 +847,9 @@ if ($_POST['operation'] == 'getallorders')
 		
 			//if($rows01['status'] == 1) $color = '#f0ad4e';
 			//if($rows01['status'] == 2) $color = '#449d44';
-			//if($rows01['status'] == 8) $color = '#428bca';
-		//if($rows01['procstatus'] == 9) $color = '#c9302c';
-		if($rows01['hallstatus'] == 9) $color = '#c9302c';
+			if($rows01['status'] == 8) $color = '#eeeeee';
+		if($rows01['procstatus'] == 9) $color = '#111111';
+		if($rows01['hallstatus'] == 9) $color = 'red';
 		
 		
 		

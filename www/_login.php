@@ -32,8 +32,8 @@
       <form action="/" method='POST' class="form-signin" role="form">
 		<input type='hidden' value="<?php echo rand();?>" name=dosend>
         <h2 class="form-signin-heading">Введите ваш email и пароль от портала</h2>
-        <input name = 'email' type="email" class="form-control" placeholder="Email address" required autofocus>
-        <input name = 'pass' type="password" class="form-control" placeholder="Password" required>
+        <input name = 'email' type="text" class="form-control" placeholder="Логин" required autofocus>
+        <input name = 'pass' type="password" class="form-control" placeholder="Пароль" required>
         <div class="checkbox">
           <label>
             <input name='remember' type="checkbox" value="remember-me"> Запомнить меня

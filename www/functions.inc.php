@@ -4,6 +4,81 @@
 // А чем  тут это мешает?
 //date_default_timezone_set ("Europe/Moscow");
 
+function renewpaystatus($orderid)
+{
+
+	$total = getpaymentsfororder($orderid);
+	$order = getorderinfo($orderid);
+	$summary = report_client('summa',$orderid);
+	
+if ($order['orderstatus'] == 2 & $order['procstatus'] == 9 & $total['all'] >= 0 & $total['payout'] == 0)
+{
+$paystatus = 6;
+}
+
+if ($order['orderstatus'] == 2 & $order['procstatus'] == 9 & $total['all'] >= 0 & $total['payout'] < 0)
+{
+$paystatus = 7;
+}
+
+if ($order['orderstatus'] == 2 & $order['procstatus'] == 9 & $total['all'] <= 0 & $total['payout'] < 0)
+{
+$paystatus = 8;
+}
+
+
+if ($order['orderstatus'] == 2 & $order['procstatus'] == 9 & $total['all'] <= 0 & $total['payout'] == 0)
+{
+$paystatus = 0;
+}
+
+if ($order['orderstatus'] == 2 & $order['procstatus'] < 9 & $total['all'] == 0 )
+{
+$paystatus = 0;
+}
+
+if ($order['orderstatus'] == 2 & $order['procstatus'] < 9 & $total['all'] > 0 )
+{
+$paystatus = 1;
+}
+
+if ($order['orderstatus'] == 2 & $order['procstatus'] < 9 & $total['all'] > 0 & $total['all'] >= $summary['summary'])
+{
+$paystatus = 3;
+}
+
+
+			$update = "UPDATE `orders` SET  `paystatus` = '".$paystatus."'  WHERE `id` = '".$orderid."' ;";
+			mysql_query($update);
+			
+
+			orders_history($orderid,'23',$paystatus);
+		
+
+
+}
+
+
+	
+function getorderinfo($orderid)
+{
+		$tsql2 = "SELECT * FROM `orders`  WHERE `id` = '".$orderid."' ;";
+			$rez_tab = mysql_query($tsql2);
+			
+			if (mysql_num_rows($rez_tab) > 0)
+			{
+				$row_tab = mysql_fetch_array($rez_tab);
+				$order['orderstatus'] = $row_tab['status'];
+				$order['procstatus'] = $row_tab['procstatus'];
+				$order['paystatus'] = $row_tab['paystatus'];
+				$order['managerid'] = $row_tab['managerid'];
+				$order['creatorid'] = $row_tab['creatorid'];
+			}
+return $order;
+}
+
+
+
 
 function orders_history($orderid,$operationid,$statusid)
 {
@@ -11,6 +86,32 @@ function orders_history($orderid,$operationid,$statusid)
 			mysql_query($insert);
 			
 }
+
+
+function getpaymentsfororder($orderid)
+{
+$total['payin'] = 0;
+$total['payout'] = 0;
+		$tsql2 = "SELECT po.*, pm.name AS methodname FROM `payments_in_orders` AS po, `paymentmethods` AS pm WHERE po.orderid = '".$orderid."' AND po.method = pm.id ORDER BY po.paymentdate ASC;";
+			$rez_tab = mysql_query($tsql2);
+			
+			if (mysql_num_rows($rez_tab)>0)
+			{
+				while ($row_tab = mysql_fetch_array($rez_tab))
+				{
+					if($row_tab['iscancel'] ==0)
+					{
+						if ($row_tab['summa'] > 0) $total['payin'] +=$row_tab['summa'];
+						if ($row_tab['summa'] < 0) $total['payout'] +=$row_tab['summa'];
+					}
+				}
+			}
+			$total['all'] = $total['payin'] + $total['payout'];
+			return	$total;
+
+
+}
+
 
 
 
@@ -1241,6 +1342,14 @@ $drink_sum = $sum[1];
 $allsumm = $food_sum + $drink_sum;
 
 $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $service_sum - $service_discont;
+$summa['food_sum']=$food_sum;
+$summa['food_discont']=$food_discont;
+$summa['drink_sum']=$drink_sum;
+$summa['drink_discont']=$drink_discont;
+$summa['service_sum']=$service_sum;
+$summa['service_discont']=$service_discont;
+$summa['teapay']=$teapay;
+$summa['summary']=$summary;
 		$sumcol =1;
 		if($forwho != 'client') 
 		{
@@ -1330,20 +1439,17 @@ $summary = $food_sum - $food_discont + $drink_sum - $drink_discont + $teapay + $
 		$body_out = $body_out.'</tr>'.chr(10);
 
 	
-	$select = "SELECT sum(summa * ((ispayout * -2) +1)) AS total FROM `payments_in_orders` WHERE `orderid` = '".$orderid."';";
-	
-	$rezult = mysql_query($select);
-	$rows = mysql_fetch_assoc($rezult);
+	$total = getpaymentsfororder($orderid);
 
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Внесенная предоплата</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$sumcol.'">'.($rows['total'] + 0).'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$sumcol.'">'.$total['all'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - $sumcol).'" class="report_section">ЗАДОЛЖЕННОСТЬ:</th>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$sumcol.'"  class="report_section">'.($summary - $rows['total']).'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$sumcol.'"  class="report_section">'.($summary - $total['all']).'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 }
 		$style = '<style>
@@ -1644,13 +1750,14 @@ $button3 = '<form action="#" method="POST" >
 			$button3 = '';
 		}
 
-?>
-
-			
-	<?php		
-			
+if ($forwho == 'summa')
+{
+return $summa;
+}
+else
+{
 	echo $style.'<table><tr><td width="560">'.$title.'</td><td>'.$button1.'</td><td>&nbsp;</td><td>'.$button2.'</td><td>&nbsp;</td><td>'.$button3.'</td></tr></table>'.$table;
-
+}
 
 }
 
@@ -1849,7 +1956,7 @@ function fixednavbar()
 			?>><a href="?create">Создать заказ</a></li>
 			<?
 			}
-			if ($_SESSION["curuserrole"]>4) {?>
+			if ($_SESSION["curuserrole"]>5) {?>
             <li class="dropdown<?php
 			if ($qq=="profile") echo ' active"';
 			?>">
@@ -1860,7 +1967,7 @@ function fixednavbar()
                 <li><a href="?menus">Меню</a></li>
                 <li><a href="?uslugi">Услуги</a></li>
                <?
-			   if ($_SESSION["curuserrole"]>4)
+			   if ($_SESSION["curuserrole"]==9)
 			   {
 				echo '<li><a href="?users">Пользователи</a></li>';
 			   }

@@ -1,3 +1,7 @@
+<?
+global $accesdenied;
+if ($_SESSION["curuserrole"]<6) die($accessdenied);
+?>
 <!DOCTYPE html>
 <html lang="ru">
   <head>
