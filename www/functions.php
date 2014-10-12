@@ -2173,7 +2173,7 @@ file_put_contents("pdf/".$filename, $output);
        require 'class.smtp.php';
 $subject = 'Заказ Банкета в ресторане Времена Года';
         $mail = new PHPMailer();
-        $mail->From = 'info@vremena-goda.ru';           // от кого
+        $mail->From = 'vremena-goda@mail.ru';           // от кого
         $mail->FromName = 'www.vremena-goda.ru';   // от кого
         $mail->AddAddress($email, 'Имя'); // кому - адрес, Имя
         $mail->IsHTML(true);        // выставляем формат письма HTML
@@ -2186,7 +2186,7 @@ $subject = 'Заказ Банкета в ресторане Времена Го�
 		if($copy)
 		{
         $mail2 = new PHPMailer();
-        $mail2->From = 'info@vremena-goda.ru';           // от кого
+        $mail2->From = 'vremena-goda@mail.ru';           // от кого
         $mail2->FromName = 'www.vremena-goda.ru';   // от кого
         $mail2->AddAddress($copy, 'Имя'); // кому - адрес, Имя
         $mail2->IsHTML(true);        // выставляем формат письма HTML

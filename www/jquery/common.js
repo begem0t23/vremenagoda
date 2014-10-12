@@ -16,6 +16,7 @@
 
 					id = $(this).attr('id');
 					id = id.substr(7);
+	
 					quant = $("#quant"+id).val();
 
 					if ($(this ).hasClass("weightfood"))
@@ -44,6 +45,7 @@
 					if ($(this ).hasClass("weightfood"))
 					{
 						wfood0+=$("#weightfood"+id).html() * 1 * quant;
+						
 					}
 					if ($(this ).hasClass("weight1drink"))
 					{
@@ -55,18 +57,23 @@
 					}
 				}
 			});
-
-		wfood -= wfood0;
-		wdrink1 -= wdrink10;
-		wdrink2 -= wdrink20;
-			
+		
+		if (wfood0) wfood = wfood0;
+		//wfood -= wfood0;
+		if (wdrink10) wdrink1 = wdrink10;
+		//wdrink1 -= wdrink10;
+		if (wdrink20) wdrink2 = wdrink20;
+		//wdrink2 -= wdrink20;
+		
+		
 			wfa = Number(wfood/persons).toFixed(2);
 			wfd1 = Number(wdrink1/persons).toFixed(2);
 			wfd2 = Number(wdrink2/persons).toFixed(2);
 			
-			  $("#foodweight").html(" Блюда: " + Number(wfood).toFixed(2) +"г/"+wfa+"г");
+			 $("#foodweight").html(" Блюда: " + Number(wfood).toFixed(2) +"г/"+wfa+"г");
 			$("#drink1weight").html("Спиртное: " + Number(wdrink1).toFixed(2) +"г/"+wfd1+"г");
 			$("#drink2weight").html(" Напитки: " + Number(wdrink2).toFixed(2) +"г/"+wfd2+"г");
+			
 		}
 		else
 		{

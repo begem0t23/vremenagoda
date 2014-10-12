@@ -188,7 +188,6 @@ fixednavbar();
 
 	while ($rows0 = mysql_fetch_array($rezult0)) {
 	
-	
 
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id'],"");
 
@@ -372,8 +371,6 @@ fixednavbar();
 		$rezult0 = mysql_query($tsql0);
 
 	while ($rows0 = mysql_fetch_array($rezult0)) {
-	
-	
 
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id'],"");
 
@@ -383,10 +380,10 @@ fixednavbar();
 	$sections[$rows0['id']]['items'] = $zzz;
 	$sections[$rows0['id']]['items']['isdrink'] = $rows0['isdrink'];
 	
-		$tsql_1 = "SELECT * 
-		 FROM `menu_sections`  
-		 WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
-		 ";
+	$tsql_1 = "SELECT * 
+	FROM `menu_sections`  
+	WHERE `level` = '1' AND `parent_id` = '".$rows0['id']."' ORDER BY `sortid` ASC
+	";
 		$rezult_1 = mysql_query($tsql_1);
 
 	while ($rows_1 = mysql_fetch_array($rezult_1)) {
@@ -894,7 +891,7 @@ fixednavbar();
 						echo '</select>' . "";
 					}
 					global $hallstatus;
-						echo '<select name="hallstatus" id="hallstatus" class="form-control" disabled style="display:none" >' . "";
+						echo '<select name="hallstatus" id="hallstatus" class="form-control" disabled style="display:none" onchange="changehallstatus()" >' . "";
 					foreach ($hallstatus as $st => $val)
 					{	
 							echo '<option value="'.$st.'">'.$val.'</option>' . "";
@@ -1310,9 +1307,10 @@ fixednavbar();
 								.done(function(data) {
 								if (data == '0' || data == '1' || data == '2' || data == '9')
 									{
-									//alert(data);
+									alert(data);
 									$("#hallstatus").show(); 
-									$("#hallstatus option[value="+data+"]").atrr("selected","selected");
+									$("#hallstatus").removeAttr("disabled"); 
+									$("#hallstatus option[value="+data+"]").attr("selected","selected");
 									
 									}
 								});
@@ -1882,18 +1880,21 @@ fixednavbar();
 				var nn = noty({text: 'Название клиента не может быть пустым', type: 'error', timeout:5000, onClick: function(){delete nn;}});
 			}
 		}
-		
+
+
+
+		function changehallstatus()
+		{
+		hallst=$("#hallstatus :selected").val();
+		hallid=$("#hall").val();
+		dateevent=$("#dateevent").val();
+			alert(hallid);
+			alert(dateevent);
+		}
 
 		
 
 		
-		
-
-		
-
-
-	
-	
 
 	</script>
   </body>
