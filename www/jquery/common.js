@@ -1,4 +1,32 @@
-﻿		function count_dish_weight()
+﻿
+		function changehallstatus()
+		{
+		hallstatus=$("#hallstatus :selected").val();
+		hallid=$("#hall").val();
+		dateevent=$("#dateevent").val();
+			//alert(hallid);
+			//alert(dateevent);
+			
+			
+				$.ajax({
+					type: "POST",
+					url: "functions.php",
+					data: { operation: 'changehallstatus', hallid:hallid, dateevent:dateevent, hallstatus:hallstatus}
+				})
+				.done(function( msg ) {
+						if(msg == 'yes'){
+							} else {
+						alert ('Что-то пошло не так. '+msg);
+						
+						}
+				});
+			
+		}
+
+		
+
+
+		function count_dish_weight()
 		{
 
 		wfood = 0;

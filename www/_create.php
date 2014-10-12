@@ -1307,9 +1307,9 @@ fixednavbar();
 								.done(function(data) {
 								if (data == '0' || data == '1' || data == '2' || data == '9')
 									{
-									alert(data);
+									//alert(data);
 									$("#hallstatus").show(); 
-									$("#hallstatus").removeAttr("disabled"); 
+									//$("#hallstatus").removeAttr("disabled"); 
 									$("#hallstatus option[value="+data+"]").attr("selected","selected");
 									
 									}
@@ -1883,19 +1883,8 @@ fixednavbar();
 
 
 
-		function changehallstatus()
-		{
-		hallst=$("#hallstatus :selected").val();
-		hallid=$("#hall").val();
-		dateevent=$("#dateevent").val();
-			alert(hallid);
-			alert(dateevent);
-		}
 
-		
-
-		
-
+	
 	</script>
   </body>
 </html>

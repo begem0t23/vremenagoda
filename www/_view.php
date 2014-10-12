@@ -93,6 +93,7 @@ $sql="SELECT * FROM `users` " ;
 	$offfunc = 'disabled';
 	$invis = 'style = "display:none"';
 	
+	$access['hallstatus']['class'] = $onclass;
 	$access['orderstatus']['class'] = $onclass;
 	$access['procstatus']['class'] = $onclass;
 	$access['paystatus']['class'] = $onclass;
@@ -102,6 +103,7 @@ $sql="SELECT * FROM `users` " ;
 	$access['payments']['class'] = $onclass;
 	$access['viewreport']['class'] = $onclass;
 	
+	$access['hallstatus']['func'] = $onfunc;
 	$access['orderstatus']['func'] = $onfunc;
 	$access['orderstatus'][1]['func'] = $onfunc;
 	$access['orderstatus'][2]['func'] = $onfunc;
@@ -132,6 +134,7 @@ $sql="SELECT * FROM `users` " ;
 	
 	if ($rows['managerid'] != $_SESSION["curuserid"]  and !$isadmin)
 	{
+	$access['hallstatus']['class'] = $offclass;
 	$access['orderstatus']['class'] = $offclass;
 	$access['procstatus']['class'] = $offclass;
 	$access['paystatus']['class'] = $offclass;
@@ -141,6 +144,7 @@ $sql="SELECT * FROM `users` " ;
 	$access['payments']['class'] = $offclass;
 	$access['viewreport']['class'] = $offclass;
 	
+	$access['hallstatus']['func'] = $offfunc;
 	$access['orderstatus']['func'] = $offfunc;
 	$access['procstatus']['func'] = $offfunc;
 	$access['paystatus']['func'] = $offfunc;
@@ -287,6 +291,25 @@ if($rows['paystatus'] == 0 || $rows['paystatus'] == 6)
 	$access['paystatus']['func'] = $offfunc;
 
 }
+
+echo '
+<div class="input-group">
+<span class="input-group-addon nav-title"><span >Статус зала</span></span>';
+
+					global $hallstatus;
+					$hs = gethallondate(convert_date2($rows['eventdate']),$rows["hallid"]);
+						echo '<select name="hallstatus" id="hallstatus" hs="'.$hs.'" class="btn  nav-element '.$access['hallstatus']['class'].'"  onchange="changehallstatus()"   '.$access['hallstatus']['func'].'>' . "";
+					foreach ($hallstatus as $st => $val)
+					{	
+						$sel ='';
+						if($st == $hs) $sel = ' selected';
+						echo '<option value="'.$st.'" '.$sel.'>'.$val.'</option>' . "";
+					}
+						echo '</select>
+</select>
+</div>';
+
+						
 
 echo '
 <div class="input-group">
@@ -612,6 +635,7 @@ fixedbotbar();
 	<script src="/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>	
 	
 			<script src="/jquery/tables_in_hall.js"></script>
+			<script src="/jquery/common.js"></script>
 	<script src="/jquery/jquery.contextMenu.js"></script>
 
 <!-- TableSorter core JavaScript ================================================== -->

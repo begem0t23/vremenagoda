@@ -6,6 +6,26 @@ $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
+
+if($_POST['operation'] == 'changehallstatus')
+{
+
+$hallid = $_POST['hallid'];
+$hallstatus = $_POST['hallstatus'];
+$dateevent = $_POST['dateevent'];
+
+checkhallondate($dateevent,$hallid);
+
+
+				$update = "UPDATE  `halls_on_date` SET `status` = '".$hallstatus."' WHERE  `hallid` = '".$hallid."' AND `date` = '".convert_date($dateevent)."' ;" ;
+			mysql_query($update);
+		echo 'yes';
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 
 if($_POST['operation'] == 'gethallondate')
@@ -13,14 +33,8 @@ if($_POST['operation'] == 'gethallondate')
 $checkdate = $_POST['checkdate'];
 $hallid = $_POST['hallid'];
 
-				$tsql3 = "SELECT * FROM `halls_on_date` WHERE `hallid` = '".$hallid."' AND `date` = '".convert_date($checkdate)."';";
-				$rez_tab3 = mysql_query($tsql3);
-				if (mysql_num_rows($rez_tab3) > 0)
-				{
-					$row = mysql_fetch_array($rez_tab3) ;
-					$out = $row['status'];
-					
-				}
+	
+					$out = gethallondate($checkdate,$hallid);
 
 					echo $out;
 

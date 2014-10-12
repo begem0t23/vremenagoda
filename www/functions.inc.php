@@ -380,7 +380,7 @@ $tabsinorder = 0;
 
 function gethallondate($checkdate,$hallid)
 {
-				$tsql3 = "SELECT * FROM `halls_on_date` WHERE `id` = '".$hallid."' AND `date` = '".convert_date($checkdate)."';";
+				$tsql3 = "SELECT * FROM `halls_on_date` WHERE `hallid` = '".$hallid."' AND `date` = '".convert_date($checkdate)."';";
 				$rez_tab3 = mysql_query($tsql3);
 				if (mysql_num_rows($rez_tab3) > 0)
 				{
