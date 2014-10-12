@@ -162,6 +162,7 @@ fixednavbar();
 						<col width="50" />
 						<col width="30" />
 						<col width="30" />
+						<col width="30" />
 						<col width="20" />
 						<col width="50" />
 						<col width="150" />
@@ -173,6 +174,7 @@ fixednavbar();
 						<th class="sorter-false">Порции (кг)</th>
 						<th class="sorter-false">Цена</th>
 						<th class="sorter-false">Спец Цена</th>
+						<th class="sorter-false">Выбранная Цена</th>
 						<th class="sorter-false">Кол-во</th>
 						<th class="sorter-false">Комментарий</th>
 						<th class="sorter-false">Действие</th>
@@ -248,7 +250,7 @@ fixednavbar();
 		if ($sections[$num]['dishes'] > 0) 
 		{	
 			
-			echo '<tbody><tr><th  colspan="7" class="level_0">'.chr(10);			
+			echo '<tbody><tr><th  colspan="8" class="level_0">'.chr(10);			
 			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
 			echo '</th></tr></tbody>'.chr(10);
 
@@ -262,7 +264,7 @@ fixednavbar();
 				
 				if ($val[$num1]['dishes'] > 0) 
 				{	
-					echo '<tbody><tr><th  colspan="7" class="level_1">'.chr(10);			
+					echo '<tbody><tr><th  colspan="8" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 
@@ -279,7 +281,7 @@ fixednavbar();
 	
 							if ($val1[$num2]['dishes'] > 0) 
 							{	
-								echo '<tbody><tr><th  colspan="7" class="level_2">'.chr(10);			
+								echo '<tbody><tr><th  colspan="8" class="level_2">'.chr(10);			
 								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
 								echo '</th></tr></tbody>'.chr(10);
 													
@@ -346,6 +348,7 @@ fixednavbar();
 						<col width="50" />
 						<col width="30" />
 						<col width="30" />
+						<col width="30" />
 						<col width="20" />
 						<col width="50" />
 						<col width="150" />
@@ -357,6 +360,7 @@ fixednavbar();
 							<th class="sorter-false">Порции (кг)</th>
 							<th class="sorter-false">Цена</th>
 							<th class="sorter-false">Спец Цена</th>
+							<th class="sorter-false">Выбранная Цена</th>
 							<th class="sorter-false">Кол-во</th>
 							<th class="sorter-false">Комментарий</th>
 							<th class="sorter-false">Действие</th>
@@ -431,7 +435,7 @@ fixednavbar();
 		if ($sections[$num]['dishes'] > 0) 
 		{	
 			
-			echo '<tbody><tr><th  colspan="7" class="level_0">'.chr(10);			
+			echo '<tbody><tr><th  colspan="8" class="level_0">'.chr(10);			
 			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
 			echo '</th></tr></tbody>'.chr(10);
 
@@ -445,7 +449,7 @@ fixednavbar();
 				
 				if (@$val[$num1]['dishes'] > 0) 
 				{	
-					echo '<tbody><tr><th  colspan="7" class="level_1">'.chr(10);			
+					echo '<tbody><tr><th  colspan="8" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 
@@ -462,7 +466,7 @@ fixednavbar();
 	
 							if (@$val1[$num2]['dishes'] > 0) 
 							{	
-								echo '<tbody><tr><th  colspan="7" class="level_2">'.chr(10);			
+								echo '<tbody><tr><th  colspan="8" class="level_2">'.chr(10);			
 								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
 								echo '</th></tr></tbody>'.chr(10);
 													
@@ -997,6 +1001,8 @@ fixednavbar();
 							$("#note"+index).val(value["note"]);
 							$("#quant"+index).attr("readonly","readonly");
 							$("#note"+index).attr("readonly","readonly");						
+							$("#price"+index).attr("disabled","disabled");						
+							$("#specialprice"+index).attr("disabled","disabled");						
 						}
 					});					
 				}
@@ -1182,8 +1188,35 @@ fixednavbar();
 				sectionid = $(this).attr("sectionid");
 				get_edit_dish_form(dishid, menuid, sectionid);
 				dialog3.dialog( "open" );
-    });
+		});
 			
+			
+		$( document ).on( "click", "button[name=price]", function() {
+				dishid = $(this).attr("id");
+				dishid=dishid.substr(5);
+				selectprice = $(this).html();
+				//alert(dishid);
+				$("#selprice"+dishid).html(selectprice);
+				$(this).removeClass("btn-default");
+				$(this).addClass("btn-success");
+				$("#specialprice"+dishid).removeClass("btn-success");
+				$("#specialprice"+dishid).addClass("btn-default");
+
+				});
+			
+			
+		$( document ).on( "click", "button[name=specialprice]", function() {
+				dishid = $(this).attr("id");
+				dishid=dishid.substr(12);
+				selectprice = $(this).html();
+				//alert(dishid);
+				$("#selprice"+dishid).html(selectprice);
+				$(this).removeClass("btn-default");
+				$(this).addClass("btn-success");
+				$("#price"+dishid).removeClass("btn-success");
+				$("#price"+dishid).addClass("btn-default");
+
+				});
 			
 				
 
@@ -1298,8 +1331,6 @@ fixednavbar();
 							else
 							{
 
-
-
 							get_selected_hall($("#hall").val(),$("#dateevent").val(),'order','selectedhall');
 
 							$.post("functions.php", {operation: 'gethallondate', hallid:$("#hall").val(), checkdate:$("#dateevent").val()},
@@ -1392,6 +1423,8 @@ fixednavbar();
 					$("#dishname"+id).css("color", "");
 					$("#quant"+id).removeAttr("readonly");
 					$("#note"+id).removeAttr("readonly");					
+					$("#price"+id).removeAttr("disabled");					
+					$("#specialprice"+id).removeAttr("disabled");					
 					if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
 					if (dishes) {
 						var dishall = $.parseJSON(dishes);
@@ -1407,12 +1440,16 @@ fixednavbar();
 							$(this).addClass("btn-primary");
 
 					$(this).html("Удалить");
+
 					$("#dishname"+id).css("color", "green");
 					var quant 	= $("#quant"+id).val();
 					var note 	= $("#note"+id).val();
 					var dishes="";
+
 					$("#quant"+id).attr("readonly","readonly");
 					$("#note"+id).attr("readonly","readonly");
+					$("#price"+id).attr("disabled","disabled");
+					$("#specialprice"+id).attr("disabled","disabled");
 					if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
 					if (dishes)
 					{

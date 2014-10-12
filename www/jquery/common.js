@@ -44,7 +44,7 @@
 
 					id = $(this).attr('id');
 					id = id.substr(7);
-	
+
 					quant = $("#quant"+id).val();
 
 					if ($(this ).hasClass("weightfood"))

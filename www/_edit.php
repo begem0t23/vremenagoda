@@ -266,6 +266,7 @@ if ($q[1]>0)
 						<col width="30" />
 						<col width="30" />
 						<col width="30" />
+						<col width="30" />
 						<col width="20" />
 						<col width="50" />
 						<col width="150" />
@@ -278,6 +279,7 @@ if ($q[1]>0)
 							<th class="sorter-false">Цена</th>
 							<th class="sorter-false">Спец Цена</th>
 							<th class="sorter-false">Цена Архив</th>
+							<th class="sorter-false">Выбранная Цена</th>
 							<th class="sorter-false">Кол-во</th>
 							<th class="sorter-false">Комментарий</th>
 							<th class="sorter-false">Действие</th>
@@ -354,7 +356,7 @@ if ($q[1]>0)
 		if ($sections[$num]['dishes'] > 0) 
 		{	
 			
-			echo '<tbody><tr><th  colspan="8" class="level_0">'.chr(10);			
+			echo '<tbody><tr><th  colspan="9" class="level_0">'.chr(10);			
 			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
 			echo '</th></tr></tbody>'.chr(10);
 
@@ -371,7 +373,7 @@ if ($q[1]>0)
 				
 				if ($val[$num1]['dishes'] > 0) 
 				{	
-					echo '<tbody><tr><th  colspan="8" class="level_1">'.chr(10);			
+					echo '<tbody><tr><th  colspan="9" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 
@@ -388,7 +390,7 @@ if ($q[1]>0)
 	
 							if ($val1[$num2]['dishes'] > 0) 
 							{	
-								echo '<tbody><tr><th  colspan="8" class="level_2">'.chr(10);			
+								echo '<tbody><tr><th  colspan="9" class="level_2">'.chr(10);			
 								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
 								echo '</th></tr></tbody>'.chr(10);
 													
@@ -455,6 +457,7 @@ if ($q[1]>0)
 						<col width="30" />
 						<col width="30" />
 						<col width="30" />
+						<col width="30" />
 						<col width="20" />
 						<col width="50" />
 						<col width="150" />
@@ -467,6 +470,7 @@ if ($q[1]>0)
 							<th class="sorter-false">Цена</th>
 							<th class="sorter-false">Спец Цена</th>
 							<th class="sorter-false">Цена Архив</th>
+							<th class="sorter-false">Выбранная Цена</th>
 							<th class="sorter-false">Кол-во</th>
 							<th class="sorter-false">Комментарий</th>
 							<th class="sorter-false">Действие</th>
@@ -543,7 +547,7 @@ if ($q[1]>0)
 		if ($sections[$num]['dishes'] > 0) 
 		{	
 			
-			echo '<tbody><tr><th  colspan="8" class="level_0">'.chr(10);			
+			echo '<tbody><tr><th  colspan="9" class="level_0">'.chr(10);			
 			echo  $sections[$num]['name'].' ('.$sections[$num]['dishes'].')'.chr(10);
 			echo '</th></tr></tbody>'.chr(10);
 
@@ -557,7 +561,7 @@ if ($q[1]>0)
 				
 				if (@$val[$num1]['dishes'] > 0) 
 				{	
-					echo '<tbody><tr><th  colspan="8" class="level_1">'.chr(10);			
+					echo '<tbody><tr><th  colspan="9" class="level_1">'.chr(10);			
 					echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val[$num1]['name'].' ('.$val[$num1]['dishes'].')'.chr(10);
 					echo '</th></tr></tbody>'.chr(10);
 
@@ -574,7 +578,7 @@ if ($q[1]>0)
 	
 							if (@$val1[$num2]['dishes'] > 0) 
 							{	
-								echo '<tbody><tr><th  colspan="8" class="level_2">'.chr(10);			
+								echo '<tbody><tr><th  colspan="9" class="level_2">'.chr(10);			
 								echo  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$val1[$num2]['name'].' ('.$val1[$num2]['dishes'].')'.chr(10);
 								echo '</th></tr></tbody>'.chr(10);
 													
@@ -977,6 +981,9 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 							$("#note"+index).val(value["note"]);
 							$("#quant"+index).attr("readonly","readonly");
 							$("#note"+index).attr("readonly","readonly");						
+							$("#price"+index).attr("disabled","disabled");						
+							$("#specialprice"+index).attr("disabled","disabled");						
+							$("#archivprice"+index).attr("disabled","disabled");
 						}
 					});					
 				}
@@ -1282,6 +1289,9 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					$("#dishname"+id).css("color", "");
 					$("#quant"+id).removeAttr("readonly");
 					$("#note"+id).removeAttr("readonly");					
+					$("#price"+id).removeAttr("disabled");					
+					$("#specialprice"+id).removeAttr("disabled");					
+					$("#archivprice"+id).removeAttr("disabled");					
 					if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
 					if (dishes) {
 						var dishall = $.parseJSON(dishes);
@@ -1303,6 +1313,9 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					var dishes="";
 					$("#quant"+id).attr("readonly","readonly");
 					$("#note"+id).attr("readonly","readonly");
+					$("#price"+id).attr("disabled","disabled");
+					$("#specialprice"+id).attr("disabled","disabled");
+					$("#archivprice"+id).attr("disabled","disabled");
 					if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
 					if (dishes)
 					{
@@ -1324,14 +1337,66 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 			});		
 			
 			
-						
+	
+		$( document ).on( "click", "button[name=price]", function() {
+				dishid = $(this).attr("id");
+				dishid=dishid.substr(5);
+				selectprice = $(this).html();
+				//alert(dishid);
+				$("#selprice"+dishid).html(selectprice);
+				$(this).removeClass("btn-default");
+				$(this).addClass("btn-success");
+				$("#specialprice"+dishid).removeClass("btn-success");
+				$("#specialprice"+dishid).addClass("btn-default");
+				$("#archivprice"+dishid).removeClass("btn-success");
+				$("#archivprice"+dishid).addClass("btn-default");
+
+				});
+			
+			
+		$( document ).on( "click", "button[name=specialprice]", function() {
+				dishid = $(this).attr("id");
+				dishid=dishid.substr(12);
+				selectprice = $(this).html();
+				//alert(dishid);
+				$("#selprice"+dishid).html(selectprice);
+				$(this).removeClass("btn-default");
+				$(this).addClass("btn-success");
+				$("#price"+dishid).removeClass("btn-success");
+				$("#price"+dishid).addClass("btn-default");
+				$("#archivprice"+dishid).removeClass("btn-success");
+				$("#archivprice"+dishid).addClass("btn-default");
+
+				});
+			
+
+		$( document ).on( "click", "button[name=archivprice]", function() {
+				dishid = $(this).attr("id");
+				dishid=dishid.substr(11);
+				selectprice = $(this).html();
+				//alert(dishid);
+				$("#selprice"+dishid).html(selectprice);
+				$(this).removeClass("btn-default");
+				$(this).addClass("btn-success");
+				$("#price"+dishid).removeClass("btn-success");
+				$("#price"+dishid).addClass("btn-default");
+				$("#specialprice"+dishid).removeClass("btn-success");
+				$("#specialprice"+dishid).addClass("btn-default");
+
+				});
+			
+
+
+
+	
 					$( document ).on( "keyup", "input[name=quantserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(9);
 				tocalc = $(this).attr("tocalc");
 				bgs = $(this).attr("bgs");
 				
-				
+	
+	
 
 				if($(this).val() != '') 
 				{
