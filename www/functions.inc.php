@@ -37,9 +37,16 @@ if ($order['orderstatus'] == 2 & $order['procstatus'] < 9 & $total['all'] == 0 )
 $paystatus = 0;
 }
 
-if ($order['orderstatus'] == 2 & $order['procstatus'] < 9 & $total['all'] > 0 )
+if ($order['orderstatus'] == 2 & $order['procstatus'] < 9 & $total['all'] > 0  )
 {
-$paystatus = 1;
+if ($order['paystatus'] == 2)
+	{
+		$paystatus = 2;
+	}
+	else
+	{
+		$paystatus = 1;
+	}
 }
 
 if ($order['orderstatus'] == 2 & $order['procstatus'] < 9 & $total['all'] > 0 & $total['all'] >= $summary['summary'])
@@ -54,7 +61,6 @@ $paystatus = 3;
 
 			orders_history($orderid,'23',$paystatus);
 		
-
 
 }
 
@@ -550,7 +556,7 @@ function dishes_in_section_by_order($order_id,$menu_section,$cnt)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT dh.id, dh.name,   dh.weight, do.price price2, do.num, do.note FROM dishes_history dh,  dishes_in_orders do  WHERE dh.menu_section = ".$menu_section." and do.orderid=".$order_id." and do.dishid = dh.dishid  AND dh.isactive > 0 GROUP BY  dh.dishid ORDER BY dh.kogda DESC;";
+		$tsql01 = "SELECT dh.id, dh.name,   dh.weight, do.price price2, do.num, do.note FROM dishes_history dh,  dishes_in_orders do  WHERE dh.menu_section = ".$menu_section." and do.orderid=".$order_id." and do.dishid = dh.id  AND dh.isactive > 0 GROUP BY  dh.dishid ORDER BY dh.name ASC, dh.kogda DESC;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -577,7 +583,7 @@ function dishes_in_section_by_arhiv($addsql,$menu_section,$cnt)
 {
 $dish = Array();
 $dish['count'] = 0;
-			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' ".$addsql." ;";
+			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' ".$addsql." ORDER BY `name` ASC;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -634,6 +640,7 @@ $class =  '';
 							<td><span id="dish_name'.$items[$i]["dishid"].'">'.$items[$i]["title"].'</span></td>';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["description"].'</td>';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["price"].'</td>';
+							$output['print'] = @$output['print'].'<td>'.$items[$i]["specialprice"].'</td>';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["weight"].'</td>';
 							$output['print'] = @$output['print'].'<td>'.$valchanges.'</td>';
 							$output['print'] = @$output['print'].'<td>'.$items[$i]["kogda"].'</td>';
@@ -653,7 +660,7 @@ function dishes_in_section($menu_id,$menu_section)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT * FROM `dishes_history` WHERE `menu_section` = ".$menu_section."  AND `menu` > 0 and `isactive` > 0;";
+		$tsql01 = "SELECT * FROM `dishes_history` WHERE `menu_section` = ".$menu_section."  AND `menu` > 0 and `isactive` > 0  ORDER BY `name` ASC;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -679,7 +686,7 @@ function dishes_in_section_for_summary($menu_section,$dishes,$cnt)
 {
 $dish = Array();
 $dish['count'] = 0;
-		$tsql01 = "SELECT * FROM `dishes_history` WHERE `menu_section` = ".$menu_section."  AND `isactive` > 0 ;";
+		$tsql01 = "SELECT * FROM `dishes_history` WHERE `menu_section` = ".$menu_section."  AND `isactive` > 0  ORDER BY `name` ASC;";
 		$rezult01 = mysql_query($tsql01);
 
 		if (mysql_num_rows($rezult01) > 0) 
@@ -718,7 +725,7 @@ function dishes_in_section_by_menu($menu_id,$menu_section,$typetree)
 {
 $dish = Array();
 $dish['count'] = 0;
-			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '".$menu_id."' AND isactive > 0  ;";
+			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '".$menu_id."' AND isactive > 0 ORDER BY `name` ASC, `isbasic` ASC ;";
 			$rezult01 = mysql_query($tsql01);
 
 
@@ -743,11 +750,11 @@ $dish['count'] = 0;
 return $dish;
 }
 
-function dishes_in_section_by_menu_edit($menu_id,$menu_section,$typetree)
+function dishes_in_section_by_menu_edit($menu_id,$menu_section,$typetree,$ordercd)
 {
 $dish = Array();
 $dish['count'] = 0;
-			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '".$menu_id."' order by dishid asc, kogda desc;";
+			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '".$menu_id."' order by `name` asc, kogda desc;";
 			$rezult01 = mysql_query($tsql01);
 
 
@@ -755,6 +762,14 @@ $dish['count'] = 0;
 		{
 			while ($rows01 = mysql_fetch_array($rezult01)) 
 			{			
+				$archivprice = $rows01['price'];
+				$tsql02 = "SELECT * FROM dishes_history  WHERE dishid = '".$rows01['dishid']."' and kogda < '".$ordercd."' order by  kogda desc limit 0,1;";
+				$rezult02 = mysql_query($tsql02);
+				if (mysql_num_rows($rezult01) > 0) 
+				{
+					$rows02 = mysql_fetch_array($rezult02);
+					$archivprice = $rows02['price'];	
+				}
 				$dish[$dish['count']]['id'] = $rows01['id'];
 				$dish[$dish['count']]['dishid'] = $rows01['dishid'];
 				$dish[$dish['count']]['isactive'] = $rows01['isactive'];
@@ -763,7 +778,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['description'] = $rows01['description'];
 				$dish[$dish['count']]['weight'] = $rows01['weight'];
 				$dish[$dish['count']]['price'] = $rows01['price'];
-				$dish[$dish['count']]['archivprice'] = $rows01['price'];
+				$dish[$dish['count']]['archivprice'] = $archivprice;
 				$dish[$dish['count']]['specialprice'] = $rows01['specialprice'];
 				$dish[$dish['count']]['kogda'] = $rows01['kogda'];
 				$dish['count'] ++;
@@ -944,7 +959,7 @@ $tsql = "SELECT o.id, o.eventdate, o.eventtime, o.status, u.realname, c.name,c.e
 $rezult = mysql_query($tsql);
 
 	$body_out = '<tbody>'.chr(10);
-	
+
 $rows = mysql_fetch_array($rezult);
 	$hallname = '';
 	if($rows['hallid'] > 0){

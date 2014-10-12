@@ -130,7 +130,7 @@ if ($q[1]>0)
 
 		<div id=spanpage1 style="visibility: hidden; max-width: 400px;">
 		<?php
-	$tsql = "select DATE_FORMAT(eventdate,'%d.%m.%Y') as ed, orders.* from orders where id = ".mysql_escape_string($q[1]).";";
+	$tsql = "select DATE_FORMAT(eventdate,'%d.%m.%Y') as ed,  orders.* from orders where id = ".mysql_escape_string($q[1]).";";
 	$r_order = mysql_query($tsql);
 	if (mysql_num_rows($r_order)==0)
 	{
@@ -297,7 +297,7 @@ if ($q[1]>0)
 	
 	
 
-	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows0['id'],"");
+	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows0['id'],"",$row_order["createdate"]);
 
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
 	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
@@ -313,7 +313,7 @@ if ($q[1]>0)
 
 	while ($rows_1 = mysql_fetch_array($rezult_1)) {
 
-	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows_1['id'],"");
+	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows_1['id'],"",$row_order["createdate"]);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name'];
@@ -331,7 +331,7 @@ if ($q[1]>0)
 
 	while ($rows_2 = mysql_fetch_array($rezult_2)) {
 
-	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows_2['id'],"");
+	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows_2['id'],"",$row_order["createdate"]);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
@@ -488,7 +488,7 @@ if ($q[1]>0)
 	
 	
 
-	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows0['id'],"");
+	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows0['id'],"",$row_order["createdate"]);
 
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
 	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
@@ -504,7 +504,7 @@ if ($q[1]>0)
 
 	while ($rows_1 = mysql_fetch_array($rezult_1)) {
 
-	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows_1['id'],"");
+	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows_1['id'],"",$row_order["createdate"]);
 	$sections[$rows0['id']]['dishes'] = @$sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name'];
@@ -522,7 +522,7 @@ if ($q[1]>0)
 
 	while ($rows_2 = mysql_fetch_array($rezult_2)) {
 
-	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows_2['id'],"");
+	$zzz = dishes_in_section_by_menu_edit($row_menutype["id"],$rows_2['id'],"",$row_order["createdate"]);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] ++;

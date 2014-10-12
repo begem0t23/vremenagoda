@@ -114,6 +114,7 @@ $sql="SELECT * FROM `users` " ;
 	$access['procstatus'][1]['func'] = $onfunc;
 	$access['procstatus'][2]['func'] = $onfunc;
 	$access['procstatus'][3]['func'] = $invis;
+	$access['procstatus'][8]['func'] = $invis;
 	$access['procstatus'][9]['func'] = $onfunc;
 
 	$access['paystatus']['func'] = $onfunc;
@@ -219,10 +220,6 @@ echo '
 		$access['paystatus'][7]['func'] = $invis;
 	}
 
-	if($total['all'] <= 0)
-	{
-		$access['payments']['add']['func'] = $invis;
-	}
 	
 //если завершен
 if($rows['status'] == 8)
@@ -237,6 +234,8 @@ if($rows['status'] == 8)
 	$access['gotoeditor']['func'] = $offfunc;
 	$access['payments']['add']['func'] = $invis;
 	$access['viewreport']['func'] = $offfunc;
+	
+
 }
 
 //если не отправлен клиенту блокировать изменения статуса
@@ -284,8 +283,10 @@ if($rows['procstatus'] == 9)
 	
 	}
 
-
-
+	if($rows['procstatus'] == 3)
+	{
+		$access['procstatus'][8]['func'] = $onfunc;
+	}
 if($rows['paystatus'] == 0 || $rows['paystatus'] == 6)
 {
 	$access['paystatus']['func'] = $offfunc;
@@ -1025,7 +1026,7 @@ dialog.dialog('open');
 					$.ajax({
 					type: "POST",
 					url: "functions.php",
-					data: { operation: 'removepayment', payid:payid, ordrid:orderid}
+					data: { operation: 'removepayment', payid:payid, orderid:orderid}
 				})
 				.done(function( msg ) {
 						if(msg == 'yes'){

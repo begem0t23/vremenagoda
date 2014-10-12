@@ -193,6 +193,7 @@ $orderid = $_POST['orderid'];
 	mysql_query($update);
 	
 renewpaystatus($orderid);	
+	echo 'yes';
 }
 
 
@@ -869,7 +870,7 @@ if ($_POST['operation'] == 'getallorders')
 		
 		$ech=$ech.'{'.chr(10);
 		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
-		$ech=$ech.'"title": "'.$rows01['id'].'. '.$rows01['name'].' ('.$rows01['guestcount'].') ",'.chr(10);
+		$ech=$ech.'"title": "№'.$rows01['id'].'. '.$rows01['name'].' ('.$rows01['guestcount'].') ",'.chr(10);
 		$ech=$ech.'"start": "'.$start.'",'.chr(10);
 		$ech=$ech.'"todo": "'.$rows01['comment'].'",'.chr(10);
 		$ech=$ech.'"url": "?view/'.$rows01['id'].'/",'.chr(10);
@@ -1488,8 +1489,7 @@ $sectionid = $_POST['sectionid'];
 	<?php
 	if ($sectionid > 0)
 	{
-	echo '	<input onchange="changeform();"  type="checkbox" id="isbasic"  <?php echo $checked; ?> В меню для зала<br>	<br>
-<p >Привязать к разделу:</p>';
+	echo '	<br><input onchange="changeform();"  type="checkbox" id="isbasic"  '.$checked.'> В меню для зала<br>	<br>';
 
 	echo '<select id="menu_section"  onchange="changeform();" >';
 
@@ -1658,11 +1658,11 @@ if ($_POST['isbasic'] == 'true') $isbasic = 1;
 if ($dishid == 0) 
 	{
 $nowtime = time();
-	$insert = "INSERT INTO `dishes` (`id`, `title`, `description`, `price`, `weight`, `isdrink`, `isbasic`, `menu_section`, `createdate`, `orderby`) VALUES(NULL, '".$name."', '".$description."', '".$price."', '".$weight."', '".$rows2['isdrink']."', '".$isbasic."',  '".$menu_section."', FROM_UNIXTIME(".$nowtime."),'0');";
+	$insert = "INSERT INTO `dishes` (`id`, `title`, `description`, `price`, `weight`, `isdrink`, `isbasic`, `menu_section`, `createdate`, `orderby`,`specialprice`) VALUES(NULL, '".$name."', '".$description."', '".$price."', '".$weight."', '".$rows2['isdrink']."', '".$isbasic."',  '".$menu_section."', FROM_UNIXTIME(".$nowtime."),'0', '".$specialprice."');";
 			mysql_query($insert);
 			
 			$changes = '4,';//создание
-	$select3 = "SELECT * FROM `dishes` WHERE `title` = '".$name."' AND `description` =  '".$description."' AND  `price` = '".$price."' AND `weight` = '".$weight."' AND `isdrink` = '".$rows2['isdrink']."' AND `isbasic`  = '".$isbasic."' AND  `menu_section` = '".$menu_section."' AND `createdate` =  FROM_UNIXTIME(".$nowtime.") ;";
+	$select3 = "SELECT * FROM `dishes` WHERE `title` = '".$name."' AND `description` =  '".$description."' AND  `price` = '".$price."'  AND  `specialprice` = '".$specialprice."' AND `weight` = '".$weight."' AND `isdrink` = '".$rows2['isdrink']."' AND `isbasic`  = '".$isbasic."' AND  `menu_section` = '".$menu_section."' AND `createdate` =  FROM_UNIXTIME(".$nowtime.") ;";
 	$rezult3 = mysql_query($select3);
 	$rows3 = mysql_fetch_array($rezult3);
 	$dishid = 	$rows3['id'];
@@ -1713,14 +1713,14 @@ $nowtime = time();
 	}
 	
 	
-		$tsql02 = "update `dishes_history`  set `isactive` = '0' where `dishid` = '".$dishid."'  ;";
+		$tsql02 = "update `dishes_history`  set `isactive` = '0' , `changes` = '".$changes."' where `dishid` = '".$dishid."'  ;";
 		mysql_query($tsql02);
 	}	
 
 	
 	
 	
-		$insert = "INSERT INTO `dishes_history` (`id`, `dishid`,`name`,  `description`, `price`,   `weight`,  `isbasic`, `menu_section`,  `menu`,  `createdby`, `isactive`, `changes`,`kogda` ) VALUES (NULL , '".$dishid."','".$name."','".$description."','".$price."','".$weight."','".$isbasic."','".$menu_section."','".$menuid."','".$_SESSION['curuserid']."' ,'1', '".$changes."' , NOW() ) ;";	
+		$insert = "INSERT INTO `dishes_history` (`id`, `dishid`,`name`,  `description`, `price`,   `weight`,  `isbasic`, `menu_section`,  `menu`,  `createdby`, `isactive`, `changes`,`kogda` ,`specialprice`) VALUES (NULL , '".$dishid."','".$name."','".$description."','".$price."','".$weight."','".$isbasic."','".$menu_section."','".$menuid."','".$_SESSION['curuserid']."' ,'1', '' , NOW(),'".$specialprice."' ) ;";	
 		mysql_query($insert);
 		echo 'yes';
 }
