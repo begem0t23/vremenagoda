@@ -6,6 +6,19 @@ $qq = @$_SERVER['QUERY_STRING'];
 if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 
+
+
+if($_POST['operation'] == 'newspecpriceperiod')
+{
+$startdate = $_POST['startdate'];
+$enddate = $_POST['enddate'];
+
+$insert = "INSERT INTO `special_prices_period` (`id`, `startdate`, `enddate`, `createdate`) VALUES (NULL, '".convert_date($startdate)."', '".convert_date($enddate)."', NOW() ) ;";
+
+mysql_query($insert);
+echo 'yes';
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
 
 

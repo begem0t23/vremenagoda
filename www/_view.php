@@ -890,8 +890,8 @@ function newpay()
 $(function(){
 
    
-$('#newpaydate').datepicker({ maxDate: "+0D" });
-$('#otkazdate').datepicker({ maxDate: "+0D" });
+$('#newpaydate').datepicker({  });
+$('#otkazdate').datepicker({});
 
  $("#allpaytab")
   .tablesorter(

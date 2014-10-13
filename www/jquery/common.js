@@ -15,6 +15,7 @@
 				})
 				.done(function( msg ) {
 						if(msg == 'yes'){
+						alert("Статус зала обновлен.");
 							} else {
 						alert ('Что-то пошло не так. '+msg);
 						
@@ -266,3 +267,13 @@
 			}
 		}	
 		
+		
+			function convertdate(fulldate)
+	{
+		d = fulldate.substr(0,2);
+		m = fulldate.substr(3,2);
+		y = fulldate.substr(6,4);
+		date = y+'-'+m+'-'+d;
+		
+		return date;
+	}

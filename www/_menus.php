@@ -84,6 +84,12 @@ if ($_SESSION["curuserrole"]<6) die($accessdenied);
 
 fixednavbar();
 
+$select = "SELECT  DATE_FORMAT(startdate,'%d.%m.%Y') as dstart,  DATE_FORMAT(enddate,'%d.%m.%Y') as dend FROM `special_prices_period` ORDER BY `id` DESC LIMIT 0,1 ;";
+$rezult = mysql_query($select);
+$row = mysql_fetch_array($rezult);
+$dstart = $row['dstart'];
+$dend = $row['dend'];
+
 
 ?>
 
@@ -92,7 +98,12 @@ fixednavbar();
 		<div class="page-header">
         <h3>Редактирование Меню</h3>
 		</div>
-		
+<div class="input-group" style="width:400px;">
+ <span class="input-group-addon"><span>Специальные цены </span></span>
+ <input value = "<?php echo $dstart; ?>"  data-mask="99.99.9999" maxlength="10" type="text" id="specpricestart" onchange="newspecpriceperiod();" onclick="$('#specpricestart' ).datepicker( 'show' );" class="form-control" placeholder="Начало периода">
+ <input  value = "<?php echo $dend; ?>"  data-mask="99.99.9999" maxlength="10" type="text" id="specpriceend" onchange="newspecpriceperiod();" onclick="$('#specpriceend' ).datepicker( 'show' );" class="form-control" placeholder="Конец периода">
+  </div>	
+		<br>
 		<div id="menutree">
 
 
@@ -351,6 +362,14 @@ $( ".stContainer" ).css("height", newh + "px")
 			// когда страница загружена
 
 
+			
+			
+			
+			
+			
+			$('#specpricestart').datepicker({  });
+			$('#specpriceend').datepicker({  });
+
 
 $( document ).on( "click", "button[name=dishfrommenu]", function() {
 				dishid = $(this).attr("dishid");
@@ -545,6 +564,30 @@ $('#tabs').smartTab({selected: 0});
  
 	});
  
+ }
+ 
+ function newspecpriceperiod()
+ {
+ 
+ startdate = $('#specpricestart' ).val();
+ enddate = $('#specpriceend' ).val();
+ 
+if(startdate != "" & enddate != "")
+{
+ 		$.ajax({
+			type: "POST",
+			url: "functions.php",
+			data: { operation: 'newspecpriceperiod', startdate: startdate, enddate: enddate}
+		})
+		.done(function( msg ) {
+				if(msg == 'yes'){
+				alert("Период обновлен.");
+				} else {
+				alert ('Что-то пошло не так. '+msg);
+				}
+		});
+ 
+ }
  }
  
 	</script>

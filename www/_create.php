@@ -94,6 +94,14 @@ setCookie("clientname", null, -1);
 
 fixednavbar();
 
+$select = "SELECT  DATE_FORMAT(startdate,'%d.%m.%Y') as dstart,  DATE_FORMAT(enddate,'%d.%m.%Y') as dend FROM `special_prices_period` ORDER BY `id` DESC LIMIT 0,1 ;";
+$rezult = mysql_query($select);
+$row = mysql_fetch_array($rezult);
+$dstart = $row['dstart'];
+$dend = $row['dend'];
+echo '<input type="hidden" id="specpricestart" value="'.$dstart.'">';
+echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
+
 ?>
 
     <!-- Begin page content -->
@@ -984,12 +992,56 @@ fixednavbar();
 				/*$( "button[name=adddish]" ).each(function( index ) {
 				  console.log( index + ": " + $( this ).attr("id") );
 				});*/
+				cntd = 0;
+				dateevent = "";
+				if (typeof $.cookie("dateevent") != 'undefined') 
+				{
+
+					de = new Date(convertdate($.cookie("dateevent"))).getTime();
+					sd = new Date(convertdate($("#specpricestart").val())).getTime();
+					ed = new Date(convertdate($("#specpriceend").val())).getTime();
+					//alert(de+' '+ sd+' '+ed );
+					if(de < sd || de > ed) 
+					{
+						//alert("Обычные цены");
+						$("#createform button").each(function(){
+						if ($(this).html() == 'Добавить') 
+							{
+							index = $(this).attr('id');
+							index = index.substr(7);
+							$("#selprice"+index).html($("#price"+index).html());
+							}
+						});
+					}
+					else
+					{
+
+						$("#createform button").each(function(){
+						if ($(this).html() == 'Добавить') 
+							{
+							index = $(this).attr('id');
+							index = index.substr(7);
+								$("#price"+index).removeClass("btn-success");
+								$("#specialprice"+index).removeClass("btn-default");
+								$("#price"+index).addClass("btn-default");
+								$("#specialprice"+index).addClass("btn-success");
+							$("#selprice"+index).html($("#specialprice"+index).html());
+							}
+							
+						
+						});
+						//alert(cntd);
+					}				
+				}
+
+
+
 				dishes = "";
 				if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
 				if (dishes) {
 					var dishall = $.parseJSON(dishes);
 					$.each(dishall, function(index, value) {
-						//console.log(index + " "+ value);
+						//console.log(index + " "+ value["selprice"]);
 						if (index)
 						{
 							$("#adddish"+index).removeClass("btn-default");
@@ -1003,6 +1055,16 @@ fixednavbar();
 							$("#note"+index).attr("readonly","readonly");						
 							$("#price"+index).attr("disabled","disabled");						
 							$("#specialprice"+index).attr("disabled","disabled");						
+							$("#selprice"+index).html(value["selprice"]);	
+if(value["selprice"] == $("#specialprice"+index).html())
+{
+	$("#price"+index).removeClass("btn-success");
+	$("#specialprice"+index).removeClass("btn-default");
+	$("#price"+index).addClass("btn-default");
+	$("#specialprice"+index).addClass("btn-success");
+}
+
+							
 						}
 					});					
 				}
@@ -1436,14 +1498,15 @@ fixednavbar();
 
 				else
 				{
-							$(this).removeClass("btn-danger");
-							$(this).addClass("btn-primary");
+					$(this).removeClass("btn-danger");
+					$(this).addClass("btn-primary");
 
 					$(this).html("Удалить");
 
 					$("#dishname"+id).css("color", "green");
 					var quant 	= $("#quant"+id).val();
 					var note 	= $("#note"+id).val();
+					var selprice 	= $("#selprice"+id).html();
 					var dishes="";
 
 					$("#quant"+id).attr("readonly","readonly");
@@ -1460,7 +1523,7 @@ fixednavbar();
 						var dishall = {};
 					}
 					var element = {};
-					element = ({quant:quant, note:note});
+					element = ({quant:quant, note:note, selprice:selprice});
 					dishall[id] = element ;
 					dishes = $.toJSON(dishall);
 					$.cookie("dishes", dishes,{ expires: 1, path: '/' });

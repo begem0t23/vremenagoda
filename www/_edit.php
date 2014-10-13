@@ -98,6 +98,16 @@
 
 fixednavbar();
 
+$select = "SELECT  DATE_FORMAT(startdate,'%d.%m.%Y') as dstart,  DATE_FORMAT(enddate,'%d.%m.%Y') as dend FROM `special_prices_period` ORDER BY `id` DESC LIMIT 0,1 ;";
+$rezult = mysql_query($select);
+$row = mysql_fetch_array($rezult);
+$dstart = $row['dstart'];
+$dend = $row['dend'];
+echo '<input type="hidden" id="specpricestart" value="'.$dstart.'">';
+echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
+
+
+
 if ($_SESSION["curuserrole"]>=5) {
 				orders_history($q[1],'3');
 if ($q[1]>0)
@@ -964,6 +974,59 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 				/*$( "button[name=adddish]" ).each(function( index ) {
 				  console.log( index + ": " + $( this ).attr("id") );
 				});*/
+				
+				
+								cntd = 0;
+				dateevent = "";
+				if (typeof $.cookie("dateevent") != 'undefined') 
+				{
+
+					de = new Date(convertdate($.cookie("dateevent"))).getTime();
+					sd = new Date(convertdate($("#specpricestart").val())).getTime();
+					ed = new Date(convertdate($("#specpriceend").val())).getTime();
+					//alert(de+' '+ sd+' '+ed );
+					if(de < sd || de > ed) 
+					{
+						//alert("Обычные цены");
+						$("#createform button").each(function(){
+						if ($(this).html() == 'Добавить') 
+							{
+								index = $(this).attr('id');
+								index = index.substr(7);
+								$("#selprice"+index).html($("#archivprice"+index).html());
+								$("#price"+index).removeClass("btn-success");
+								$("#specialprice"+index).removeClass("btn-success");
+								$("#archivspecialprice"+index).removeClass("btn-default");
+								$("#price"+index).addClass("btn-default");
+								$("#specialprice"+index).addClass("btn-default");
+								$("#archivprice"+index).addClass("btn-success");
+							}
+						});
+					}
+					else
+					{
+
+						$("#createform button").each(function(){
+						if ($(this).html() == 'Добавить') 
+							{
+								index = $(this).attr('id');
+								index = index.substr(7);
+								$("#price"+index).removeClass("btn-success");
+								$("#archivprice"+index).removeClass("btn-success");
+								$("#specialprice"+index).removeClass("btn-default");
+								$("#price"+index).addClass("btn-default");
+								$("#archivprice"+index).addClass("btn-default");
+								$("#specialprice"+index).addClass("btn-success");
+								$("#selprice"+index).html($("#specialprice"+index).html());
+							}
+							
+						
+						});
+						//alert(cntd);
+					}				
+				}
+
+
 				dishes = "";
 				if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
 				if (dishes) {
@@ -984,6 +1047,25 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 							$("#price"+index).attr("disabled","disabled");						
 							$("#specialprice"+index).attr("disabled","disabled");						
 							$("#archivprice"+index).attr("disabled","disabled");
+							$("#selprice"+index).html(value["selprice"]);	
+if(value["selprice"] == $("#specialprice"+index).html())
+{
+	$("#price"+index).removeClass("btn-success");
+	$("#archivprice"+index).removeClass("btn-success");
+	$("#specialprice"+index).removeClass("btn-default");
+	$("#price"+index).addClass("btn-default");
+	$("#archivprice"+index).addClass("btn-default");
+	$("#specialprice"+index).addClass("btn-success");
+}
+if(value["selprice"] == $("#archivprice"+index).html())
+{
+	$("#price"+index).removeClass("btn-success");
+	$("#specialprice"+index).removeClass("btn-success");
+	$("#archivspecialprice"+index).removeClass("btn-default");
+	$("#price"+index).addClass("btn-default");
+	$("#specialprice"+index).addClass("btn-default");
+	$("#archivprice"+index).addClass("btn-success");
+}
 						}
 					});					
 				}

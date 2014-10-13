@@ -105,7 +105,7 @@ else
 						$row_dishes = mysql_fetch_array($r_dishes);
 						$tsql = "insert into dishes_in_orders (orderid,dishid,price,num,note) values (".mysql_real_escape_string($oi).",
 						'".mysql_real_escape_string($row_dishes["id"])."',
-						'".mysql_real_escape_string($row_dishes["price"])."',
+						'".mysql_real_escape_string($dd["selprice"])."',
 						'".mysql_real_escape_string($dd["quant"])."',
 						'".mysql_real_escape_string($dd["note"])."');";
 						$r_order = mysql_query($tsql);	
@@ -287,7 +287,7 @@ if (($oi>0) && (!$ec)) {
 			$row_dishes = mysql_fetch_array($r_dishes);
 			$tsql = "insert into dishes_in_orders (orderid,dishid,price,num,note) values (".mysql_real_escape_string($oi).",
 			'".mysql_real_escape_string($row_dishes["id"])."',
-			'".mysql_real_escape_string($row_dishes["price"])."',
+			'".mysql_real_escape_string($dd["selprice"])."',
 			'".mysql_real_escape_string($dd["quant"])."',
 			'".mysql_real_escape_string($dd["note"])."');";
 			$r_order = mysql_query($tsql);	

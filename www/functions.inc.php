@@ -709,7 +709,7 @@ $dish['count'] = 0;
 						$dish[$dish['count']]['num'] = $dd["quant"];
 						$dish[$dish['count']]['note'] = $dd["note"];
 						$dish[$dish['count']]['weight'] = $rows01['weight'];
-						$dish[$dish['count']]['price'] = $rows01['price'];
+						$dish[$dish['count']]['price'] = $dd["selprice"];
 						$dish[$dish['count']]['specialprice'] = $rows01['specialprice'];
 						$dish[$dish['count']]['cnt'] = $cnt + $dish['count'] +1;
 						$dish['count'] ++;
@@ -762,7 +762,7 @@ $dish['count'] = 0;
 		{
 			while ($rows01 = mysql_fetch_array($rezult01)) 
 			{			
-				$archivprice = $rows01['price'];
+				$archivprice = "";
 				$tsql02 = "SELECT * FROM dishes_history  WHERE dishid = '".$rows01['dishid']."' and kogda < '".$ordercd."' order by  kogda desc limit 0,1;";
 				$rezult02 = mysql_query($tsql02);
 				if (mysql_num_rows($rezult01) > 0) 
@@ -811,7 +811,7 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 							<td  class = "'.$aclass.'">
 							<button  id="specialprice'.$items[$i]["id"].'" name="specialprice"  type="button" class="btn btn-default">'.$items[$i]["specialprice"].'</button>
 							</td>
-							<td  class = "'.$aclass.'" ><div id = "selprice'.$items[$i]["id"].'">'.$items[$i]["price"].'</div></td>
+							<td  class = "'.$aclass.'" ><div id = "selprice'.$items[$i]["id"].'"></div></td>
 							<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
 							<td  class = "'.$aclass.'"><textarea dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></textarea></td>
 							<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
@@ -834,13 +834,16 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 		$r_dish_in_order = mysql_query("SELECT do.*,dh.dishid as did,dh.price as price2,dh.name as dname FROM `dishes_in_orders` do left join dishes_history dh on do.dishid = dh.id where do.orderid=" . $order . ";");
 		while ($row_dish_in_order = mysql_fetch_array($r_dish_in_order))
 		{
-			$dish_in_order[$row_dish_in_order["dishid"]] = array("did"=>$row_dish_in_order["did"],"id"=>$row_dish_in_order["id"], "price"=>$row_dish_in_order["price2"],
+			$dish_in_order[$row_dish_in_order["dishid"]] = array("did"=>$row_dish_in_order["did"],"id"=>$row_dish_in_order["id"], "price"=>$row_dish_in_order["price"], "price2"=>$row_dish_in_order["price2"],
 			"num"=>$row_dish_in_order["num"],"note"=>$row_dish_in_order["note"],"dname"=>$row_dish_in_order["dname"]);
 		}
 		//die(var_dump($dish_in_order));
 		for($i=0;$i<$items['count'];$i++)
 		{		
 			$aclass='';
+					$spclass =  ' btn-danger';
+					$pclass = ' btn-danger';
+					$apclass = ' btn-danger';
 			if ($items[$i]["isbasic"] == 1) $aclass .= ' basic';
 
 			echo '<tr  class = "'.$aclass.'">';
@@ -848,6 +851,26 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 			{
 				$item = $dish_in_order[$items[$i]["id"]];
 				//die(var_dump($num));
+				if($item["price"] == $items[$i]["price"] )
+				{
+					$spclass =  ' btn-default';
+					$pclass = ' btn-success';
+					$apclass = ' btn-default';
+				}
+				if($item["price"] == $items[$i]["specialprice"])
+				{
+					$spclass =  ' btn-success';
+					$pclass = ' btn-default';
+					$apclass = ' btn-default';
+				}
+				
+				if($item["price"] == $items[$i]["archivprice"] )
+				{
+					$spclass =  ' btn-default';
+					$pclass = ' btn-default';
+					$apclass = ' btn-success';
+				}
+				
 				echo '<td  class = "'.$aclass.'"><span isactive="'.$items[$i]["isactive"].'"  id=dishname'.$items[$i]["id"].'>' . $item["dname"];
 				if ($items[$i]["isactive"]!=1) 
 				{
@@ -856,15 +879,15 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 				echo '</span></td>
 					<td  class = "'.$aclass.'"><div dishid="'.$items[$i]["dishid"].'" id="'.$wid.$items[$i]["id"].'">'.number_format(($items[$i]["weight"])/1000,2).'</div></td>
 							<td  class = "'.$aclass.'">
-							<button  id="price'.$items[$i]["id"].'"  name="price"  type="button" class="btn btn-success">'.$items[$i]["price"].'</button>
+							<button  id="price'.$items[$i]["id"].'"  name="price"  type="button" class="btn '.$pclass.'">'.$items[$i]["price"].'</button>
 							</td>
 							<td  class = "'.$aclass.'">
-							<button  id="specialprice'.$items[$i]["id"].'" name="specialprice"  type="button" class="btn btn-default">'.$items[$i]["specialprice"].'</button>
+							<button  id="specialprice'.$items[$i]["id"].'" name="specialprice"  type="button" class="btn  '.$spclass.'">'.$items[$i]["specialprice"].'</button>
 							</td>
 							<td  class = "'.$aclass.'">
-							<button  id="archivprice'.$items[$i]["id"].'" name="archivprice"  type="button" class="btn btn-default">'.$items[$i]["archivprice"].'</button>
+							<button  id="archivprice'.$items[$i]["id"].'" name="archivprice"  type="button" class="btn  '.$apclass.'">'.$items[$i]["archivprice"].'</button>
 							</td>
-							<td  class = "'.$aclass.'" ><div id = "selprice'.$items[$i]["id"].'">'.$items[$i]["price"].'</div></td>
+							<td  class = "'.$aclass.'" ><div id = "selprice'.$items[$i]["id"].'">'.$item["price"].'</div></td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" readonly="readonly" name="quant" id="quant'.$items[$i]["id"].'" value="'.$item["num"].'" class="quant" size="1"></td>
 					<td  class = "'.$aclass.'"><textarea dishid="'.$items[$i]["dishid"].'"  name = "note" readonly="readonly" id="note'.$items[$i]["id"].'" value="" type="text" class="note">'.$item["note"].'</textarea></td>
 					<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-primary '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Удалить</button></td>';
@@ -886,7 +909,7 @@ if (@$items['isdrink'] == 2) { $wclass = 'weight2drink'; $wid = 'weightdrink';}
 							<td  class = "'.$aclass.'">
 							<button  id="archivprice'.$items[$i]["id"].'" name="archivprice"  type="button" class="btn btn-default">'.$items[$i]["archivprice"].'</button>
 							</td>
-							<td  class = "'.$aclass.'" ><div id = "selprice'.$items[$i]["id"].'">'.$items[$i]["price"].'</div></td>
+							<td  class = "'.$aclass.'" ><div id = "selprice'.$items[$i]["id"].'"></div></td>
 					<td  class = "'.$aclass.'"><input dishid="'.$items[$i]["dishid"].'"  type="text" name="quant" id="quant'.$items[$i]["id"].'" value="" ;" class="quant" size="1"></td>
 					<td  class = "'.$aclass.'"><textarea dishid="'.$items[$i]["dishid"].'"  name = "note" id="note'.$items[$i]["id"].'" type="text" class="note"></textarea></td>
 					<td  class = "'.$aclass.'"><button dishid="'.$items[$i]["dishid"].'"  class = "btn btn-default disabled '.$wclass.'" type="button" name="adddish" id="adddish'.$items[$i]["id"].'" class="add" title="Добавть блюдо к заказу">Добавить</button></td>';
