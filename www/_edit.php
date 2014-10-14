@@ -83,7 +83,7 @@
 		
 		   .basic {
 	color: #000;
-  background-color: #ff11C0 !important;
+  background-color: #FAAFE6 !important;
   }
   </style>  
 
@@ -989,7 +989,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					{
 						//alert("Обычные цены");
 						$("#createform button").each(function(){
-						if ($(this).html() == 'Добавить') 
+						if ($(this).html() == 'Добавить' & $("#specialprice"+index).html() != '') 
 							{
 								index = $(this).attr('id');
 								index = index.substr(7);
@@ -1048,7 +1048,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 							$("#specialprice"+index).attr("disabled","disabled");						
 							$("#archivprice"+index).attr("disabled","disabled");
 							$("#selprice"+index).html(value["selprice"]);	
-if(value["selprice"] == $("#specialprice"+index).html())
+if(value["selprice"] == $("#specialprice"+index).html() )
 {
 	$("#price"+index).removeClass("btn-success");
 	$("#archivprice"+index).removeClass("btn-success");
@@ -1057,7 +1057,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 	$("#archivprice"+index).addClass("btn-default");
 	$("#specialprice"+index).addClass("btn-success");
 }
-if(value["selprice"] == $("#archivprice"+index).html())
+if(value["selprice"] == $("#archivprice"+index).html() )
 {
 	$("#price"+index).removeClass("btn-success");
 	$("#specialprice"+index).removeClass("btn-success");

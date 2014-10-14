@@ -78,7 +78,7 @@ setCookie("clientname", null, -1);
 
    .basic {
 	color: #000;
-  background-color: #ff11C0 !important;
+  background-color: #FAAFE6 !important;
   }
   
   </style>  

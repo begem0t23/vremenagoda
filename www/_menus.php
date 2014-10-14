@@ -52,7 +52,7 @@ if ($_SESSION["curuserrole"]<6) die($accessdenied);
   }
   .basic {
 	color: #000;
-  background-color: #ff11C0 !important;
+  background-color: #FAAFE6 !important;
   }
 </style>  
 

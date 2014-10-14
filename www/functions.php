@@ -1679,7 +1679,7 @@ $nowtime = time();
 	$rezult3 = mysql_query($select3);
 	$rows3 = mysql_fetch_array($rezult3);
 	$dishid = 	$rows3['id'];
-			echo $select3;
+			//echo $select3;
 	}
 	
 	
