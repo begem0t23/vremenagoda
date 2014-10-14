@@ -208,9 +208,10 @@
 							id = id.substr(7);
 							if ($(this).html()=="Удалить")
 							{
-								quant = $("#quant"+id).val();
-								note = $("#note"+id).val();
-								element = ({quant:quant, note:note});
+								var quant = $("#quant"+id).val();
+								var note = $("#note"+id).val();
+								var selprice 	= $("#selprice"+id).html();
+								element = ({quant:quant, note:note, selprice:selprice});
 								dishall[id] = element ;
 							}
 						});

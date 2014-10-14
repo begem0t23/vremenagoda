@@ -51,7 +51,7 @@ global $orderstatus;
 renewpaystatus($q[1]);
 $order = getorderinfo($q[1]);
 
-$sql="SELECT * FROM `users` " ;
+$sql="SELECT * FROM `users` WHERE `isactive` = '1' " ;
 			$rez = mysql_query($sql);
 			if (mysql_num_rows($rez)>0)
 			{
@@ -141,7 +141,7 @@ $sql="SELECT * FROM `users` " ;
 	$access['paystatus']['class'] = $offclass;
 	$access['payments']['class'] = $offclass;
 	$access['gotoeditor']['class'] = $offclass;
-	$access['viewtables']['class'] = $offclass;
+	//$access['viewtables']['class'] = $offclass;
 	$access['payments']['class'] = $offclass;
 	$access['viewreport']['class'] = $offclass;
 	
@@ -151,7 +151,7 @@ $sql="SELECT * FROM `users` " ;
 	$access['paystatus']['func'] = $offfunc;
 	$access['payments']['func'] = $offfunc;
 	$access['gotoeditor']['func'] = $offfunc;
-	$access['viewtables']['func'] = $offfunc;
+	//$access['viewtables']['func'] = $offfunc;
 	$access['payments']['func'] = $offfunc;
 	$access['viewreport']['func'] = $offfunc;
 	
@@ -192,6 +192,25 @@ echo '
 <button class="btn btn-primary  nav-element"  onclick = "delegateok()"  >Принять</button>
 </div>
 ';
+	$access['hallstatus']['class'] = $offclass;
+	$access['orderstatus']['class'] = $offclass;
+	$access['procstatus']['class'] = $offclass;
+	$access['paystatus']['class'] = $offclass;
+	$access['payments']['class'] = $offclass;
+	$access['gotoeditor']['class'] = $offclass;
+	//$access['viewtables']['class'] = $offclass;
+	$access['payments']['class'] = $offclass;
+	$access['viewreport']['class'] = $offclass;
+	
+	$access['hallstatus']['func'] = $offfunc;
+	$access['orderstatus']['func'] = $offfunc;
+	$access['procstatus']['func'] = $offfunc;
+	$access['paystatus']['func'] = $offfunc;
+	$access['payments']['func'] = $offfunc;
+	$access['gotoeditor']['func'] = $offfunc;
+	//$access['viewtables']['func'] = $offfunc;
+	$access['payments']['func'] = $offfunc;
+	$access['viewreport']['func'] = $offfunc;
 
 }
 

@@ -8,6 +8,35 @@ if (!connect()) die($_SERVER["SCRIPT_NAME"] . " " . mysql_error());
 
 
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
+if($_POST['operation'] == 'savesectionsorder')
+{
+$sortidarray = $_POST['sortidarray'];
+$out = "UPDATE `menu_sections` SET `sortid` = CASE "; 
+
+$sections = explode(",", $sortidarray);
+
+foreach ($sections AS $num => $val)
+{
+	if ($val) 
+	{
+		$sec =  explode("_", $val);
+		$out = $out." WHEN  `id` = '".$sec[0]."' THEN '".$sec[1]."' ";
+	}
+
+}
+
+$out = $out." END ;";
+mysql_query($out);
+echo 'yes';
+
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				
+
 if($_POST['operation'] == 'newspecpriceperiod')
 {
 $startdate = $_POST['startdate'];
@@ -1129,8 +1158,11 @@ $sectionid = $_POST['sectionid'];
 	//цикл по массиву секций с блюдами для конкретного меню для вывода на экран
 	foreach ($sections as $num => $val) 
 	{
+					$sid = substr($sections[$num]['id'],1);
+					$selected = '';
+					if ($sid == $sectionid) {$selected = 'selected = "selected"'; }
 
-		echo '<option disabled value="" class="level_0">'.$sections[$num]['name'].'</option>'.chr(10);
+		echo '<option  value="'.$sid.'"  class="level_0">'.$sections[$num]['name'].'</option>'.chr(10);
 			
 			foreach ($val as $num1 => $val1) 
 			{
@@ -1726,11 +1758,17 @@ $nowtime = time();
 	}
 	
 	
-		$tsql02 = "update `dishes_history`  set `isactive` = '0' , `changes` = '".$changes."' where `dishid` = '".$dishid."'  ;";
+		$tsql02 = "update `dishes_history`  set `isactive` = '0' where `dishid` = '".$dishid."'  ;";
 		mysql_query($tsql02);
+		
+		
+		$insert0 = "INSERT INTO `dishes_history` 
+		SELECT NULL, `dishid`,`name`,  `description`,  `price`, `weight`,  `isbasic`,  `menu_section`,  `menu`,   '".$_SESSION['curuserid']."', '0' , '".$changes."', NOW(), `specialprice`
+		FROM `dishes_history` WHERE `dishid` = '".$dishid."' ORDER BY `id` DESC LIMIT 0,1 ;";	
+		mysql_query($insert0);
+		//echo $insert0;
 	}	
 
-	
 	
 	
 		$insert = "INSERT INTO `dishes_history` (`id`, `dishid`,`name`,  `description`, `price`,   `weight`,  `isbasic`, `menu_section`,  `menu`,  `createdby`, `isactive`, `changes`,`kogda` ,`specialprice`) VALUES (NULL , '".$dishid."','".$name."','".$description."','".$price."','".$weight."','".$isbasic."','".$menu_section."','".$menuid."','".$_SESSION['curuserid']."' ,'1', '' , NOW(),'".$specialprice."' ) ;";	
@@ -1749,7 +1787,7 @@ $dishid = $_POST['dishid'];
 		mysql_query($update);
 
 		$insert = "INSERT INTO `dishes_history` 
-		SELECT NULL, `dishid`,`name`,  `description`,  `price`, `weight`,  `isbasic`,  `menu_section`,  '".$menuid."',   '".$_SESSION['curuserid']."', '2' , '2,', NOW() 
+		SELECT NULL, `dishid`,`name`,  `description`,  `price`, `weight`,  `isbasic`,  `menu_section`,  '".$menuid."',   '".$_SESSION['curuserid']."', '2' , '2,', NOW(), `specialprice`
 		FROM `dishes_history` WHERE `dishid` = '".$dishid."' ORDER BY `id` DESC LIMIT 0,1 ;";	
 		mysql_query($insert);
 
@@ -1769,7 +1807,7 @@ $dishid = $_POST['dishid'];
 		mysql_query($update);
 
 		$insert = "INSERT INTO `dishes_history` 
-		SELECT NULL, `dishid`,`name`,  `description`, `price`,`weight`,   `isbasic`,   `menu_section`,  '0',   '".$_SESSION['curuserid']."', '1' , '1,', NOW() 
+		SELECT NULL, `dishid`,`name`,  `description`, `price`,`weight`,   `isbasic`,   `menu_section`,  '0',   '".$_SESSION['curuserid']."', '1' , '1,', NOW(), `specialprice`
 		FROM `dishes_history` WHERE `dishid` = '".$dishid."' ORDER BY `id` DESC LIMIT 0,1 ;";	
 		mysql_query($insert);
 
@@ -1897,6 +1935,7 @@ if ($_POST['typetree'] == 'sections')
  
 {
 echo '<button class="btn btn-primary" type="button" sectionid="0" name="addsection"  title="Добавть раздел в меню">Добавить&nbsp;раздел</button>';
+echo '<button class="btn btn-success" type="button" sectionid="0" name="savesectionsorder"  title="Сохранить порядок разделов в меню">Сохранить&nbsp;порядок</button>';
 }
 
 echo '<br><br>
@@ -1966,6 +2005,7 @@ echo '<br><br>
 	$yyy = dishes_in_section($row_menutype["id"],$rows0['id'],$_POST['typetree']);
 	$zzz = dishes_in_section_by_menu($row_menutype["id"],$rows0['id'],$_POST['typetree']);
 	$sections[$rows0['id']]['id'] = '_'.$rows0['id']; //непонял почему но без _ не работает
+	$sections[$rows0['id']]['sortid'] = $rows0['sortid']; //непонял почему но без _ не работает
 	$sections[$rows0['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
 	
 	$sections[$rows0['id']]['name'] = $rows0['section_name'];
@@ -1993,6 +2033,7 @@ echo '<br><br>
 	$sections[$rows0['id']][$rows_1['id']]['id'] = '_'.$rows_1['id'];//непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']]['name'] = $rows_1['section_name']; 
+	$sections[$rows0['id']][$rows_1['id']]['sortid'] = $rows_1['sortid']; 
 	$sections[$rows0['id']][$rows_1['id']]['isdrink'] = $rows_1['isdrink']; 
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['alldishes'] = $sections[$rows0['id']][$rows_1['id']]['alldishes'] + $yyy['count'];
@@ -2018,6 +2059,7 @@ echo '<br><br>
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['id'] = '_'.$rows_2['id']; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['menuid'] = '_'.$row_menutype["id"]; //непонял почему но без _ не работает
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['name'] = $rows_2['section_name'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['sortid'] = $rows_2['sortid'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['isdrink'] = $rows_2['isdrink'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['alldishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['alldishes'] + $yyy['count'];
@@ -2050,7 +2092,8 @@ echo '<br><br>
 			if ($_POST['typetree'] == 'sections')
 			{
 				echo '<button class="level_0 btn btn-primary" type="button" isdrink="'.$sections[$num]['isdrink'].'" name="editsection" sectionid="'.$sections[$num]['id'].'"  menuid="0"   title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
-			}
+				echo '<input size="1"  id = "sortid'.$sections[$num]['id'].'" value = "'.$sections[$num]['sortid'].'">';
+				}
 			echo '</th></tr></tbody>'.chr(10);
 
 			if ($sections[$num]['items']['count'] > 0)
@@ -2087,6 +2130,7 @@ echo '<br><br>
 					{
 						echo '<button class="level_1 btn btn-primary" type="button" name="editsection" sectionid="'.substr($val[$num1]['id'],1).'"  menuid="0"   isdrink="'.$val[$num1]['isdrink'].'"  title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
 						echo '<button class="level_1 btn btn-primary" type="button" name="deletesection" sectionid="'.substr($val[$num1]['id'],1).'"  menuid="0"   alldishes="'.$val[$num1]['alldishes'].'"  title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
+				echo '<input size="1"  id = "sortid'.$val[$num1]['id'].'" value = "'.$val[$num1]['sortid'].'">';
 					}
 					echo '</th></tr></tbody>'.chr(10);
 				}
@@ -2127,6 +2171,7 @@ echo '<br><br>
 							{
 								echo '<button class="level_2 btn btn-primary" type="button" isdrink="'.$val1[$num2]['isdrink'].'" name="editsection" sectionid="'.substr($val1[$num2]['id'],1).'"  menuid="0"  id="'.$rows01["id"].'" title="Редактировать раздел"><span class="glyphicon glyphicon-pencil"></span></button>'.chr(10);
 								echo '<button class="level_2 btn btn-primary" type="button" name="deletesection" sectionid="'.substr($val1[$num2]['id'],1).'" alldishes="'.$val1[$num2]['alldishes'].'" menuid="0"  id="'.$rows01["id"].'" title="удалить раздел"><span class="glyphicon glyphicon-trash"></span></button>'.chr(10);
+				echo '<input size="1" id = "sortid'.$val1[$num2]['id'].'" value = "'.$val1[$num2]['sortid'].'">';
 							}
 							echo '</th></tr></tbody>'.chr(10);
 		}

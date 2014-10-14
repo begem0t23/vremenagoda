@@ -2009,13 +2009,34 @@ function fixednavbar()
 			?>><a href="/">Заказы</a></li>
 			<?
 			}
-			if ($_SESSION["curuserrole"]>1) {?>			
+			if ($_SESSION["curuserrole"] == 5) {?>			
             <li <?php
 			if ($qq=="create") echo 'class="active"';
 			?>><a href="?create">Создать заказ</a></li>
 			<?
 			}
-			if ($_SESSION["curuserrole"]>5) {?>
+			?>
+			
+			<?
+//Директор
+
+			if ($_SESSION["curuserrole"]==8 || $_SESSION["curuserrole"]==9) {?>
+            <li class="dropdown<?php
+			if ($qq=="profile") echo ' active"';
+			?>">
+              <a href="?settings" class="dropdown-toggle" data-toggle="dropdown">Отчеты<span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="?report1">Отчет1</a></li>
+                <li><a href="?report2">Отчет2</a></li>
+                <li><a href="?report3">Отчет3</a></li>
+               </ul>
+            </li>			
+			<?}?>
+			
+			<?
+//Админ
+
+			if ($_SESSION["curuserrole"]==9) {?>
             <li class="dropdown<?php
 			if ($qq=="profile") echo ' active"';
 			?>">
@@ -2026,38 +2047,15 @@ function fixednavbar()
                 <li><a href="?menus">Меню</a></li>
                 <li><a href="?uslugi">Услуги</a></li>
                <?
-			   if ($_SESSION["curuserrole"]==9)
-			   {
 				echo '<li><a href="?users">Пользователи</a></li>';
-			   }
-			   else
-			   {
-				echo '<!--кнопка управления пользователями доступна только админу-->';
-				echo '<li class="disabled"><a href="#">Пользователи</a></li>';			   
-			   }
 			   ?>
                <li><a href="?halls">Залы</a></li>
                <li><a href="?agenstva">Агенства</a></li>
-                <!--<li><a href="#">Другие настройки</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Учетная запись</li>
-                <li><a href="#">Мои настройки</a></li>
-                <li><a href="#">Другие настройки</a></li>-->
-              </ul>
+               </ul>
             </li>			
 			<?}?>
-            <!--<li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Отчеты<span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>-->
+			
+			
             <li><a href="?logout">Выйти (<?php
 echo $_SESSION["curusername"];
 ?>)</a></li>

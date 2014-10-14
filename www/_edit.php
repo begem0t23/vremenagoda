@@ -989,17 +989,20 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					{
 						//alert("Обычные цены");
 						$("#createform button").each(function(){
-						if ($(this).html() == 'Добавить' & $("#specialprice"+index).html() != '') 
+						if ($(this).html() == 'Добавить') 
 							{
 								index = $(this).attr('id');
 								index = index.substr(7);
-								$("#selprice"+index).html($("#archivprice"+index).html());
-								$("#price"+index).removeClass("btn-success");
-								$("#specialprice"+index).removeClass("btn-success");
-								$("#archivspecialprice"+index).removeClass("btn-default");
-								$("#price"+index).addClass("btn-default");
-								$("#specialprice"+index).addClass("btn-default");
-								$("#archivprice"+index).addClass("btn-success");
+								if ($("#archivprice"+index).html() != '')
+								{
+									$("#selprice"+index).html($("#archivprice"+index).html());
+									$("#price"+index).removeClass("btn-success");
+									$("#specialprice"+index).removeClass("btn-success");
+									$("#archivspecialprice"+index).removeClass("btn-default");
+									$("#price"+index).addClass("btn-default");
+									$("#specialprice"+index).addClass("btn-default");
+									$("#archivprice"+index).addClass("btn-success");
+								}
 							}
 						});
 					}
@@ -1392,6 +1395,7 @@ if(value["selprice"] == $("#archivprice"+index).html() )
 					$("#dishname"+id).css("color", "green");
 					var quant 	= $("#quant"+id).val();
 					var note 	= $("#note"+id).val();
+					var selprice 	= $("#selprice"+id).html();
 					var dishes="";
 					$("#quant"+id).attr("readonly","readonly");
 					$("#note"+id).attr("readonly","readonly");
@@ -1408,7 +1412,7 @@ if(value["selprice"] == $("#archivprice"+index).html() )
 						var dishall = {};
 					}
 					var element = {};
-					element = ({quant:quant, note:note});
+					element = ({quant:quant, note:note, selprice:selprice});
 					dishall[id] = element ;
 					dishes = $.toJSON(dishall);
 					$.cookie("dishes", dishes,{ expires: 1, path: '/' });

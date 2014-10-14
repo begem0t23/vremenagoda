@@ -78,6 +78,18 @@ if (checklogin())
 	{
 		include("_halls.php");
 	}
+	elseif ($qq == "report1")
+	{
+		include("_report1.php");
+	}
+	elseif ($qq == "report2")
+	{
+		include("_report2.php");
+	}
+	elseif ($qq == "report3")
+	{
+		include("_report3.php");
+	}
 	elseif ($qq == "events")
 	{
 		include("_events.php");

@@ -1,6 +1,6 @@
 <?
 global $accesdenied;
-if ($_SESSION["curuserrole"]<6) die($accessdenied);
+if ($_SESSION["curuserrole"]!=9) die($accesdenied);
 ?>
 <<!DOCTYPE html>
 <html lang="ru">
@@ -299,6 +299,7 @@ fixednavbar();
 		<option value="3" all="1">Возврат в меню</option>
 		<option value="4" all="1">Создание нового</option>
 		<option value="5" all="1">Изменение цены</option>
+		<option value="55" all="1">Изменение Спец цены</option>
 		<option value="6" all="1">Изменение веса</option>
 		<option value="7" all="1">Изменение названия</option>
 		<option value="8" all="1">Изменение описания</option>

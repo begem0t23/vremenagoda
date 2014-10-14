@@ -1,6 +1,6 @@
 <?
 global $accesdenied;
-if ($_SESSION["curuserrole"]!=9) die($accesdenied);
+if ($_SESSION["curuserrole"]<8) die($accesdenied);
 ?>
 <<!DOCTYPE html>
 <html lang="ru">
@@ -12,7 +12,7 @@ if ($_SESSION["curuserrole"]!=9) die($accesdenied);
     <meta name="author" content="">   
     <title><?php
 	echo PRODUCTNAME;
-	?> :: Разделы</title>
+	?> :: Отчет 3</title>
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -24,6 +24,10 @@ if ($_SESSION["curuserrole"]!=9) die($accesdenied);
 	<link rel="stylesheet" href="/jasny-bootstrap/css/jasny-bootstrap.min.css">	
 
 <style>
+.left{
+float:left;
+}
+
 .rouble {
   position: relative; }
 
@@ -45,6 +49,180 @@ if ($_SESSION["curuserrole"]!=9) die($accesdenied);
 	color: #000;
   background-color: #FFFFC0 !important;
   }
+  
+  table {
+}
+caption, th, td {
+text-align:left;
+font-weight:normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+content:"";
+}
+blockquote, q {
+quotes:"" "";
+}
+
+
+
+
+.simple-little-table {
+width:700px;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#666;
+	font-size:12px;
+	_text-shadow: 1px 1px 0px #fff;
+	background:#fff;
+	_margin:15px;
+	border:#ccc 1px solid;
+	border-collapse:separate;
+
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+
+	-moz-box-shadow: 0 1px 2px #d1d1d1;
+	-webkit-box-shadow: 0 1px 2px #d1d1d1;
+	_box-shadow: 0 1px 2px #d1d1d1;
+	border-collapse:collapse;
+border-spacing:0;
+
+}
+
+.simple-little-table th {
+	font-weight:bold;
+	_padding:10px 13px 11px 13px;
+	_border-top:1px solid #2E2E2E;
+	_border-bottom:1px solid #2E2E2E;
+
+	background: #99bfe6;
+	_background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+	_background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+}
+.simple-little-table th:first-child{
+	text-align: left;
+	padding-left:20px;
+}
+.simple-little-table tr:first-child th:first-child{
+	-moz-border-radius-topleft:3px;
+	-webkit-border-top-left-radius:3px;
+	border-top-left-radius:3px;
+}
+.simple-little-table tr:first-child th:last-child{
+	-moz-border-radius-topright:3px;
+	-webkit-border-top-right-radius:3px;
+	border-top-right-radius:3px;
+}
+.simple-little-table tr{
+	text-align: center;
+	padding-left:20px;
+}
+.simple-little-table tr td:first-child{
+	text-align: left;
+	padding-left:20px;
+	border-left: 0;
+}
+.simple-little-table tr td {
+	 padding:4px;
+	border-top: 1px solid #ffffff;
+	border-bottom:1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	
+	_background: #fFFFFF;
+	_background: -webkit-gradient(linear, left top, left bottom, from(#FFFFFF), to(#FFFFFF));
+	_background: -moz-linear-gradient(top,  #FFFFFF,  #FFFFFF);
+}
+
+.simple-little-table tr:nth-child(even) td{
+	_background: #ebf2fa;                                                                                                                
+	_background: -webkit-gradient(linear, left top, left bottom, from(#ebf2fa), to(#ebf2fa));
+	_background: -moz-linear-gradient(top,  #ebf2fa,  #ebf2fa);
+}
+.simple-little-table tr:last-child td{
+	border-bottom:0;
+}
+.simple-little-table tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:3px;
+	-webkit-border-bottom-left-radius:3px;
+	border-bottom-left-radius:3px;
+}
+.simple-little-table tr:last-child td:last-child{
+	-moz-border-radius-bottomright:3px;
+	-webkit-border-bottom-right-radius:3px;
+	border-bottom-right-radius:3px;
+}
+.simple-little-table tr:hover td{
+	background: #f2f2f2;
+	_background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+	_background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);	
+}
+
+.simple-little-table a:link {
+	color: #666;
+	font-weight: bold;
+	text-decoration:none;
+}
+.simple-little-table a:visited {
+	color: #999999;
+	font-weight:bold;
+	text-decoration:none;
+}
+.simple-little-table a:active,
+.simple-little-table a:hover {
+	color: #bd5a35;
+	text-decoration:underline;
+}
+
+ 
+	
+  .level_0{
+  _padding:5px;
+  background-color: #FFD141 !important;
+  }
+    .level_1{
+	_padding:4px;
+  background-color: #FFF368 !important;
+  }
+    .level_2{
+	_padding:3px;
+  background-color: #FFFFC0 !important;
+  }
+  
+  	.report_columns_head{
+	font-size:12px;
+	 padding:10px;
+	color: #000;
+  background-color: #c1d2e4 !important;
+   	border-left: 1px solid #e0e0e0;
+
+  }
+  
+	.report_section{
+	font-size:14px;
+	 padding:10px;
+	color: #fff;
+  background-color: #66a6e7 !important;
+  }
+
+	.summary_section{
+	font-size:14px;
+	 padding:10px;
+	color: #fff;
+  background-color: #6bcf5d !important;
+ 
+  }
+ 	.lite_summary_section{
+	font-size:12px;
+	 padding:1px;
+	color: #fff;
+  background-color: #6bcf5d !important;
+ 
+  }
+   
+    ._second_row {
+   	background-color: #ebf2fa;                                                                                                                
+	}
 </style>  
 
 
@@ -63,43 +241,6 @@ if ($_SESSION["curuserrole"]!=9) die($accesdenied);
  
 
  
- 
- <div id="dialog-adddish" title="Добавление блюда в меню">
- 
-<table id = "dishes"  class="tablesorter dishestoadd" style="width: 100%;"><colgroup>
-						<col width="45%">
-						<col width="35%">
-						<col width="10%">
-						<col width="10%">
-						<col width="10%">
-					
-						</colgroup><thead>
-							<tr>
-							<th class="sorter-false">Название</th>
-							<th class="sorter-false">Описание</th>
-							<th class="sorter-false">Вес</th>
-							<th class="sorter-false">Цена</th>
-							<th class="sorter-false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Действия&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-							</tr>
-							</thead>
-							<tbody><tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-			
-							</tr></tbody></table>
-							
-</div>
- 
- <div id="dialog-editdish" title="Заполните информацию о блюде">
- 
-</div>
-
- <div id="dialog-editsection" title="Заполните информацию о разделе">
- 
-</div>
 <?php
 
 fixednavbar();
@@ -110,16 +251,12 @@ fixednavbar();
     <!-- Begin page content -->
     <div class="container">
 		<div class="page-header">
-        <h3>Редактирование Разделов</h3>
+        <h3>Отчет 3</h3>
 		</div>
+
+
+	</div>
 		
-		<div id="menutree">
-
-
-		</div>
-	  
-	
-    </div>
 
 <?php
 
@@ -153,6 +290,8 @@ fixednavbar();
 
 
 	<script>
+	
+	var curyear = '2014';
 	function viewtree(key) {
 	if(key == 1) 
 	{
@@ -165,7 +304,7 @@ fixednavbar();
 	
 	if(key == 0) 
 	{
-					$.cookie("viewtree", '0',{ expires: 1, path: '/' });
+			$.cookie("viewtree", '0',{ expires: 1, path: '/' });
 			$(".glyphicon-minus").addClass("glyphicon-plus");
 			$(".glyphicon-minus").removeClass("glyphicon-minus");
 			$(".dis_0 span").removeClass("glyphicon-plus");
@@ -177,19 +316,7 @@ fixednavbar();
 }
 	
 	
-	function get_edit_section_form(sectionid)
-	{
 
-		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'geteditsectionform',sectionid: sectionid}
-		})
-		.done(function( msg ) {
-			$( "#dialog-editsection" ).html(msg);
-			});	
-	}
-	
 	
 	
 	function tree_hide(el,id)
@@ -294,112 +421,50 @@ $( ".stContainer" ).css("height", newh + "px")
  }
  
  
- 
-	function delete_section(secid){
 	
+		function print_periods(type){
+		
 			$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'deletesection', sectionid: secid}
+			data: { operation: 'printperiodsforarhiv', type: type}
 		})
 		.done(function( msg ) {
-				if(msg == 'yes'){
-				alert ('Раздел удалён из системы.');
-				print_menu_tree(curmenu());
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-	
+			$( "#periods" ).html(msg);
+			});
 	}
 	
-
- function delete_dish(dishid,sectionid){
-	
+		
+		function print_menu_tree(period,value,type,year){
+		
 			$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'deletedish', dishid: dishid}
-		})
-		.done(function( msg ) {
-				if(msg == 'yes'){
-				alert ('Блюдо удалено из системы.');
-				get_dishes_for_add(curmenu(),sectionid);
-				print_menu_tree(curmenu());
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-	
-	}
-	
-	
-	
-	function get_edit_dish_form(dishid,menuid,sectionid){
-	
-		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'geteditdishform',dishid: dishid, menuid: menuid, sectionid: sectionid}
-		})
-		.done(function( msg ) {
-			$( "#dialog-editdish" ).html(msg);
-			});	
-	}
-	
-	
-	
-		function print_menu_tree(cnt){
-
-			$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'printmenutree', typetree: 'sections'}
+			data: { operation: 'printarhivtree', period: period, value: value, type: type,year: year}
 		})
 		.done(function( msg ) {
 			$( "#menutree" ).html(msg);
-			$(".menus")
-			.tablesorter(
-			{
+			$(".menus").tablesorter({
 				theme: 'blue',
 				widgets: ['zebra']
 			});
-			$('#tabs').smartTab({selected: cnt});
-			viewtree($.cookie("viewtree"));
-		});
+
+			});
 	
 	}
+	
+	
 	
 	function dish_to_menu (dishid,menuid,sectionid){
 	
 		$.ajax({
 			type: "POST",
 			url: "functions.php",
-			data: { operation: 'dishtomenu', menuid: menuid, dishid: dishid}
+			data: { operation: 'dishtomenu', menuid: menuid, dishid: dishid,sectionid:sectionid}
 		})
 		.done(function( msg ) {
 				if(msg == 'yes'){
-				//alert ('Блюдо добавлено в меню.');
-				get_dishes_for_add(menuid,sectionid);
-				print_menu_tree(menuid);
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-	}
-	
-	function dish_from_menu (dishid,menuid,sectionid){
-	
-		$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'dishfrommenu', menuid: menuid, dishid: dishid}
-		})
-		.done(function( msg ) {
-				if(msg == 'yes'){
-				//alert ('Блюдо удалено из меню.');
-				get_dishes_for_add(menuid,sectionid);
-				print_menu_tree(menuid);
+					changeperiod('2014');
 				} else {
 				alert ('Что-то пошло не так. '+msg);
 				}
@@ -408,23 +473,7 @@ $( ".stContainer" ).css("height", newh + "px")
 	
 
 	
-	function get_dishes_for_add(menuid,sectionid){
-	
-			$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'getdishesforadd', menuid: menuid, sectionid: sectionid, toadd: 'free'}
-		})
-		.done(function( msg ) {
-			$( "#dishes tbody" ).html(msg);
 
-		});
-	
-	
-	
-	
-	
-	}
 	
 		$(document).ready(function(){
 			// когда страница загружена
@@ -445,7 +494,7 @@ $( ".stContainer" ).css("height", newh + "px")
 			});
 
 
-print_menu_tree(1);		
+	changetype();	
 	
 	
 			
@@ -533,7 +582,7 @@ $('#tabs').smartTab({selected: 0});
 				//alert ('Информация о блюде сохранена.');
 				menuid1 = curmenu();
 				get_dishes_for_add(menuid1,menu_section.val());
-				print_menu_tree(menuid1);
+		changeperiod('2014');
 				menutitle = curmenutitle();
 				sectiontitle = $( "#menu_section option:selected").text().replace('-','');
 				dialog2.dialog('option', 'title', 'Добавление блюд в:  "'+menutitle + '" / раздел: "' + sectiontitle + '"');
@@ -581,7 +630,7 @@ $('#tabs').smartTab({selected: 0});
 		.done(function( msg ) {
 			if(msg == 'yes'){
 				alert ('Информация о разделе сохранена.');
-				print_menu_tree(curmenu());
+				changeperiod('2014');
 				dialog4.dialog( "close" );
 				} else {
 				alert ('Что-то пошло не так. '+msg);
@@ -641,14 +690,7 @@ $('#tabs').smartTab({selected: 0});
           dialog3.dialog( "close" );
 
         }
-      },
-      close: function() {
-	  dialog2.dialog( "open" );
-     },
-      open: function() {
-  
-	  
-	  }
+      }
     });
 	
  
@@ -661,35 +703,18 @@ $('#tabs').smartTab({selected: 0});
 
 	
 	$( document ).on( "click", "button[name=dishtomenu]", function() {
-				dishid = $(this).attr("id");
+				dishid = $(this).attr("dishid");
 				menuid = $(this).attr("menuid");
 				sectionid = $(this).attr("sectionid");
-				dish_to_menu(dishid, menuid, sectionid);
+								if (confirm("Вы уверены что хотите вернуть блюдо в меню?")) {
+					dish_to_menu(dishid, menuid, sectionid);
+				} else {
+				}
+			
     });
 
 	
-	$( document ).on( "click", "button[name=dishfrommenu]", function() {
-				dishid = $(this).attr("id");
-				menuid = $(this).attr("menuid");
-				sectionid = $(this).attr("sectionid");
-								if (confirm("Вы уверены что ходите убрать блюдо из меню?")) {
-					dish_from_menu(dishid, menuid, sectionid);
-				} else {
-				}
-				
-    });
 
-	$( document ).on( "click", "button[name=deletedish]", function() {
-				dishid = $(this).attr("id");
-				menuid = $(this).attr("menuid");
-				sectionid = $(this).attr("sectionid");
-				if (confirm("Вы уверены что ходите удалить блюдо из системы?")) {
-					delete_dish(dishid,sectionid);
-				} else {
-				}
-
-				
-    });
 
 	
 	$( document ).on( "click", "button[name=adddish]", function() {
@@ -710,10 +735,10 @@ $('#tabs').smartTab({selected: 0});
 	$( document ).on( "click", "button[name=editdish]", function() {
 				dishid = $(this).attr("id");
 				menuid = $(this).attr("menuid");
-				sectionid = $(this).attr("sectionid");
+				sectionid = $(this).attr("secid");
 				get_edit_dish_form(dishid, menuid, sectionid);
-			dialog2.dialog( "close" );
-				$( ".ui-dialog" ).css("margin-top", "70px");
+				//dialog2.dialog( "close" );
+				//$( ".ui-dialog" ).css("margin-top", "70px");
 
 				dialog3.dialog( "open" );
     });
@@ -733,32 +758,7 @@ $('#tabs').smartTab({selected: 0});
 	
 
 
-		$( document ).on( "click", "button[name=savesectionsorder]", function() {
-			sortidarray='';
-			$("input").each(function(){
-			secid = $(this).attr('id');
-			secid = secid.substr(7);
-			sortid = $(this).val();
-			sortidarray+=  secid + '_' + sortid + ',';
-		
-		});
-		
-				$.ajax({
-			type: "POST",
-			url: "functions.php",
-			data: { operation: 'savesectionsorder',  sortidarray:sortidarray}
-		})
-		.done(function( msg ) {
-			if(msg == 'yes'){
-			print_menu_tree(curmenu());
-				} else {
-				alert ('Что-то пошло не так. '+msg);
-				}
-		});
-			
-		//alert (cnt);
-		
-    });
+
 	
 	
 		$( document ).on( "click", "button[name=addsection]", function() {
@@ -772,7 +772,7 @@ $('#tabs').smartTab({selected: 0});
 	
 			$( document ).on( "click", "button[name=editsection]", function() {
 				secid = $(this).attr("sectionid");
-				//secid = secid.substr(1);
+				secid = secid.substr(1);
 				get_edit_section_form(secid);
 				$( ".ui-dialog" ).css("margin-top", "70px");
 				
@@ -783,7 +783,7 @@ $('#tabs').smartTab({selected: 0});
 	
 	$( document ).on( "click", "button[name=deletesection]", function() {
 			secid = $(this).attr("sectionid");
-			//secid = secid.substr(1);
+			secid = secid.substr(1);
 			alldishes = $(this).attr("alldishes");
 
 			if (alldishes > 0) {
@@ -800,7 +800,24 @@ $('#tabs').smartTab({selected: 0});
 	
   });
   
+   function changetype()
+ {
  
+	type = $("#arhivtype :selected").val();
+	print_periods(type);
+	changeperiod(curyear);
+ }
+  
+ function changeperiod(year)
+ {
+	period = $("#arhivdate"+year+" :selected").attr("period");
+	value = $("#arhivdate"+year+" :selected").val();
+	type = $("#arhivtype :selected").val();
+	//alert(value);
+	
+	print_menu_tree(period,value,type,year);
+	
+ }
  
 	</script>
   </body>

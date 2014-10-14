@@ -1,6 +1,6 @@
 <?
 global $accesdenied;
-if ($_SESSION["curuserrole"]<6) die($accessdenied);
+if ($_SESSION["curuserrole"]!=9) die($accesdenied);
 ?>
 <<!DOCTYPE html>
 <html lang="ru">
