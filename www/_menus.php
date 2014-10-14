@@ -361,12 +361,7 @@ $( ".stContainer" ).css("height", newh + "px")
 		$(document).ready(function(){
 			// когда страница загружена
 
-
-			
-			
-			
-			
-			
+		
 			$('#specpricestart').datepicker({  });
 			$('#specpriceend').datepicker({  });
 
@@ -514,7 +509,15 @@ $('#tabs').smartTab({selected: 0});
           dialog3.dialog( "close" );
 
         }
-      }
+		},
+      close: function() {
+	  
+	  $( "#dialog-editdish" ).html('Пожалуйста подождите. Загружаются новые данные.<br><img src="images/loading.gif">')
+	 // alert('close');
+	  
+	  
+     }
+      
     });
 	
  
