@@ -1,6 +1,4 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
 
 	setCookie("clientname", null, -1);
 	setCookie("clientid", null, -1);
@@ -18,6 +16,7 @@
 	setCookie("editclientid", null, -1);
 	setCookie("eventtype", null, -1);
 	setCookie("eventcomment", null, -1);
+	setCookie("cntload", null, -1);
 
 ?>
 <!DOCTYPE html>
@@ -218,17 +217,6 @@ if ($q[1]>0)
 			}
 			echo  '</select>' . "";
 		}
-					global $hallstatus;
-					$hs = gethallondate($row_order["ed"],$row_order["hallid"]);
-						echo '<select name="hallstatus" id="hallstatus" hs="'.$hs.'" class="form-control"  onchange="changehallstatus()" >' . "";
-					foreach ($hallstatus as $st => $val)
-					{	
-						$sel ='';
-						if($st == $hs) $sel = ' selected';
-						echo '<option value="'.$st.'" '.$sel.'>'.$val.'</option>' . "";
-					}
-						echo '</select>' . "";
-		
 		echo '</div><br>';
 		echo '<br><div  id="selectedhall">';
 

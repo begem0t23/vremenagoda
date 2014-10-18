@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<?php
+	setCookie("tables", null, -1);
+?>	
+	<!DOCTYPE html>
 <html lang="ru">
   <head>
     <meta charset="utf-8">
@@ -312,24 +315,36 @@ if($rows['paystatus'] == 0 || $rows['paystatus'] == 6)
 
 }
 
-echo '
-<div class="input-group">
-<span class="input-group-addon nav-title"><span >Статус зала</span></span>';
-
 					global $hallstatus;
-					$hs = gethallondate(convert_date2($rows['eventdate']),$rows["hallid"]);
-						echo '<select name="hallstatus" id="hallstatus" hs="'.$hs.'" class="btn  nav-element '.$access['hallstatus']['class'].'"  onchange="changehallstatus()"   '.$access['hallstatus']['func'].'>' . "";
-					foreach ($hallstatus as $st => $val)
-					{	
-						$sel ='';
-						if($st == $hs) $sel = ' selected';
-						echo '<option value="'.$st.'" '.$sel.'>'.$val.'</option>' . "";
-					}
-						echo '</select>
-</select>
-</div>';
 
-						
+$hio = gethallondatebyorder($q[1]);
+
+if ($hio)
+{
+	foreach ($hio AS $hid => $tabs)
+	{
+		$hs = gethallondate(convert_date2($rows['eventdate']),$hid);
+		echo '
+		<div class="input-group">
+		<span class="input-group-addon nav-title"><span >Статус '.$hs['name'].'</span></span>
+		 <button class="btn btn-default nav-element"  >'.$hallstatus[$hs['status']].'</button>
+		</div>';		
+		
+		
+	}
+}
+else
+{
+		echo '
+		<div class="input-group">
+		<span class="input-group-addon nav-title"><span >Статус зала</span></span>
+		 <button class="btn btn-default nav-element"  >Зал не выбран</button>
+		</div>';		
+
+}
+
+
+		
 
 echo '
 <div class="input-group">

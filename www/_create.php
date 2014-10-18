@@ -902,13 +902,6 @@ echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
 						}
 						echo '</select>' . "";
 					}
-					global $hallstatus;
-						echo '<select name="hallstatus" id="hallstatus" class="form-control" disabled style="display:none" onchange="changehallstatus()" >' . "";
-					foreach ($hallstatus as $st => $val)
-					{	
-							echo '<option value="'.$st.'">'.$val.'</option>' . "";
-					}
-						echo '</select>' . "";
 					?>';
 					spanpage1+='</div><br>';
 					spanpage1+='<br><div  id="selectedhall"></div>';

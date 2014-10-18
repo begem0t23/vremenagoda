@@ -1,12 +1,9 @@
 ﻿
-		function changehallstatus()
+		function changehallstatus(hallid)
 		{
-		hallstatus=$("#hallstatus :selected").val();
-		hallid=$("#hall").val();
-		dateevent=$("#dateevent").val();
-			//alert(hallid);
-			//alert(dateevent);
-			
+	
+		hallstatus=$("#hallstatus"+hallid+" :selected").val();
+		dateevent=$("#hallstatus"+hallid).attr('dateevent');
 			
 				$.ajax({
 					type: "POST",

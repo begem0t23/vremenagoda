@@ -259,6 +259,41 @@ $ech = "";
 	}
 	else 
 	{
+	global $hallstatus;
+	if ($place =='order')
+	{
+
+						echo '<select name="hallstatus" id="hallstatus" class="form-control" disabled style="display:none" onchange="changehallstatus('.$hallid.')" >' . "";
+					foreach ($hallstatus as $st => $val)
+					{	
+							echo '<option value="'.$st.'">'.$val.'</option>' . "";
+					}
+						echo '</select>' . "";
+	}
+	
+	
+	
+	if ($place=='editor' || $place=='report')
+	{
+	
+		
+					$hs = gethallondate($dateevent,$hallid);
+						echo '<select name="hallstatus" id="hallstatus'.$hallid.'" hs="'.$hs.'" class="form-control" dateevent="'.$dateevent.'" onchange="changehallstatus('.$hallid.')" >' . "";
+					foreach ($hallstatus as $st => $val)
+					{	
+						$sel ='';
+						if($st == $hs['status']) $sel = ' selected';
+						echo '<option value="'.$st.'" '.$sel.'>'.$val.'</option>' . "";
+					}
+						echo '</select>' . "";
+		
+	}
+	
+	
+	
+	
+	
+	
 	echo $ech2.$ech1.$ech4.$ech3;
 	}
 
@@ -365,15 +400,31 @@ $tabsinorder = 0;
 				if( $place == 'editor')
 			{
 				$cookietables = json_decode($_COOKIE["tables"],true);
-				if($ordertables){
-				foreach($ordertables as $i=>$ot)
+				$cntload = $_COOKIE["cntload"];
+				if(!$cntload) $cntload=0;
+				if ($cntload != 2)
 				{
-					if (!$cookietables[$i]) $cookietables[$i] = $ot ;
+					if($ordertables & !$cookietables)
+					{
+						foreach($ordertables as $i=>$ot)
+						{
+							$cookietables[$i] = $ot ;
+						}
+					}
 				}
+				else
+				{
+					if($ordertables)
+					{
+						foreach($ordertables as $i=>$ot)
+						{
+							if (!$cookietables[$i]) $cookietables[$i] = $ot ;
+						}
+					}				
 				}
-				
-				
+				$cntload = $cntload + 1;
 								 setcookie ("tables", json_encode($cookietables),time()+33600);
+								 setcookie ("cntload", $cntload,time()+33600);
 			}					
 								
 						$ech = $ech.'</div>';
@@ -383,15 +434,44 @@ $tabsinorder = 0;
 						return $out;
 }
 
+function gethallondatebyorder($orderid)
+{
+
+						$select = "SELECT COUNT( * ) AS  `rows` ,  tod.hallid, h.name FROM tables_on_date as tod, hall as h WHERE orderid = '".$orderid."' and h.id = tod.hallid GROUP BY `hallid`;";
+						$rezult = mysql_query($select);
+						while ($rows = mysql_fetch_array($rezult))
+						{
+							$out[$rows['hallid']]['tabs'] = $rows['rows'];
+							$out[$rows['hallid']]['name'] = $rows['name'];
+							
+						}
+
+return $out;
+
+}
+
+
 
 function gethallondate($checkdate,$hallid)
 {
-				$tsql3 = "SELECT * FROM `halls_on_date` WHERE `hallid` = '".$hallid."' AND `date` = '".convert_date($checkdate)."';";
+				$tsql3 = "SELECT hod . * , h.name, he.childhall FROM  `halls_on_date` AS hod,  `hall` AS h LEFT JOIN `halls_expansion` AS he ON he.parenthall =  '".$hallid."'  WHERE hod.hallid = '".$hallid."' AND hod.date = '".convert_date($checkdate)."' AND h.id = '".$hallid."' ;";
 				$rez_tab3 = mysql_query($tsql3);
 				if (mysql_num_rows($rez_tab3) > 0)
 				{
 					$row = mysql_fetch_array($rez_tab3) ;
-					$out = $row['status'];
+					$out['status'] = $row['status'];
+					$out['name'] = $row['name'];
+					$out['expid'] = 0;
+					if ($row['childhall'] > 0)
+					{
+						$out['expid'] = $row['childhall'];
+						$select = "SELECT hod . * , h.name, he.childhall FROM  `halls_on_date` AS hod,  `hall` AS h LEFT JOIN `halls_expansion` AS he ON he.parenthall =  '".$row['childhall']."'  WHERE hod.hallid = '".$row['childhall']."' AND hod.date = '".convert_date($checkdate)."' AND h.id = '".$row['childhall']."' ;";
+						$rezult = mysql_query($select);
+						$rows = mysql_fetch_array($rezult);
+						$out['expnm'] = $rows['name'];
+						$out['expst'] = $rows['status'];
+						$out['sql'] = $select;
+					}
 					
 				}
 
@@ -983,13 +1063,36 @@ $rezult = mysql_query($tsql);
 
 	$body_out = '<tbody>'.chr(10);
 
+	
+	//названия залов
+	$hio = gethallondatebyorder($orderid);
+	
+$hallname = '';
+if ($hio)
+{
+	foreach ($hio AS $hid => $val)
+	{
+		$hallname .= '+'.$val['name'];		
+	}
+	
+	$hallname = substr($hallname,1);
+}
+else
+{
+$hallname = 'Зал еще не выбран.';
+}	
+	
+	
+	
+	
+	
 $rows = mysql_fetch_array($rezult);
-	$hallname = '';
+
 	if($rows['hallid'] > 0){
 		$tsql11 = "SELECT * FROM `hall`  WHERE `id` = '".$rows['hallid']."' ;"; 
 		$rezult11 = mysql_query($tsql11);
 		$rows11 = mysql_fetch_array($rezult11);
-		$hallname =$rows11['name'] ;
+		
 		}
 $otkuda = $rows['otkuda'];
 	if($rows['otkuda'] == 'От Агентства'){
