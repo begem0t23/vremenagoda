@@ -1281,9 +1281,30 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					if(alladd > 0) 
 					{
 	
-				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
+						$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 						return false;
 					} 
+					if (curpage==1)
+					{
+						if ($("body #guestcount").val()>0)
+						{
+							//хуй
+						}
+						else
+						{
+							var nn = noty({text: 'Заполните количество гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});											
+							return false;
+						}
+						if (isDate($("body #dateevent").val()))
+						{
+							//хуй
+						}
+						else
+						{
+							var nn = noty({text: 'Заполните дату мероприятия', type: 'error', timeout:10000, onClick: function(){delete nn;}});											
+							return false;
+						}					
+					}					
 			});
 			
 			
@@ -1538,7 +1559,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 
 
 
-						$( document ).on( "keyup", "input[name=quantserv]", function() {
+				$( document ).on( "keyup", "input[name=quantserv]", function() {
 				id = $(this).attr("id");
 				id = id.substr(9);
 				tocalc = $(this).attr("tocalc");
@@ -1575,7 +1596,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 
 
 		
- 			$( document ).on( "click", "input[name=discontserv]", function() {
+ 	$( document ).on( "click", "input[name=discontserv]", function() {
         $(this).select();
     });
 
@@ -1745,7 +1766,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 		tabid = $(this).attr("tabid");
 		hallid = $(this).attr("hallid");
 		isfull = $(this).attr("isfull");
-	tabnum = $(this).html();
+		tabnum = $(this).html();
 			if($(this).hasClass("success"))
 			{
 					
@@ -1855,12 +1876,31 @@ if(value["selprice"] == $("#specialprice"+index).html())
 
 			if(alladd > 0) 
 			{
-
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 			} else
 			{
-			
-				
+				//Богачев - контроль первой вкладки
+				if (curpage==1)
+				{
+					if ($("body #guestcount").val()>0)
+					{
+						//хуй
+					}
+					else
+					{
+						var nn = noty({text: 'Заполните количество гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});											
+						return false;
+					}
+					if (isDate($("body #dateevent").val()))
+					{
+						//хуй
+					}
+					else
+					{
+						var nn = noty({text: 'Заполните дату мероприятия', type: 'error', timeout:10000, onClick: function(){delete nn;}});											
+						return false;
+					}					
+				}
 			setvaluesincookie();
 			id = $(this).prop("id");
 			
@@ -1893,7 +1933,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 			$("#createform").html($("#spanpage"+curpage).html());
 			readvaluesincookie();
 			$("body").animate({"scrollTop":0},"slow");
-						count_dish_weight();	
+			count_dish_weight();	
 			//$("#spanpage"+curpage).css("visibility","visible");
 		}
 		function dosaveorder()

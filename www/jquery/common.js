@@ -1,4 +1,16 @@
-﻿
+﻿	function isDate(sDate) {
+	   var re = /^\d{1,2}\.\d{1,2}\.\d{4}$/
+	   if (re.test(sDate)) {
+		  //var dArr = sDate.split(".");
+		  //var d = new Date(sDate);
+		  //return d.getMonth() + 1 == dArr[0] && d.getDate() == dArr[1] && d.getFullYear() == dArr[2];
+		  return true;
+	   }
+	   else {
+		  return false;
+	   }
+	}	
+
 		function changehallstatus(hallid)
 		{
 	
@@ -249,12 +261,31 @@
 		alladd = $("#createform  .btn-danger").length;			
 		
 	
-		if(alladd > 0) 
+			if(alladd > 0) 
 			{
 				//alert("Остались недобавленные позиции: " + alladd);
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
 			} else
 			{
+			
+				if ($("body #guestcount").val()>0)
+				{
+					//хуй
+				}
+				else
+				{
+					var nn = noty({text: 'Заполните количество гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});											
+					return false;
+				}
+				if (isDate($("body #dateevent").val()))
+				{
+					//хуй
+				}
+				else
+				{
+					var nn = noty({text: 'Заполните дату мероприятия', type: 'error', timeout:10000, onClick: function(){delete nn;}});											
+					return false;
+				}						
 			setvaluesincookie();
 			if (curpage<5) curpage = curpage + 1;
 			$("#page"+curpage).click();
