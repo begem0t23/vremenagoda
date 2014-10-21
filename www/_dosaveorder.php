@@ -51,7 +51,7 @@ if (@$ci)
 	if (mysql_num_rows($r_client)>0)
 	{
 		$row_client = mysql_fetch_array($r_client);
-		$tsql = "update clients set phone='".mysql_real_escape_string(@$_POST["cp"])."',otkuda='".mysql_real_escape_string(@$_POST["cf"])."',email='".mysql_real_escape_string(@$_POST["ce"])."' where id=". $ci . ";";
+		$tsql = "update clients set phone='".mysql_real_escape_string(@$_POST["cp"])."',otkuda='".mysql_real_escape_string(@$_POST["cf"])."',agencyname='".mysql_real_escape_string(@$_POST["cf4"])."',email='".mysql_real_escape_string(@$_POST["ce"])."' where id=". $ci . ";";
 		//die("ERR:".$tsql);
 		$r_client = mysql_query($tsql);
 		if (mysql_error()) die("ERR:1=" . mysql_error());
@@ -72,7 +72,7 @@ else
 		if (mysql_num_rows($r_client)>0)
 		{
 			$row_client = mysql_fetch_array($r_client);
-			$tsql = "update clients set phone='".mysql_real_escape_string(@$_POST["cp"])."',otkuda='".mysql_real_escape_string(@$_POST["cf"])."',email='".mysql_real_escape_string(@$_POST["ce"])."' where id=". $ec . ";";
+			$tsql = "update clients set phone='".mysql_real_escape_string(@$_POST["cp"])."',otkuda='".mysql_real_escape_string(@$_POST["cf"])."',agencyname='".mysql_real_escape_string(@$_POST["cf4"])."',email='".mysql_real_escape_string(@$_POST["ce"])."' where id=". $ec . ";";
 			//die("ERR:".$tsql);
 			$r_client = mysql_query($tsql);
 			if (mysql_error()) die("ERR:1=" . mysql_error());

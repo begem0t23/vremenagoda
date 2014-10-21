@@ -1,5 +1,5 @@
 <?php
-	setCookie("tables", null, -1);
+	setCookie("cntload", null, -1);
 ?>	
 	<!DOCTYPE html>
 <html lang="ru">

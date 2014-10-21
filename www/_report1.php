@@ -255,6 +255,53 @@ fixednavbar();
 		</div>
 
 
+		<?php
+		
+		$ech = $ech.'<th class="report_columns_head">Дата</th>
+				<th class="report_columns_head">Веранда</th>
+				<th class="report_columns_head">Большой Зал</th>
+				<th class="report_columns_head">Беседки</th>
+				<th class="report_columns_head">Каминный Зал</th>
+				<th class="report_columns_head">Малый Зал</th>
+				<th class="report_columns_head">Откуда клиент</th>
+				<th class="report_columns_head">Сумма Заказа</th>
+				<th class="report_columns_head">Предоплата</th>
+				</tr>';
+
+	$tsql01 = "select o.*, h.name, hon.status AS hallstatus from `orders` AS o, `hall` AS h, halls_on_date AS hon WHERE h.id = o.hallid And h.id = hon.hallid and o.eventdate = hon.date ;";
+	//echo $tsql01; 
+	$result01 = mysql_query($tsql01);
+	if (mysql_num_rows($result01)>0)
+	{			
+			while ($rows01 = mysql_fetch_array($result01))
+		{
+					$ech = $ech.'<td class="'.$sclass.'">'.$row_tab['paymentdate'].'</td>
+				<td class="'.$sclass.'">''</td>
+				<td class="'.$sclass.'">''</td>
+				<td class="'.$sclass.'">''</td>
+				<td class="'.$sclass.'">''</td>
+				<td class="'.$sclass.'">''</td>
+				<td class="'.$sclass.'">'.$row_tab['comment'].'</td>
+				<td class="'.$sclass.'">'.$summa.'</td>
+				<td class="'.$sclass.'">'.$type.'</td>
+				</tr>';
+				}
+			}
+							$ech = $ech.'<tr>
+				<td colspan = "'.$colspan.'"  class="summary_section">ВСЕГО:</td>
+				<td colspan = "2" class="summary_section">'.$total.'</td>
+				</tr>';
+				$ech = $ech.'</table>';
+		
+		
+		?>
+		
+		
+		
+		
+		
+		
+		
 	</div>
 		
 

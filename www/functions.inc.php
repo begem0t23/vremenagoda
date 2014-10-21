@@ -384,7 +384,9 @@ $tabsinorder = 0;
 			$inorder = '';
 			$class .=' element';
 			}
-			
+				$cntload = $_COOKIE["cntload"];		
+				if(!$cntload) $cntload=0;
+				$cntload = $cntload * 1;
 				//$sumpersons = $sumpersons + $row_tab["persons"];
 					$ech = $ech.'<div class="context-menu-one '.$class.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'"  isfull="'.$isfull.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; line-height:'.($row_tab["height"]-7).'px;" place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
 					
@@ -400,9 +402,8 @@ $tabsinorder = 0;
 				if( $place == 'editor')
 			{
 				$cookietables = json_decode($_COOKIE["tables"],true);
-				$cntload = $_COOKIE["cntload"];
-				if(!$cntload) $cntload=0;
-				if ($cntload != 2)
+	
+				if ($cntload > 1)
 				{
 					if($ordertables & !$cookietables)
 					{
@@ -755,6 +756,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['price'] = $rows01['price'];
 				$dish[$dish['count']]['specialprice'] = $rows01['specialprice'];
 				$dish[$dish['count']]['dishid'] = $rows01['dishid'];
+				$dish[$dish['ids']] .= $rows01['dishid'];
 				$dish['count'] ++;
 			}
 		}
@@ -834,7 +836,7 @@ function dishes_in_section_by_menu_edit($menu_id,$menu_section,$typetree,$orderc
 {
 $dish = Array();
 $dish['count'] = 0;
-			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '".$menu_id."' order by `name` asc, kogda desc;";
+			$tsql01 = "SELECT * FROM dishes_history  WHERE menu_section = '".$menu_section."' and menu = '".$menu_id."' and `isactive` > 0 order by  `name` asc, kogda desc;";
 			$rezult01 = mysql_query($tsql01);
 
 
@@ -862,6 +864,7 @@ $dish['count'] = 0;
 				$dish[$dish['count']]['specialprice'] = $rows01['specialprice'];
 				$dish[$dish['count']]['kogda'] = $rows01['kogda'];
 				$dish['count'] ++;
+				$dish['ids']= $dish['ids'].'_'.$rows01['dishid'];
 			}
 		}
 return $dish;
@@ -1426,7 +1429,8 @@ $drink_sum = $sum[1];
 				$show =0;		
 				$food_discont_comment = $rows011["comment"];
 			}
-			if($rows011["id"] == 10)
+	
+	if($rows011["id"] == 10)
 			{
 				$drink_discont = ($drink_sum * $rows011["discont"])/100;
 				$show =0;		
@@ -1436,7 +1440,7 @@ $drink_sum = $sum[1];
 			{
 				if ($rows011["discont"]>0) 
 				{
-					$teapay = round(($food_sum + $drink_sum)/$rows011["discont"],2);
+					$teapay = round(($food_sum + $drink_sum)*$rows011["discont"]/100,2);
 					$teapayproc = round($rows011["discont"],0).'%';					
 				$teapay_comment = $rows011["comment"];
 				} 
@@ -1444,6 +1448,23 @@ $drink_sum = $sum[1];
 				{
 					$teapay = 0;
 					$teapayproc = ' (0%)';
+				}
+				$show =0;		
+			}
+
+
+			if($rows011["id"] == 37)
+			{
+				if ($rows011["discont"]>0) 
+				{
+					$agpay = 0 - round(($food_sum + $drink_sum)*$rows011["discont"]/100,2) ;
+					$agpayproc = round($rows011["discont"],0).'%';					
+				$agpay_comment = $rows011["comment"];
+				} 
+				else 
+				{
+					$agpay = 0;
+					$agpayproc = ' (0%)';
 				}
 				$show =0;		
 			}
@@ -1582,11 +1603,20 @@ $summa['summary']=$summary;
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Наценка за обслуживание ('.$teapayproc.' От общей суммы заказа без скидок: '.$allsumm.')</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Наценка за обслуживание ('.$teapayproc.' От общей суммы меню без скидок: '.$allsumm.')</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="1">'.$teapay.'</td>'.chr(10);
 		if($forwho != 'client') 
 		{
 			$body_out = $body_out.'<td  colspan="1">'.$teapay_comment.'</td>'.chr(10);
+		}
+		$body_out = $body_out.'</tr>'.chr(10);
+
+		$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Агентское вознаграждение ('.$agpayproc.' От общей суммы меню без скидок: '.$allsumm.')</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="1">'.$agpay.'</td>'.chr(10);
+		if($forwho != 'client') 
+		{
+			$body_out = $body_out.'<td  colspan="1">'.$agpay_comment.'</td>'.chr(10);
 		}
 		$body_out = $body_out.'</tr>'.chr(10);
 

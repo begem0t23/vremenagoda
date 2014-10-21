@@ -161,6 +161,8 @@ if ($q[1]>0)
 	if (mysql_num_rows($r_user)>0)
 	{
 		$row = mysql_fetch_array($r_user);
+					$data5 = $row['agencyname'];
+
 		//echo "OK^" . $row["id"]."^" . $row["phone"]."^" . $row["email"]."^" . $row["otkuda"];
 		echo '<div style="max-width: 400px"><form id=frm1 role="form" data-toggle="validator">';
 		echo '<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>';
@@ -186,7 +188,28 @@ if ($q[1]>0)
 			}
 			echo '<option value="999">Другое</option>' . "";
 			echo '</select>' . "";
-		}
+			
+					$tsql22 = "select * from `agenсies` WHERE isactive = 1;";
+						$r_from2 = mysql_query($tsql22);
+						if (mysql_num_rows($r_from2)>0)
+						{	
+							echo '<select id="clientfrom4" class="form-control" style="display:none;" >' . "";
+							echo '<option value="0">Укажите название агенства</option>' . "";
+
+							while ($row_from2 = mysql_fetch_array($r_from2))
+							{	
+								$sel = '';
+							if($data5 == $row_from2['id']) $sel = ' selected="selected"';
+							echo ' <option'.$sel.' value="'.$row_from2["id"].'">'.$row_from2["name"].'</option>';
+
+							}
+
+							echo '</select>' . "";
+						}
+
+			echo '<input type="text" id="clientfrom3" style="display:none;" value="'.$data5.'" class="form-control" placeholder="Укажите откуда пришел">';
+	
+	}
 		echo '<input type="text" id="clientfrom" style="display:none;" value="'.htmlspecialchars($row["otkuda"]).'" class="form-control" placeholder="Укажите откуда пришел">';
 		echo '</div><br>';
 		echo '<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>';
@@ -337,7 +360,6 @@ if ($q[1]>0)
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items']['isdrink'] = $rows_2['isdrink'];
-	
 
 	} //result_2
 			
@@ -528,6 +550,8 @@ if ($q[1]>0)
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] = @$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items'] = $zzz;
 	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['items']['isdrink'] = $rows_2['isdrink'];
+	$sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['ids'] = $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['ids'].$zzz['ids'];
+	
 	
 
 	} //result_2
@@ -942,8 +966,29 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 				{
 					
 					$("body #editclientid").val($.cookie("editclientid"));
+					
+					$("body #clientfrom2 option").each(function () {
+						if ($(this).html() == $.cookie("clientfrom"))
+						{
+							$(this).attr('selected','selected');
+						}
+					});
+					
 					$("body #clientfrom").val($.cookie("clientfrom"));
-					$("body #clientfrom4").val($.cookie("clientfrom4"));
+
+					if($.cookie("clientfrom") == 'От Агентства')
+					{
+						$("body #clientfrom4").show();
+						$("body #clientfrom4 option").each(function () {
+
+							if ($(this).val() == $.cookie("clientfrom4"))
+							{
+							
+								$(this).attr('selected','selected');
+							}
+						});
+					
+					}
 					$("body #clientphone").val($.cookie("clientphone"));
 					$("body #clientemail").val($.cookie("clientemail"));
 					$("body #dateevent").val($.cookie("dateevent"));
@@ -1234,7 +1279,6 @@ if(value["selprice"] == $("#archivprice"+index).html() )
 			
 				$( document ).on( "change", "#clientfrom2", function() {	
 					$("#clientfrom").hide();
-		
 					if ($("#clientfrom2").val() == '999')
 						{
 							$("#clientfrom").show();
@@ -1246,7 +1290,7 @@ if(value["selprice"] == $("#archivprice"+index).html() )
 							
 									if ($("#clientfrom2").val() == '1')
 									{
-								
+		alert($("#clientfrom2").val());
 										$("#clientfrom4").show();
 									} else
 									{

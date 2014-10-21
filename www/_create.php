@@ -958,10 +958,32 @@ echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
 			{
 				if (typeof $.cookie("clientname") != 'undefined')
 				{
-					
+									
 					$("body #clientid").val($.cookie("clientid"));
+					
+					$("body #clientfrom2 option").each(function () {
+						if ($(this).html() == $.cookie("clientfrom"))
+						{
+							$(this).attr('selected','selected');
+						}
+					});
+					
 					$("body #clientfrom").val($.cookie("clientfrom"));
-					$("body #clientfrom4").val($.cookie("clientfrom4"));
+
+					if($.cookie("clientfrom") == 'От Агентства')
+					{
+						$("body #clientfrom4").show();
+						$("body #clientfrom4 option").each(function () {
+
+							if ($(this).val() == $.cookie("clientfrom4"))
+							{
+							
+								$(this).attr('selected','selected');
+							}
+						});
+					
+					}
+
 					$("body #clientphone").val($.cookie("clientphone"));
 					$("body #clientemail").val($.cookie("clientemail"));
 					$("body #dateevent").val($.cookie("dateevent"));
