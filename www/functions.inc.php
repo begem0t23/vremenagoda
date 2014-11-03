@@ -403,7 +403,7 @@ $tabsinorder = 0;
 			{
 				$cookietables = json_decode($_COOKIE["tables"],true);
 	
-				if ($cntload > 1)
+				if ($cntload > 2)
 				{
 					if($ordertables & !$cookietables)
 					{
@@ -1611,14 +1611,14 @@ $summa['summary']=$summary;
 		}
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Агентское вознаграждение ('.$agpayproc.' От общей суммы меню без скидок: '.$allsumm.')</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$agpay.'</td>'.chr(10);
-		if($forwho != 'client') 
-		{
-			$body_out = $body_out.'<td  colspan="1">'.$agpay_comment.'</td>'.chr(10);
-		}
-		$body_out = $body_out.'</tr>'.chr(10);
+		//$body_out = $body_out.'<tr>'.chr(10);			
+		//$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Агентское вознаграждение ('.$agpayproc.' От общей суммы меню //без скидок: '.$allsumm.')</td>'.chr(10);
+		//$body_out = $body_out.'<td  colspan="1">'.$agpay.'</td>'.chr(10);
+		//if($forwho != 'client') 
+		//{
+		//	$body_out = $body_out.'<td  colspan="1">'.$agpay_comment.'</td>'.chr(10);
+		//}
+		//$body_out = $body_out.'</tr>'.chr(10);
 
 		//$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
 		//$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - 1).'">Пробковый сбор</td>'.chr(10);
@@ -2060,7 +2060,7 @@ if ( mysql_num_rows($rezult) > 0){
 
 		//проверка изменений в заказе
 		$changes = '';
-		if (anydishgetchangetype($rows['id']) > 0) $changes = '<br><font color=red><small>* у блюд произошли изменения</small></font>'; 
+		//if (anydishgetchangetype($rows['id']) > 0) $changes = '<br><font color=red><small>* у блюд произошли изменения</small></font>'; 
 		
 		if($tbuts)
 		{	

@@ -1847,15 +1847,9 @@ if ($id == 0)
 		$rezult01 = mysql_query($tsql01);
 		if (mysql_num_rows($rezult01) > 0) 
 		{
-		
-
-		$update = "UPDATE `services` SET `description` = '".$description."', `price` = '".$price."' WHERE  `services`.`id` = ".$id." ;";
+		$update = "UPDATE `services` SET `name` = '".$name."', `description` = '".$description."', `price` = '".$price."' WHERE  `services`.`id` = ".$id." ;";
 		
 		mysql_query($update);
-
-		
-		
-	
 		} else {
 				Echo "почемуто нет такой записи";	
 				}

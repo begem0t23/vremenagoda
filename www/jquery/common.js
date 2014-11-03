@@ -260,14 +260,15 @@
 		{
 		alladd = $("#createform  .btn-danger").length;			
 		
-	
-			if(alladd > 0) 
+
+			if(alladd > 0 & curpage > 1) 
 			{
-				//alert("Остались недобавленные позиции: " + alladd);
+					//alert (alladd+'_'+curpage+'не пошло кнопка далее');
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100 }, 500);
 			} else
 			{
-			
+						//alert (alladd+'_'+curpage+'пошло кнопка далее');
+		
 				if ($("body #guestcount").val()>0)
 				{
 					//хуй
@@ -287,8 +288,8 @@
 					return false;
 				}						
 			setvaluesincookie();
-			if (curpage<5) curpage = curpage + 1;
-			$("#page"+curpage).click();
+			//if (curpage<5) curpage = curpage + 1;
+			$("#page"+(curpage+1)).click();
 
 			count_dish_weight();
 						

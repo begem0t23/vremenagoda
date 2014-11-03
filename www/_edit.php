@@ -1026,9 +1026,17 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 							{
 								index = $(this).attr('id');
 								index = index.substr(7);
-								if ($("#archivprice"+index).html() != '')
+								archprice = $("#archivprice"+index).html();
+								regprice = $("#price"+index).html();
+
+									$("#selprice"+index).html(regprice);
+
+								
+								if (archprice != "")
 								{
-									$("#selprice"+index).html($("#archivprice"+index).html());
+
+									$("#selprice"+index).html(archprice);
+											
 									$("#price"+index).removeClass("btn-success");
 									$("#specialprice"+index).removeClass("btn-success");
 									$("#archivspecialprice"+index).removeClass("btn-default");
@@ -1237,7 +1245,7 @@ if(value["selprice"] == $("#archivprice"+index).html() )
 			$( document ).on( "click", ".navbar a", function() 
 			{
 					alladd = $("#createform  .btn-danger").length;			
-					if(alladd > 0) 
+					if(alladd > 0 & curpage>1) 
 					{
 						$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 						//return false;
@@ -1815,14 +1823,18 @@ if(value["selprice"] == $("#archivprice"+index).html() )
 		$("li[id*='page']").bind("click", function(){
 			// слушаем клики на элементы выбора страниц
 
-			alladd = $("#createform  .btn-danger").length;			
-			if(alladd > 0) 
+			alladd = $("#createform  .btn-danger").length;	
+	
+			if(alladd > 0 & curpage>1) 
 			{
+									//alert (alladd+'_'+curpage+' не пошло клик на страницу');
+
 				$('body').animate({ scrollTop: $("#createform .btn-danger").offset().top - 100}, 500);
 			} 
-			//else
-			//{
+			else
+			{
 		
+									//alert (alladd+'_'+curpage+' пошло клик на страницу');
 			
 			setvaluesincookie();
 			id = $(this).prop("id");
@@ -1844,7 +1856,7 @@ if(value["selprice"] == $("#archivprice"+index).html() )
 				}
 			}	
 			doloadcreateform();
-			//}
+			}
 		});
 		
 		
