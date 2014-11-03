@@ -10,7 +10,7 @@ $zid= $_POST['number'];
 $forwho= $_POST['forwho'];
 
 $land='portrait';
-if($forwho == 'full') $land='landscape'; 
+if($forwho == 'full') $land='portrait'; 
 
 $title='';
 $oh = 0;

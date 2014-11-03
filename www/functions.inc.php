@@ -569,15 +569,15 @@ $class =  '';
 					$output['print'] = @$output['print'].'<tr'.$class.'>
 							<td>'.$items[$i]["cnt"].'</td>
 							<td><span id="dish_name'.$items[$i]["id"].'">'.$items[$i]["title"].'</span></td>
-							<td>'.number_format(($items[$i]["weight"])/1000,2).'</td>';
+							<td class="num">'.number_format(($items[$i]["weight"])/1000,2).'</td>';
 							if($forwho <> "food" && $forwho <> "drink") 
 							{
-								$output['print'] = @$output['print'].'<td>'.$items[$i]["price"].'</td>';
+								$output['print'] = @$output['print'].'<td   class="sum">'.number_format($items[$i]["price"],2).'</td>';
 							}
-							$output['print'] = @$output['print'].'<td><span id="dish_num'.$items[$i]["id"].'">'.$items[$i]["num"].'</span></td>';
+							$output['print'] = @$output['print'].'<td  class="num"><span id="dish_num'.$items[$i]["id"].'">'.$items[$i]["num"].'</span></td>';
 							if($forwho <> "food" && $forwho <> "drink") 
 							{
-								$output['print'] = @$output['print'].'<td><span id="dish_cost'.$items[$i]["id"].'">'.($items[$i]["num"] * $items[$i]["price"]).'</span></td>';
+								$output['print'] = @$output['print'].'<td  class="sum"><span id="dish_cost'.$items[$i]["id"].'">'.number_format(($items[$i]["num"] * $items[$i]["price"]),2).'</span></td>';
 							}
 							if($forwho <> "client") 
 							{
@@ -1038,15 +1038,15 @@ $menuid = substr($menuid,1);
 
 function report_client($forwho,$orderid)
 {
-$cs1 = 2;
-$cs2 = 5;
+$cs1 = 1;
+$cs2 = 1;
 if($forwho == "client") 
 {
-$cs2 = 4;
+$cs2 = 1;
 }
 if($forwho == "food" || $forwho == "drink") 
 {
-$cs2 = 3;
+$cs2 = 1;
 }
 $cols_out = '';
 
@@ -1106,68 +1106,93 @@ $otkuda = $rows['otkuda'];
 		}
 		
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).' class="report_section" class="report_section"">Информация по клиенту</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="8" class="report_section" class="report_section"">Информация по клиенту</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.$cs1.'">Клиент</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['name'].'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		$body_out = $body_out.'<td   width="10%"  colspan="'.$cs1.'" class="report_columns_head">Клиент:</td>'.chr(10);
+		$body_out = $body_out.'<td   width="15%"  colspan="'.$cs2.'">'.$rows['name'].'</td>'.chr(10);
+		
+		
+		
+		
+		//$body_out = $body_out.'</tr>'.chr(10);
 
 if($forwho != "food" & $forwho != "drink") 
 {		
-		$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
-		$body_out = $body_out.'<td colspan="'.$cs1.'">Телефон</td>'.chr(10);
-		$body_out = $body_out.'<td colspan="'.$cs2.'">'.$rows['phone'].'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		//$body_out = $body_out.'<tr  class="second_row">'.chr(10);			
+		$body_out = $body_out.'<td   width="10%"  colspan="'.$cs1.'" class="report_columns_head">Телефон:</td>'.chr(10);
+		$body_out = $body_out.'<td   width="15%"  colspan="'.$cs2.'">'.$rows['phone'].'</td>'.chr(10);
+		//$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.$cs1.'">E-mail</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['email'].'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		//$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td   width="10%"   colspan="'.$cs1.'" class="report_columns_head">E-mail:</td>'.chr(10);
+		$body_out = $body_out.'<td   width="15%"   colspan="'.$cs2.'">'.$rows['email'].'</td>'.chr(10);
+		//$body_out = $body_out.'</tr>'.chr(10);
 		
-		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.$cs1.'">Откуда</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$otkuda.'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		//$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td   width="10%"   colspan="'.$cs1.'" class="report_columns_head">Откуда:</td>'.chr(10);
+		$body_out = $body_out.'<td   width="15%"   colspan="'.$cs2.'">'.$otkuda.'</td>'.chr(10);
+		//$body_out = $body_out.'</tr>'.chr(10);
 		
 
 }
 		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Информация по мероприятию</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="8" class="report_section">Информация по мероприятию</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.$cs1.'">Дата</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['eventdate'].'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs1.'" class="report_columns_head">Дата и время:</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['eventdate'].' '.$rows['eventtime'].'</td>'.chr(10);
+		//$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.$cs1.'">Время</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['eventtime'].'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		//$body_out = $body_out.'<tr class="second_row">'.chr(10);			
+		//$body_out = $body_out.'<td  colspan="'.$cs1.'">Время</td>'.chr(10);
+		//$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['eventtime'].'</td>'.chr(10);
+		//$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.$cs1.'">Помещение</td>'.chr(10);
+		//$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs1.'" class="report_columns_head">Помещение:</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$hallname.'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		//$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.$cs1.'">Количество гостей</td>'.chr(10);
+		//$body_out = $body_out.'<tr class="second_row">'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs1.'" class="report_columns_head">Количество гостей:</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['guestcount'].'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		//$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.$cs1.'">Тип мероприятия</td>'.chr(10);
+		//$body_out = $body_out.'<tr>'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.$cs1.'" class="report_columns_head">Тип мероприятия:</td>'.chr(10);
 		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['type'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
+		
+		$body_out0 = $body_out.'</tbody>';
+		$body_out = '<tbody>'.chr(10);
+	
+		
+$cs1 = 2;
+$cs2 = 5;
+if($forwho == "client") 
+{
+$cs2 = 4;
+}
+if($forwho == "food" || $forwho == "drink") 
+{
+$cs2 = 3;
+}		
+		
+		
+		
 if($forwho <> "client") 
 {
-		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.$cs1.'">Комментарий по размещению</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$cs2.'">'.$rows['comment'].'</td>'.chr(10);
+		$body_out = $body_out.'<tr >'.chr(10);			
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Комментарий по размещению</th>'.chr(10);
+		$body_out = $body_out.'</tr>'.chr(10);
+		
+		$body_out = $body_out.'<tr >'.chr(10);			
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2).'">'.$rows['comment'].'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr >'.chr(10);			
@@ -1190,7 +1215,7 @@ if($forwho <> "client")
 $body_out = $body_out.'
 <tr>
 <th  width="5" class="report_columns_head">№</th>
-<th  width="230" class="report_columns_head">Наименование блюда</th>
+<th  width="230" class="report_columns_head" >Наименование блюда</th>
 <th  width="40" class="report_columns_head">Вес</th>';
 if($forwho <> "food" && $forwho <> "drink") 
 {
@@ -1206,7 +1231,7 @@ if($forwho <> "food" && $forwho <> "drink")
 
 if($forwho <> "client") 
 {
-	$body_out = $body_out.'<th  width="100" class="report_columns_head">Комментарий</th>';
+	$body_out = $body_out.'<th  width="50" class="report_columns_head">Комментарий</th>';
 }
 
 $body_out = $body_out.'</tr>
@@ -1317,9 +1342,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 			}
 			
 			foreach ($val as $num1 => $val1) 
-			{
-
-					
+			{	
 					if (is_array($val1)) 
 					{
 					
@@ -1411,7 +1434,7 @@ $service_discont = 0;
 //$food_sum = $level0_sum['_59'] + $level0_sum['_60'];
 //$drink_sum = @$level0_sum['_61'] + @$level0_sum['_19'];
 $food_sum = $sum[0] ;
-$drink_sum = $sum[1];
+$drink_sum = $sum[1] + $sum[2];
 
 		$tsql011 = "SELECT s.id, s.name,    so.price ,  so.discont , so.num, so.comment FROM services s,  services_in_orders so  WHERE  so.orderid=".$orderid." AND so.serviceid = s.id   ;";
 		$rezult011 = mysql_query($tsql011);
@@ -1482,10 +1505,10 @@ $drink_sum = $sum[1];
 						$body_out = $body_out.'<tr'.$class.'>
 							<td>'.$cnt.'</td>
 							<td>'.$rows011["name"].'</td>
-							<td>'.$rows011["discont"].'%</td>
-							<td>'.$rows011["price"].'</td>
-							<td>'.$rows011["num"].'</td>
-							<td>'.($rows011["num"] * $rows011["price"] * (1-$rows011["discont"]/100)).'</td>';
+							<td class="num">'.$rows011["discont"].'%</td>
+							<td class="sum">'.number_format($rows011["price"],2).'</td>
+							<td class="num">'.$rows011["num"].'</td>
+							<td class="sum">'.number_format($rows011["num"] * $rows011["price"] * (1-$rows011["discont"]/100),2).'</td>';
 							
 							if($forwho <> "client") 
 							{
@@ -1538,73 +1561,85 @@ $summa['summary']=$summary;
 		{
 		$sumcol =2;
 		}
+		
 //////////////////////////////////
+
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2).'" class="report_section">Итоги:</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая стоимость по блюдам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$sumcol.'">'.$food_sum.'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
 		
-		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая Скидка по блюдам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$food_discont.$fooddiscproc.'</td>'.chr(10);
-		if($forwho != 'client') 
+		if ($food_discont > 0)
 		{
-			$body_out = $body_out.'<td  colspan="1">'.$food_discont_comment.'</td>'.chr(10);
-		}
-		$body_out = $body_out.'</tr>'.chr(10);
+			$body_out = $body_out.'<tr>'.chr(10);			
+			$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая стоимость по блюдам</td>'.chr(10);
+			$body_out = $body_out.'<td  class="sum" colspan="'.$sumcol.'">'.number_format($food_sum,2).'</td>'.chr(10);
+			$body_out = $body_out.'</tr>'.chr(10);
 
+			$body_out = $body_out.'<tr class="second_row">'.chr(10);			
+			$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая Скидка по блюдам '.$fooddiscproc.'</td>'.chr(10);
+			$body_out = $body_out.'<td class="sum" colspan="1">'.number_format($food_discont,2).'</td>'.chr(10);
+			if($forwho != 'client') 
+			{
+				$body_out = $body_out.'<td  colspan="1">'.$food_discont_comment.'</td>'.chr(10);
+			}
+			$body_out = $body_out.'</tr>'.chr(10);
+		}
+		
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -$sumcol ).'" class="lite_summary_section">Итого по Блюдам:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="'.$sumcol.'" class="lite_summary_section">'.($food_sum - $food_discont).'</th>'.chr(10);
+		$body_out = $body_out.'<th   colspan="'.$sumcol.'" class="lite_summary_section sum">'.number_format($food_sum - $food_discont,2).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая стоимость по напиткам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$sumcol.'">'.$drink_sum.'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
-		
-		$body_out = $body_out.'<tr class="second_row">'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая Скидка по напиткам</td>'.chr(10);		
-		$body_out = $body_out.'<td  colspan="1">'.$drink_discont.$drinkdiscproc.'</td>'.chr(10);
-		if($forwho != 'client') 
+		if ($drink_discont > 2)
 		{
-			$body_out = $body_out.'<td  colspan="1">'.$drink_discont_comment.'</td>'.chr(10);
+			$body_out = $body_out.'<tr>'.chr(10);			
+			$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая стоимость по напиткам</td>'.chr(10);
+			$body_out = $body_out.'<td  class="sum" colspan="'.$sumcol.'">'.number_format($drink_sum,2).'</td>'.chr(10);
+			$body_out = $body_out.'</tr>'.chr(10);
+			
+			$body_out = $body_out.'<tr class="second_row">'.chr(10);			
+			$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая Скидка по напиткам '.$drinkdiscproc.'</td>'.chr(10);		
+			$body_out = $body_out.'<td  class="sum" colspan="1">'.number_format($drink_discont,2).'</td>'.chr(10);
+			if($forwho != 'client') 
+			{
+				$body_out = $body_out.'<td  colspan="1">'.$drink_discont_comment.'</td>'.chr(10);
+			}
+			$body_out = $body_out.'</tr>'.chr(10);
 		}
-		$body_out = $body_out.'</tr>'.chr(10);
-		
 		
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -$sumcol ).'" class="lite_summary_section">Итого по Напиткам:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="'.$sumcol.'" class="lite_summary_section">'.($drink_sum - $drink_discont).'</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - $sumcol ).'" class="lite_summary_section">Итого по Напиткам:</th>'.chr(10);
+		$body_out = $body_out.'<th colspan="'.$sumcol.'" class="lite_summary_section sum">'.number_format($drink_sum - $drink_discont,2).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -$sumcol ).'" class="lite_report_section">Итого по Блюдам и Напиткам без скидок:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="'.$sumcol.'" class="lite_report_section">'.$allsumm.'</th>'.chr(10);
+		$body_out = $body_out.'<th  colspan="'.$sumcol.'" class="lite_report_section sum">'.number_format($allsumm,2).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая стоимость по услугам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$sumcol.'">'.$service_sum.'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
+		if ($service_discont > 0)
+		{
+			$body_out = $body_out.'<tr>'.chr(10);
+			$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая стоимость по услугам</td>'.chr(10);
+			$body_out = $body_out.'<td  class="sum" colspan="'.$sumcol.'">'.number_format($service_sum,2).'</td>'.chr(10);
+			$body_out = $body_out.'</tr>'.chr(10);
 
-		$body_out = $body_out.'<tr class="second_row">'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая скидка по услугам</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$sumcol.'">'.$service_discont.$servdiscproc.'</td>'.chr(10);
-		$body_out = $body_out.'</tr>'.chr(10);
-
+			$body_out = $body_out.'<tr class="second_row">'.chr(10);
+			$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Общая скидка по услугам '.$servdiscproc.'</td>'.chr(10);
+			$body_out = $body_out.'<td  class="sum" colspan="'.$sumcol.'">'.number_format($service_discont,2).'</td>'.chr(10);
+			$body_out = $body_out.'</tr>'.chr(10);
+		}
+		
+		
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 -$sumcol ).'" class="lite_summary_section">Итого по Услугам:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="'.$sumcol.'" class="lite_summary_section">'.($service_sum - $service_discont).'</th>'.chr(10);
+		$body_out = $body_out.'<th colspan="'.$sumcol.'" class="lite_summary_section sum">'.number_format($service_sum - $service_discont,2).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Наценка за обслуживание ('.$teapayproc.' От общей суммы меню без скидок: '.$allsumm.')</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="1">'.$teapay.'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Обслуживание ('.$teapayproc.' От общей суммы меню без скидок: '.number_format($allsumm,2).')</td>'.chr(10);
+		$body_out = $body_out.'<td  class="sum" colspan="1">'.number_format($teapay,2).'</td>'.chr(10);
 		if($forwho != 'client') 
 		{
 			$body_out = $body_out.'<td  colspan="1">'.$teapay_comment.'</td>'.chr(10);
@@ -1627,7 +1662,7 @@ $summa['summary']=$summary;
 		
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - $sumcol).'"  class="summary_section">ИТОГО:</th>'.chr(10);
-		$body_out = $body_out.'<th  colspan="'.$sumcol.'" class="summary_section">'.$summary.'</th>'.chr(10);
+		$body_out = $body_out.'<th colspan="'.$sumcol.'" class="summary_section sum">'.number_format($summary,2).'</th>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 	
@@ -1635,13 +1670,13 @@ $summa['summary']=$summary;
 
 
 		$body_out = $body_out.'<tr>'.chr(10);			
-		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Внесенная предоплата</td>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$sumcol.'">'.$total['all'].'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.($cs1 + $cs2 - $sumcol).'">Внесенные задатки</td>'.chr(10);
+		$body_out = $body_out.'<td  class="sum" colspan="'.$sumcol.'">'.number_format($total['all'],2).'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 
 		$body_out = $body_out.'<tr>'.chr(10);			
 		$body_out = $body_out.'<th  colspan="'.($cs1 + $cs2 - $sumcol).'" class="report_section">ЗАДОЛЖЕННОСТЬ:</th>'.chr(10);
-		$body_out = $body_out.'<td  colspan="'.$sumcol.'"  class="report_section">'.($summary - $total['all']).'</td>'.chr(10);
+		$body_out = $body_out.'<td  colspan="'.$sumcol.'"  class="report_section sum">'.number_format($summary - $total['all'],2).'</td>'.chr(10);
 		$body_out = $body_out.'</tr>'.chr(10);
 }
 		$style = '<style>
@@ -1663,13 +1698,23 @@ quotes:"" "";
 }
 
 
+.sum
+{
+text-align:right;
+vertical-align:middle;
+}
 
+.num
+{
+text-align:center;
+vertical-align:middle;
+}
 
 .simple-little-table {
 width:700px;
 	font-family:Arial, Helvetica, sans-serif;
 	color:#666;
-	font-size:12px;
+	font-size:10px;
 	_text-shadow: 1px 1px 0px #fff;
 	background:#fff;
 	_margin:15px;
@@ -1690,7 +1735,7 @@ border-spacing:0;
 
 .simple-little-table th {
 	font-weight:bold;
-	_padding:10px 13px 11px 13px;
+	_padding:8px;
 	_border-top:1px solid #2E2E2E;
 	_border-bottom:1px solid #2E2E2E;
 
@@ -1722,7 +1767,7 @@ border-spacing:0;
 	border-left: 0;
 }
 .simple-little-table tr td {
-	 padding:4px;
+	 padding:2px;
 	border-top: 1px solid #ffffff;
 	border-bottom:1px solid #e0e0e0;
 	border-left: 1px solid #e0e0e0;
@@ -1788,8 +1833,8 @@ border-spacing:0;
   }
   
   	.report_columns_head{
-	font-size:12px;
-	 padding:10px;
+	font-size:10px;
+	 padding:3px;
 	color: #000;
   background-color: #c1d2e4 !important;
    	border-left: 1px solid #e0e0e0;
@@ -1797,27 +1842,27 @@ border-spacing:0;
   }
   
 	.report_section{
-	font-size:14px;
-	 padding:10px;
+	font-size:12px;
+	 padding:4px;
 	color: #fff;
   background-color: #66a6e7 !important;
   }
 	.lite_report_section{
-	font-size:12px;
+	font-size:10px;
 	 padding:1px;
 	color: #fff;
   background-color: #66a6e7 !important;
   }
 
 	.summary_section{
-	font-size:14px;
-	 padding:10px;
+	font-size:12px;
+	 padding:4px;
 	color: #fff;
   background-color: #6bcf5d !important;
  
   }
  	.lite_summary_section{
-	font-size:12px;
+	font-size:10px;
 	 padding:1px;
 	color: #fff;
   background-color: #6bcf5d !important;
@@ -1911,7 +1956,10 @@ $footer ='<p><strong>Исполнительный директор _____________
 
 //$title = '<h3>'.$tname.'</h3>'.chr(10);		
 
-$table = '<table id="report_client_param" class="simple-little-table">'.chr(10).
+$table = '<table id="report_client_param0" class="simple-little-table">'.chr(10).
+			$cols_out.$head_out.$body_out0.
+			'</table>'.chr(10);
+$table .= '<table id="report_client_param" class="simple-little-table">'.chr(10).
 			$cols_out.$head_out.$body_out.
 			'</table>'.chr(10);
 
@@ -1952,6 +2000,12 @@ else
 }
 
 }
+
+
+
+
+
+
 
 function table($tname, $tcols, $thead, $tbody, $tsql, $tdate, $tbuts )
 {
