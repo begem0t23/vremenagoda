@@ -1314,6 +1314,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 						}
 						else
 						{
+					
 							var nn = noty({text: 'Заполните количество гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});											
 							return false;
 						}
@@ -1910,6 +1911,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					}
 					else
 					{
+					
 						var nn = noty({text: 'Заполните количество гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});											
 						return false;
 					}

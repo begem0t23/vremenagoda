@@ -108,7 +108,7 @@ echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
 
 
 if ($_SESSION["curuserrole"]>=5) {
-				orders_history($q[1],'3');
+				orders_history($q[1],'3','');
 if ($q[1]>0)
 {
 ?>
@@ -958,6 +958,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 
 		function readvaluesincookie()
 		{
+		//alert($.cookie("dishes"));
 			//aler($("body #clientfrom").val());
 			//aler(curpage);
 			if (curpage==1)
@@ -1239,7 +1240,7 @@ if(value["selprice"] == $("#archivprice"+index).html() )
 		}
 		$(document).ready(function(){
 			// когда страница загружена
-			
+				
 		setvaluesincookie2();
 		
 			$( document ).on( "click", ".navbar a", function() 

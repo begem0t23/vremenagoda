@@ -458,7 +458,7 @@ $('#tabs').smartTab({selected: 0});
  
       valid = valid && checkLength( name, "названия", 3, 250 );
       valid = valid && checkLength( description, "описания", 0, 250 );
-      valid = valid && checkLength( weight, "веса", 2, 5 );
+      //valid = valid && checkLength( weight, "веса", 2, 5 );
      valid = valid && checkLength( price, "цена", 1, 10 );
      valid = valid && checkLength( specialprice, "специальная цена", 1, 10 );
  

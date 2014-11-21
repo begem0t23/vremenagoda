@@ -125,7 +125,7 @@
 	function setvaluesincookie()
 		{
 			//aler($("body #clientfrom").val());
-			
+		
 			if ((curpage==1) && (typeof $("body #clientname").val() != 'undefined'))
 			{
 
@@ -165,6 +165,7 @@
 		
 	function setvaluesincookie2()
 		{
+	
 					$.removeCookie("clientname");
 				$.removeCookie("clientid");
 				$.removeCookie("clientphone");
@@ -208,15 +209,17 @@
 					//$.cookie("tables", tables,{ expires: 1, path: '/' });
 			
 	$.removeCookie("dishes");
-			
+
 					var dishes="";
 					var dishall = {};
 					var element = {};
 					$("body  button[name=adddish]").each(function(){
 							id = $(this).attr("id");
+
 							id = id.substr(7);
 							if ($(this).html()=="Удалить")
 							{
+														
 								var quant = $("#quant"+id).val();
 								var note = $("#note"+id).val();
 								var selprice 	= $("#selprice"+id).html();
@@ -225,8 +228,9 @@
 							}
 						});
 						dishes = $.toJSON(dishall);
+						alert(dishes.length);
 						$.cookie("dishes", dishes,{ expires: 1, path: '/' });
-	
+	alert($.cookie("dishes"));
 	$.removeCookie("service");
 					var services="";
 					var serviceall = {};
@@ -269,16 +273,17 @@
 			{
 						//alert (alladd+'_'+curpage+'пошло кнопка далее');
 		
-				if ($("body #guestcount").val()>0)
+				if ($("body #guestcount").val()>0 || $.cookie("guestcount") >0)
 				{
 					//хуй
 				}
 				else
 				{
+			
 					var nn = noty({text: 'Заполните количество гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});											
 					return false;
 				}
-				if (isDate($("body #dateevent").val()))
+				if (isDate($("body #dateevent").val())  || isDate($.cookie("dateevent")) >0)
 				{
 					//хуй
 				}

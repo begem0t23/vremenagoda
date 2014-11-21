@@ -956,12 +956,7 @@ $(".report_client2")
       height: 350,
       width: 700,
       modal: true,
-      buttons: {
-        "Отправить": sendemail,
-        "Отмена": function() {
-          dialog.dialog( "close" );
-        }
-      }
+
     });
  
 
@@ -1021,10 +1016,11 @@ $(".report_client2")
 
 
 
-function sendemail()
+function sendemail(xxx)
 {
-
- $("#myForm").submit();
+alert(xxx);
+$("#sendemailb").attr("disabled","disabled");
+$("#myForm").submit();
 	
 }
 
@@ -1518,7 +1514,10 @@ function add_delegate()
 	<br>
 	Ресторан Времена Года.<br><br></textarea>
  </form>
- 
+
+<br>
+ <button type="button" id="sendemailb" onclick = "sendemail(1);">Отправить</button>
+ <button type="button" onclick = "dialog.dialog( 'close' );">Отмена</button>
 <br/>
  
 
