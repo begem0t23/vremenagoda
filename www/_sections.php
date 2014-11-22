@@ -138,6 +138,7 @@ fixednavbar();
 	
 	<script src="/jquery/validator.js"></script>
 	<script src="/jquery/jquery.cookie.js"></script>
+	<script src="/jquery/jquery.session.js"></script>
 	<script src="/jquery/smarttab/js/jquery.smartTab.min.js"></script>
 	<script src="/jquery/jquery.json-2.4.js"></script>
 	
