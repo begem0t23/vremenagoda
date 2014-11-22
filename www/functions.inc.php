@@ -384,7 +384,7 @@ $tabsinorder = 0;
 			$inorder = '';
 			$class .=' element';
 			}
-				$cntload = $_COOKIE["cntload"];		
+				$cntload = $_SESSION["cntload"];		
 				if(!$cntload) $cntload=0;
 				$cntload = $cntload * 1;
 				//$sumpersons = $sumpersons + $row_tab["persons"];
@@ -401,7 +401,7 @@ $tabsinorder = 0;
 			}
 				if( $place == 'editor')
 			{
-				$cookietables = json_decode($_COOKIE["tables"],true);
+				$cookietables = json_decode($_SESSION["tables"],true);
 	
 				if ($cntload > 2)
 				{
@@ -424,15 +424,15 @@ $tabsinorder = 0;
 					}				
 				}
 				$cntload = $cntload + 1;
-								 setcookie ("tables", json_encode($cookietables),time()+33600);
-								 setcookie ("cntload", $cntload,time()+33600);
+				 $_SESSION["tables"]=json_encode($cookietables);
+				 $_SESSION["cntload"]=$cntload;
 			}					
 								
-						$ech = $ech.'</div>';
-						$out['tabsinorder'] = $tabsinorder;
-						$out['tabquant'] = $tabquant;
-						$out['tables'] = $ech;
-						return $out;
+			$ech = $ech.'</div>';
+			$out['tabsinorder'] = $tabsinorder;
+			$out['tabquant'] = $tabquant;
+			$out['tables'] = $ech;
+			return $out;
 }
 
 function gethallondatebyorder($orderid)
@@ -2258,9 +2258,9 @@ function checklogin()
 	$curusermd5 		= "";
 	$curusersessionmd5 	= "";
 	
-	if (@$_COOKIE["curuser"]) 
+	if (@$_SESSION["curuser"]) 
 	{
-		$curusermd5 = $_COOKIE["curuser"];
+		$curusermd5 = $_SESSION["curuser"];
 		return true;
 	}
 	else

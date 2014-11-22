@@ -1,5 +1,5 @@
 <?php
-	setCookie("cntload", null, -1);
+	unset($_SESSION["cntload"]);
 ?>	
 	<!DOCTYPE html>
 <html lang="ru">

@@ -296,7 +296,7 @@ fixednavbar();
 	function viewtree(key) {
 	if(key == 1) 
 	{
-					$.cookie("viewtree", '1',{ expires: 1, path: '/' });
+			$.session.set("viewtree", '1');
 			$(".fullrow").show();
 			$(".glyphicon-plus").addClass("glyphicon-minus");
 			$(".glyphicon-plus").removeClass("glyphicon-plus");
@@ -305,7 +305,7 @@ fixednavbar();
 	
 	if(key == 0) 
 	{
-			$.cookie("viewtree", '0',{ expires: 1, path: '/' });
+			$.session.set("viewtree", '0');
 			$(".glyphicon-minus").addClass("glyphicon-plus");
 			$(".glyphicon-minus").removeClass("glyphicon-minus");
 			$(".dis_0 span").removeClass("glyphicon-plus");

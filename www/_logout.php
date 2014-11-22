@@ -1,11 +1,13 @@
 <?php
+
 	unset($_COOKIE["scuruser"]);
 	unset($_SESSION["curusersession"]);
 	unset($_SESSION["curuser"]);
 	unset($_SESSION["curusername"]);
-    setcookie('scuruser', null, -1);
-	Header("Location: /?" . rand());
 	
+	session_destroy();
+	
+    /*setcookie('scuruser', null, -1);
 	setCookie("clientname", null, -1);
 	setCookie("clientid", null, -1);
 	setCookie("clientphone", null, -1);
@@ -21,6 +23,8 @@
 	setCookie("tables", null, -1);
 	setCookie("editclientid", null, -1);
 	setCookie("eventtype", null, -1);
-	setCookie("eventcomment", null, -1);
+	setCookie("eventcomment", null, -1);*/
+
+	Header("Location: /?" . rand());	
 
 ?>

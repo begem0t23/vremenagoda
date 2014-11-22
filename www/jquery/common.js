@@ -45,7 +45,7 @@
 		wfood0 = 0;
 		wdrink10 = 0;
 		wdrink20 = 0;
-		persons = $.cookie("guestcount") * 1;
+		persons = $.session.get("guestcount") * 1;
 		if(persons > 0) 
 		{
 			$(".btn-primary").each(function(){
@@ -130,19 +130,19 @@
 			{
 
 		
-				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
-				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
+				$.session.set("clientname", $("body #clientname").val());
+				$.session.set("clientid", $("body #clientid").val());
 				if ($("body #clientfrom").val()!="Укажите откуда пришел")
 				{
-					$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
+					$.session.set("clientfrom", $("body #clientfrom").val());
 				}
-				$.cookie("clientfrom4", $("body #clientfrom4").val(),{ expires: 1, path: '/' });
-				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
-				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
-				$.cookie("dateevent", $("body #dateevent").val(),{ expires: 1, path: '/' });
-				$.cookie("timeevent", $("body #timeevent").val(),{ expires: 1, path: '/' });
-				$.cookie("guestcount", $("body #guestcount").val(),{ expires: 1, path: '/' });
-				$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
+				$.session.set("clientfrom4", $("body #clientfrom4").val());
+				$.session.set("clientphone", $("body #clientphone").val());
+				$.session.set("clientemail", $("body #clientemail").val());
+				$.session.set("dateevent", $("body #dateevent").val());
+				$.session.set("timeevent", $("body #timeevent").val());
+				$.session.set("guestcount", $("body #guestcount").val());
+				$.session.set("hall", $("body #hall").val());
 				
 			}
 			if (curpage==2)	{
@@ -155,60 +155,49 @@
 	
 			}
 			if (curpage==5)	{
-				$.removeCookie("eventtype");
-				$.removeCookie("eventcomment");
+				$.session.remove("eventtype");
+				$.session.remove("eventcomment");
 				
-				$.cookie("eventtype", $("#type").val(),{ expires: 1, path: '/' });
-				$.cookie("eventcomment", $("#comment").val(),{ expires: 1, path: '/' });
+				$.session.set("eventtype", $("#type").val());
+				$.session.set("eventcomment", $("#comment").val());
 			}
 		}
 		
 	function setvaluesincookie2()
 		{
 	
-					$.removeCookie("clientname");
-				$.removeCookie("clientid");
-				$.removeCookie("clientphone");
-				$.removeCookie("clientfrom");
-				$.removeCookie("clientfrom4");
-				$.removeCookie("clientemail");
-				$.removeCookie("dateevent");
-				$.removeCookie("timeevent");
-				$.removeCookie("guestcount");
-				$.removeCookie("hall");
-				$.removeCookie("tables");
-					$.removeCookie("editclientid");
+				$.session.remove("clientname");
+				$.session.remove("clientid");
+				$.session.remove("clientphone");
+				$.session.remove("clientfrom");
+				$.session.remove("clientfrom4");
+				$.session.remove("clientemail");
+				$.session.remove("dateevent");
+				$.session.remove("timeevent");
+				$.session.remove("guestcount");
+				$.session.remove("hall");
+				$.session.remove("tables");
+				$.session.remove("editclientid");
 			
-				$.cookie("editclientid", $("body #editclientid").val(),{ expires: 1, path: '/' });
-				$.cookie("clientname", $("body #clientname").val(),{ expires: 1, path: '/' });
-				$.cookie("clientid", $("body #clientid").val(),{ expires: 1, path: '/' });
+				$.session.set("editclientid", $("body #editclientid").val());
+				$.session.set("clientname", $("body #clientname").val());
+				$.session.set("clientid", $("body #clientid").val());
 				if ($("body #clientfrom").val()!="Укажите откуда пришел")
 				{
-					$.cookie("clientfrom", $("body #clientfrom").val(),{ expires: 1, path: '/' });
+					$.session.set("clientfrom", $("body #clientfrom").val());
 				}
-				$.cookie("clientfrom4", $("body #clientfrom4").val(),{ expires: 1, path: '/' });
-				$.cookie("clientphone", $("body #clientphone").val(),{ expires: 1, path: '/' });
-				$.cookie("clientemail", $("body #clientemail").val(),{ expires: 1, path: '/' });
-				$.cookie("dateevent", $("body #dateevent").val(),{ expires: 1, path: '/' });
-				$.cookie("timeevent", $("body #timeevent").val(),{ expires: 1, path: '/' });
-				$.cookie("guestcount", $("body #guestcount").val(),{ expires: 1, path: '/' });
-				$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
-					var tables = "";
-					var taball = {};
-					var element = {};
-					
-								//tables_func($("body #hall").val(),'editor',$("body #dateevent").val(),'selectedhall')
-				//	$("body  .table.primary2").each(function(){
-		//alert('dd');
-							//tabid1 = $(this).attr("tabid");
-							//tabnum1 = $(this).html();
-							//element = ({tabid:tabid1, tabnum:tabnum1});
-							//taball[tabid1] = element ;
-						//});
-					//tables = $.toJSON(taball);
-					//$.cookie("tables", tables,{ expires: 1, path: '/' });
+				$.session.set("clientfrom4", $("body #clientfrom4").val());
+				$.session.set("clientphone", $("body #clientphone").val());
+				$.session.set("clientemail", $("body #clientemail").val());
+				$.session.set("dateevent", $("body #dateevent").val());
+				$.session.set("timeevent", $("body #timeevent").val());
+				$.session.set("guestcount", $("body #guestcount").val());
+				$.session.set("hall", $("body #hall").val());
+				var tables = "";
+				var taball = {};
+				var element = {};
 			
-	$.removeCookie("dishes");
+				$.session.remove("dishes");
 
 					var dishes="";
 					var dishall = {};
@@ -229,9 +218,8 @@
 						});
 						dishes = $.toJSON(dishall);
 						alert(dishes.length);
-						$.cookie("dishes", dishes,{ expires: 1, path: '/' });
-	alert($.cookie("dishes"));
-	$.removeCookie("service");
+						$.session.set("dishes", dishes);
+						$.session.remove("service");
 					var services="";
 					var serviceall = {};
 					var element = {};
@@ -249,13 +237,13 @@
 							}
 						});
 						services = $.toJSON(serviceall);
-						$.cookie("service", services,{ expires: 1, path: '/' });
+						$.session.set("service", services);
 
-				$.removeCookie("eventtype");
-				$.removeCookie("eventcomment");
+				$.session.remove("eventtype");
+				$.session.remove("eventcomment");
 				
-				$.cookie("eventtype", $("body #type").val(),{ expires: 1, path: '/' });
-				$.cookie("eventcomment", $("body #comment").val(),{ expires: 1, path: '/' });
+				$.session.set("eventtype", $("body #type").val());
+				$.session.set("eventcomment", $("body #comment").val());
 			
 		}
 
@@ -273,7 +261,7 @@
 			{
 						//alert (alladd+'_'+curpage+'пошло кнопка далее');
 		
-				if ($("body #guestcount").val()>0 || $.cookie("guestcount") >0)
+				if ($("body #guestcount").val()>0 || $.session.get("guestcount") >0)
 				{
 					//хуй
 				}
@@ -283,7 +271,7 @@
 					var nn = noty({text: 'Заполните количество гостей', type: 'error', timeout:10000, onClick: function(){delete nn;}});											
 					return false;
 				}
-				if (isDate($("body #dateevent").val())  || isDate($.cookie("dateevent")) >0)
+				if (isDate($("body #dateevent").val())  || isDate($.session.get("dateevent")) >0)
 				{
 					//хуй
 				}

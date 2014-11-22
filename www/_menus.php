@@ -148,7 +148,7 @@ $dend = $row['dend'];
 	function viewtree(key) {
 	if(key == 1) 
 	{
-					$.cookie("viewtree", '1',{ expires: 1, path: '/' });
+			$.session.set("viewtree", '1');
 			$(".fullrow").show();
 			$(".glyphicon-plus").addClass("glyphicon-minus");
 			$(".glyphicon-plus").removeClass("glyphicon-plus");
@@ -157,7 +157,7 @@ $dend = $row['dend'];
 	
 	if(key == 0) 
 	{
-					$.cookie("viewtree", '0',{ expires: 1, path: '/' });
+			$.session.set("viewtree", '0');
 			$(".glyphicon-minus").addClass("glyphicon-plus");
 			$(".glyphicon-minus").removeClass("glyphicon-minus");
 			$(".dis_0 span").removeClass("glyphicon-plus");
@@ -332,7 +332,7 @@ $( ".stContainer" ).css("height", newh + "px")
 				widgets: ['zebra']
 			});
 			$('#tabs').smartTab({selected: cnt});
-			viewtree($.cookie("viewtree"));
+			viewtree($.session.get("viewtree"));
 		});
 	
 	}

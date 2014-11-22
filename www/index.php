@@ -28,7 +28,7 @@ if (@$_POST["dosend"])
 		{	
 			if (@$_POST["remember"])
 			{
-				setcookie ("scuruser", md5($_POST["email"] . md5($_POST["pass"])),time()+3600*365,'/');
+				setcookie ("scuruser", md5($_POST["email"] . md5($_POST["pass"])),time()+3600*365*2,'/');
 			}
 			$row_user = mysql_fetch_array($r_user);
 			$_SESSION["curusersession"] = md5($_POST["email"] . md5($_POST["pass"]) . $_SERVER['REMOTE_ADDR']);
@@ -108,7 +108,7 @@ if (checklogin())
 	}
 	elseif ($qq == "debug")
 	{
-		var_dump($_SESSION);
+		var_dump(@$_SESSION);
 		var_dump(@$_COOKIES);	
 	}
 	else

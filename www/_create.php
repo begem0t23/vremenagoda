@@ -1,21 +1,20 @@
 <?php
-setCookie("clientname", null, -1);
-	setCookie("clientid", null, -1);
-	setCookie("clientphone", null, -1);
-	setCookie("clientfrom", null, -1);
-	setCookie("clientfrom4", null, -1);
-	setCookie("clientemail", null, -1);
-	setCookie("dateevent", null, -1);
-	setCookie("timeevent", null, -1);
-	setCookie("guestcount", null, -1);
-	setCookie("hall", null, -1);
-	setCookie("dishes", null, -1);
-	setCookie("service", null, -1);
-	setCookie("tables", null, -1);
-	setCookie("editclientid", null, -1);
-	setCookie("eventtype", null, -1);
-	setCookie("eventcomment", null, -1);
-	
+	$.session.remove("clientname");
+	$.session.remove("clientid");
+	$.session.remove("clientphone");
+	$.session.remove("clientfrom");
+	$.session.remove("clientfrom4");
+	$.session.remove("clientemail");
+	$.session.remove("dateevent");
+	$.session.remove("timeevent");
+	$.session.remove("guestcount");
+	$.session.remove("hall");
+	$.session.remove("dishes");
+	$.session.remove("service");
+	$.session.remove("tables");
+	$.session.remove("editclientid");
+	$.session.remove("eventtype");
+	$.session.remove("eventcomment");
 	?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -926,26 +925,21 @@ echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
 			if ($("#clientsearch").val())
 			{			
 				//aler($("#clientsearch").val());
-				if ($.cookie("clientname")!==$("#clientsearch").val())
-				{
-					//aler($.cookie("clientname"));
-					//aler($("#clientsearch").val());
-					
-					$.removeCookie("clientname");
-					$.removeCookie("clientid");
-					$.removeCookie("clientfrom");
-					$.removeCookie("clientfrom4");
-					$.removeCookie("clientphone");
-					$.removeCookie("clientemail");
-					$.removeCookie("dateevent");
-					$.removeCookie("timeevent");
-					$.removeCookie("guestcount");
-					$.removeCookie("hall");
-					$.removeCookie("dishes");
-					$.removeCookie("service");
-					$.removeCookie("tables");
-					//$.removeCookie("timestart");
-					
+				if ($.session.get("clientname")!==$("#clientsearch").val())
+				{				
+					$.session.remove("clientname");
+					$.session.remove("clientid");
+					$.session.remove("clientfrom");
+					$.session.remove("clientfrom4");
+					$.session.remove("clientphone");
+					$.session.remove("clientemail");
+					$.session.remove("dateevent");
+					$.session.remove("timeevent");
+					$.session.remove("guestcount");
+					$.session.remove("hall");
+					$.session.remove("dishes");
+					$.session.remove("service");
+					$.session.remove("tables");			
 				}
 			}
 		}		
@@ -957,26 +951,26 @@ echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
 			//aler(curpage);
 			if (curpage==1)
 			{
-				if (typeof $.cookie("clientname") != 'undefined')
+				if (typeof $.session.get("clientname") != 'undefined')
 				{
 									
-					$("body #clientid").val($.cookie("clientid"));
+					$("body #clientid").val($.session.get("clientid"));
 					
 					$("body #clientfrom2 option").each(function () {
-						if ($(this).html() == $.cookie("clientfrom"))
+						if ($(this).html() == $.session.get("clientfrom"))
 						{
 							$(this).attr('selected','selected');
 						}
 					});
 					
-					$("body #clientfrom").val($.cookie("clientfrom"));
+					$("body #clientfrom").val($.session.get("clientfrom"));
 
-					if($.cookie("clientfrom") == 'От Агентства')
+					if($.session.get("clientfrom") == 'От Агентства')
 					{
 						$("body #clientfrom4").show();
 						$("body #clientfrom4 option").each(function () {
 
-							if ($(this).val() == $.cookie("clientfrom4"))
+							if ($(this).val() == $.session.get("clientfrom4"))
 							{
 							
 								$(this).attr('selected','selected');
@@ -985,12 +979,12 @@ echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
 					
 					}
 
-					$("body #clientphone").val($.cookie("clientphone"));
-					$("body #clientemail").val($.cookie("clientemail"));
-					$("body #dateevent").val($.cookie("dateevent"));
-					$("body #timeevent").val($.cookie("timeevent"));
-					$("body #guestcount").val($.cookie("guestcount"));
-					$("body #hall").val($.cookie("hall"));
+					$("body #clientphone").val($.session.get("clientphone"));
+					$("body #clientemail").val($.session.get("clientemail"));
+					$("body #dateevent").val($.session.get("dateevent"));
+					$("body #timeevent").val($.session.get("timeevent"));
+					$("body #guestcount").val($.session.get("guestcount"));
+					$("body #hall").val($.session.get("hall"));
 
 	
 				if($("body #hall").val() > 0 & $("body #dateevent").val() != '')
@@ -1010,10 +1004,10 @@ echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
 				});*/
 				cntd = 0;
 				dateevent = "";
-				if (typeof $.cookie("dateevent") != 'undefined') 
+				if (typeof $.session.get("dateevent") != 'undefined') 
 				{
 
-					de = new Date(convertdate($.cookie("dateevent"))).getTime();
+					de = new Date(convertdate($.session.get("dateevent"))).getTime();
 					sd = new Date(convertdate($("#specpricestart").val())).getTime();
 					ed = new Date(convertdate($("#specpriceend").val())).getTime();
 					//alert(de+' '+ sd+' '+ed );
@@ -1053,7 +1047,7 @@ echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
 
 
 				dishes = "";
-				if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
+				if (typeof $.session.get("dishes") != 'undefined') dishes = $.session.get("dishes");
 				if (dishes) {
 					var dishall = $.parseJSON(dishes);
 					$.each(dishall, function(index, value) {
@@ -1093,7 +1087,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 				  console.log( index + ": " + $( this ).attr("id") );
 				});*/
 				services = "";
-				if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
+				if (typeof $.session.get("service") != 'undefined') services = $.session.get("service");
 				if (services) {
 					var serviceall = $.parseJSON(services);
 					$.each(serviceall, function(index, value) {
@@ -1122,13 +1116,13 @@ if(value["selprice"] == $("#specialprice"+index).html())
 			if (curpage==5) {
 				$("#type").hide();
 				$("#type2 option[value=0]").attr('selected','selected');
-				if ($.cookie("eventtype"))
+				if ($.session.get("eventtype"))
 				{
 					$("#type2 [option=0]").attr('selected','selected');
 					ok = 0;
 					$("#type2 option").each(function(){
 					
-					if($(this).text() == $.cookie("eventtype")) 
+					if($(this).text() == $.session.get("eventtype")) 
 						{
 							$(this).attr('selected','selected');
 							ok = 1;
@@ -1141,30 +1135,30 @@ if(value["selprice"] == $("#specialprice"+index).html())
 						$("#type2 option[value=999]").attr('selected','selected');
 						$("#type").show();
 					}
-					$("#type").val($.cookie("eventtype"));
+					$("#type").val($.session.get("eventtype"));
 				}
 				
-					if (typeof $.cookie("eventcomment") != 'undefined')
+					if (typeof $.session.get("eventcomment") != 'undefined')
 				{
 
-					$("#comment").val($.cookie("eventcomment"));
+					$("#comment").val($.session.get("eventcomment"));
 				}
 
 				var additional_pars = new Object();
-				additional_pars["cn"] = $.cookie("clientname");
+				additional_pars["cn"] = $.session.get("clientname");
 				//aler($("#clientid").val());
-				additional_pars["ci"] = $.cookie("clientid");
-				additional_pars["cp"] = $.cookie("clientphone");
-				additional_pars["ce"] = $.cookie("clientemail");
-				additional_pars["cf"] = $.cookie("clientfrom");
-				additional_pars["cf4"] = $.cookie("clientfrom4");
-				additional_pars["de"] = $.cookie("dateevent");
-				additional_pars["te"] = $.cookie("timeevent");
-				additional_pars["gc"] = $.cookie("guestcount");
-				additional_pars["hh"] = $.cookie("hall");	
-				additional_pars["dd"] = $.cookie("dishes");	
-				additional_pars["ss"] = $.cookie("service");
-				additional_pars["tt"] = $.cookie("tables");
+				additional_pars["ci"] = $.session.get("clientid");
+				additional_pars["cp"] = $.session.get("clientphone");
+				additional_pars["ce"] = $.session.get("clientemail");
+				additional_pars["cf"] = $.session.get("clientfrom");
+				additional_pars["cf4"] = $.session.get("clientfrom4");
+				additional_pars["de"] = $.session.get("dateevent");
+				additional_pars["te"] = $.session.get("timeevent");
+				additional_pars["gc"] = $.session.get("guestcount");
+				additional_pars["hh"] = $.session.get("hall");	
+				additional_pars["dd"] = $.session.get("dishes");	
+				additional_pars["ss"] = $.session.get("service");
+				additional_pars["tt"] = $.session.get("tables");
 				
 				$.post("_summary.php", additional_pars,
 				function(){
@@ -1180,32 +1174,15 @@ if(value["selprice"] == $("#specialprice"+index).html())
 		{
 			//var warnchangeguestcount=0;
 			//aler(1);
-			if (typeof $.cookie("guestcount") != 'undefined')
+			if (typeof $.session.get("guestcount") != 'undefined')
 			{
-				//aler(2);
-				if ($.isNumeric($.cookie("guestcount")))
+				if ($.isNumeric($.session.get("guestcount")))
 				{
-					//aler($.cookie("guestcount"));
 					$("input[class*='byguestcount']").each(function() {
-						//aler($(this).val());
-						//if ($(this).attr("readonly")!=="readonly") 
-						//{
-							$(this).val($.cookie("guestcount"));
-						//}
-						//else
-						//{
-						//	if ($(this).val()!=$.cookie("guestcount"))
-						//	{
-						//		warnchangeguestcount=1;
-						//	}
-						//}
+						$(this).val($.session.get("guestcount"));
 					});					
 				}
 			}
-			//if (warnchangeguestcount)
-			//{
-				//aler("Изменилось количество гостей, в уже выбранных услугах трубуется изменение значений");
-			//}
 		}
 		
 		
@@ -1351,24 +1328,10 @@ if(value["selprice"] == $("#specialprice"+index).html())
 				theme: 'blue',
 				widgets: ['zebra']
 			});
-	
-	
-
 			dosetrightpaginator();
-
 			doloadcreateform();
-
-			//erasevaluesincookie();
-			
 			$('#tabs').smartTab({selected: 0});		
-
 			setcountguestfields();
-				
-
-
-
-
-
 				$( document ).on( "change", "#clientfrom2", function() {	
 					$("#clientfrom").hide();
 		
@@ -1447,7 +1410,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 								});
 							
 							
-							$.cookie("hall", $("body #hall").val(),{ expires: 1, path: '/' });
+							$.session.set("hall", $("body #hall").val());
 
 							}
 						}
@@ -1525,12 +1488,12 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					$("#note"+id).removeAttr("readonly");					
 					$("#price"+id).removeAttr("disabled");					
 					$("#specialprice"+id).removeAttr("disabled");					
-					if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
+					if (typeof $.session.get("dishes") != 'undefined') dishes = $.session.get("dishes");
 					if (dishes) {
 						var dishall = $.parseJSON(dishes);
 						delete dishall[id];
 						dishes = $.toJSON(dishall);
-						$.cookie("dishes", dishes,{ expires: 1, path: '/' });				
+						$.session.set("dishes", dishes);				
 					}
 				}
 
@@ -1551,7 +1514,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					$("#note"+id).attr("readonly","readonly");
 					$("#price"+id).attr("disabled","disabled");
 					$("#specialprice"+id).attr("disabled","disabled");
-					if (typeof $.cookie("dishes") != 'undefined') dishes = $.cookie("dishes");
+					if (typeof $.session.get("dishes") != 'undefined') dishes = $.session.get("dishes");
 					if (dishes)
 					{
 						var dishall = $.parseJSON(dishes);
@@ -1564,11 +1527,9 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					element = ({quant:quant, note:note, selprice:selprice});
 					dishall[id] = element ;
 					dishes = $.toJSON(dishall);
-					$.cookie("dishes", dishes,{ expires: 1, path: '/' });
+					$.session.set("dishes", dishes);
 				}
-				//console.log($.cookie("dishes"));
-				
-					count_dish_weight();
+				count_dish_weight();
 			});			
 			
 			
@@ -1735,12 +1696,12 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					$("#discontservchb"+id).removeAttr("disabled");
 					$("#commentserv"+id).removeAttr("readonly");
 
-					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
+					if (typeof $.session.get("service") != 'undefined') services = $.session.get("service");
 					if (services) {
 						var serviceall = $.parseJSON(services);
 						delete serviceall[id];
 						services = $.toJSON(serviceall);
-						$.cookie("service", services,{ expires: 1, path: '/' });			
+						$.session.set("service", services);			
 					}
 				}
 				else
@@ -1766,7 +1727,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					$("#commentserv"+id).attr("readonly","readonly");
 										
 					var services="";
-					if (typeof $.cookie("service") != 'undefined') services = $.cookie("service");
+					if (typeof $.session.get("service") != 'undefined') services = $.session.get("service");
 					if (services)
 					{
 						var serviceall = $.parseJSON(services);
@@ -1780,9 +1741,8 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					element = ({priceserv:priceserv, quantserv:quantserv, discont:discont, comment:comment});
 					serviceall[id] = element ;
 					services = $.toJSON(serviceall);
-					$.cookie("service", services,{ expires: 1, path: '/' });
+					$.session.set("service", services);
 				}
-				//console.log($.cookie("service"));
 			});			
 			
 			
@@ -1805,7 +1765,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					$("#hallplace-" +hallid +" .table:not(.element)").addClass("primary");
 				}
 					var tables="";
-					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
+					if (typeof $.session.get("tables") != 'undefined') tables = $.session.get("tables");
 					if (tables)
 					{
 						var taball = $.parseJSON(tables);
@@ -1831,7 +1791,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					}
 					
 					tables = $.toJSON(taball);
-					$.cookie("tables", tables,{ expires: 1, path: '/' });
+					$.session.set("tables", tables);
 
 				
 			} else 
@@ -1852,7 +1812,7 @@ if(value["selprice"] == $("#specialprice"+index).html())
 					
 					var tables="";
 					
-					if (typeof $.cookie("tables") != 'undefined') tables = $.cookie("tables");
+					if (typeof $.session.get("tables") != 'undefined') tables = $.session.get("tables");
 					if (tables) {
 						var taball = $.parseJSON(tables);
 					if(isfull==0) 
@@ -1868,23 +1828,14 @@ if(value["selprice"] == $("#specialprice"+index).html())
 						
 						
 						tables = $.toJSON(taball);
-						$.cookie("tables", tables,{ expires: 1, path: '/' });				
+						$.session.set("tables", tables);				
 					}
 				}
-			}
-
-			
-		checkhallselect(hallid);
-			
-
-				
+			}	
+		checkhallselect(hallid);			
 	});
-			
-
-
-
 		$(window).bind('beforeunload', function(){
-		  if (typeof $.cookie("clientname") != 'undefined')
+		  if (typeof $.session.get("clientname") != 'undefined')
 		  {
 			alert("Вы покидаете страницу создания заказа без сохранения данных.");
 		  }
@@ -1964,27 +1915,27 @@ if(value["selprice"] == $("#specialprice"+index).html())
 		function dosaveorder()
 		{
 			//setvaluesincookie();
-			if ($.cookie("clientname")!="") 
+			if ($.session.get("clientname")!="") 
 			{
-				if ($.cookie("clientphone")!="") 
+				if ($.session.get("clientphone")!="") 
 				{
-					if ($.cookie("clientfrom")!="") 
+					if ($.session.get("clientfrom")!="") 
 					{
 				
 						var additional_pars = new Object();
-						additional_pars["cn"] = $.cookie("clientname");
-						additional_pars["ci"] = $.cookie("clientid");
-						additional_pars["cp"] = $.cookie("clientphone");
-						additional_pars["cf"] = $.cookie("clientfrom");
-						additional_pars["cf4"] = $.cookie("clientfrom4");
-						additional_pars["ce"] = $.cookie("clientemail");
-						additional_pars["de"] = $.cookie("dateevent");
-						additional_pars["te"] = $.cookie("timeevent");
-						additional_pars["gc"] = $.cookie("guestcount");
-						additional_pars["hh"] = $.cookie("hall");	
-						additional_pars["dd"] = $.cookie("dishes");	
-						additional_pars["ss"] = $.cookie("service");
-						additional_pars["tt"] = $.cookie("tables");
+						additional_pars["cn"] = $.session.get("clientname");
+						additional_pars["ci"] = $.session.get("clientid");
+						additional_pars["cp"] = $.session.get("clientphone");
+						additional_pars["cf"] = $.session.get("clientfrom");
+						additional_pars["cf4"] = $.session.get("clientfrom4");
+						additional_pars["ce"] = $.session.get("clientemail");
+						additional_pars["de"] = $.session.get("dateevent");
+						additional_pars["te"] = $.session.get("timeevent");
+						additional_pars["gc"] = $.session.get("guestcount");
+						additional_pars["hh"] = $.session.get("hall");	
+						additional_pars["dd"] = $.session.get("dishes");	
+						additional_pars["ss"] = $.session.get("service");
+						additional_pars["tt"] = $.session.get("tables");
 						additional_pars["ts"] = $("#timestart").val();
 						additional_pars["tp"] = $("#type").val();
 						additional_pars["cm"] = $("#comment").val();
@@ -2000,22 +1951,21 @@ if(value["selprice"] == $("#specialprice"+index).html())
 							if (data[0]=="OK")
 							{
 								var nn = noty({text: 'Сохранено, номер заказа ' + data[1], type: 'information', timeout:5000, callback: {afterClose: function() {location.href="?view/"+data[1]+"/";}}, onClick: function(){delete nn;}});							
-								$.removeCookie("clientname");
-								$.removeCookie("clientid");
-								$.removeCookie("clientfrom");
-								$.removeCookie("clientfrom4");
-								$.removeCookie("clientphone");
-								$.removeCookie("clientemail");
-								$.removeCookie("dateevent");
-								$.removeCookie("timeevent");
-								$.removeCookie("guestcount");
-								$.removeCookie("hall");
-								$.removeCookie("dishes");
-								$.removeCookie("service");							
-								$.removeCookie("tables");	
-								$.removeCookie("eventtype");
-								$.removeCookie("eventcomment");
-
+								$.session.remove("clientname");
+								$.session.remove("clientid");
+								$.session.remove("clientfrom");
+								$.session.remove("clientfrom4");
+								$.session.remove("clientphone");
+								$.session.remove("clientemail");
+								$.session.remove("dateevent");
+								$.session.remove("timeevent");
+								$.session.remove("guestcount");
+								$.session.remove("hall");
+								$.session.remove("dishes");
+								$.session.remove("service");							
+								$.session.remove("tables");	
+								$.session.remove("eventtype");
+								$.session.remove("eventcomment");
 							}
 							else
 							{
