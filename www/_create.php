@@ -1,21 +1,21 @@
 <?php
-	$.session.remove("clientname");
-	$.session.remove("clientid");
-	$.session.remove("clientphone");
-	$.session.remove("clientfrom");
-	$.session.remove("clientfrom4");
-	$.session.remove("clientemail");
-	$.session.remove("dateevent");
-	$.session.remove("timeevent");
-	$.session.remove("guestcount");
-	$.session.remove("hall");
-	$.session.remove("dishes");
-	$.session.remove("service");
-	$.session.remove("tables");
-	$.session.remove("editclientid");
-	$.session.remove("eventtype");
-	$.session.remove("eventcomment");
-	?>
+	unset($_SESSION["clientname"]);
+	unset($_SESSION["clientid"]);
+	unset($_SESSION["clientphone"]);
+	unset($_SESSION["clientfrom"]);
+	unset($_SESSION["clientfrom4"]);
+	unset($_SESSION["clientemail"]);
+	unset($_SESSION["dateevent"]);
+	unset($_SESSION["timeevent"]);
+	unset($_SESSION["guestcount"]);
+	unset($_SESSION["hall"]);
+	unset($_SESSION["dishes"]);
+	unset($_SESSION["service"]);
+	unset($_SESSION["tables"]);
+	unset($_SESSION["editclientid"]);
+	unset($_SESSION["eventtype"]);
+	unset($_SESSION["eventcomment"]);
+?>
 <!DOCTYPE html>
 <html lang="ru">
   <head>
