@@ -146,6 +146,7 @@ if ($q[1]>0)
 		die("cant find order");
 	}
 	$row_order = mysql_fetch_array($r_order);
+	
 	if (((($row_order["managerid"]!=$_SESSION["curuserid"]) && ($row_order["creatorid"]!=$_SESSION["curuserid"])) && ($_SESSION["curuserrole"]<8)) || ($_SESSION["curuserrole"]<5))
 	{
 			echo '</div></div>   <div class="container">
@@ -242,8 +243,10 @@ if ($q[1]>0)
 		}
 		echo '</div><br>';
 		echo '<br><div  id="selectedhall">';
-
+		
 		//get_hall($row_order["hallid"],$row_order["ed"],'editor',$q[1]);
+		
+		//Богачев
 		
 		echo '</div>';
 		
@@ -947,7 +950,7 @@ echo '<input type="text" id="type"   value="'.$row_order["type"].'" class="form-
 					$.session.remove("service");
 					$.session.remove("tables");
 					$.session.remove("eventtype");
-					$.session.remove("eventcomment");				
+					$.session.remove("eventcomment");
 				}
 			}
 		}		

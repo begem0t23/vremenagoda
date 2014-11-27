@@ -614,8 +614,9 @@ element_resize(tabid, ui.size.width, ui.size.height);
 				});
 
 				//раскраска выбранных столов
-				tables = "";
-				if ($.cookie("tables")  != 'null') tables = $.cookie("tables");
+				tables = ""; 
+				//alert($.session.get("tables"));
+				if ($.session.get("tables") != 'null') tables = $.session.get("tables");
 									
 				if (tables) 
 				{

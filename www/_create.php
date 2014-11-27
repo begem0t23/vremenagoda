@@ -939,7 +939,10 @@ echo '<input type="hidden" id="specpriceend" value="'.$dend.'">';
 					$.session.remove("hall");
 					$.session.remove("dishes");
 					$.session.remove("service");
-					$.session.remove("tables");			
+					$.session.remove("tables");		
+					$.session.remove("eventtype");
+					$.session.remove("eventcomment");
+					$.session.remove("editclientid");					
 				}
 			}
 		}		

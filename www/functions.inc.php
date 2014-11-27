@@ -435,6 +435,34 @@ $tabsinorder = 0;
 			return $out;
 }
 
+function gettablestosession($orderid, $place)
+{
+	$gettablestosession1 = '';
+	if ($orderid) {
+	//echo 1;
+	if ($place=="edit")
+	{
+	//echo 2;
+		$tsql = "select * from tables_in_orders where orderid = ".mysql_escape_string($orderid).";";
+		$r_tables_in_orders = mysql_query($tsql);
+		if (mysql_num_rows($r_tables_in_orders)==0)
+		{
+			//хуй
+		}
+		else
+		{
+			$tables_in_orders = array();
+			while ($row_tables_in_orders = mysql_fetch_array($r_tables_in_orders))
+			{
+				$tables_in_orders[$row_tables_in_orders["tableid"]] = $row_tables_in_orders["tableid"];
+			}
+			$gettablestosession1 = json_encode($tables_in_orders);
+		}
+	}
+	}
+	return $gettablestosession1;
+}
+
 function gethallondatebyorder($orderid)
 {
 
