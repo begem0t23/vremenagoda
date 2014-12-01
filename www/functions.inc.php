@@ -388,7 +388,7 @@ $tabsinorder = 0;
 				if(!$cntload) $cntload=0;
 				$cntload = $cntload * 1;
 				//$sumpersons = $sumpersons + $row_tab["persons"];
-					$ech = $ech.$cntload.'<div class="context-menu-one '.$class.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'"  isfull="'.$isfull.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; line-height:'.($row_tab["height"]-7).'px;" place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
+					$ech = $ech.'<div class="context-menu-one '.$class.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'"  isfull="'.$isfull.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; line-height:'.($row_tab["height"]-7).'px;" place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
 					
 					//for($i=0;$i<$row_tab["persons"];$i++)
 					//{
@@ -402,10 +402,7 @@ $tabsinorder = 0;
 				if( $place == 'editor')
 			{
 				$cookietables = json_decode($_SESSION["tables"],true);
-	echo '<br>cookietables<br>';
-	print_r($cookietables);
-	echo '<br>ordertables<br>';
-	print_r($ordertables);
+
 				if ($cntload > 2)
 				{
 					if($ordertables & !$cookietables)
@@ -469,12 +466,13 @@ function gettablestosession($orderid, $place)
 function gethallondatebyorder($orderid)
 {
 
-						$select = "SELECT COUNT( * ) AS  `rows` ,  tod.hallid, h.name FROM tables_on_date as tod, hall as h WHERE orderid = '".$orderid."' and h.id = tod.hallid GROUP BY `hallid`;";
+						$select = "SELECT COUNT( * ) AS  `rows` ,  tod.hallid, h.name , h.description FROM tables_on_date as tod, hall as h WHERE orderid = '".$orderid."' and h.id = tod.hallid GROUP BY `hallid`;";
 						$rezult = mysql_query($select);
 						while ($rows = mysql_fetch_array($rezult))
 						{
 							$out[$rows['hallid']]['tabs'] = $rows['rows'];
-							$out[$rows['hallid']]['name'] = $rows['name'];
+							$out[$rows['hallid']]['name'][0] = $rows['name'];
+							$out[$rows['hallid']]['name'][1] = $rows['description'];
 							
 						}
 
@@ -1067,6 +1065,26 @@ $menuid = substr($menuid,1);
 }
 }
 
+function gethallnames($orderid,$type)
+{
+			$hio = gethallondatebyorder($orderid);
+			
+		$hallname = '';
+		if ($hio)
+		{
+			foreach ($hio AS $hid => $val)
+			{
+				$hallname .= '+'.$val['name'][$type];		
+			}
+			
+			$hallname = substr($hallname,1);
+		}
+		else
+		{
+		$hallname = 'Зал еще не выбран.';
+		}	
+		return $hallname;
+	}
 
 function report_client($forwho,$orderid)
 {
@@ -1100,23 +1118,7 @@ $rezult = mysql_query($tsql);
 
 	
 	//названия залов
-	$hio = gethallondatebyorder($orderid);
-	
-$hallname = '';
-if ($hio)
-{
-	foreach ($hio AS $hid => $val)
-	{
-		$hallname .= '+'.$val['name'];		
-	}
-	
-	$hallname = substr($hallname,1);
-}
-else
-{
-$hallname = 'Зал еще не выбран.';
-}	
-	
+$hallname = gethallnames($orderid,0);
 	
 	
 	

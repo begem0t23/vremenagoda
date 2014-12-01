@@ -908,11 +908,11 @@ if ($_POST['operation'] == 'getallorders')
 		if($rows01['procstatus'] == 9) $color = '#111111';
 		if($rows01['hallstatus'] == 9) $color = 'red';
 		
-		
+		$hallname = gethallnames($rows01['id'],1);
 		
 		$ech=$ech.'{'.chr(10);
 		$ech=$ech.'"id": "'.$rows01['id'].'",'.chr(10);
-		$ech=$ech.'"title": "№'.$rows01['id'].'. '.$rows01['name'].' ('.$rows01['guestcount'].') ",'.chr(10);
+		$ech=$ech.'"title": "№'.$rows01['id'].'. '.$hallname.' ('.$rows01['guestcount'].') ",'.chr(10);
 		$ech=$ech.'"start": "'.$start.'",'.chr(10);
 		$ech=$ech.'"todo": "'.$rows01['comment'].'",'.chr(10);
 		$ech=$ech.'"url": "?view/'.$rows01['id'].'/",'.chr(10);
