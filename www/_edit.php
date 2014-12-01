@@ -1708,7 +1708,7 @@ if(value["selprice"] == $("#archivprice"+index).html() )
 					$("#hallplace-" +hallid +" .table:not(.element)").addClass("primary");
 				}
 					var tables="";
-					if ($.session.get("tables") != 'null') tables = $.session.get("tables");
+					if (typeof $.session.get("tables") != 'undefined') tables = $.session.get("tables");
 					if (tables)
 					{
 						var taball = $.parseJSON(tables);

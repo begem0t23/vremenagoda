@@ -388,7 +388,7 @@ $tabsinorder = 0;
 				if(!$cntload) $cntload=0;
 				$cntload = $cntload * 1;
 				//$sumpersons = $sumpersons + $row_tab["persons"];
-					$ech = $ech.'<div class="context-menu-one '.$class.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'"  isfull="'.$isfull.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; line-height:'.($row_tab["height"]-7).'px;" place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
+					$ech = $ech.$cntload.'<div class="context-menu-one '.$class.$inorder.'" tabid="'.$row_tab["id"].'"  id="table'.$row_tab["id"].'" top="'.$row_tab["top"].'" left="'.$row_tab["left"].'"  angle="'.$row_tab["angle"].'" hallid="'.$hallid.'"  isfull="'.$isfull.'" tabpersons="'.$row_tab["persons"].'"   style="width:'.$row_tab["width"].'px; height:'.$row_tab["height"].'px; line-height:'.($row_tab["height"]-7).'px;" place="'.$place.'" dateevent="'.$dateevent.'">'.$row_tab["num"].'</div>';;
 					
 					//for($i=0;$i<$row_tab["persons"];$i++)
 					//{
@@ -402,7 +402,10 @@ $tabsinorder = 0;
 				if( $place == 'editor')
 			{
 				$cookietables = json_decode($_SESSION["tables"],true);
-	
+	echo '<br>cookietables<br>';
+	print_r($cookietables);
+	echo '<br>ordertables<br>';
+	print_r($ordertables);
 				if ($cntload > 2)
 				{
 					if($ordertables & !$cookietables)
@@ -781,7 +784,8 @@ $dish['count'] = 0;
 					if ($rows01['id'] == $j)
 					{
 
-						$dish['sum'] = 	$dish['sum'] + ($dd["quant"] * $rows01['price']);
+						$dish['sum'] = 	$dish['sum'] + ($dd["quant"] * $dd["selprice"]);
+						$dish['sumt'] = 	$dish['sumt'].'_('.($dd["quant"] * $dd["selprice"]);
 		
 						$dish[$dish['count']]['id'] = $rows01['id'];
 						$dish[$dish['count']]['isactive'] = $rows01['isactive'];
@@ -2246,6 +2250,7 @@ function fixednavbar()
             <li><a href="?logout">Выйти (<?php
 echo $_SESSION["curusername"];
 ?>)</a></li>
+
           </ul>
         </div><!--/.nav-collapse -->
       </div>

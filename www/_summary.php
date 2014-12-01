@@ -178,6 +178,7 @@ $sections = Array();
 	
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']]['sumt'] = $sections[$rows0['id']]['sumt'].'_'.$zzz['sumt'];
 	$sections[$rows0['id']]['children'] = 0;
 	$sections[$rows0['id']]['items'] = $zzz;
 	$cntdish = $cntdish + $sections[$rows0['id']]['dishes'] ;
@@ -194,6 +195,7 @@ $sections = Array();
 
 	$zzz = dishes_in_section_for_summary($rows_1['id'],$dishes,$cntdish);
 	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']]['sumt'] = $sections[$rows0['id']]['sumt'].'_'.$zzz['sumt'];
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['children'] ++;
 	$sections[$rows0['id']][$rows_1['id']]['id'] = '_'.$rows_1['id']; //непонял почему но без _ не работает
@@ -220,6 +222,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']]['dishes'];
 	$zzz = dishes_in_section_for_summary($rows_2['id'],$dishes,$cntdish);
 	$sections[$rows0['id']]['dishes'] = $sections[$rows0['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']]['sum'] = $sections[$rows0['id']]['sum'] + $zzz['sum'];
+	$sections[$rows0['id']]['sumt'] = $sections[$rows0['id']]['sumt'].'_'.$zzz['sumt'];
 	$sections[$rows0['id']][$rows_1['id']]['dishes'] = $sections[$rows0['id']][$rows_1['id']]['dishes'] + $zzz['count'];
 	$sections[$rows0['id']][$rows_1['id']]['sum'] = $sections[$rows0['id']][$rows_1['id']]['sum'] + $zzz['sum'];
 	$sections[$rows0['id']][$rows_1['id']]['children'] ++;
@@ -254,6 +257,7 @@ $cntdish = $cntdish + $sections[$rows0['id']][$rows_1['id']][$rows_2['id']]['dis
 		{	
 			$level0_sum[$sections[$num]['id']] = $sections[$num]['sum']; 
 			$sum[$sections[$num]['isdrink']] = $sum[$sections[$num]['isdrink']] + $sections[$num]['sum']; 
+			$sumt[$sections[$num]['isdrink']] = $sumt[$sections[$num]['isdrink']].'_'.$sections[$num]['sumt']; 
 			
 			$body_out = $body_out.'<tbody><tr><th  colspan="'.($cs1 + $cs2).'" class="level_0">'.chr(10);			
 			$body_out = $body_out.$sections[$num]['name'].''.chr(10);
@@ -339,7 +343,10 @@ $service_discont = 0;
 $food_sum = $level0_sum['_59'] + $level0_sum['_60'];
 $drink_sum = $level0_sum['_61'] + $level0_sum['_19'];
 $food_sum = $sum[0] ;
-$drink_sum = $sum[1];
+$drink_sum = $sum[1] +  $sum[2];
+$food_sumt = $sumt[0] ;
+$drink_sumt = $sumt[1].$sumt[2];
+
 	if ($_POST["ss"])
 	{
 	$services = json_decode($_POST["ss"],true);
