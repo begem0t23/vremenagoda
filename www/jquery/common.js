@@ -196,7 +196,13 @@
 				var tables = "";
 				var taball = {};
 				var element = {};
-			
+				request = jQuery.ajax({
+				 url:    '/_gettablesforsession.php' ,
+				 data: {oid:$("#orderid").val(), p:"edit", Rand: "<?php echo rand(); ?>"},
+				 async:   false });
+				 request.done(function(data) {
+					$.session.set("tables", data);
+				 });
 				$.session.remove("dishes");
 
 					var dishes="";
@@ -217,7 +223,7 @@
 							}
 						});
 						dishes = $.toJSON(dishall);
-						alert(dishes.length);
+						//alert(dishes.length);
 						$.session.set("dishes", dishes);
 						$.session.remove("service");
 					var services="";

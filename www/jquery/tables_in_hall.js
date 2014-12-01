@@ -614,13 +614,13 @@ element_resize(tabid, ui.size.width, ui.size.height);
 				});
 
 				//раскраска выбранных столов
-				
-				tables = "";
-				if ($.session.get("tables")  != 'undefined') tables = $.session.get("tables");
+				tables = ""; 
+				//alert($.session.get("tables"));
+				if ($.session.get("tables") != 'null') tables = $.session.get("tables");
 									
 				if (tables) 
 				{
-				alert($.session.get("tables"));
+				
 					var taball = $.parseJSON(tables);
 					$.each(taball, function(index, value) 
 					{

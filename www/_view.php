@@ -1213,8 +1213,8 @@ function add_delegate()
 
 	function get_hall()
 	{
-	orderid = $("#newpayment").attr('orderid');
-	get_selected_hall($("#hall").val(),$("#dateevent").val(),'report','selectedhall',orderid);
+		orderid = $("#newpayment").attr('orderid');
+		get_selected_hall($("#hall").val(),$("#dateevent").val(),'report','selectedhall',orderid);
 	}
 	
 	function get_all_payments()
